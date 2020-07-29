@@ -152,7 +152,7 @@ ESX.StartPayCheck = function()
 								kredit = kredit-rata
 								MySQL.Async.execute("UPDATE users SET kredit=@kr WHERE identifier=@identifier", {['@identifier'] = xPlayer.identifier, ['@kr'] = kredit})
 								local tekste = "Platili ste ratu kredita od $"..rata.."! Za vratit vam je ostalo jos $"..kredit.."."
-								TriggerClientEvent('esx:showAdvancedNotification', _source, 'Banka',
+								TriggerClientEvent('esx:showAdvancedNotification', xPlayer.source, 'Banka',
                                 'Kredit',
                                 tekste,
                                 'CHAR_BANK_MAZE', 9)
@@ -161,7 +161,7 @@ ESX.StartPayCheck = function()
 								kredit = 0
 								MySQL.Async.execute("UPDATE users SET kredit=0, rata=0 WHERE identifier=@identifier", {['@identifier'] = xPlayer.identifier})
 								TriggerClientEvent('esx:showNotification', xPlayer.source, "[Banka] Otplatili ste kredit!")
-								TriggerClientEvent('esx:showAdvancedNotification', _source, 'Banka',
+								TriggerClientEvent('esx:showAdvancedNotification', xPlayer.source, 'Banka',
                                 'Kredit',
                                 'Otplatili ste kredit!',
                                 'CHAR_BANK_MAZE', 9)
