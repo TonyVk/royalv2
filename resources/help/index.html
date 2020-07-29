@@ -1,0 +1,473 @@
+<html>
+<head>
+<style>
+#pozadina
+{
+	background-color: transparent;
+    position: relative;
+    top: 170px;
+    width: 50%;
+	left: 25%;
+	height: 50%;
+	display:none;
+}
+#tipka
+{
+	width: 15%;
+    background-color: #565656;
+    border: 0;
+    height: 10%;
+    color: white;
+}
+#tipka2
+{
+	width: 15%;
+    background-color: #1f1f1f;
+    border: 0;
+    height: 10%;
+	margin-left: -4px;
+	color: white;
+}
+#tipka3
+{
+	width: 15%;
+    background-color: #1f1f1f;
+    border: 0;
+    height: 10%;
+	margin-left: -4px;
+	color: white;
+}
+#tipka4
+{
+	width: 15%;
+    background-color: #1f1f1f;
+    border: 0;
+    height: 10%;
+	margin-left: -4px;
+	color: white;
+}
+#tipka5
+{
+	width: 15%;
+    background-color: #1f1f1f;
+    border: 0;
+    height: 10%;
+	margin-left: -4px;
+	color: white;
+}
+#tipka:hover
+{
+	background-color: #000000;
+}
+#tipka2:hover
+{
+	background-color: #000000;
+}
+#tipka3:hover
+{
+	background-color: #000000;
+}
+#tipka4:hover
+{
+	background-color: #000000;
+}
+#tipka5:hover
+{
+	background-color: #000000;
+}
+#pravila
+{
+	background-image: url(bg1.png);
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+#komande
+{
+    background-image: url(bg2.jpg);
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+	display:none;
+	overflow: auto;
+}
+#admin
+{
+    background-image: url(bg3.jpg);
+    background-size: cover;
+	overflow: auto;
+    width: 100%;
+    height: 100%;
+	display:none;
+}
+#tipke
+{
+    background-image: url(bg3.jpg);
+    background-size: cover;
+	overflow: auto;
+    width: 100%;
+    height: 100%;
+	display:none;
+}
+#tekst
+{
+    position: relative;
+    float: left;
+    background-color: #56565675;
+    color: white;
+    padding: 13px;
+}
+#slika1
+{
+	position: absolute;
+    float: right;
+    right: 2px;
+    height: 100%;
+}
+#slika2
+{
+	position: absolute;
+    float: right;
+    right: -230px;
+    height: 100%;
+}
+</style>
+</head>
+<body>
+<div id="pozadina">
+<button id="tipka" onclick="tipka1()">Pravila</button>
+<button id="tipka2" onclick="tipka2()">Komande</button>
+<button id="tipka3" onclick="tipka3()">Tipke</button>
+<button id="tipka5" style="display:none;" onclick="tipka5()">Admin</button>
+<button id="tipka4" onclick="tipka4()">Zatvori</button>
+<div id="pravila">
+<img id="slika1" src="slika1.png">
+<div id="tekst">
+<font style="color: orange"><b>MetaGaming</b></font><br>
+– Koristenje IC informacija u OOC korist. IC sluzi za stvari koje rade/govore
+nasi In Game karakteri, OOC sluzi za sve ostalo i tamo pisemo sve sto nema veze s igrom
+odnosno radnjom u igri.<br>
+Naprimjer: U IC Chatu napisete: Eee dodaj me na Facebooku zovem se Marko Maric!<br>
+Naprimjer: U IC Chatu napisete: Kako se zoves na Discordu?<br>
+Naprimjer: U OOC Chatu napisete: Oces kupit Sultana za 250.000$?<br>
+Naprimjer: U OOC Chatu napisete: Jel moze neko doci do policijske stanice?<br><br>
+<font style="color: orange"><b>PowerGaming</b></font><br>
+– Radnja koju je moguce napraviti u igrici, a nije moguca u stvarnom
+zivotu.<br>
+Naprimjer: Vozite auto 200 na sat, zaletite se u zgradu i nastavite voziti, ili izadjete iz auta i
+nastavite hodati.<br>
+Naprimjer: Zavezane su vam ruke ( iza leda su vam ), a vi uzmete mobitel i krenete pisati
+nekome poruku.<br><br>
+<font style="color: orange"><b>Random DeathMatch</b></font><br>
+– Ubijanje ljudi bez dovoljno ili bez ikakvog roleplay razloga.<br>
+Naprimjer: Parkirate se na parkirno mjesto, vidite neku osobu iza vas i odlucite ju
+jednostavno ubiti bez razloga.<br><br>
+<font style="color: orange"><b>Revenge Kill</b></font><br>
+– Ubojstvo igraca odmah nakon sto vas je on ubio. Znaci igrac vas ubije i vi ga odmah odlucite potraziti i ubiti.<br><br>
+<font style="color: orange"><b>Combat Logging</b></font><br>
+– Izlazenje sa servera kako bi izbjegli neku RolePlay akciju.<br>
+Naprimjer: Hapsi vas policija i vi ne zelite biti hapseni i jednostavno izadete iz igrice.<br><br>
+<font style="color: orange"><b>New Life Rule</b></font><br>
+- Kada jednom umrete, ne smijete se nicega sjecati ( tko vas je ubio i slicno ) niti smijete dolaziti na lokaciju gdje ste umrli u roku od 15 minuta.<br><br>
+<font style="color: orange"><b>FailRP</b></font><br>
+– Neuspjesno drzanje svoga karaktera, znaci lika kojeg RolePlayate.<br>
+Naprimjer: Policajac dode i opljacka banku.<br><br>
+<font style="color: orange"><b>Cop Baiting</b></font><br>
+- Ne smijete namjerno navlaciti policiju da vas pocne loviti ili ih navuci u neku zasjedu. Znaci ne smijete imati namjeru povlacenja pozornosti policije na vas kako bi vas jurila.<br><br>
+<font style="color: orange"><b>SafeZona</b></font><br>
+– Mjesto na kojem se ne smije pociniti nikakvo ubojstvo niti.
+Igraca u safezoni mozete ubiti ili oteti tek kada vas RolePlay navede na to.<br>
+Naprimjer: Lovite igraca od autosalona I on pobjegne u safezonu. ( Tada mozete koristiti silu)<br><br>
+<font style="color: orange"><b>FearRP</b></font><br>
+- Morate cijeniti svoj zivot vise od icega. Znaci ukoliko vam netko drzi pistolj na glavi morate slusati njegove naredbe i pokusati izvuci zivu glavu.<br>
+Naprimjer: Oteti ste u banci (taoc ste), pljackas vam nareduje da kleknete na pod s rukama iza glave a vi mu odgovarate: "Necu ko te sljivi majmune pucaj ako smijes".<br><br>
+<font style="color: orange"><b>Mikrofon</b></font><br>
+- Posjedovanje mikrofona je obavezno, bez mikrofona ne mozete komunicirati s osobama na serveru.<br><br>
+<font style="color: orange"><b>Spam</b></font><br>
+- Svaki oblik spama je zabranjen, bio to u chatu ili preko mikrofona (Pustanje pre glasne muzike i namjerno deranje ).<br><br>
+<font style="color: orange"><b>Cheat</b></font><br>
+- Svaki cheater na serveru biti ce kaznjen banom bez unbana.<br><br>
+<font style="color: orange"><b>Bugovi</b></font><br>
+- Svaki bug obavezno morate prijaviti i ne smijete ga iskoristavati!
+</div>
+</div>
+<div id="komande">
+<img id="slika2" src="slika2.png">
+<div id="tekst">
+<font size = "5"><b>Osnovno</b></font><br>
+<font style="color: orange"><b>/me [Radnja]</b></font><br>Oznacava pocetak neke radnje<br>
+<font style="color: orange"><b>/do [Radnja]</b></font><br>Oznacava zavrsetak neke radnje<br>
+<font style="color: orange"><b>/youtube [Youtube Link]</b></font><br>Kako bi ste pustili si pjesmu na serveru sa youtubea zajedno sa videom u gornjem lijevom kutu ekrana. Odete na youtube, nadjete pjesmu koju zelite si pustiti u igri, kopirate link i taj link stavite u ovu komandu.<br>
+<font style="color: orange"><b>/youtubeoff</b></font><br>Koristi se kako bih ste ugasili pjesmu sa youtubea koju ste pustili<br>
+<font style="color: orange"><b>/youtubesakrij</b></font><br>Pjesma nastavi svirati u pozadini ali se sakrije video<br>
+<font style="color: orange"><b>/youtubeprikazi</b></font><br>Prikazete video koji ste sakrili ranije<br>
+<font style="color: orange"><b>/mp3 [Link]</b></font><br>Pustate .mp3 pjesmu (NE youtube link)<br>
+<font style="color: orange"><b>/mp3vol [0.0-1.0]</b></font><br>Glasnoca pjesme koju ste pustili sa /mp3<br>
+<font style="color: orange"><b>/mp3off</b></font><br>Da ugasite pjesmu<br>
+<font style="color: orange"><b>/ad</b></font><br>Za dodavanje oglasa, obavezno dodajte svoj broj na kraj oglasa<br>
+<font style="color: orange"><b>/tweet</b></font><br>Za tweet objave<br>
+<font style="color: orange"><b>/anontweet</b></font><br>Za anonimne tweet objave<br>
+<font style="color: orange"><b>/e</b></font><br>Animacije<br>
+<font style="color: orange"><b>/clanovi</b></font><br>Online clanovi<br>
+<font style="color: orange"><b>/lideri</b></font><br>Online lideri<br>
+<font style="color: orange"><b>/mjenjac</b></font><br>Mijenjanje izmedju rucnog/automatskog<br><br>
+<font size = "5"><b>Bande</b></font><br>
+<font style="color: orange"><b>/prodajdrogu</b></font><br>Prodajete drogu drugome igracu<br>
+<font style="color: orange"><b>/posadi</b></font><br>Sadite drogu na odredjenom polju<br><br>
+<font size = "5"><b>Mafije</b></font><br>
+<font style="color: orange"><b>/prodajoruzje</b></font><br>Prodajete oruzje drugome igracu<br><br>
+</div>
+</div>
+<div id="tipke">
+<img id="slika1" src="slika3.png">
+<div id="tekst">
+<font style="color: orange"><b>F1</b></font><br>Otvara mobitel<br>
+<font style="color: orange"><b>F2</b></font><br>Otvara inventory<br>
+<font style="color: orange"><b>F3</b></font><br>Otvara izbornik sa animacijama<br>
+<font style="color: orange"><b>F5</b></font><br>Otvara izbornik sa dozvolama<br>
+<font style="color: orange"><b>F6</b></font><br>Otvara izbornik od bande/mafije/organizacije<br>
+<font style="color: orange"><b>F7</b></font><br>Otvara izbornik sa neplacenim kaznama<br>
+<font style="color: orange"><b>F9</b></font><br>Otvara izbornik za kucnog ljubimca<br>
+<font style="color: orange"><b>F10</b></font><br>Otvara listu online igraca<br>
+<font style="color: orange"><b>Z</b></font><br>Animacija podignutih ruku<br>
+<font style="color: orange"><b>K</b></font><br>Paljenje/gasenje vozila<br>
+<font style="color: orange"><b>ALT+H</b></font><br>Prebacivanje izmedju tipova pricanja. Postoje tipovi: normalan, tih, glasan i tip za organizacije/mafije. Kada izaberete tip svoje organizacije/mafije moci cete pricati sa svojim clanovima ukoliko su oni izabrali isti tip. Tip odredjene organizacije/mafije/bande mogu odabrati samo clanovi te iste.<br>
+<font style="color: orange"><b>Lijeva strelica</b></font><br>Paljenje/gasenje lijevog zmigavca<br>
+<font style="color: orange"><b>Doljnja strelica</b></font><br>Paljenje/gasenje sva cetri zmigavca<br>
+<font style="color: orange"><b>Desna strelica</b></font><br>Paljenje/gasenje desnog zmigavca<br>
+<font style="color: orange"><b>U</b></font><br>Zakljucavanje/otkljucavanje vozila<br>
+<font style="color: orange"><b>CTRL+ALT+M</b></font><br>Paljenje radara u vozilu (Samo policija)<br>
+<font style="color: orange"><b>G</b></font><br>Vezanje/odvezivanje pojasa<br>
+<font style="color: orange"><b>C</b></font><br>Cucanje<br>
+<font style="color: orange"><b>CTRL</b></font><br>Lezanje<br>
+<font style="color: orange"><b>F11</b></font><br>Upravljanje odjecom<br>
+<font style="color: orange"><b>B</b></font><br>Pokazivanje prstom<br>
+<font style="color: orange"><b>ALT</b></font><br>Tempomat<br>
+<font style="color: orange"><b>L</b></font><br>Stavljanje/skidanje maske<br>
+<font style="color: orange"><b>Y</b></font><br>Pokazuje ID iznad igraca<br>
+</div>
+</div>
+<div id="admin">
+<img id="slika1" src="slika3.png">
+<div id="tekst">
+<font size = "5"><b>Tipke</b></font><br>
+<font style="color: orange"><b>Home</b></font><br>Otvara admin panel<br>
+<font style="color: orange"><b>9</b></font><br>Otvara spectate menu<br><br>
+<font size = "5"><b>Komande</b></font><br>
+<font style="color: orange"><b>/weather</b></font><br>Promjena vremenske prognoze<br>
+<font style="color: orange"><b>/time</b></font><br>Promjena vremena<br>
+<font style="color: orange"><b>/announce</b></font><br>Najava svim igracima na serveru<br>
+<font style="color: orange"><b>/pokreniutrku</b></font><br>Ukoliko samo upisete komandu dobijete popis svih dostupnih utrka. Sa popisa izaberete ime utrke i upisete u komandu.<br>
+<font style="color: orange"><b>/zaustaviutrku</b></font><br>Zaustavljate trenutno pokrenut event<br>
+<font style="color: orange"><b>/pokreniwar</b></font><br>Prva 2 parametra su ID-ovi lidera bandi/mafija. Treci parametar je koliko na koliko se igra war ( 2 je 2v2, 3 je 3v3 itd.). Kada pokrenete war lideri pozivaju clanove iz svoje bande/mafije do broja koji je naveden trecim parametrom.<br>
+<font style="color: orange"><b>/zavrsiwar</b></font><br>Zaustavljate trenutno pokrenut war<br>
+<font style="color: orange"><b>/tpm</b></font><br>Port do lokacije oznacene na mapi<br>
+<font style="color: orange"><b>/setgroup</b></font><br>Postavljate admina igracu<br>
+<font style="color: orange"><b>/setjob</b></font><br>Postavljate posao igracu ili lidera i clana bande/mafije/organizacije<br>
+<font style="color: orange"><b>/dv</b></font><br>Brisete vozilo<br>
+<font style="color: orange"><b>/dvi</b></font><br>Brisete vozilo u blizini<br>
+<font style="color: orange"><b>/dvu</b></font><br>Brisete unisteno vozilo u blizini<br>
+<font style="color: orange"><b>/fix</b></font><br>Popravljate vozilo<br>
+<font style="color: orange"><b>/clean</b></font><br>Cistite vozilo<br>
+<font style="color: orange"><b>/freeze</b></font><br>Freezate igraca<br>
+<font style="color: orange"><b>/giveweapon</b></font><br>Dajete igracu oruzje<br>
+<font style="color: orange"><b>/heal</b></font><br>Healate sebe ili drugog igraca<br>
+<font style="color: orange"><b>/kick</b></font><br>Kickate igraca<br>
+<font style="color: orange"><b>/youtubeall</b></font><br>Pustate youtube video svim igracima na serveru<br>
+<font style="color: orange"><b>/mp3all</b></font><br>Pustate mp3 svim igracima na serveru<br>
+<font style="color: orange"><b>/goto</b></font><br>Port do igraca<br>
+<font style="color: orange"><b>/bring</b></font><br>Port igraca do sebe<br>
+<font style="color: orange"><b>/noclip</b></font><br>Letenje po zraku<br>
+<font style="color: orange"><b>/clear</b></font><br>Brisanje chata<br>
+<font style="color: orange"><b>/aodg</b></font><br>Odgovor igracu<br>
+<font style="color: orange"><b>/rpchat</b></font><br>Mjenjanje T chata iz global u local i obrnuto<br>
+<font style="color: orange"><b>/svilideri</b></font><br>Svi lideri (online i offline)<br>
+<font style="color: orange"><b>/a</b></font><br>Admin chat<br>
+<font style="color: orange"><b>/restartsrw</b></font><br>Prije RR servera<br>
+
+</div>
+</div>
+</div>
+<script src="nui://game/ui/jquery.js" type="text/javascript"></script>
+<script>
+window.addEventListener('message', function(event) {
+            var item = event.data;
+			var x = document.getElementById("pozadina");
+			var z = document.getElementById("tipka5");
+			if (item.admin){
+				z.style.display = "unset";
+			}
+			else{
+				z.style.display = "none";
+			}
+            if (item.otvorihelparu) {
+				x.style.display = "block";
+            }
+			else if (item.zatvorihelparu) {
+				x.style.display = "none";
+            }
+        });
+		
+var ta = document.getElementById("tipka");
+var ta2 = document.getElementById("tipka2");
+var ta3 = document.getElementById("tipka3");
+var ta4 = document.getElementById("tipka5");
+var t1a = 1;
+var t2a = 0;
+var t3a = 0;
+var t4a = 0;
+ta.addEventListener('mouseenter', e => {
+	if(t1a == 0){
+	ta.style.background = '#000000';
+	}
+});
+ta.addEventListener('mouseleave', e => {
+	if(t1a == 0){
+	ta.style.background = '#1f1f1f';
+	}
+});
+
+ta2.addEventListener('mouseenter', e => {
+	if(t2a == 0){
+	ta2.style.background = '#000000';
+	}
+});
+ta2.addEventListener('mouseleave', e => {
+	if(t2a == 0){
+	ta2.style.background = '#1f1f1f';
+	}
+});
+
+ta3.addEventListener('mouseenter', e => {
+	if(t3a == 0){
+	ta3.style.background = '#000000';
+	}
+});
+ta3.addEventListener('mouseleave', e => {
+	if(t3a == 0){
+	ta3.style.background = '#1f1f1f';
+	}
+});
+
+ta4.addEventListener('mouseenter', e => {
+	if(t4a == 0){
+	ta4.style.background = '#000000';
+	}
+});
+ta4.addEventListener('mouseleave', e => {
+	if(t4a == 0){
+	ta4.style.background = '#1f1f1f';
+	}
+});
+
+function tipka1() {
+  var x = document.getElementById("pravila");
+  var t = document.getElementById("tipka");
+  var t2 = document.getElementById("tipka2");
+  var t3 = document.getElementById("tipka3");
+  var t4 = document.getElementById("tipka5");
+  var y = document.getElementById("komande");
+  var z = document.getElementById("tipke");
+  var h = document.getElementById("admin");
+  x.style.display = "block";
+  t.style.background = "#565656";
+  t2.style.background = "#1f1f1f";
+  t3.style.background = "#1f1f1f";
+  t4.style.background = "#1f1f1f";
+  t1a = 1;
+  t2a = 0;
+  t3a = 0;
+  t4a = 0;
+  if (y.style.display === "block") {
+    y.style.display = "none";
+  }
+  if (z.style.display === "block") {
+    z.style.display = "none";
+  }
+  if (h.style.display === "block") {
+    h.style.display = "none";
+  }
+}
+function tipka2() {
+  var x = document.getElementById("komande");
+  var y = document.getElementById("pravila");
+  var z = document.getElementById("tipke");
+  var h = document.getElementById("admin");
+  var t = document.getElementById("tipka");
+  var t2 = document.getElementById("tipka2");
+  var t3 = document.getElementById("tipka3");
+  var t4 = document.getElementById("tipka5");
+  t1a = 0;
+  t2a = 1;
+  t3a = 0;
+  t4a = 0;
+  t.style.background = "#1f1f1f";
+  t2.style.background = "#565656";
+  t3.style.background = "#1f1f1f";
+  t4.style.background = "#1f1f1f";
+  x.style.display = "block";
+  y.style.display = "none";
+  z.style.display = "none";
+  h.style.display = "none";
+}
+function tipka3() {
+  var x = document.getElementById("komande");
+  var y = document.getElementById("pravila");
+  var z = document.getElementById("tipke");
+  var h = document.getElementById("admin");
+  var t = document.getElementById("tipka");
+  var t2 = document.getElementById("tipka2");
+  var t3 = document.getElementById("tipka3");
+  var t4 = document.getElementById("tipka5");
+  t1a = 0;
+  t2a = 0;
+  t3a = 1;
+  t4a = 0;
+  t.style.background = "#1f1f1f";
+  t2.style.background = "#1f1f1f";
+  t4.style.background = "#1f1f1f";
+  t3.style.background = "#565656";
+  z.style.display = "block";
+  y.style.display = "none";
+  x.style.display = "none";
+  h.style.display = "none";
+}
+function tipka5() {
+  var x = document.getElementById("komande");
+  var y = document.getElementById("pravila");
+  var z = document.getElementById("tipke");
+  var h = document.getElementById("admin");
+  var t = document.getElementById("tipka");
+  var t2 = document.getElementById("tipka2");
+  var t3 = document.getElementById("tipka3");
+  var t4 = document.getElementById("tipka5");
+  t1a = 0;
+  t2a = 0;
+  t3a = 0;
+  t4a = 1;
+  t.style.background = "#1f1f1f";
+  t2.style.background = "#1f1f1f";
+  t3.style.background = "#1f1f1f";
+  t4.style.background = "#565656";
+  z.style.display = "none";
+  y.style.display = "none";
+  x.style.display = "none";
+  h.style.display = "block";
+}
+function tipka4() {
+  sendData("Help", "close");
+}
+function sendData(name, data) {
+	$.post("http://help/" + name, JSON.stringify(data), function(
+		datab
+	) {
+		if (datab != "ok") {
+			
+		}
+	});
+}
+
+</script>
+</body>
+</html>

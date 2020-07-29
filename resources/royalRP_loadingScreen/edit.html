@@ -1,0 +1,49 @@
+
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Royal Roleplay</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" media="screen" href="keks.css">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,400i,700" rel="stylesheet">
+</head>
+<body>
+    
+    <h1 class="enable_music"> Koristi<strong> SPACE </strong> da ugasiš muziku </h1>
+
+    <h1 class="servername"><strong>Royal</strong> <strong>Roleplay</strong></h1>
+    <h1 class="undertext">Povezivanje...</h1>
+    
+    <div class="overcast"></div>
+    <div class="progress"></div>
+
+    <audio id="leson" src="music.mp3" autoplay="true" hidden="true" loop="true"/>
+    <script>
+
+    var play = true;
+    var myAudio = document.getElementById("leson");
+    
+    myAudio.volume = 0.1;
+
+    function onKeyDown(event) {
+            switch (event.keyCode) {
+                case 32: //SpaceBar                    
+                    if (play) {
+                        myAudio.pause();
+                        play = false;
+                    } else {
+                        myAudio.play();
+                        play = true;
+                    }
+                    break;
+            }
+      return false;
+    }
+
+    window.addEventListener("keydown", onKeyDown, false);
+    </script>
+
+</body>
+</html>

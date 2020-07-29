@@ -1,0 +1,211 @@
+<html>
+    <head>
+		<style>
+		#myDIV
+		{
+			display: none;
+		}
+		#ytdiv
+		{
+			display: none;
+		}
+		#mp3
+		{
+			display: none;
+		}
+		</style>
+        <script src="nui://game/ui/jquery.js" type="text/javascript"></script>
+		<script src="https://embed.twitch.tv/embed/v1.js"></script>
+        <script>
+		var Prikazan = false;
+		var Objektic = null;
+		function isPlaying(audelem) { return !audelem.paused; }
+        window.addEventListener('message', function(event) {
+            var item = event.data;
+			
+            if (item.playradio) {
+				var str = item.sound;
+				var res = str.split("https://www.youtube.com/watch?v=").join("");
+				var rez = "<iframe width='560' height='315' src='https://www.youtube.com/embed/"+res+"'?autoplay=1' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>";
+				var myIFrame = document.getElementById("yta");
+				var x = document.getElementById("myDIV");
+				var content = "https://www.hooktube.com/embed/"+res+"?autoplay=1";
+				myIFrame.setAttribute("src", content);
+				if(Prikazan == false)
+				{
+					x.style.display = "block";
+					Prikazan = true;
+				}
+            }
+			else if (item.playboomboxyt) {
+				var str = item.sound;
+				var res = str.split("https://www.youtube.com/watch?v=").join("");
+				var rez = "<iframe width='560' height='315' src='https://www.youtube.com/embed/"+res+"'?autoplay=1' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>";
+				var myIFrame = document.getElementById("yta");
+				var x = document.getElementById("myDIV");
+				var content = "https://www.hooktube.com/embed/"+res+"?autoplay=1";
+				myIFrame.setAttribute("src", content);
+            }
+			else if (item.playtwitch) {
+				var str = item.sound;
+				var x = document.getElementById("twitch-embed");
+				if(Objektic != null)
+				{
+					x.remove();
+					Objektic = null;
+					var node = document.createElement("div");
+					node.id = "twitch-embed";
+					document.getElementById("twt").appendChild(node);
+				}
+				Objektic = new Twitch.Embed("twitch-embed", {
+					width: 560,
+					height: 315,
+					layout: "video",
+					channel: str
+				});
+				if(Prikazan == false)
+				{
+					x.style.display = "block";
+					Prikazan = true;
+				}
+            }
+			else if (item.playmp3) {
+					var str = item.sound;
+					var myIFrame = document.getElementById("mp3a");
+					var audio = document.getElementById('audio');
+					myIFrame.src = str;
+					audio.load();
+					audio.play();
+            }
+			else if (item.playradio2) {
+				var str = item.sound;
+				var myIFrame = document.getElementById("videosrc");
+				var video = document.getElementById('video');
+				var res = str.split("https://www.youtube.com/watch?v=").join("");
+				var rez = "<iframe width='560' height='315' src='https://www.youtube.com/embed/"+res+"'?autoplay=1' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>";
+				var x = document.getElementById("ytdiv");
+				var content = "https://www.hooktube.com/embed/"+res+"?autoplay=1";
+				//myIFrame.setAttribute("src", content);
+				myIFrame.src = content;
+				video.load();
+				video.play();
+				if(Prikazan == false)
+				{
+					x.style.display = "block";
+					Prikazan = true;
+				}
+            }
+			else if (item.syncmp) {
+					var audio = document.getElementById('audio');
+					var vr = item.sound;
+					audio.currentTime = vr;
+            }
+			else if (item.syncajsve) {
+					var audio = document.getElementById('audio');
+					var tr = audio.currentTime;
+					var ida = item.idsyncera;
+					$.post('http://radio/RadioB', JSON.stringify({vol: tr, id: ida}));
+            }
+			else if (item.loadmp3) {
+				var str = item.sound;
+				var myIFrame = document.getElementById("mp3a");
+				var audio = document.getElementById('audio');
+				myIFrame.src = str;
+				audio.load();
+				audio.pause();
+            }
+			else if (item.pausemp3) {
+					var audio = document.getElementById('audio');
+					audio.pause();
+            }
+			else if (item.resumemp3) {
+					var audio = document.getElementById('audio');
+					audio.play();
+            }
+			else if (item.volmp3) {
+					var str = item.zvuk;
+					var audio = document.getElementById('audio');
+					audio.volume = str;
+            }
+			else if (item.voltwitch) {
+					var str = item.zvuk;
+					var player = Objektic.getPlayer();
+					player.setVolume(str);
+            }
+			else if (item.stopmp3) {
+					var audio = document.getElementById('audio');
+					audio.pause();
+					audio.currentTime = 0;
+            }
+			else if (item.stopradio) {
+					var x = document.getElementById("myDIV");
+					var myIFrame = document.getElementById("yta");
+					myIFrame.setAttribute("src", "OFF");
+					if(Prikazan == true)
+					{
+						x.style.display = "none";
+						Prikazan = false;
+					}
+            }
+			else if (item.stoptwitch) {
+					var x = document.getElementById("twitch-embed");
+					x.remove()
+					Objektic = null;
+					var node = document.createElement("div");
+					node.id = "twitch-embed";
+					document.getElementById("twt").appendChild(node);
+					if(Prikazan == true)
+					{
+						x.style.display = "none";
+						Prikazan = false;
+					}
+            }
+			else if (item.sakrijradio) {
+					var x = document.getElementById("myDIV");
+					if(Prikazan == true)
+					{
+						x.style.display = "none";
+						Prikazan = false;
+					}
+            }
+			else if (item.prikaziradio) {
+					var x = document.getElementById("myDIV");
+					if(Prikazan == false)
+					{
+						x.style.display = "block";
+						Prikazan = true;
+					}
+            }
+        });
+		var resourceName = "radio";
+		function sendData(name, data) {
+			$.post("http://" + resourceName + "/" + name, JSON.stringify({id: data}), function(
+				datab
+			) {
+				if (datab != "ok") {
+					console.log(datab);
+				}
+			});
+		}
+        </script>
+    </head>
+	<body>
+	<div id="twt">
+	<div id="twitch-embed"></div>
+	</div>
+	<div id="myDIV">
+	<iframe id="yta" name="ifr" width='560' height='315' src='https://www.youtube.com/embed/lxRwEPvL-mQ' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>
+	</div>
+	<div id="ytdiv">
+	<video id="video" width="560" height="315" controls autoplay>
+		<source id="videosrc" src="https://hooktube.com/watch?v=0wUS31xo_tU" type="video/mp4">
+		Your browser does not support the video tag.
+	</video>
+	</div>
+	<div id="mp3">
+	<audio id="audio" controls autoplay>
+	  <source id="mp3a" src="off" type="audio/mpeg">
+	</audio>
+	</div>
+	</body>
+</html>

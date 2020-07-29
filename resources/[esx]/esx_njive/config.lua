@@ -1,0 +1,9 @@
+Config                            = {}
+Config.EnablePlayerManagement     = true
+Config.EnableArmoryManagement     = true
+Config.EnableESXIdentity          = true -- only turn this on if you are using esx_identity
+Config.EnableNonFreemodePeds      = false -- turn this on if you want custom peds
+Config.EnableSocietyOwnedVehicles = false
+Config.EnableLicenses             = false
+Config.Locale                     = 'hr'
+Config.Blipovi					  = false

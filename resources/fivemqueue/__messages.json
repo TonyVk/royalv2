@@ -1,0 +1,14 @@
+﻿{
+  "Gathering": "Prikupljanje Informacija iz Queue-a",
+  "License": "Potrebna je licenca za ulaz",
+  "Steam": "Upalite Steam pa Pokusajte ponovo",
+  "Banned": "Vi ste bannani sa Royal Roleplaya",
+  "Whitelist": "Niste na whitelisti",
+  "Queue": "Cekate u redu da udete",
+  "PriorityQueue": "Vi ste u priority queue",
+  "Canceled": "Izbaceni ste iz Queue-a",
+  "Error": "Error je sprijecio povezivanje sa serverom",
+  "Timeout": "Ucitavanje duze od dozvoljenog na serveru",
+  "QueueCount": "[Queue: {0}]",
+  "Symbols": "Simboli i razmaci nisu dozvoljeni u vasem imenu"
+}

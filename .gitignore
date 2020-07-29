@@ -1,0 +1,7 @@
+cache/*
+*.txt
+*.yft
+*.ydt
+*.ydr
+*.meta
+*.ytd

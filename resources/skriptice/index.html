@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ID</title>
+	<style>
+		html {
+		  font-size: 14px;
+		}
+		@media (min-width: 768px) {
+		  html {
+			font-size: 16px;
+		  }
+		}
+		#tijelo {
+			display: none;
+			background-color: transparent;
+		}
+	</style>
+</head>
+	<body id = "tijelo">
+		<div id = "tekst" style="position: absolute;bottom: 0;left: 2px;color: #4d87a0;font-size: 23px;font-weight: bold;text-shadow: #000 1px 1px 1px;">ID: <font id="id" style="color: #a23135;">1</font></div>
+		<script>
+			var Prikazan = false;
+			window.addEventListener('message', function(event) {
+				var item = event.data;
+				if (item.prikazi) {
+					var id = item.id;
+					document.getElementById("id").innerHTML=id;
+					var x = document.getElementById("tijelo");
+					if(Prikazan == false)
+					{
+						x.style.display = "block";
+						Prikazan = true;
+					}
+					else
+					{
+						x.style.display = "none";
+						Prikazan = false;
+					}
+				}
+			});
+		</script>
+	</body>
+</html>

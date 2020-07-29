@@ -1,0 +1,13 @@
+{
+  "vehicles": [
+    "bmwm8"
+  ],
+  "peds": [
+    "addonpedname1",
+    "addonpedname2"
+  ],
+  "weapons": [
+    "addonweaponname1",
+    "addonweaponname2"
+  ]
+}
