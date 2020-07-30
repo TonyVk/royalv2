@@ -508,32 +508,15 @@ end
 -------------------------------------------------
 RegisterNetEvent('vodoinstalater:ObrisiObjekte')
 AddEventHandler('vodoinstalater:ObrisiObjekte', function(obj1, obj2, obj3, obj4, obj5)
-	print(obj1)
-	print("Network:"..NetToObj(obj1))
-	while not NetworkHasControlOfNetworkId(obj1)do 
-		Wait(1)
-		NetworkRequestControlOfNetworkId(obj1)
-	end
+	NetworkRequestControlOfNetworkId(obj1)
 	ESX.Game.DeleteObject(NetToObj(obj1))
-	while not NetworkHasControlOfNetworkId(obj2)do 
-		Wait(1)
-		NetworkRequestControlOfNetworkId(obj2)
-	end
+	NetworkRequestControlOfNetworkId(obj2)
 	ESX.Game.DeleteObject(NetToObj(obj2))
-	while not NetworkHasControlOfNetworkId(obj3)do 
-		Wait(1)
-		NetworkRequestControlOfNetworkId(obj3)
-	end
+	NetworkRequestControlOfNetworkId(obj3)
 	ESX.Game.DeleteObject(NetToObj(obj3))
-	while not NetworkHasControlOfNetworkId(obj4)do 
-		Wait(1)
-		NetworkRequestControlOfNetworkId(obj4)
-	end
+	NetworkRequestControlOfNetworkId(obj4)
 	ESX.Game.DeleteObject(NetToObj(obj4))
-	while not NetworkHasControlOfNetworkId(obj5)do 
-		Wait(1)
-		NetworkRequestControlOfNetworkId(obj5)
-	end
+	NetworkRequestControlOfNetworkId(obj5)
 	ESX.Game.DeleteObject(NetToObj(obj5))
 end)
 -- Fonction selection nouvelle mission livraison

@@ -15,7 +15,6 @@ AddEventHandler('vodoinstalater:PosaljiObjekte', function(obj)
 	for i=1, #obj, 1 do
 		if obj[i] ~= nil then
 			table.insert(Objekti, {ID = obj[i].ID, Obj1 = obj[i].Obj1, Obj2 = obj[i].Obj2, Obj3 = obj[i].Obj3, Obj4 = obj[i].Obj4, Obj5 = obj[i].Obj5})
-			print(obj[i].Obj1)
 		end
 	end
 end)
@@ -44,6 +43,7 @@ AddEventHandler('playerDropped', function()
 			Objekti[i].Obj3 = nil
 			Objekti[i].Obj4 = nil
 			Objekti[i].Obj5 = nil
+			Objekti[i] = nil
 			break
 		end
 	end
