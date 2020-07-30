@@ -78,6 +78,69 @@ function EnumerateVehicles()
     return EnumerateEntities(FindFirstVehicle, FindNextVehicle, EndFindVehicle)
 end
 
+local kont
+RegisterCommand("kontenjer", function(source, args, rawCommandString)
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if br == 1 then
+			ESX.Game.SpawnObject('prop_contr_03b_ld', GetEntityCoords(PlayerPedId()), function(obj)
+				PlaceObjectOnGroundProperly(obj)
+				FreezeEntityPosition(obj, true)
+				kont = obj
+			end)
+		else
+			ESX.ShowNotification("Nemate pristup ovoj komandi!")
+		end
+	end)
+end, false)
+local zakacio = false
+local prikolica = nil
+RegisterCommand("handler", function(source, args, rawCommandString)
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if br == 1 then
+			if zakacio == false then
+				if IsHandlerFrameAboveContainer(GetVehiclePedIsIn(PlayerPedId(), false), kont) then
+					Citizen.InvokeNative(0x6a98c2ecf57fa5d4, GetVehiclePedIsIn(PlayerPedId(), false), kont)
+					FreezeEntityPosition(kont, false)
+					zakacio = true
+				else
+					ESX.ShowNotification("Nije nad kontenjerom")
+				end
+			else
+				local corda = GetEntityCoords(prikolica)
+				local corda2 = GetEntityCoords(kont)
+				if GetDistanceBetweenCoords(corda, corda2, true) <= 2.0 then
+					DetachContainerFromHandlerFrame(GetVehiclePedIsIn(PlayerPedId(), false))
+					zakacio = false
+					AttachEntityToEntity(kont, prikolica, 0, 0.0, 0.0, 0.4, 0.0, 0.0, 0.0, false, false, true, false, 20, true)
+				else
+					ESX.ShowNotification("Nisi blizu!")
+				end
+			end
+		else
+			ESX.ShowNotification("Nemate pristup ovoj komandi!")
+		end
+	end)
+end, false)
+
+RegisterCommand("prikolica", function(source, args, rawCommandString)
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if br == 1 then
+			local corde = GetEntityCoords(PlayerPedId())
+			local head = GetEntityHeading(PlayerPedId())
+			local x,y,z = table.unpack(corde)
+			ESX.Game.SpawnVehicle("TRFlat", {
+					x = x,
+					y = y,
+					z = z
+				}, head, function(callback_vehicle)
+					prikolica = callback_vehicle
+			end)
+		else
+			ESX.ShowNotification("Nemate pristup ovoj komandi!")
+		end
+	end)
+end, false)
+
 RegisterCommand("ndv", function(source, args, rawCommandString)
 	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		if br == 1 then
