@@ -628,6 +628,7 @@ end
 ESX.Game.GetVehicleProperties = function(vehicle)
 	local color1, color2 = GetVehicleColours(vehicle)
 	local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
+	local svijetlaColor = GetVehicleXenonLightsColour(vehicle)
 	local extras = {}
 
 	for id=0, 12 do
@@ -652,6 +653,7 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 
 		pearlescentColor  = pearlescentColor,
 		wheelColor        = wheelColor,
+		svijetlaColor 	  = svijetlaColor,
 
 		wheels            = GetVehicleWheelType(vehicle),
 		windowTint        = GetVehicleWindowTint(vehicle),
@@ -752,6 +754,10 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 	if props.pearlescentColor ~= nil then
 		local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
 		SetVehicleExtraColours(vehicle, props.pearlescentColor, wheelColor)
+	end
+	
+	if props.svijetlaColor ~= nil then
+		SetVehicleHeadlightsColour(vehicle, props.svijetlaColor)
 	end
 
 	if props.wheelColor ~= nil then

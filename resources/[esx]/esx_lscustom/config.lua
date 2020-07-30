@@ -145,6 +145,36 @@ Config.Colors = {
 	{ label = _U('gold'), value = 'gold'}
 }
 
+function GetSvijetla(color)
+	local naziv
+	if color == -1 then
+		naziv = "Default"
+	elseif color == 1 then
+		naziv = "Plava"
+	elseif color == 2 then
+		naziv = "Elektricno plava"
+	elseif color == 3 then
+		naziv = "Menta zelena"
+	elseif color == 4 then
+		naziv = "Limeta zelena"
+	elseif color == 5 then
+		naziv = "Zuta"
+	elseif color == 6 then
+		naziv = "Zlatna"
+	elseif color == 7 then
+		naziv = "Narancasta"
+	elseif color == 8 then
+		naziv = "Crvena"
+	elseif color == 9 then
+		naziv = "Pony ruzicasta"
+	elseif color == 10 then
+		naziv = "Vruca ruzicasta"
+	elseif color == 11 then
+		naziv = "Ljubicasta"
+	end
+	return naziv
+end
+
 function GetColors(color)
 	local colors = {}
 	if color == 'black' then
@@ -847,6 +877,7 @@ Config.Menus = {
 		primaryRespray = _U('primary'),
 		secondaryRespray = _U('secondary'),
 		pearlescentRespray = _U('pearlescent'),
+		svijetlaColor = "Svijetla"
 	},
 	primaryRespray = {
 		label = _U('primary'),
@@ -858,6 +889,10 @@ Config.Menus = {
 	},
 	pearlescentRespray = {
 		label = _U('pearlescent'),
+		parent = 'resprays',
+	},
+	svijetlaColor = {
+		label = "Boja svjetala",
 		parent = 'resprays',
 	},
 	color1 = {
@@ -897,7 +932,15 @@ Config.Menus = {
 		modRearBumper = _U('rearbumper'),
 		modFrontBumper = _U('frontbumper'),
 		modExhaust = _U('exhaust'),
-		modRoof = _U('roof')
+		modRoof = _U('roof'),
+		modFelge = _U('felge')
+	},
+	
+	modFelge = {
+		label = _U('felge'),
+		parent = 'bodyparts',
+		modType = 0,
+		price = 4.00
 	},
 	modSpoilers = {
 		label = _U('spoilers'),

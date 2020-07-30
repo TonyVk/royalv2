@@ -62,7 +62,7 @@ function OpenLSMenu(elems, menuName, menuTitle, parent)
 		align    = 'top-left',
 		elements = elems
 	}, function(data, menu)
-		local isRimMod, found, isMjenjac = false, false, false
+		local isRimMod, found, isMjenjac, isSvijetla = false, false, false, false
 		local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
 		local vehicleProps = ESX.Game.GetVehicleProperties(vehicle)
 		local tablica = vehicleProps.plate
@@ -74,10 +74,14 @@ function OpenLSMenu(elems, menuName, menuTitle, parent)
 		if data.current.modType == "mjenjac" then
 			isMjenjac = true
 		end
+		
+		if data.current.modType == "svijetlaColor" then
+			isSvijetla = true
+		end
 
 		for k,v in pairs(Config.Menus) do
 
-			if k == data.current.modType or isRimMod or isMjenjac then
+			if k == data.current.modType or isRimMod or isMjenjac or isSvijetla then
 
 				if data.current.label == _U('by_default') or string.match(data.current.label, _U('installed')) then
 					ESX.ShowNotification(_U('already_own', data.current.label))
@@ -102,6 +106,10 @@ function OpenLSMenu(elems, menuName, menuTitle, parent)
 						TriggerServerEvent("DiscordBot:Mehanicari", GetPlayerName(PlayerId()).." je kupio dio za $"..price)
 					elseif v.modType == 17 then
 						price = math.floor(vehiclePrice * v.price[1] / 800)
+						TriggerServerEvent("lscs:kupiPeraje", GetEntityModel(vehicle), price, tablica)
+						TriggerServerEvent("DiscordBot:Mehanicari", GetPlayerName(PlayerId()).." je kupio dio za $"..price)
+					elseif isSvijetla then
+						price = math.floor(vehiclePrice * 1.10 / 800)
 						TriggerServerEvent("lscs:kupiPeraje", GetEntityModel(vehicle), price, tablica)
 						TriggerServerEvent("DiscordBot:Mehanicari", GetPlayerName(PlayerId()).." je kupio dio za $"..price)
 					elseif isMjenjac then
@@ -219,14 +227,14 @@ function GetAction(data)
 	end
 
 	for k,v in pairs(Config.Menus) do
-
 		if data.value == k then
-
 			menuName  = k
 			menuTitle = v.label
 			parent    = v.parent
-			
-			print(k)
+			if data.value == "svijetlaColor" and not currentMods.modXenon then
+				ESX.ShowNotification("Vozilo mora imati ugradjena xenon svijetla!")
+				return
+			end
 
 			if v.modType ~= nil then
 				
@@ -390,6 +398,30 @@ function GetAction(data)
 					end
 				end
 			else
+				if data.value == 'svijetlaColor' then
+					for j=1, 12, 1 do
+						price = math.floor((vehiclePrice * 1.10 / 800)*1.30)
+						if j == 1 then
+							local ime = GetSvijetla(-1)
+							_label = ime .. ' - <span style="color:green;">$' .. price .. ' </span>'
+							if -1 == currentMods[k] then
+								_label = ime .. ' - <span style="color:cornflowerblue;">'.. _U('installed') ..'</span>'
+							else
+								_label = ime .. ' - <span style="color:green;">$' .. price .. ' </span>'
+							end
+							table.insert(elements, {label = _label, modType = k, modNum = -1})
+						else
+							local ime = GetSvijetla(j-1)
+							_label = ime .. ' - <span style="color:green;">$' .. price .. ' </span>'
+							if j-1 == currentMods[k] then
+								_label = ime .. ' - <span style="color:cornflowerblue;">'.. _U('installed') ..'</span>'
+							else
+								_label = ime .. ' - <span style="color:green;">$' .. price .. ' </span>'
+							end
+							table.insert(elements, {label = _label, modType = k, modNum = j-1})
+						end
+					end
+				end
 				if data.value == 'primaryRespray' or data.value == 'secondaryRespray' or data.value == 'pearlescentRespray' or data.value == 'modFrontWheelsColor' then
 					for i=1, #Config.Colors, 1 do
 						if data.value == 'primaryRespray' then

@@ -6,7 +6,7 @@ Locales['hr'] = {
   ['purchased'] = 'kupili ste ovaj mod!',
   ['press_custom'] = 'pritisnite ~INPUT_PICKUP~ da ~y~uredite~s~ svoje vozilo.',
   ['level'] = 'level %s',
-  ['neon'] = 'neon',
+  ['neon'] = 'Xenon',
   ['blip_name'] = 'los Santos Customs',
 -- Paint Colors
   -- Black
@@ -231,6 +231,7 @@ Locales['hr'] = {
   ['neons'] = 'neon',
   -- Wheels
   ['wheels'] = 'felge',
+  ['felge'] = 'felge',
   ['tiresmoke'] = 'dim guma',
   ['wheel_type'] = 'tip felgi',
   ['wheel_color'] = 'boja felgi',
