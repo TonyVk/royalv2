@@ -655,6 +655,7 @@ function SetProned()
 	ped = PlayerPedId()
 	ClearPedTasksImmediately(ped)
 	TaskPlayAnimAdvanced(ped, "move_crawl", "onfront_fwd", GetEntityCoords(ped), 0.0, 0.0, GetEntityHeading(ped), 1.0, 1.0, 1.0, 46, 1.0, 0, 0)
+	RemoveAnimSet("move_crawl")
 end
 
 
@@ -996,7 +997,7 @@ Citizen.CreateThread(function()
 			DisableControlAction( 0, crouchKey, true ) 
 			if ( not IsPauseMenuActive() ) then 
 				if ( IsDisabledControlJustPressed( 0, crouchKey ) and not proned ) then 
-					RequestAnimSet( "move_ped_crouched" )
+					RequestAnimSet("move_ped_crouched")
 					RequestAnimSet("MOVE_M@TOUGH_GUY@")
 					
 					while ( not HasAnimSetLoaded( "move_ped_crouched" ) ) do 
@@ -1009,11 +1010,15 @@ Citizen.CreateThread(function()
 						ResetPedMovementClipset( ped )
 						ResetPedStrafeClipset(ped)
 						SetPedMovementClipset( ped,"MOVE_M@TOUGH_GUY@", 0.5)
-						crouched = false 
+						crouched = false
+						RemoveAnimSet("move_ped_crouched")
+						RemoveAnimSet("MOVE_M@TOUGH_GUY@")
 					elseif ( not crouched and not proned ) then
 						SetPedMovementClipset( ped, "move_ped_crouched", 0.55 )
 						SetPedStrafeClipset(ped, "move_ped_crouched_strafing")
 						crouched = true 
+						RemoveAnimSet("move_ped_crouched")
+						RemoveAnimSet("MOVE_M@TOUGH_GUY@")
 					end 
 				elseif ( IsDisabledControlJustPressed(0, proneKey) and not crouched and not IsPedInAnyVehicle(ped, true) and not IsPedFalling(ped) and not IsPedDiving(ped) and not IsPedInCover(ped, false) and not IsPedInParachuteFreeFall(ped) and (GetPedParachuteState(ped) == 0 or GetPedParachuteState(ped) == -1) ) then
 					if proned then
