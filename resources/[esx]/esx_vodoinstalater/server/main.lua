@@ -29,6 +29,7 @@ AddEventHandler('vodoinstalater:MaknutKvar', function(id)
 			Objekti[i].Obj3 = nil
 			Objekti[i].Obj4 = nil
 			Objekti[i].Obj5 = nil
+			Objekti[i] = nil
 		end
 	end
 end)
