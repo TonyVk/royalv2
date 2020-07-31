@@ -283,6 +283,33 @@ AddEventHandler('eden_garage:deletevehicle_cl', function(plate)
 		local usedPlate = vehicleProps.plate:gsub("^%s*(.-)%s*$", "%1")
 		if usedPlate == _plate then
 			ESX.Game.DeleteVehicle(vehicle)
+			Wait(100)
+			if DoesEntityExist(vehicle) then
+				local entity = vehicle
+				carModel = GetEntityModel(entity)
+				carName = GetDisplayNameFromVehicleModel(carModel)
+				NetworkRequestControlOfEntity(entity)
+				
+				local timeout = 2000
+				while timeout > 0 and not NetworkHasControlOfEntity(entity) do
+					Wait(100)
+					timeout = timeout - 100
+				end
+
+				SetEntityAsMissionEntity(entity, true, true)
+				
+				local timeout = 2000
+				while timeout > 0 and not IsEntityAMissionEntity(entity) do
+					Wait(100)
+					timeout = timeout - 100
+				end
+
+				Citizen.InvokeNative( 0xEA386986E786A54F, Citizen.PointerValueIntInitialized( entity ) )
+				
+				if (DoesEntityExist(entity)) then 
+					DeleteEntity(entity)
+				end 
+			end
 		end
 	end
 end)

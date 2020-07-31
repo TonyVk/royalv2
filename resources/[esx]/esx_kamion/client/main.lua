@@ -498,8 +498,6 @@ function StartajPosao(br)
 					AttachEntityToEntity(kont, prikolica, 0, 0.0, 0.0, 0.4, 0.0, 0.0, 0.0, false, false, true, false, 20, true)
 					utovario = true
 					zakacio = false
-					ESX.Game.DeleteVehicle(Vozilo)
-					Vozilo = nil
 					ESX.ShowNotification("Udjite u kamion i zakacite prikolicu")
 				end
 			end
@@ -516,6 +514,8 @@ function StartajPosao(br)
 				ESX.ShowNotification("Zakacili ste krivu prikolicu i posao vam je prekinut")
 				ZavrsiPosao()
 			else
+				ESX.Game.DeleteVehicle(Vozilo)
+				Vozilo = nil
 				Blipara = AddBlipForCoord(-500.92709350586, -2842.4367675781, 6.0003814697266)
 				SetBlipSprite (Blipara, 68)
 				SetBlipDisplay(Blipara, 8)
