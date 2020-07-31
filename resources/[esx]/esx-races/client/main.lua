@@ -379,54 +379,54 @@ end, false)
 
 RegisterCommand("join", function(source, args, rawCommandString)
 	if PokrenutaUtrka == 1 and PocelaUtrka == 0 then
-	if UUtrci < 10 then
-	if USudjeluje == 0 then
-	USudjeluje = 1
-	Pozicija = 1
-	local x, y, z = table.unpack(GetEntityCoords(GetPlayerPed(-1), true))
-	LastPosX = x
-	LastPosY = y
-	LastPosZ = z
-	TriggerEvent("NPC:MakniNPC", 1)
-	TriggerEvent("radarce:NemojGa", 1)
-	Citizen.CreateThread(function()
-		local hashara = GetHashKey("WEAPON_UNARMED")
-		while isRacing == false and USudjeluje == 1 do
-			Citizen.Wait(0)
-			SetCurrentPedWeapon(PlayerPedId(),hashara,true)
-			DisableControlAction(0, 24, true)
-			DisableControlAction(0, 25, true)
-			SetPlayerCanDoDriveBy(PlayerId(), false)
-		end
-	end)
-	PrikazoUI = false
-	ZatvoriUI = false
-    SpawnajGa(NazivUtrke)
-	UUtrci = UUtrci+1
-	TriggerServerEvent("SpremiBroj", UUtrci)
-	MaxTada = UUtrci
-	TriggerServerEvent("SpremiTada", MaxTada)
-	ESX.ShowNotification("Kako bih ste napustili utrku upisite /napustiutrku")
-	TriggerEvent("EoTiIzSalona", 1)
-	local elem = {}
+		if UUtrci < 10 then
+			if USudjeluje == 0 then
+				USudjeluje = 1
+				Pozicija = 1
+				local x, y, z = table.unpack(GetEntityCoords(GetPlayerPed(-1), true))
+				LastPosX = x
+				LastPosY = y
+				LastPosZ = z
+				TriggerEvent("NPC:MakniNPC", 1)
+				TriggerEvent("radarce:NemojGa", 1)
+				Citizen.CreateThread(function()
+					local hashara = GetHashKey("WEAPON_UNARMED")
+					while isRacing == false and USudjeluje == 1 do
+						Citizen.Wait(0)
+						SetCurrentPedWeapon(PlayerPedId(),hashara,true)
+						DisableControlAction(0, 24, true)
+						DisableControlAction(0, 25, true)
+						SetPlayerCanDoDriveBy(PlayerId(), false)
+					end
+				end)
+				PrikazoUI = false
+				ZatvoriUI = false
+				SpawnajGa(NazivUtrke)
+				UUtrci = UUtrci+1
+				TriggerServerEvent("SpremiBroj", UUtrci)
+				MaxTada = UUtrci
+				TriggerServerEvent("SpremiTada", MaxTada)
+				ESX.ShowNotification("Kako bih ste napustili utrku upisite /napustiutrku")
+				TriggerEvent("EoTiIzSalona", 1)
+				local elem = {}
 
-    ESX.TriggerServerCallback('esx-qalle-races:getScoreboard', function(Races)
-		if Races[1] ~= nil then
-		local tekst = 'Rekord utrke drzi '..Races[1].name..' ('..tonumber(string.format("%.2f", Races[1].time))..')'
-		ESX.ShowNotification(tekst)
+				ESX.TriggerServerCallback('esx-qalle-races:getScoreboard', function(Races)
+					if Races[1] ~= nil then
+					local tekst = 'Rekord utrke drzi '..Races[1].name..' ('..tonumber(string.format("%.2f", Races[1].time))..')'
+					ESX.ShowNotification(tekst)
+					end
+				end, NazivUtrke)
+				ESX.ShowNotification("Kako bih ste vidjeli scoreboard utrke upisite /escoreboard")
+				Startajj = 1
+				PratiPocetak()
+			else
+				ESX.ShowNotification("Vec ste u utrci")
+			end
+		else
+			ESX.ShowNotification("Utrka je popunjena")
 		end
-    end, NazivUtrke)
-	ESX.ShowNotification("Kako bih ste vidjeli scoreboard utrke upisite /escoreboard")
-	Startajj = 1
-	PratiPocetak()
 	else
-	ESX.ShowNotification("Vec ste u utrci")
-	end
-	else
-	ESX.ShowNotification("Utrka je popunjena")
-	end
-	else
-	ESX.ShowNotification("Nema pokrenute utrke")
+		ESX.ShowNotification("Nema pokrenute utrke")
 	end
 end, false)
 
@@ -492,6 +492,7 @@ function SpawnajGa(race)
 		Rh2 = raceInfo['StartPosition']['h']
 		RaceVehicle = CreateVehicle(model, Rx, Ry, Rz, Rh, true, false)
 		SetModelAsNoLongerNeeded(model)
+		SetEntityCoords(PlayerPedId(), Rx, Ry, Rz, 1, 0, 0, 1)
 		FreezeEntityPosition(RaceVehicle, true)
 		local cordsa = GetOffsetFromEntityInWorldCoords(RaceVehicle, 0.0, -6.0 , 0.0)
 		Rx = cordsa.x
@@ -509,6 +510,7 @@ function SpawnajGa(race)
 			TriggerServerEvent("SpremiPomocne", Lokacija, ucitao, Prvi)
 			RaceVehicle = CreateVehicle(model, Rx, Ry, Rz, Rh, true, false)
 			SetModelAsNoLongerNeeded(model)
+			SetEntityCoords(PlayerPedId(), Rx, Ry, Rz, 1, 0, 0, 1)
 			FreezeEntityPosition(RaceVehicle, true)
 			local cordsa = GetOffsetFromEntityInWorldCoords(RaceVehicle, 0.0, -6.0 , 0.0)
 			Rx = cordsa.x
@@ -527,6 +529,7 @@ function SpawnajGa(race)
 				TriggerServerEvent("SpremiPomocne", Lokacija, ucitao, Prvi)
 				RaceVehicle = CreateVehicle(model, Rx2, Ry2, Rz2, Rh2, true, false)
 				SetModelAsNoLongerNeeded(model)
+				SetEntityCoords(PlayerPedId(), Rx2, Ry2, Rz2, 1, 0, 0, 1)
 				FreezeEntityPosition(RaceVehicle, true)
 				local cordsa = GetOffsetFromEntityInWorldCoords(RaceVehicle, 0.0, -6.0 , 0.0)
 				Rx2 = cordsa.x
@@ -538,6 +541,7 @@ function SpawnajGa(race)
 				TriggerServerEvent("SpremiPomocne", Lokacija, ucitao, Prvi)
 				RaceVehicle = CreateVehicle(model, Rx2, Ry2, Rz2, Rh2, true, false)
 				SetModelAsNoLongerNeeded(model)
+				SetEntityCoords(PlayerPedId(), Rx2, Ry2, Rz2, 1, 0, 0, 1)
 				FreezeEntityPosition(RaceVehicle, true)
 				local cordsa = GetOffsetFromEntityInWorldCoords(RaceVehicle, 0.0, -6.0 , 0.0)
 				Rx2 = cordsa.x
