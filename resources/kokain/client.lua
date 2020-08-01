@@ -113,6 +113,7 @@ function PostaviPosao()
     end
 	
 	local npc = CreatePed(4, model, -1155.025390625, -1521.6463623047, 9.63272857666, 132.74, false, true)
+	SetModelAsNoLongerNeeded(model)
 			
 	SetEntityHeading(npc, 132.74)
 	FreezeEntityPosition(npc, true)
