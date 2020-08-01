@@ -70,17 +70,17 @@ AddEventHandler('ducan:piku2', function(zona, id)
 	local xPlayer = ESX.GetPlayerFromId(_source)
 
 	-- can the player afford this item?
-	if xPlayer.getMoney() >= 5000000 then
-		xPlayer.removeMoney(5000000)
+	if xPlayer.getMoney() >= 2000000 then
+		xPlayer.removeMoney(2000000)
 		local store = zona..id
 		MySQL.Async.execute('UPDATE shops2 SET `owner` = @identifier WHERE store = @store', {
 			['@identifier'] = xPlayer.identifier,
 			['@store'] = store
 		})
-		TriggerClientEvent('esx:showNotification', _source, "Kupili ste trgovinu za $5000000")
+		TriggerClientEvent('esx:showNotification', _source, "Kupili ste trgovinu za $2000000")
 		TriggerClientEvent("esx_shops:ReloadBlip", _source)
 	else
-		local missingMoney = 5000000 - xPlayer.getMoney()
+		local missingMoney = 2000000 - xPlayer.getMoney()
 		TriggerClientEvent('esx:showNotification', _source, _U('not_enough', ESX.Math.GroupDigits(missingMoney)))
 	end
 end)

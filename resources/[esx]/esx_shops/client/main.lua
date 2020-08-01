@@ -71,10 +71,10 @@ function OpenShopMenu(zone)
 	ESX.TriggerServerCallback('esx_shops:DajDostupnost', function(jelje)
 			if jelje == 1 then
 				table.insert(elements, {
-					label      = "Kupite trgovinu ($10000000)",
+					label      = "Kupite trgovinu ($2000000)",
 					label_real = "kupi",
 					item       = "kupit",
-					price      = 10000000,
+					price      = 2000000,
 				})
 			else
 				ESX.TriggerServerCallback('esx_shops:DalJeVlasnik', function(jelje2)

@@ -183,7 +183,7 @@ RegisterCommand("mute", function(source, args, rawCommandString)
 			local minu = 0
 			id = tonumber(args[1])
 			minu = tonumber(args[2])
-			if id ~= 0 and id ~= nil and minu ~= 0 then
+			if id ~= 0 and id ~= nil and minu ~= 0 and minu ~= nil then
 				TriggerServerEvent("esx_rpchat:MuteGa", id, minu)
 			else
 				name = "Admin"..": "
