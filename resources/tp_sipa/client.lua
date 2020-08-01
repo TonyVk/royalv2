@@ -15,8 +15,10 @@ positions = {
 local player = GetPlayerPed(-1)
 
 Citizen.CreateThread(function ()
+	local waitara = 500
     while true do
-        Citizen.Wait(5)
+        Citizen.Wait(waitara)
+		local naso = 0
         local player = GetPlayerPed(-1)
         local playerLoc = GetEntityCoords(player)
 
@@ -38,8 +40,16 @@ Citizen.CreateThread(function ()
             Green = location[3][2]
             Blue = location[3][3]
 
-            DrawMarker(23, loc1.x, loc1.y, loc1.z, 0, 0, 0, 0, 0, 0, 1.501, 1.5001, 0.5001, Red, Green, Blue, 200, 0, 0, 0, 0)
-			DrawMarker(23, loc2.x, loc2.y, loc2.z, 0, 0, 0, 0, 0, 0, 1.501, 1.5001, 0.5001, Red, Green, Blue, 200, 0, 0, 0, 0)
+			if CheckPos(playerLoc.x, playerLoc.y, playerLoc.z, loc1.x, loc1.y, loc1.z, 10) then 
+				waitara = 0
+				naso = 1
+				DrawMarker(23, loc1.x, loc1.y, loc1.z, 0, 0, 0, 0, 0, 0, 1.501, 1.5001, 0.5001, Red, Green, Blue, 200, 0, 0, 0, 0)
+			end
+			if CheckPos(playerLoc.x, playerLoc.y, playerLoc.z, loc2.x, loc2.y, loc2.z, 10) then
+				waitara = 0
+				naso = 1
+				DrawMarker(23, loc2.x, loc2.y, loc2.z, 0, 0, 0, 0, 0, 0, 1.501, 1.5001, 0.5001, Red, Green, Blue, 200, 0, 0, 0, 0)
+			end
 
             if CheckPos(playerLoc.x, playerLoc.y, playerLoc.z, loc1.x, loc1.y, loc1.z, 2) then 
                 alert(teleport_text)
@@ -68,6 +78,9 @@ Citizen.CreateThread(function ()
                 end
             end            
         end
+		if naso == 0 then
+			waitara = 500
+		end
     end
 end)
 

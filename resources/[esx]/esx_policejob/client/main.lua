@@ -12,6 +12,7 @@ local Cufan = false
 local BVozilo = nil
 local PostavioEUP = false
 local PlayerLoaded = false
+local BrojObjekata = 0
 ESX = nil
 
 Citizen.CreateThread(function()
@@ -25,6 +26,9 @@ Citizen.CreateThread(function()
 	end
 	PlayerLoaded = true
 	PlayerData = ESX.GetPlayerData()
+	ESX.TriggerServerCallback('policija:DohvatiObjekte', function(br)
+		BrojObjekata = br
+	end)
 end)
 
 function cleanPlayer(playerPed)
@@ -963,7 +967,7 @@ function OpenPoliceActionsMenu()
 					SetNetworkIdExistsOnAllMachines(netid, true)
 					SetNetworkIdCanMigrate(netid, false)
 				end)
-				
+				TriggerServerEvent("policija:SpawnoObjekt")
 				SetModelAsNoLongerNeeded(model)
 			end, function(data2, menu2)
 				menu2.close()
@@ -1548,6 +1552,11 @@ function OpenPutStocksMenu()
 	end)
 end
 
+RegisterNetEvent('policija:EoObjekti')
+AddEventHandler('policija:EoObjekti', function(br)
+	BrojObjekata = br
+end)
+
 RegisterNetEvent('esx_policejob:DajNaDuznosti')
 AddEventHandler('esx_policejob:DajNaDuznosti', function()
 	if playerInService == true then
@@ -1690,7 +1699,7 @@ end)
 AddEventHandler('esx_policejob:hasEnteredEntityZone', function(entity)
 	local playerPed = PlayerPedId()
 
-	if PlayerData.job and PlayerData.job.name == 'police' and IsPedOnFoot(playerPed) then
+	if PlayerData.job and (PlayerData.job.name == 'police' or PlayerData.job.name == 'sipa') and IsPedOnFoot(playerPed) then
 		CurrentAction     = 'remove_entity'
 		CurrentActionMsg  = _U('remove_prop')
 		CurrentActionData = {entity = entity}
@@ -2068,9 +2077,8 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
-		local playerPed = PlayerPedId()
-
 		if IsHandcuffed then
+			local playerPed = PlayerPedId()
 			if Vezan == 1 then
 			DisableControlAction(0, 1, true) -- Disable pan
 			DisableControlAction(0, 2, true) -- Disable tilt
@@ -2267,14 +2275,11 @@ Citizen.CreateThread(function()
 	local trackedEntities = {
 		'prop_roadcone02a',
 		'prop_barrier_work05',
-		'p_ld_stinger_s',
-		'prop_boxpile_07d',
-		'hei_prop_cash_crate_half_full'
+		'p_ld_stinger_s'
 	}
-
 	while true do
 		Citizen.Wait(500)
-		--if PlayerData.job and PlayerData.job.name == 'police' then
+		if BrojObjekata > 0 then
 
 			local playerPed = PlayerPedId()
 			local coords    = GetEntityCoords(playerPed)
@@ -2307,7 +2312,7 @@ Citizen.CreateThread(function()
 					LastEntity = nil
 				end
 			end
-		--end
+		end
 	end
 end)
 
@@ -2318,7 +2323,7 @@ Citizen.CreateThread(function()
 		if CurrentAction then
 			ESX.ShowHelpNotification(CurrentActionMsg)
 			
-			if IsControlJustReleased(0, 38) and PlayerData.job and PlayerData.job.name == 'police' then
+			if IsControlJustReleased(0, 38) and PlayerData.job and (PlayerData.job.name == 'police' or PlayerData.job.name == 'sipa') then
 
 				if CurrentAction == 'menu_cloakroom' then
 					OpenCloakroomMenu()
@@ -2364,28 +2369,31 @@ Citizen.CreateThread(function()
 					DeleteObject(CurrentActionData.entity)
 					DeleteEntity(CurrentActionData.entity)
 					ESX.Game.DeleteObject(CurrentActionData.entity)
+					TriggerServerEvent("policija:MakniObjekt")
 				end
 
 				CurrentAction = nil
 			end
 		end -- CurrentAction end
 
-		if IsControlJustReleased(0, 167) and not isDead and PlayerData.job and PlayerData.job.name == 'police' and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'police_actions') then
-			if Config.MaxInService == -1 then
-				OpenPoliceActionsMenu()
-			elseif playerInService then
-				OpenPoliceActionsMenu()
-			else
-				ESX.ShowNotification(_U('service_not'))
+		if PlayerData.job and PlayerData.job.name == 'police' then
+			if IsControlJustReleased(0, 167) and not isDead and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'police_actions') then
+				if Config.MaxInService == -1 then
+					OpenPoliceActionsMenu()
+				elseif playerInService then
+					OpenPoliceActionsMenu()
+				else
+					ESX.ShowNotification(_U('service_not'))
+				end
 			end
-		end
 
-		if IsControlJustReleased(0, 38) and currentTask.busy then
-			ESX.ShowNotification(_U('impound_canceled'))
-			ESX.ClearTimeout(currentTask.task)
-			ClearPedTasks(PlayerPedId())
+			if IsControlJustReleased(0, 38) and currentTask.busy then
+				ESX.ShowNotification(_U('impound_canceled'))
+				ESX.ClearTimeout(currentTask.task)
+				ClearPedTasks(PlayerPedId())
 
-			currentTask.busy = false
+				currentTask.busy = false
+			end
 		end
 	end
 end)
@@ -2432,7 +2440,7 @@ AddEventHandler('esx_policejob:updateBlip', function()
 	if PlayerData.job and PlayerData.job.name == 'police' then
 		ESX.TriggerServerCallback('esx_society:getOnlinePlayers', function(players)
 			for i=1, #players, 1 do
-				if players[i].job.name == 'police' then
+				if players[i].job.name == 'police' or players[i].job.name == 'sipa' then
 					local id = GetPlayerFromServerId(players[i].source)
 					if NetworkIsPlayerActive(id) and GetPlayerPed(id) ~= PlayerPedId() then
 						createBlip(id)
@@ -2450,6 +2458,9 @@ AddEventHandler('playerSpawned', function(spawn)
 
 	if not hasAlreadyJoined then
 		TriggerServerEvent('esx_policejob:spawned')
+		ESX.TriggerServerCallback('policija:DohvatiObjekte', function(br)
+			BrojObjekata = br
+		end)
 	end
 	hasAlreadyJoined = true
 end)

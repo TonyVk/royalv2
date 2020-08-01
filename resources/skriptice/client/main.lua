@@ -543,10 +543,10 @@ Citizen.CreateThread(function()
 	end
 	local Cekaj = 500
     while true do
-		local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
-		if closestPlayer ~= -1 and closestDistance < 10.0 then
+		local players = ESX.Game.GetPlayersInArea(GetEntityCoords(PlayerPedId()), 10.0)
+		if #players > 1 then
 			Cekaj = 10
-			for _,id in ipairs(GetActivePlayers()) do
+			for _,id in ipairs(players) do
 				if GetPlayerPed( id ) ~= GetPlayerPed( -1 ) then
 	 
 					x1, y1, z1 = table.unpack( GetEntityCoords( GetPlayerPed( -1 ), true ) )
@@ -655,7 +655,6 @@ function SetProned()
 	ped = PlayerPedId()
 	ClearPedTasksImmediately(ped)
 	TaskPlayAnimAdvanced(ped, "move_crawl", "onfront_fwd", GetEntityCoords(ped), 0.0, 0.0, GetEntityHeading(ped), 1.0, 1.0, 1.0, 46, 1.0, 0, 0)
-	RemoveAnimSet("move_crawl")
 end
 
 
@@ -997,38 +996,24 @@ Citizen.CreateThread(function()
 			DisableControlAction( 0, crouchKey, true ) 
 			if ( not IsPauseMenuActive() ) then 
 				if ( IsDisabledControlJustPressed( 0, crouchKey ) and not proned ) then 
-					RequestAnimSet("move_ped_crouched")
-					RequestAnimSet("MOVE_M@TOUGH_GUY@")
-					
-					while ( not HasAnimSetLoaded( "move_ped_crouched" ) ) do 
-						Citizen.Wait( 100 )
-					end 
-					while ( not HasAnimSetLoaded( "MOVE_M@TOUGH_GUY@" ) ) do 
-						Citizen.Wait( 100 )
-					end 		
+					ESX.Streaming.RequestAnimSet("move_ped_crouched")
+					ESX.Streaming.RequestAnimSet("MOVE_M@TOUGH_GUY@")		
 					if ( crouched and not proned ) then 
 						ResetPedMovementClipset( ped )
 						ResetPedStrafeClipset(ped)
 						SetPedMovementClipset( ped,"MOVE_M@TOUGH_GUY@", 0.5)
 						crouched = false
-						RemoveAnimSet("move_ped_crouched")
-						RemoveAnimSet("MOVE_M@TOUGH_GUY@")
 					elseif ( not crouched and not proned ) then
 						SetPedMovementClipset( ped, "move_ped_crouched", 0.55 )
 						SetPedStrafeClipset(ped, "move_ped_crouched_strafing")
 						crouched = true 
-						RemoveAnimSet("move_ped_crouched")
-						RemoveAnimSet("MOVE_M@TOUGH_GUY@")
 					end 
 				elseif ( IsDisabledControlJustPressed(0, proneKey) and not crouched and not IsPedInAnyVehicle(ped, true) and not IsPedFalling(ped) and not IsPedDiving(ped) and not IsPedInCover(ped, false) and not IsPedInParachuteFreeFall(ped) and (GetPedParachuteState(ped) == 0 or GetPedParachuteState(ped) == -1) ) then
 					if proned then
 						ClearPedTasksImmediately(ped)
 						proned = false
 					elseif not proned then
-						RequestAnimSet( "move_crawl" )
-						while ( not HasAnimSetLoaded( "move_crawl" ) ) do 
-							Citizen.Wait( 100 )
-						end 
+						ESX.Streaming.RequestAnimSet( "move_crawl" )
 						ClearPedTasksImmediately(ped)
 						proned = true
 						if IsPedSprinting(ped) or IsPedRunning(ped) or GetEntitySpeed(ped) > 5 then

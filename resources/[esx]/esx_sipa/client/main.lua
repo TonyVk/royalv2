@@ -875,7 +875,7 @@ function OpenPoliceActionsMenu()
 					SetNetworkIdExistsOnAllMachines(netid, true)
 					SetNetworkIdCanMigrate(netid, true)
 				end)
-				
+				TriggerServerEvent("policija:SpawnoObjekt")
 				SetModelAsNoLongerNeeded(model)
 			end, function(data2, menu2)
 				menu2.close()
@@ -2120,55 +2120,6 @@ Citizen.CreateThread(function()
 	end
 end)
 
--- Enter / Exit entity zone events
-Citizen.CreateThread(function()
-	local trackedEntities = {
-		'prop_roadcone02a',
-		'prop_barrier_work05',
-		'p_ld_stinger_s',
-		'prop_boxpile_07d',
-		'hei_prop_cash_crate_half_full'
-	}
-
-	while true do
-		Citizen.Wait(500)
-		--if PlayerData.job and PlayerData.job.name == 'sipa' then
-
-			local playerPed = PlayerPedId()
-			local coords    = GetEntityCoords(playerPed)
-
-			local closestDistance = -1
-			local closestEntity   = nil
-
-			for i=1, #trackedEntities, 1 do
-				local object = GetClosestObjectOfType(coords, 3.0, GetHashKey(trackedEntities[i]), false, false, false)
-
-				if DoesEntityExist(object) then
-					local objCoords = GetEntityCoords(object)
-					local distance  = GetDistanceBetweenCoords(coords, objCoords, true)
-
-					if closestDistance == -1 or closestDistance > distance then
-						closestDistance = distance
-						closestEntity   = object
-					end
-				end
-			end
-
-			if closestDistance ~= -1 and closestDistance <= 3.0 then
-				if LastEntity ~= closestEntity then
-					TriggerEvent('esx_sipa:hasEnteredEntityZone', closestEntity)
-					LastEntity = closestEntity
-				end
-			else
-				if LastEntity then
-					TriggerEvent('esx_sipa:hasExitedEntityZone', LastEntity)
-					LastEntity = nil
-				end
-			end
-		--end
-	end
-end)
-
 -- Key Controls
 Citizen.CreateThread(function()
 	while true do
@@ -2290,7 +2241,7 @@ AddEventHandler('esx_sipa:updateBlip', function()
 	if PlayerData.job and PlayerData.job.name == 'sipa' then
 		ESX.TriggerServerCallback('esx_society:getOnlinePlayers', function(players)
 			for i=1, #players, 1 do
-				if players[i].job.name == 'sipa' then
+				if players[i].job.name == 'sipa' or players[i].job.name == 'police' then
 					local id = GetPlayerFromServerId(players[i].source)
 					if NetworkIsPlayerActive(id) and GetPlayerPed(id) ~= PlayerPedId() then
 						createBlip(id)

@@ -256,7 +256,7 @@ Citizen.CreateThread(function()
 	end
 
     while true do
-        Wait(500)
+        Citizen.Wait(1500)
         for k, v in pairs(Config.Houses) do
             if Vdist2(GetEntityCoords(PlayerPedId()), v['door']) <= 2.5 then
                 local text = 'error'

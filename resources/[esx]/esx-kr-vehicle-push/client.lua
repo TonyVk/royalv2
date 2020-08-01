@@ -8,7 +8,7 @@ Citizen.CreateThread(function()
 end)
 
 Config = {} 
-Config.DamageNeeded = 60.0 -- 100.0 being broken and 1000.0 being fixed a lower value than 100.0 will break it
+Config.DamageNeeded = 90.0 -- 100.0 being broken and 1000.0 being fixed a lower value than 100.0 will break it
 Config.MaxWidth = 5.0 -- Will complete soon
 Config.MaxHeight = 5.0
 Config.MaxLength = 5.0
@@ -33,22 +33,24 @@ Citizen.CreateThread(function()
     Citizen.Wait(200)
     while true do
         local ped = PlayerPedId()
-        local closestVehicle, Distance = ESX.Game.GetClosestVehicle()
-        local vehicleCoords = GetEntityCoords(closestVehicle)
-        local dimension = GetModelDimensions(GetEntityModel(closestVehicle), First, Second)
-        if Distance < 6.0  and not IsPedInAnyVehicle(ped, false) then
-            Vehicle.Coords = vehicleCoords
-            Vehicle.Dimensions = dimension
-            Vehicle.Vehicle = closestVehicle
-            Vehicle.Distance = Distance
-            if GetDistanceBetweenCoords(GetEntityCoords(closestVehicle) + GetEntityForwardVector(closestVehicle), GetEntityCoords(ped), true) > GetDistanceBetweenCoords(GetEntityCoords(closestVehicle) + GetEntityForwardVector(closestVehicle) * -1, GetEntityCoords(ped), true) then
-                Vehicle.IsInFront = false
-            else
-                Vehicle.IsInFront = true
-            end
-        else
-            Vehicle = {Coords = nil, Vehicle = nil, Dimensions = nil, IsInFront = false, Distance = nil}
-        end
+		if not IsPedInAnyVehicle(ped, false) then
+			local closestVehicle, Distance = ESX.Game.GetClosestVehicle()
+			if Distance < 6.0 then
+				local vehicleCoords = GetEntityCoords(closestVehicle)
+				local dimension = GetModelDimensions(GetEntityModel(closestVehicle), First, Second)
+				Vehicle.Coords = vehicleCoords
+				Vehicle.Dimensions = dimension
+				Vehicle.Vehicle = closestVehicle
+				Vehicle.Distance = Distance
+				if GetDistanceBetweenCoords(GetEntityCoords(closestVehicle) + GetEntityForwardVector(closestVehicle), GetEntityCoords(ped), true) > GetDistanceBetweenCoords(GetEntityCoords(closestVehicle) + GetEntityForwardVector(closestVehicle) * -1, GetEntityCoords(ped), true) then
+					Vehicle.IsInFront = false
+				else
+					Vehicle.IsInFront = true
+				end
+			else
+				Vehicle = {Coords = nil, Vehicle = nil, Dimensions = nil, IsInFront = false, Distance = nil}
+			end
+		end
         Citizen.Wait(500)
     end
 end)
@@ -57,9 +59,8 @@ end)
 Citizen.CreateThread(function()
     while true do 
         Citizen.Wait(5)
-        local ped = PlayerPedId()
         if Vehicle.Vehicle ~= nil then
- 
+			local ped = PlayerPedId()
                 if IsVehicleSeatFree(Vehicle.Vehicle, -1) and GetVehicleEngineHealth(Vehicle.Vehicle) <= Config.DamageNeeded then
                     ESX.Game.Utils.DrawText3D({x = Vehicle.Coords.x, y = Vehicle.Coords.y, z = Vehicle.Coords.z}, 'Pritisnite [~g~SHIFT~w~] i [~g~E~w~] da gurate vozilo', 0.4)
                 end

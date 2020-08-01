@@ -152,57 +152,60 @@ Citizen.CreateThread(function()
 			hasAlreadyEnteredMarker = false
 			TriggerEvent('pkuca:hasExitedMarker', lastZone)
 		end
-		for k, v in pairs(Config.Houses) do
-			local vrataCoords = v['door']
-			local xo,yo,zo = table.unpack(v['door'])
-			if GetDistanceBetweenCoords(vrataCoords, GetEntityCoords(PlayerPedId()), true) <= 2 then
-				waitara = 0
-				naso = 1
-				if IsControlJustPressed(0, 24) or IsControlJustPressed(0, 140) then
-					if Minute <= 0 then
-						local retval = GetSelectedPedWeapon(PlayerPedId())
-						if retval == GetHashKey("WEAPON_CROWBAR") then
-							if zadnjakuca ~= nil then
-								if zadnjakuca ~= k then
+		local retval = GetSelectedPedWeapon(PlayerPedId())
+		if retval == GetHashKey("WEAPON_CROWBAR") then
+			for k, v in pairs(Config.Houses) do
+				local vrataCoords = v['door']
+				local xo,yo,zo = table.unpack(v['door'])
+				if GetDistanceBetweenCoords(vrataCoords, GetEntityCoords(PlayerPedId()), true) <= 2 then
+					waitara = 0
+					naso = 1
+					if IsControlJustPressed(0, 24) or IsControlJustPressed(0, 140) then
+						if Minute <= 0 then
+							local retval = GetSelectedPedWeapon(PlayerPedId())
+							if retval == GetHashKey("WEAPON_CROWBAR") then
+								if zadnjakuca ~= nil then
+									if zadnjakuca ~= k then
+										brojac = 0
+									end
+								end
+								zadnjakuca = k
+								brojac = brojac+1
+								Citizen.Wait(1000)
+								if brojac == 10 then
+									DoScreenFadeOut(100)
+									while not IsScreenFadedOut() do
+										Wait(1)
+									end
+									local alarm = math.random(1,10)
+									if alarm == 1 or alarm == 3 or alarm == 5 or alarm == 7 or alarm == 9 then
+										local PlayerCoords = { x = xo, y = yo, z = zo }
+										TriggerServerEvent('esx_addons_gcphone:startCall', 'police', "Oglasio se glasan alarm u kuci", PlayerCoords, {
+											PlayerCoords = { x = xo, y = yo, z = zo },
+										})
+									end
+									kuca = math.random(1, 3)
+									ulaz = GetEntityCoords(PlayerPedId())
+									local ime = "Pljacka"..GetPlayerServerId(PlayerId())
+									TriggerEvent('instance:create', 'pljacka', {property = ime, owner = ESX.GetPlayerData().identifier})
+									SetEntityCoords(PlayerPedId(), interijeri[kuca].x, interijeri[kuca].y, interijeri[kuca].z)
+									izlaz = vector3(interijeri[kuca].x, interijeri[kuca].y, interijeri[kuca].z)
 									brojac = 0
+									unutra = true
+									TriggerServerEvent("pkuca:SpremiVrijeme", 30)
+									Minute = 30
+									Wait(300)
+									DoScreenFadeIn(100)
 								end
 							end
-							zadnjakuca = k
-							brojac = brojac+1
-							Citizen.Wait(1000)
-							if brojac == 10 then
-								DoScreenFadeOut(100)
-								while not IsScreenFadedOut() do
-									Wait(1)
-								end
-								local alarm = math.random(1,10)
-								if alarm == 1 or alarm == 3 or alarm == 5 or alarm == 7 or alarm == 9 then
-									local PlayerCoords = { x = xo, y = yo, z = zo }
-									TriggerServerEvent('esx_addons_gcphone:startCall', 'police', "Oglasio se glasan alarm u kuci", PlayerCoords, {
-										PlayerCoords = { x = xo, y = yo, z = zo },
-									})
-								end
-								kuca = math.random(1, 3)
-								ulaz = GetEntityCoords(PlayerPedId())
-								local ime = "Pljacka"..GetPlayerServerId(PlayerId())
-								TriggerEvent('instance:create', 'pljacka', {property = ime, owner = ESX.GetPlayerData().identifier})
-								SetEntityCoords(PlayerPedId(), interijeri[kuca].x, interijeri[kuca].y, interijeri[kuca].z)
-								izlaz = vector3(interijeri[kuca].x, interijeri[kuca].y, interijeri[kuca].z)
-								brojac = 0
-								unutra = true
-								TriggerServerEvent("pkuca:SpremiVrijeme", 30)
-								Minute = 30
-								Wait(300)
-								DoScreenFadeIn(100)
-							end
-						end
-					else
-						if Minute >= 2 and Minute <= 4 then
-							ESX.ShowNotification("Vi ne mozete pljackati novu kucu jos "..Minute.." minute")
-						elseif Minute == 1 then
-							ESX.ShowNotification("Vi ne mozete pljackati novu kucu jos "..Minute.." minutu")
 						else
-							ESX.ShowNotification("Vi ne mozete pljackati novu kucu jos "..Minute.." minuta")
+							if Minute >= 2 and Minute <= 4 then
+								ESX.ShowNotification("Vi ne mozete pljackati novu kucu jos "..Minute.." minute")
+							elseif Minute == 1 then
+								ESX.ShowNotification("Vi ne mozete pljackati novu kucu jos "..Minute.." minutu")
+							else
+								ESX.ShowNotification("Vi ne mozete pljackati novu kucu jos "..Minute.." minuta")
+							end
 						end
 					end
 				end

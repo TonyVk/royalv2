@@ -1,6 +1,7 @@
 ESX = nil
 
 local Cuffan = {}
+local BrojObjekata = 0
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -68,6 +69,25 @@ AddEventHandler('popo:zapljeni9', function(target, itemType, itemName, amount)
         --TriggerClientEvent('esx:showNotification', _source, _U('you_confiscated_weapon', ESX.GetWeaponLabel(itemName), targetXPlayer.name, amount))
         TriggerClientEvent('esx:showNotification', target,  _U('got_confiscated_weapon', ESX.GetWeaponLabel(itemName), amount, sourceXPlayer.name))
     end
+end)
+
+RegisterNetEvent('policija:SpawnoObjekt')
+AddEventHandler('policija:SpawnoObjekt', function()
+	BrojObjekata = BrojObjekata+1
+	TriggerClientEvent("policija:EoObjekti", -1, BrojObjekata)
+end)
+
+RegisterNetEvent('policija:MakniObjekt')
+AddEventHandler('policija:MakniObjekt', function()
+	BrojObjekata = BrojObjekata-1
+	if BrojObjekata < 0 then
+		BrojObjekata = 0
+	end
+	TriggerClientEvent("policija:EoObjekti", -1, BrojObjekata)
+end)
+
+ESX.RegisterServerCallback('policija:DohvatiObjekte', function(source, cb)
+	cb(BrojObjekata)
 end)
 
 RegisterNetEvent('esx_qalle_brottsregister:add')
