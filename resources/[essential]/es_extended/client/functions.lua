@@ -629,6 +629,8 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 	local color1, color2 = GetVehicleColours(vehicle)
 	local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
 	local svijetlaColor = GetVehicleXenonLightsColour(vehicle)
+	local nr, ng, nb = GetVehicleNeonLightsColour(vehicle)
+	local sr, sg, sb = GetVehicleTyreSmokeColor(vehicle)
 	local extras = {}
 
 	for id=0, 12 do
@@ -667,8 +669,8 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 
 		extras            = extras,
 
-		neonColor         = table.pack(GetVehicleNeonLightsColour(vehicle)),
-		tyreSmokeColor    = table.pack(GetVehicleTyreSmokeColor(vehicle)),
+		neonColor         = { nr, ng, nb },
+		tyreSmokeColor    = { sr, sg, sb },
 
 		modSpoilers       = GetVehicleMod(vehicle, 0),
 		modFrontBumper    = GetVehicleMod(vehicle, 1),
@@ -754,10 +756,6 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 	if props.pearlescentColor ~= nil then
 		local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
 		SetVehicleExtraColours(vehicle, props.pearlescentColor, wheelColor)
-	end
-	
-	if props.svijetlaColor ~= nil then
-		SetVehicleHeadlightsColour(vehicle, props.svijetlaColor)
 	end
 
 	if props.wheelColor ~= nil then
@@ -977,6 +975,10 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 	if props.modLivery ~= nil then
 		SetVehicleMod(vehicle, 48, props.modLivery, false)
 		SetVehicleLivery(vehicle, props.modLivery)
+	end
+	
+	if props.svijetlaColor ~= nil then
+		SetVehicleHeadlightsColour(vehicle, props.svijetlaColor)
 	end
 end
 
