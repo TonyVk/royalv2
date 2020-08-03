@@ -134,7 +134,7 @@ RegisterCommand("uredimafiju", function(source, args, raw)
 				end
 			end
 			
-			table.insert(elements, {label = "Kreiraj mafiju", value = "nova"})
+			table.insert(elements, {label = "Kreiraj mafiju", value = "novamaf"})
 
 			ESX.UI.Menu.Open(
 				'default', GetCurrentResourceName(), 'umafiju',
@@ -144,7 +144,7 @@ RegisterCommand("uredimafiju", function(source, args, raw)
 					elements = elements,
 				},
 				function(data, menu)
-					if data.current.value == "nova" then
+					if data.current.value == "novamaf" then
 						ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'rankime', {
 							title = "Upisite ime mafije",
 						}, function (datari, menuri)
@@ -2229,7 +2229,7 @@ AddEventHandler('mafije:KreirajBlip', function(co, maf)
 
 	BeginTextCommandSetBlipName("STRING")
 	for j=1, #Mafije, 1 do
-		if Mafije[j] ~= nil and Mafije[j].Ime == Koord[i].Mafija then
+		if Mafije[j] ~= nil and Mafije[j].Ime == maf then
 			AddTextComponentString(firstToUpper(Mafije[j].Label))
 			break
 		end

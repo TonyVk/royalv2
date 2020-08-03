@@ -68,7 +68,7 @@ Config.Zones = {
 		Robbed						= 0, -- DO NOT CHANGE
 		TimeToRob					= 400,
 		TimeBeforeNewRob 	= 3600,
-		PoliceRequired		= 2,
+		PoliceRequired		= 3,
 		Tip = 1
 	},
 	["LTD Gasoline Grove Street"] = {
@@ -84,7 +84,7 @@ Config.Zones = {
 		Robbed						= 0, -- DO NOT CHANGE
 		TimeToRob					= 420,
 		TimeBeforeNewRob 	= 3600,
-		PoliceRequired		= 2,
+		PoliceRequired		= 3,
 		Tip = 1
 	},
 	
@@ -101,7 +101,7 @@ Config.Zones = {
 		Robbed						= 0, -- DO NOT CHANGE
 		TimeToRob					= 400,
 		TimeBeforeNewRob 	= 3600,
-		PoliceRequired		= 2,
+		PoliceRequired		= 3,
 		Tip = 1
 	},
 	
@@ -118,7 +118,7 @@ Config.Zones = {
 		Robbed						= 0, -- DO NOT CHANGE
 		TimeToRob					= 420,
 		TimeBeforeNewRob 	= 3600,
-		PoliceRequired		= 2,
+		PoliceRequired		= 3,
 		Tip = 1
 	},
 	
@@ -135,7 +135,7 @@ Config.Zones = {
 		Robbed						= 0, -- DO NOT CHANGE
 		TimeToRob					= 420,
 		TimeBeforeNewRob 	= 3600,
-		PoliceRequired		= 2,
+		PoliceRequired		= 3,
 		Tip = 1
 	},
 	
@@ -152,7 +152,7 @@ Config.Zones = {
 		Robbed						= 0, -- DO NOT CHANGE
 		TimeToRob					= 420,
 		TimeBeforeNewRob 	= 3600,
-		PoliceRequired		= 2,
+		PoliceRequired		= 3,
 		Tip = 1
 	},
 	
@@ -169,7 +169,7 @@ Config.Zones = {
 		Robbed						= 0, -- DO NOT CHANGE
 		TimeToRob					= 420,
 		TimeBeforeNewRob 	= 3600,
-		PoliceRequired		= 2,
+		PoliceRequired		= 3,
 		Tip = 1
 	},
 	
@@ -186,7 +186,7 @@ Config.Zones = {
 		Robbed						= 0, -- DO NOT CHANGE
 		TimeToRob					= 420,
 		TimeBeforeNewRob 	= 3600,
-		PoliceRequired		= 2,
+		PoliceRequired		= 3,
 		Tip = 1
 	},
 	
@@ -203,7 +203,7 @@ Config.Zones = {
 		Robbed						= 0, -- DO NOT CHANGE
 		TimeToRob					= 420,
 		TimeBeforeNewRob 	= 3600,
-		PoliceRequired		= 2,
+		PoliceRequired		= 3,
 		Tip = 1
 	},
 	
@@ -220,7 +220,7 @@ Config.Zones = {
 		Robbed						= 0, -- DO NOT CHANGE
 		TimeToRob					= 400,
 		TimeBeforeNewRob 	= 3600,
-		PoliceRequired		= 2,
+		PoliceRequired		= 3,
 		Tip = 1
 	},
 	
@@ -237,7 +237,7 @@ Config.Zones = {
 		Robbed						= 0, -- DO NOT CHANGE
 		TimeToRob					= 400,
 		TimeBeforeNewRob 	= 3600,
-		PoliceRequired		= 2,
+		PoliceRequired		= 3,
 		Tip = 1
 	},
 	
@@ -255,7 +255,7 @@ Config.Zones = {
 		Robbed						= 0, -- DO NOT CHANGE
 		TimeToRob					= 440,
 		TimeBeforeNewRob 	= 7200,
-		PoliceRequired		= 2,
+		PoliceRequired		= 5,
 		Tip = 2
 	},
 
@@ -271,7 +271,7 @@ Config.Zones = {
 		Robbed						= 0, -- DO NOT CHANGE
 		TimeToRob					= 480,
 		TimeBeforeNewRob 	= 7200,
-		PoliceRequired		= 3,
+		PoliceRequired		= 7,
 		Tip = 2,
 		Hack = vector3(146.83, -1046.05, 29.36),
 		["Bank_Vault"] = {
@@ -294,7 +294,7 @@ Config.Zones = {
 		Robbed						= 0, -- DO NOT CHANGE
 		TimeToRob					= 480,
 		TimeBeforeNewRob 	= 7200,
-		PoliceRequired		= 3,
+		PoliceRequired		= 7,
 		Tip = 2,
 		Hack = vector3(-1210.90, -336.67, 37.78),
 		["Bank_Vault"] = {
@@ -317,7 +317,7 @@ Config.Zones = {
 		Robbed						= 0, -- DO NOT CHANGE
 		TimeToRob					= 480,
 		TimeBeforeNewRob 	= 7200,
-		PoliceRequired		= 3,
+		PoliceRequired		= 7,
 		Tip = 2,
 		Hack = vector3(-2956.47, 481.52, 15.69),
 		["Bank_Vault"] = {

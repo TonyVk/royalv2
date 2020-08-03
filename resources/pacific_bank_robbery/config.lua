@@ -2,7 +2,7 @@ Config = {}
 
 Config.ItemNeeded = "net_cracker"
 Config.MaxLives = 3 -- this is the max lives in hacking thing don't set more than 5. thank you
-Config.CopsNeeded = 1 -- number of cops required to start the robbery
+Config.CopsNeeded = 7 -- number of cops required to start the robbery
 Config.BlackMoney = false -- true for black_money and false for cash
 Config.AlertInChat = false -- true or false only
 Config.AlertInChatMessage = "'NEWS' ^7 Robbery in progress at ^1"
@@ -11,7 +11,7 @@ Config.PhoneHackDifficulty = 7
 Config.PhoneHackTime = 150
 
 Config.Trolley = {
-    ["cash"] = { 1000, 1700 }, -- this is what you receive every cash stack math.random(1, 2)
+    ["cash"] = { 2100, 2700 }, -- this is what you receive every cash stack math.random(1, 2)
     ["model"] = GetHashKey("hei_prop_hei_cash_trolly_01")
 }
 

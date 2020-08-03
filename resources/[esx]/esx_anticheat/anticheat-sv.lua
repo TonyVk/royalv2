@@ -71,23 +71,51 @@ local ExplosionTypes = {
 local BlockedExplosions = {1, 2, 4, 5, 18, 25, 29, 32, 33, 35, 36, 37, 38}
 
 AddEventHandler('explosionEvent', function(sender, ev)
+	for _, v in ipairs(BlockedExplosions) do
+		if ev.explosionType == v then
+			CancelEvent()
+		end
+    end
 	if ev.explosionType ~= 0 and ev.explosionType ~= 13 and ev.explosionType ~= 30 and ev.explosionType ~= 12 and ev.explosionType ~= 34 and ev.explosionType ~= 22 then
 		TriggerEvent("DiscordBot:Anticheat", GetPlayerName(sender).."("..sender..") je napravio eksploziju (Tip eksplozije: "..ExplosionTypes[ev.explosionType+1].."["..ev.explosionType.."])")
 		if ev.explosionType == 18 or ev.explosionType == 4 or ev.explosionType == 29 or ev.explosionType == 1 or ev.explosionType == 5 or ev.explosionType == 2 then
 			TriggerEvent("AntiCheat:Citer", sender)
 		end
 	end
-	for _, v in ipairs(BlockedExplosions) do
-		if ev.explosionType == v then
-			CancelEvent()
-			return
-		end
-    end
 end)
 
 AddEventHandler("entityCreated",  function(entity)
-	local entID = NetworkGetNetworkIdFromEntity(entity)
-	TriggerClientEvent("anticheat:ObrisiPeda", NetworkGetEntityOwner(entity), NetworkGetEntityOwner(entity), entID, GetPlayerName(NetworkGetEntityOwner(entity)))
+	--local entID = NetworkGetNetworkIdFromEntity(entity)
+	--TriggerClientEvent("anticheat:ObrisiPeda", NetworkGetEntityOwner(entity), NetworkGetEntityOwner(entity), entID, GetPlayerName(NetworkGetEntityOwner(entity)))
+end)
+
+local CheaterObjects = {
+	"prop_gold_cont_01",
+	"p_cablecar_s",
+	"stt_prop_stunt_tube_l",
+	"stt_prop_stunt_track_dwuturn",
+	"prop_fnclink_05crnr1",
+	"cargoplane",
+	"prop_beach_fire",
+	"stt_prop_stunt_soccer_ball",
+	"xs_prop_hamburgher_wl",
+	"sr_prop_spec_tube_xxs_01a",
+	"armytanker",
+	"a_m_o_acult_01",
+	"s_m_y_swat_01"
+}
+
+AddEventHandler("entityCreating",  function(handle)
+	local source = NetworkGetEntityOwner(handle)
+	local model = GetEntityModel(handle)
+    
+	for i=1,#CheaterObjects do
+		local modele = (type(CheaterObjects[i]) == 'number' and CheaterObjects[i] or GetHashKey(CheaterObjects[i]))
+		if model == modele then
+			TriggerEvent("DiscordBot:Anticheat", GetPlayerName(source).."["..source.."] je spawn zabranjen objekt/NPC-a ["..CheaterObjects[model].."]")
+			CancelEvent()
+		end
+	end
 end)
 
 --Fake eventi

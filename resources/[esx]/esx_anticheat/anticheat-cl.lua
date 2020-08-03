@@ -171,25 +171,6 @@ function Initialize(scaleform)
     return scaleform
 end
 
-CageObjs = {
-	"prop_gold_cont_01",
-	"p_cablecar_s",
-	"stt_prop_stunt_tube_l",
-	"stt_prop_stunt_track_dwuturn",
-	"prop_fnclink_05crnr1",
-	"cargoplane",
-	"prop_beach_fire",
-	"stt_prop_stunt_soccer_ball",
-	"xs_prop_hamburgher_wl",
-	"sr_prop_spec_tube_xxs_01a",
-	"armytanker",
-	-145066854
-}
-
-PedObjs = {
-	"a_m_o_acult_01"
-}
-
 RegisterNetEvent('anticheat:ObrisiPeda')
 AddEventHandler('anticheat:ObrisiPeda', function(id, ent, ime)
 	local retval = NetworkGetEntityFromNetworkId(ent)
