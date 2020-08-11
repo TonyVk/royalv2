@@ -27,6 +27,15 @@ AddEventHandler('gepeke:getOwnedVehicule', function()
         end)
 end)
 
+AddEventHandler('esx:playerDropped', function(playerID, reason)
+	for _, v in pairs(VehicleList) do
+        if (playerID == v.id) then
+			TriggerEvent('gepeke:RemoveVehicleList', v.vehicleplate)
+            break
+        end
+    end
+end)
+
 RegisterServerEvent('gepeke:getInventory')
 AddEventHandler('gepeke:getInventory', function(plate)
     local inventory_ = {}
@@ -142,7 +151,6 @@ ESX.RegisterServerCallback('esx_truck:checkvehicle', function(source, cb, vehicl
             if (plate == v.vehicleplate) then
                 isFound = true
                 break
-            
             end
         end
     else
@@ -154,6 +162,7 @@ end)
 RegisterServerEvent('gepeke:AddVehicleList')
 AddEventHandler('gepeke:AddVehicleList', function(plate)
     local plateisfound = false
+	local _source = source
     if plate ~= " " or plate ~= nil or plate ~= "" then
         for _, v in pairs(VehicleList) do
             if (plate == v.vehicleplate) then
@@ -162,7 +171,7 @@ AddEventHandler('gepeke:AddVehicleList', function(plate)
             end
         end
         if not plateisfound then
-            table.insert(VehicleList, {vehicleplate = plate})
+            table.insert(VehicleList, {vehicleplate = plate, id = _source})
         end
     end
 end)

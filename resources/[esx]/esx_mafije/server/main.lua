@@ -208,6 +208,7 @@ AddEventHandler('mafije:ObrisiMafiju', function(maf)
 		for i=1, #Mafije, 1 do
 			if Mafije[i] ~= nil and Mafije[i].Ime == maf then
 				Postoji = 1
+				table.remove(Mafije, i)
 			end
 		end
 		if Postoji == 1 then
@@ -215,44 +216,33 @@ AddEventHandler('mafije:ObrisiMafiju', function(maf)
 				['@ime'] = maf
 			})
 			
-			for i=1, #Mafije, 1 do
-				if Mafije[i] ~= nil and Mafije[i].Ime == maf then
-					Mafije[i].Ime = nil
-					Mafije[i] = nil
-				end
-			end
 			for i=1, #Koord, 1 do
 				if Koord[i] ~= nil and Koord[i].Mafija == maf then
-					Koord[i].Mafija = nil
-					Koord[i] = nil
+					table.remove(Koord, i)
 				end
 			end
 			
 			for i=1, #Rankovi, 1 do
 				if Rankovi[i] ~= nil and Rankovi[i].Mafija == maf then
-					Rankovi[i].Mafija = nil
-					Rankovi[i] = nil
+					table.remove(Rankovi, i)
 				end
 			end
 			
 			for i=1, #Vozila, 1 do
 				if Vozila[i] ~= nil and Vozila[i].Mafija == maf then
-					Vozila[i].Mafija = nil
-					Vozila[i] = nil
+					table.remove(Vozila, i)
 				end
 			end
 			
 			for i=1, #Oruzja, 1 do
 				if Oruzja[i] ~= nil and Oruzja[i].Mafija == maf then
-					Oruzja[i].Mafija = nil
-					Oruzja[i] = nil
+					table.remove(Oruzja, i)
 				end
 			end
 			
 			for i=1, #Boje, 1 do
 				if Boje[i] ~= nil and Boje[i].Mafija == maf then
-					Boje[i].Mafija = nil
-					Boje[i] = nil
+					table.remove(Boje, i)
 				end
 			end
 			
@@ -296,71 +286,13 @@ AddEventHandler('mafije:ObrisiMafiju', function(maf)
 				TriggerEvent("RefreshDatastore")
 				TriggerEvent("RefreshInventory")
 				TriggerEvent("RefreshPoslove")
-				Mafije = {}
-				Rankovi = {}
-				Koord = {}
-				Vozila = {}
-				Oruzja = {}
-				Boje = {}
-				MySQL.Async.fetchAll(
-				  'SELECT * FROM mafije',
-				  {},
-				  function(result)
-					for i=1, #result, 1 do
-						local soc = "society_"..result[i].Ime
-						TriggerEvent("RefreshAddone")
-						TriggerEvent("RefreshSociety")
-						TriggerEvent('esx_society:registerSociety', result[i].Ime, result[i].Label, soc, soc, soc, {type = 'public'})
-						table.insert(Mafije, {Ime = result[i].Ime, Label = result[i].Label})
-						local data = json.decode(result[i].Rankovi)
-						if data ~= nil then
-							for a=1, #data do
-								table.insert(Rankovi, {ID = data[a].ID, Mafija = result[i].Ime, Ime = data[a].Ime})
-							end
-						end
-						local data2 = json.decode(result[i].Oruzarnica)
-						table.insert(Koord, {Mafija = result[i].Ime, Ime = "Oruzarnica", Coord = data2})
-						data2 = json.decode(result[i].Lider)
-						table.insert(Koord, {Mafija = result[i].Ime, Ime = "Lider", Coord = data2})
-						data2 = json.decode(result[i].SpawnV)
-						table.insert(Koord, {Mafija = result[i].Ime, Ime = "SpawnV", Coord = data2})
-						data2 = json.decode(result[i].DeleteV)
-						table.insert(Koord, {Mafija = result[i].Ime, Ime = "DeleteV", Coord = data2})
-						data2 = json.decode(result[i].LokVozila)
-						table.insert(Koord, {Mafija = result[i].Ime, Ime = "LokVozila", Coord = data2})
-						data2 = json.decode(result[i].CrateDrop)
-						table.insert(Koord, {Mafija = result[i].Ime, Ime = "CrateDrop", Coord = data2})
-						local data3 = json.decode(result[i].Vozila)
-						if data3 ~= nil then
-							for b=1, #data3 do
-								table.insert(Vozila, {Mafija = data3[b].Mafija, Ime = data3[b].Ime, Label = data3[b].Label})
-							end
-						end
-						local data4 = json.decode(result[i].Oruzja)
-						if data4 ~= nil then
-							for c=1, #data4 do
-								table.insert(Oruzja, {Mafija = data4[c].Mafija, Ime = data4[c].Ime, Cijena = data4[c].Cijena})
-							end
-						end
-						local data5 = json.decode(result[i].Boje)
-						if data5 ~= nil then
-							for d=1, #data5 do
-								if data5[d].Ime == "Vozilo" then
-									table.insert(Boje, {Mafija = data5[d].Mafija, Ime = "Vozilo", R = data5[d].R, G = data5[d].G, B = data5[d].B})
-								else
-									table.insert(Boje, {Mafija = data5[d].Mafija, Ime = "Blip", Boja = data5[d].Boja})
-								end
-							end
-						end
-					end
-					TriggerClientEvent("mafije:PosaljiVozila", -1, maf, Vozila)
-					TriggerClientEvent("mafije:PosaljiOruzja", -1, maf, Oruzja)
-					TriggerClientEvent("mafije:UpdateKoord", -1, Koord)
-					TriggerClientEvent("mafije:UpdateBoje", -1, 3, maf, Boje)
-					TriggerClientEvent("mafije:UpdateRankove", -1, Rankovi)
-					TriggerClientEvent("mafije:UpdateMafije", -1, Mafije)
-				  end
-				)
+				
+				TriggerClientEvent("mafije:PosaljiVozila", -1, maf, Vozila)
+				TriggerClientEvent("mafije:PosaljiOruzja", -1, maf, Oruzja)
+				TriggerClientEvent("mafije:UpdateKoord", -1, Koord)
+				TriggerClientEvent("mafije:UpdateBoje", -1, 3, maf, Boje)
+				TriggerClientEvent("mafije:UpdateRankove", -1, Rankovi)
+				TriggerClientEvent("mafije:UpdateMafije", -1, Mafije)
 			end)
 		else
 			TriggerClientEvent('esx:showNotification', source, 'Mafija sa tim imenom ne postoji!')
@@ -535,12 +467,13 @@ AddEventHandler('mafije:ObrisiOruzje', function(ime, maf)
 		for i=1, #Oruzja, 1 do
 			if Oruzja[i] ~= nil and Oruzja[i].Ime == ime and Oruzja[i].Mafija == maf then
 				Postoji = 1
+				table.remove(Oruzja, i)
 			end
 		end
 		if Postoji == 1 then
 			local Temp = {}
 			for h=1, #Oruzja, 1 do
-				if Oruzja[h] ~= nil and Oruzja[h].Mafija == maf and Oruzja[h].Ime ~= ime then
+				if Oruzja[h] ~= nil and Oruzja[h].Mafija == maf then
 					table.insert(Temp, {Mafija = Oruzja[h].Mafija, Ime = Oruzja[h].Ime, Cijena = Oruzja[h].Cijena})
 				end
 			end
@@ -550,23 +483,7 @@ AddEventHandler('mafije:ObrisiOruzje', function(ime, maf)
 				['@im'] = maf
 			})
 			
-			Oruzja = {}
-			MySQL.Async.fetchAll(
-			  'SELECT Oruzja FROM mafije',
-			  {},
-			  function(result)
-				for i=1, #result, 1 do
-					local data4 = json.decode(result[i].Oruzja)
-					if data4 ~= nil then
-						for c=1, #data4 do
-							table.insert(Oruzja, {Mafija = data4[c].Mafija, Ime = data4[c].Ime, Cijena = data4[c].Cijena})
-						end
-					end
-				end
-				
-				TriggerClientEvent("mafije:PosaljiOruzja", -1, maf, Oruzja)
-			  end
-			)
+			TriggerClientEvent("mafije:PosaljiOruzja", -1, maf, Oruzja)
 			TriggerClientEvent('esx:showNotification', source, 'Oruzje '..ime..' uspjesno obrisano mafiji '..maf..'!')
 		end
 end)
@@ -632,12 +549,13 @@ AddEventHandler('mafije:ObrisiVozilo', function(ime, maf)
 		for i=1, #Vozila, 1 do
 			if Vozila[i] ~= nil and Vozila[i].Ime == ime and Vozila[i].Mafija == maf then
 				Postoji = 1
+				table.remove(Vozila, i)
 			end
 		end
 		if Postoji == 1 then
 			local Temp = {}
 			for i=1, #Vozila, 1 do
-				if Vozila[i] ~= nil and Vozila[i].Mafija == maf and Vozila[i].Ime ~= ime then
+				if Vozila[i] ~= nil and Vozila[i].Mafija == maf then
 					table.insert(Temp, {Mafija = Vozila[i].Mafija, Ime = Vozila[i].Ime, Label = Vozila[i].Label})
 				end
 			end
@@ -647,23 +565,7 @@ AddEventHandler('mafije:ObrisiVozilo', function(ime, maf)
 				['@im'] = maf
 			})
 			
-			Vozila = {}
-			
-			MySQL.Async.fetchAll(
-			  'SELECT Vozila FROM mafije',
-			  {},
-			  function(result)
-				for i=1, #result, 1 do
-					local data3 = json.decode(result[i].Vozila)
-					if data3 ~= nil then
-						for b=1, #data3 do
-							table.insert(Vozila, {Mafija = data3[b].Mafija, Ime = data3[b].Ime, Label = data3[b].Label})
-						end
-					end
-				end
-				TriggerClientEvent("mafije:PosaljiVozila", -1, maf, Vozila)
-			  end
-			)
+			TriggerClientEvent("mafije:PosaljiVozila", -1, maf, Vozila)
 			TriggerClientEvent('esx:showNotification', source, 'Vozilo '..ime..' uspjesno obrisano mafiji '..maf..'!')
 		end
 end)
@@ -674,15 +576,13 @@ AddEventHandler('mafije:ObrisiRank', function(id, maf)
 		for i=1, #Rankovi, 1 do
 			if Rankovi[i] ~= nil and Rankovi[i].ID == id and Rankovi[i].Mafija == maf then
 				Postoji = 1
-				Rankovi[i].Mafija = nil
-				Rankovi[i].ID = nil
-				Rankovi[i] = nil
+				table.remove(Rankovi, i)
 			end
 		end
 		if Postoji == 1 then
 			local Temp = {}
 			for i=1, #Rankovi, 1 do
-				if Rankovi[i] ~= nil and Rankovi[i].Mafija == maf and Rankovi[i].ID ~= id then
+				if Rankovi[i] ~= nil and Rankovi[i].Mafija == maf then
 					table.insert(Temp, {ID = Rankovi[i].ID, Ime = Rankovi[i].Ime})
 				end
 			end
@@ -696,23 +596,7 @@ AddEventHandler('mafije:ObrisiRank', function(id, maf)
 				['@maf'] = maf
 			})
 			
-			Vozila = {}
-			
-			MySQL.Async.fetchAll(
-			  'SELECT Rankovi FROM mafije',
-			  {},
-			  function(result)
-				for i=1, #result, 1 do
-					local data = json.decode(result[i].Rankovi)
-					if data ~= nil then
-						for a=1, #data do
-							table.insert(Rankovi, {ID = data[a].ID, Mafija = result[i].Ime, Ime = data[a].Ime})
-						end
-					end
-				end
-				TriggerClientEvent("mafije:UpdateRankove", -1, Rankovi)
-			  end
-			)
+			TriggerClientEvent("mafije:UpdateRankove", -1, Rankovi)
 			TriggerEvent("RefreshPoslove")
 			TriggerEvent("RefreshSociety")
 			TriggerClientEvent('esx:showNotification', source, 'Rank '..id..' uspjesno obrisan mafiji '..maf..'!')

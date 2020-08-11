@@ -70,7 +70,7 @@ RegisterCommand("gepek", function(source, args, raw)
             else
 				if not locked then
 					SetVehicleDoorOpen(closecar, door, false, false)
-					TriggerEvent("gepeke:OtvoriGa")
+					TriggerEvent("gepeke:OtvoriGa", closecar)
 				else
 					ShowInfo("Vozilo je zakljucano.")
 				end
@@ -202,8 +202,8 @@ AddEventHandler('gepeke:setOwnedVehicule', function(vehicle)
 end)
 
 RegisterNetEvent('gepeke:OtvoriGa')
-AddEventHandler('gepeke:OtvoriGa', function()
-    openmenuvehicle()
+AddEventHandler('gepeke:OtvoriGa', function(vehid)
+    openmenuvehicle(vehid)
 end)
 
 RegisterNetEvent('gepeke:OdjebiGa')
@@ -231,40 +231,35 @@ function VehicleMaxSpeed(vehicle,weight,maxweight)
   end
 end
 
-function openmenuvehicle()
+function openmenuvehicle(vehid)
 	if GPSID == 1 then
 		local playerPed = GetPlayerPed(-1)
 		local coords    = GetEntityCoords(playerPed)
-		local vehicle   =VehicleInFront()
-		globalplate  = GetVehicleNumberPlateText(vehicle)
+		globalplate  = GetVehicleNumberPlateText(vehid)
 		if globalplate ~= nil or globalplate ~= "" or globalplate ~= " " then
 			ESX.TriggerServerCallback('esx_truck:checkvehicle',function(valid)
 				if (not valid) then
 					-- CloseToVehicle = true
 					-- TriggerServerEvent('gepeke:AddVehicleList', globalplate)
-					local vehFront = VehicleInFront()
 					local x,y,z = table.unpack(GetEntityCoords(GetPlayerPed(-1),true))
-					local closecar = GetClosestVehicle(x, y, z, 4.0, 0, 71)
-				  if vehFront > 0 and closecar ~= nil and GetPedInVehicleSeat(closecar, -1) ~= GetPlayerPed(-1) then
-						lastVehicle = vehFront
-							local model = GetDisplayNameFromVehicleModel(GetEntityModel(closecar))
-						local locked = GetVehicleDoorsLockedForPlayer(vehFront, PlayerId())
-						local class = GetVehicleClass(vehFront)
-						  ESX.UI.Menu.CloseAll()
+					local closecar = vehid
+					if closecar ~= nil and GetPedInVehicleSeat(closecar, -1) ~= GetPlayerPed(-1) then
+						lastVehicle = closecar
+						local model = GetDisplayNameFromVehicleModel(GetEntityModel(closecar))
+						local locked = GetVehicleDoorsLockedForPlayer(closecar, PlayerId())
+						local class = GetVehicleClass(closecar)
+						ESX.UI.Menu.CloseAll()
 						if ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'inventory') then
-						  --SetVehicleDoorShut(vehFront, 5, false)
+						  --SetVehicleDoorShut(closecar, 5, false)
 						else
-						  if not locked or class == 15 or class == 16 or class == 14 then
-							  SetVehicleDoorOpen(vehFront, 5, false, false)
-							  ESX.UI.Menu.CloseAll()
-							  if globalplate ~= nil or globalplate ~= "" or globalplate ~= " " then
+							if not locked or class == 15 or class == 16 or class == 14 then
+								SetVehicleDoorOpen(closecar, 5, false, false)
 								CloseToVehicle = true
 								TriggerServerEvent('gepeke:AddVehicleList', globalplate)
-							  TriggerServerEvent("gepeke:getInventory", GetVehicleNumberPlateText(vehFront))
-							  end
+								TriggerServerEvent("gepeke:getInventory", GetVehicleNumberPlateText(closecar))
 							else
-							   ESX.ShowNotification('Gepek je zakljucan!')
-						  end
+								ESX.ShowNotification('Gepek je zakljucan!')
+							end
 						end
 					else
 						ESX.ShowNotification('Nema vozila u blizini!')
