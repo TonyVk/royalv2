@@ -10,6 +10,7 @@ local Izrasla = false
 local Kosim = false
 local prop_ent = nil
 local Broj = 0
+local UKuci = false
 
 --[[Citizen['CreateThread'](function()
     while true do
@@ -1101,6 +1102,7 @@ AddEventHandler('loaf_housing:leaveHouse', function(house)
         Wait(50)
     end
     DoScreenFadeIn(1500)
+	UKuci = false
 end)
 
 RegisterNetEvent('loaf_housing:leaveHouse2')
@@ -1121,6 +1123,7 @@ AddEventHandler('loaf_housing:leaveHouse2', function(house)
     end
     DeleteObject(prop)
     DoScreenFadeIn(1500)
+	UKuci = false
     TriggerServerEvent('loaf_housing:leaveHouse', house)
 end)
 
@@ -1147,6 +1150,7 @@ AddEventHandler('loaf_housing:knockAccept', function(coords, house, storage, spa
     DoScreenFadeOut(750)
     while not IsScreenFadedOut() do Wait(0) end
     SetEntityCoords(PlayerPedId(), coords)
+	UKuci = true
     for i = 1, 25 do
         SetEntityCoords(PlayerPedId(),  coords)
         Wait(50)
@@ -1164,7 +1168,7 @@ AddEventHandler('loaf_housing:knockAccept', function(coords, house, storage, spa
     DoScreenFadeIn(1500)
     local timer = GetGameTimer() + 500
     local delete = false
-    while true do
+    while UKuci do
         Wait(0)
         if timer <= GetGameTimer() then
             timer = GetGameTimer() + 500
@@ -1174,7 +1178,7 @@ AddEventHandler('loaf_housing:knockAccept', function(coords, house, storage, spa
                 end
             end, host)
         end
-        if delete then 
+        if delete then
             ESX.UI.Menu.CloseAll()
             DoScreenFadeOut(750)
             for k, v in pairs(placed_furniture) do
@@ -1193,6 +1197,7 @@ AddEventHandler('loaf_housing:knockAccept', function(coords, house, storage, spa
             DeleteObject(prop)
             DoScreenFadeIn(1500)
             ESX.ShowNotification(Strings['Host_Left'])
+			UKuci = false
             return
         end
         DrawMarker(27, coords, vector3(0.0, 0.0, 0.0), vector3(0.0, 0.0, 0.0), vector3(1.0, 1.0, 1.0), 255, 0, 255, 150, false, false, 2, false, false, false)
@@ -1217,6 +1222,7 @@ AddEventHandler('loaf_housing:knockAccept', function(coords, house, storage, spa
                 end
                 DeleteObject(prop)
                 DoScreenFadeIn(1500)
+				UKuci = false
                 TriggerServerEvent('loaf_housing:leaveHouse', house)
                 return
             end
