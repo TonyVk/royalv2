@@ -76,7 +76,6 @@ end
 
 function SpawnBlipove()
 	for i=1, #Koord, 1 do
-		print(Koord[i].Ime)
 		if Koord[i] ~= nil and Koord[i].Ime == "Lider" then
 			local x,y,z = table.unpack(Koord[i].Coord)
 			
@@ -1555,7 +1554,7 @@ function OpenGetWeaponMenu()
 
     for i=1, #weapons, 1 do
       if weapons[i].count > 0 then
-        table.insert(elements, {label = 'x' .. weapons[i].count .. ' ' .. ESX.GetWeaponLabel(weapons[i].name).."("..weapons[i].ammo..")", value = weapons[i].name, metci = weapons[i].ammo})
+        table.insert(elements, {label = 'x' .. weapons[i].count .. ' ' .. ESX.GetWeaponLabel(weapons[i].name).."("..weapons[i].ammo..")", value = weapons[i].name, ammo = weapons[i].ammo})
       end
     end
 
@@ -1829,8 +1828,6 @@ end)
 function OpenGetStocksMenu()
 
   ESX.TriggerServerCallback('mafije:getStockItems', function(items)
-
-    print(json.encode(items))
 
     local elements = {}
 
