@@ -12,9 +12,14 @@ AddEventHandler("KCoke:get", function()
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	
 		
-				if xPlayer.getInventoryItem('coke').count <= 20 then
-					xPlayer.addInventoryItem("coke", math.random(1,2))
+				if xPlayer.getInventoryItem('coke').count < 20 then
+					local randa = math.random(1,2)
+					if xPlayer.getInventoryItem('coke').count+randa > 20 then
+						xPlayer.addInventoryItem("coke", 1)
 					else
+						xPlayer.addInventoryItem("coke", randa)
+					end
+				else
 					TriggerClientEvent('esx:showNotification', source, '~r~Ne mozete imati vise listova koke')
 				end
 

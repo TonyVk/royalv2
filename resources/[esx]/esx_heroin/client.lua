@@ -9,19 +9,20 @@ local runspeed = 1.20 --(Change the run speed here !!! MAXIMUM IS 1.49 !!! )
 local onDrugs = false
 
 -- Useitem thread
-RegisterNetEvent('esx_drogica:useItem')
-AddEventHandler('esx_drogica:useItem', function(itemName)
+RegisterNetEvent('esx_koristiHeroin:useItem')
+AddEventHandler('esx_koristiHeroin:useItem', function(itemName)
 	if onDrugs == false then
 		ESX.UI.Menu.CloseAll()
 
-		if itemName == 'cocaine' then
+		if itemName == 'heroin' then
 			local lib, anim = 'anim@mp_player_intcelebrationmale@face_palm', 'face_palm'
 			local playerPed = PlayerPedId()
 			ESX.ShowNotification('Osjecate kako vam zivci pocinju raditi protiv vas...')
-			TriggerServerEvent("esx_drogica:removeItem", "cocaine")
+			TriggerServerEvent("esx_koristiHeroin:removeItem", "heroin")
 			local playerPed = PlayerPedId()
-			SetEntityHealth(playerPed, GetEntityMaxHealth(playerPed))
-			SetPedArmour(playerPed, 100)
+			SetEntityHealth(playerPed, 150)
+			SetPedArmour(playerPed, 25)
+			SetRunSprintMultiplierForPlayer(PlayerId(), 0.5)
 			ESX.Streaming.RequestAnimDict(lib, function()
 				TaskPlayAnim(playerPed, lib, anim, 8.0, -8.0, -1, 32, 0, false, false, false)
 
@@ -31,11 +32,11 @@ AddEventHandler('esx_drogica:useItem', function(itemName)
 					DisableAllControlActions(0)
 				end
 
-				TriggerEvent('esx_drogica:runMan')
+				TriggerEvent('esx_koristiHeroin:runMan')
 			end)
 		end
 	else
-		ESX.ShowNotification("Vec ste nadrogirani!")
+		ESX.ShowNotification("Vec ste pod utjecajom droge!")
 	end
 end)
 
@@ -46,17 +47,17 @@ AddEventHandler('esx:onPlayerDeath', function(data)
 		DoScreenFadeIn(1000)
 		ClearTimecycleModifier()
 		ResetPedMovementClipset(GetPlayerPed(-1), 0)
-		SetRunSprintMultiplierForPlayer(PlayerId(),1.0)
+		SetRunSprintMultiplierForPlayer(PlayerId(),0.5)
 		ClearAllPedProps(GetPlayerPed(-1), true)
 		SetPedMotionBlur(GetPlayerPed(-1), false)
-		ESX.ShowNotification('Dolazite sebi...')
+		ESX.ShowNotification('Utjecaj droge popusta')
     onDrugs = false
 	end
 end)
 
 -- Cocaine effect (Run really fast)
-RegisterNetEvent('esx_drogica:runMan')
-AddEventHandler('esx_drogica:runMan', function()
+RegisterNetEvent('esx_koristiHeroin:runMan')
+AddEventHandler('esx_koristiHeroin:runMan', function()
     RequestAnimSet("move_m@hurry_butch@b")
     while not HasAnimSetLoaded("move_m@hurry_butch@b") do
         Citizen.Wait(0)
@@ -68,14 +69,12 @@ AddEventHandler('esx_drogica:runMan', function()
     SetPedMotionBlur(GetPlayerPed(-1), true)
     SetTimecycleModifier("spectator5")
     SetPedMovementClipset(GetPlayerPed(-1), "move_m@hurry_butch@b", true)
-	SetRunSprintMultiplierForPlayer(PlayerId(), runspeed)
+	SetRunSprintMultiplierForPlayer(PlayerId(), 0.5)
     DoScreenFadeIn(1000)
 	repeat
-		ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.1)
-		TaskJump(GetPlayerPed(-1), false, true, false)
-		Citizen.Wait(5000)
+		Citizen.Wait(10000)
 		count = count  + 1
-	until count == 6
+	until count == 8
     DoScreenFadeOut(1000)
     Citizen.Wait(1000)
     DoScreenFadeIn(1000)
@@ -84,7 +83,7 @@ AddEventHandler('esx_drogica:runMan', function()
 	SetRunSprintMultiplierForPlayer(PlayerId(),1.0)
     ClearAllPedProps(GetPlayerPed(-1), true)
     SetPedMotionBlur(GetPlayerPed(-1), false)
-    ESX.ShowNotification('Dolazite sebi...')
+    ESX.ShowNotification('Utjecaj droge popusta...')
     onDrugs = false
 end)
 
@@ -105,17 +104,17 @@ function PostaviPosao()
 		Mafije = mafija
 	end)
 	
-	local model = GetHashKey("s_m_y_dealer_01")
+	local model = GetHashKey("a_m_m_beach_01")
     RequestModel(model)
 	
     while not HasModelLoaded(model) do
         Wait(1)
     end
 	
-	local npc = CreatePed(4, model, -1155.025390625, -1521.6463623047, 9.63272857666, 132.74, false, true)
+	local npc = CreatePed(4, model, -1121.755390625, 2713.163623047, 17.793272857666, 40.00, false, true)
 	SetModelAsNoLongerNeeded(model)
 			
-	SetEntityHeading(npc, 132.74)
+	SetEntityHeading(npc, 40.00)
 	FreezeEntityPosition(npc, true)
 	SetEntityInvincible(npc, true)
 	SetBlockingOfNonTemporaryEvents(npc, true)
@@ -151,17 +150,17 @@ Citizen.CreateThread( function()
 						end
 					end
 					if naso == 1 then
-						TriggerEvent('KCoke:start')
-						TriggerEvent('KCoke:start')
-						TriggerEvent('KCoke:start')
-						TriggerEvent('KCoke:start')
-						TriggerEvent('KCoke:start')
-						TriggerEvent('KCoke:start')
-						TriggerEvent('KCoke:start')
-						TriggerEvent('KCoke:start')
-						TriggerEvent('KCoke:start')
-						TriggerEvent('KCoke:start')
-						TriggerEvent('KCoke:start')
+						TriggerEvent('Heroin:start')
+						TriggerEvent('Heroin:start')
+						TriggerEvent('Heroin:start')
+						TriggerEvent('Heroin:start')
+						TriggerEvent('Heroin:start')
+						TriggerEvent('Heroin:start')
+						TriggerEvent('Heroin:start')
+						TriggerEvent('Heroin:start')
+						TriggerEvent('Heroin:start')
+						TriggerEvent('Heroin:start')
+						TriggerEvent('Heroin:start')
 						spawned = true
 					end
 				end
@@ -189,14 +188,14 @@ end)
 local displayed = false
 local menuOpen = false
 			
-AddEventHandler('kokain:hasEnteredMarker', function(zone)
+AddEventHandler('heroin:hasEnteredMarker', function(zone)
 	if zone == 'prodaja' then
 		CurrentAction     = 'prodaj'
-        CurrentActionMsg  = "Pritisnite E da prodate kokain!"
+        CurrentActionMsg  = "Pritisnite E da dilate heroin!"
 	end
 end)
 
-AddEventHandler('kokain:hasExitedMarker', function(zone)
+AddEventHandler('heroin:hasExitedMarker', function(zone)
 	ESX.UI.Menu.CloseAll()    
     CurrentAction = nil
     CurrentActionMsg = ''
@@ -216,28 +215,28 @@ Citizen.CreateThread(function()
 			end
 			local naso2 = 0
 			local kordic = GetEntityCoords(PlayerPedId())
-			if (GetDistanceBetweenCoords(-1156.2723388672, -1522.8728027344, 9.63272857666,  kordic.x,  kordic.y,  kordic.z,  true) <= 50.0) and naso == 0 then
+			if (GetDistanceBetweenCoords(-1121.755390625, 2713.163623047, 17.83272857666,  kordic.x,  kordic.y,  kordic.z,  true) <= 50.0) and naso == 0 then
 				waitara = 0
 				naso2 = 1
-				DrawMarker(27, -1156.2723388672, -1522.8728027344, 9.63272857666, 0, 0, 0, 0, 0, 0, 2.25, 2.25, 1.0001, 0, 128, 0, 200, 0, 0, 0, 0)
+				DrawMarker(27, -1122.4923388672, 2713.9328027344, 17.83272857666, 0, 0, 0, 0, 0, 0, 2.25, 2.25, 1.0001, 0, 128, 0, 200, 0, 0, 0, 0)
 			end
 			
 			local isInMarker  = false
 			local currentZone = nil
 
-			if(GetDistanceBetweenCoords(kordic, -1156.2723388672, -1522.8728027344, 9.63272857666, true) < 2.25) and naso == 0 then
+			if(GetDistanceBetweenCoords(kordic, -1122.4923388672, 2713.9328027344, 17.83272857666, true) < 2.25) and naso == 0 then
 				isInMarker  = true
 				currentZone = "prodaja"
 			end
 			if isInMarker and not hasAlreadyEnteredMarker then
 				hasAlreadyEnteredMarker = true
 				lastZone                = currentZone
-				TriggerEvent('kokain:hasEnteredMarker', currentZone)
+				TriggerEvent('heroin:hasEnteredMarker', currentZone)
 			end
 
 			if not isInMarker and hasAlreadyEnteredMarker then
 				hasAlreadyEnteredMarker = false
-				TriggerEvent('kokain:hasExitedMarker', lastZone)
+				TriggerEvent('heroin:hasExitedMarker', lastZone)
 			end
 			if ESX ~= nil then
 				if ESX.PlayerData.job ~= nil then
@@ -248,13 +247,13 @@ Citizen.CreateThread(function()
 								naso2 = 1
 								DrawMarker(3, locations[k].x, locations[k].y, locations[k].z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0, 200, 0, 110, 0, 1, 0, 0)	
 								
-								if GetDistanceBetweenCoords(locations[k].x, locations[k].y, locations[k].z, GetEntityCoords(GetPlayerPed(-1)), false) < 1.0 then	
-									TriggerEvent('KCoke:new', k)
+								if GetDistanceBetweenCoords(locations[k].x, locations[k].y, locations[k].z, GetEntityCoords(GetPlayerPed(-1)), false) < 1.0 then
+									TriggerEvent('Heroin:new', k)
 									TaskStartScenarioInPlace(PlayerPedId(), 'world_human_gardener_plant', 0, false)
 									Citizen.Wait(2000)
 									ClearPedTasks(PlayerPedId())
 									ClearPedTasksImmediately(PlayerPedId())
-									TriggerServerEvent('KCoke:get')
+									TriggerServerEvent('Heroin:get')
 								end
 							
 							end
@@ -265,7 +264,7 @@ Citizen.CreateThread(function()
 								naso2 = 1
 								DrawMarker(1, Config.Processing.x, Config.Processing.y, Config.Processing.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.3, 1.3, 1.0, 0, 200, 0, 110, 0, 1, 0, 0)	
 								if GetDistanceBetweenCoords(Config.Processing.x, Config.Processing.y, Config.Processing.z, GetEntityCoords(GetPlayerPed(-1)), true) < 2 then			
-									Draw3DText( Config.Processing.x, Config.Processing.y, Config.Processing.z , "~w~Proizvodnja kokaina~y~\nPritisnite [~b~E~y~] da krenete sa proizvodnjom",4,0.15,0.1)
+									Draw3DText( Config.Processing.x, Config.Processing.y, Config.Processing.z , "~w~Proizvodnja Heroina~y~\nPritisnite [~b~E~y~] da krenete sa proizvodnjom heroina",4,0.15,0.1)
 									if IsControlJustReleased(0, Keys['E']) then
 										Citizen.CreateThread(function()
 											Process()
@@ -286,7 +285,7 @@ Citizen.CreateThread(function()
 				DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 				if IsControlJustPressed(0, 38) then
 					if CurrentAction == 'prodaj' then
-						TriggerServerEvent("kokain:ProdajKoku")
+						TriggerServerEvent("heroin:ProdajHeroin")
 					end
 					CurrentAction = nil
 				end
@@ -330,9 +329,9 @@ function Process()
 	process = true
 	local making = true
 	while making and process do
-	TriggerEvent('esx:showNotification', '~g~Pocetak ~g~proizvodnje ~w~kokaina')
+	TriggerEvent('esx:showNotification', '~g~Pocetak ~g~proizvodnje ~w~heroina')
 	Citizen.Wait(5000)
-	ESX.TriggerServerCallback('KCoke:process', function(output)
+	ESX.TriggerServerCallback('Heroin:process', function(output)
 			making = output
 		end)
 
@@ -340,13 +339,13 @@ function Process()
 end
 
 
-RegisterNetEvent('KCoke:start')
-AddEventHandler('KCoke:start', function()
+RegisterNetEvent('Heroin:start')
+AddEventHandler('Heroin:start', function()
 	local set = false
 	Citizen.Wait(10)
 	
-	local rnX = Config.PickupBlip.x + math.random(-35, 35)
-	local rnY = Config.PickupBlip.y + math.random(-35, 35)
+	local rnX = Config.PickupBlip.x + math.random(-55, 55)
+	local rnY = Config.PickupBlip.y + math.random(-55, 55)
 	
 	local u, Z = GetGroundZFor_3dCoord(rnX ,rnY ,300.0,0)
 	
@@ -360,15 +359,14 @@ AddEventHandler('KCoke:start', function()
 end)
 
 
-RegisterNetEvent('KCoke:new')
-AddEventHandler('KCoke:new', function(id)
+RegisterNetEvent('Heroin:new')
+AddEventHandler('Heroin:new', function(id)
 	local set = false
 	Citizen.Wait(10)
 	
 	
-	local rnX = Config.PickupBlip.x + math.random(-35, 35)
-	local rnY = Config.PickupBlip.y + math.random(-35, 35)
-	
+	local rnX = Config.PickupBlip.x + math.random(-55, 55)
+	local rnY = Config.PickupBlip.y + math.random(-55, 55)
 	
 	local u, Z = GetGroundZFor_3dCoord(rnX ,rnY ,300.0,0)
 	
@@ -378,8 +376,8 @@ AddEventHandler('KCoke:new', function(id)
 	ClearPedTasks(PlayerPedId())
 end)
 
-RegisterNetEvent('KCoke:message')
-AddEventHandler('KCoke:message', function(message)
+RegisterNetEvent('Heroin:message')
+AddEventHandler('Heroin:message', function(message)
 	ESX.ShowNotification(message)
 end)
 			
