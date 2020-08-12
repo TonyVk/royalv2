@@ -78,21 +78,6 @@ function EnumerateVehicles()
     return EnumerateEntities(FindFirstVehicle, FindNextVehicle, EndFindVehicle)
 end
 
-RegisterCommand("testara", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
-			local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
-			SetVehicleNeonLightEnabled(vehicle, 0, 1)
-			SetVehicleNeonLightEnabled(vehicle, 1, 1)
-			SetVehicleNeonLightEnabled(vehicle, 2, 1)
-			SetVehicleNeonLightEnabled(vehicle, 3, 1)
-			SetVehicleNeonLightsColour(vehicle, 0, 0, 255)
-		else
-			ESX.ShowNotification("Nemate pristup ovoj komandi!")
-		end
-	end)
-end, false)
-
 RegisterCommand("ndv", function(source, args, rawCommandString)
 	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		if br == 1 then

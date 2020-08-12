@@ -52,6 +52,7 @@ local CurrentAction           = nil
 local CurrentActionMsg        = ''
 local CurrentActionData       = {}
 local blip = nil
+local Objektic = nil
 --------------------------------------------------------------------------------
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -442,6 +443,10 @@ function nouvelledestination()
 	temppayamount = 0
 	temppaytable = nil
 	multibagpay = 0
+	if Objektic ~= nil then
+		ESX.Game.DeleteObject(Objektic)
+		Objektic = nil
+	end
 	iscurrentboss = false
 	binselected = false
 	if livraisonnombre >= Config.MaxDelivery then
@@ -509,6 +514,10 @@ function retourcamionperdu_oui()
 		PVozilo = nil
 	end
 	
+	if Objektic ~= nil then
+		ESX.Game.DeleteObject(Objektic)
+		Objektic = nil
+	end
 	MissionRetourCamion = false
 	livraisonnombre = 0
 	MissionRegion = 0
@@ -560,6 +569,10 @@ function retourcamionperduannulermission_oui()
 		PVozilo = nil
 	end
 	
+	if Objektic ~= nil then
+		ESX.Game.DeleteObject(Objektic)
+		Objektic = nil
+	end
 	MissionLivraison = false
 	livraisonnombre = 0
 	MissionRegion = 0
@@ -647,6 +660,14 @@ function SelectBinandCrew()
 	work_truck = GetVehiclePedIsIn(GetPlayerPed(-1), true)
 	bagsoftrash = math.random(4, 10)
 	local NewBin, NewBinDistance = ESX.Game.GetClosestObject(Config.DumpstersAvaialbe)
+	if NewBin == -1 then
+		ESX.Game.SpawnLocalObject(destination.Model, destination.kPos, function(obj)
+			SetEntityHeading(obj, destination.kHeading)
+			Objektic = obj
+		end)
+		Wait(200)
+		NewBin, NewBinDistance = ESX.Game.GetClosestObject(Config.DumpstersAvaialbe)
+	end
 	trashcollectionpos = GetEntityCoords(NewBin)
 	platenumb = GetVehicleNumberPlateText(GetVehiclePedIsIn(GetPlayerPed(-1), true))
 	TriggerServerEvent("esx_garbagejob:binselect", trashcollectionpos, platenumb, bagsoftrash)
