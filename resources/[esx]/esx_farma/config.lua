@@ -46,6 +46,76 @@ Config.Zones = {
 	}
 }
 
+Config.Uniforms = {
+	EUP = true,
+	uniforma = { 
+		male = {
+			['tshirt_1'] = 59,  ['tshirt_2'] = 0,
+			['torso_1'] = 89,   ['torso_2'] = 1,
+			['decals_1'] = 0,   ['decals_2'] = 0,
+			['arms'] = 31,
+			['pants_1'] = 36,   ['pants_2'] = 0,
+			['shoes'] = 35,
+			['helmet_1'] = 5,  ['helmet_2'] = 0,
+			['glasses_1'] = 19,  ['glasses_2'] = 0
+		},
+		female = {
+			['tshirt_1'] = 36,  ['tshirt_2'] = 0,
+			['torso_1'] = 0,   ['torso_2'] = 11,
+			['decals_1'] = 0,   ['decals_2'] = 0,
+			['arms'] = 68,
+			['pants_1'] = 30,   ['pants_2'] = 2,
+			['shoes'] = 26,
+			['helmet_1'] = 19,  ['helmet_2'] = 0,
+			['glasses_1'] = 15,  ['glasses_2'] = 0
+		}
+	},
+	EUPuniforma = { 
+		male = {
+			ped = 'mp_m_freemode_01',
+			props = {
+				{ 0, 0, 0 },
+				{ 1, 0, 0 },
+				{ 2, 0, 0 },
+				{ 6, 0, 0 },
+			},
+			components = {
+				{ 1, 1, 1 },
+				{ 11, 72, 1 },
+				{ 3, 65, 1 },
+				{ 10, 1, 1 },
+				{ 8, 16, 1 },
+				{ 4, 54, 1 },
+				{ 6, 28, 1 },
+				{ 7, 1, 1 },
+				{ 9, 1, 1 },
+				{ 5, 1, 1 },
+			}
+		},
+		female = {
+			ped = 'mp_f_freemode_01',
+			props = {
+				{ 0, 0, 0 },
+				{ 1, 14, 1 },
+				{ 2, 0, 0 },
+				{ 6, 0, 0 },
+			},
+			components = {
+				{ 1, 1, 1 },
+				{ 11, 68, 1 },
+				{ 3, 76, 1 },
+				{ 10, 1, 1 },
+				{ 8, 15, 1 },
+				{ 4, 56, 1 },
+				{ 6, 27, 1 },
+				{ 7, 1, 1 },
+				{ 9, 1, 1 },
+				{ 5, 1, 1 },
+			}
+		}
+	}
+}
+
 Config.Objekti = {
 	{x = 2338.9152832032, y = 5126.4633789062, z = 47.518600463868}, --Nema komentara
 	{x = 2332.5815429688, y = 5132.8876953125, z = 48.08137512207}, --Nema komentara

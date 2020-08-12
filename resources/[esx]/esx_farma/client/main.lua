@@ -80,13 +80,14 @@ function MenuCloakRoom()
 					Vozilo2 = nil
 				end
 				isInService = true
-				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+				setUniform(PlayerPedId())
+				--[[ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 	    			if skin.sex == 0 then
 	    				TriggerEvent('skinchanger:loadClothes', skin, jobSkin.skin_male)
 					else
 	    				TriggerEvent('skinchanger:loadClothes', skin, jobSkin.skin_female)
 					end
-				end)
+				end)--]]
 			end
 			menu.close()
 		end,
@@ -94,6 +95,87 @@ function MenuCloakRoom()
 			menu.close()
 		end
 	)
+end
+
+function setUniform(playerPed)
+	TriggerEvent('skinchanger:getSkin', function(skin)
+		if skin.sex == 0 then
+			if Config.Uniforms.EUP == false or Config.Uniforms.EUP == nil then
+				if Config.Uniforms["uniforma"].male then
+					TriggerEvent('skinchanger:loadClothes', skin, Config.Uniforms["uniforma"].male)
+				else
+					ESX.ShowNotification("Nema postavljene uniforme!")
+				end
+			else
+				local jobic = "EUPuniforma"
+				local outfit = Config.Uniforms[jobic].male
+				local ped = playerPed
+
+				RequestModel(outfit.ped)
+
+				while not HasModelLoaded(outfit.ped) do
+					Wait(0)
+				end
+
+				if GetEntityModel(ped) ~= GetHashKey(outfit.ped) then
+					SetPlayerModel(PlayerId(), outfit.ped)
+				end
+
+				ped = PlayerPedId()
+
+				for _, comp in ipairs(outfit.components) do
+				   SetPedComponentVariation(ped, comp[1], comp[2] - 1, comp[3] - 1, 0)
+				end
+
+				for _, comp in ipairs(outfit.props) do
+					if comp[2] == 0 then
+						ClearPedProp(ped, comp[1])
+					else
+						SetPedPropIndex(ped, comp[1], comp[2] - 1, comp[3] - 1, true)
+					end
+				end
+			end
+			
+		else
+			if Config.Uniforms.EUP == false then
+				if Config.Uniforms["uniforma"].female then
+					TriggerEvent('skinchanger:loadClothes', skin, Config.Uniforms["uniforma"].female)
+				else
+					ESX.ShowNotification(_U('no_outfit'))
+				end
+			else
+				local jobic = "EUPuniforma"
+				local outfit = Config.Uniforms[jobic].female
+				local ped = playerPed
+
+				RequestModel(outfit.ped)
+
+				while not HasModelLoaded(outfit.ped) do
+					Wait(0)
+				end
+
+				if GetEntityModel(ped) ~= GetHashKey(outfit.ped) then
+					SetPlayerModel(PlayerId(), outfit.ped)
+				end
+
+				ped = PlayerPedId()
+
+				for _, comp in ipairs(outfit.components) do
+				   SetPedComponentVariation(ped, comp[1], comp[2] - 1, comp[3] - 1, 0)
+				end
+
+				for _, comp in ipairs(outfit.props) do
+					if comp[2] == 0 then
+						ClearPedProp(ped, comp[1])
+					else
+						SetPedPropIndex(ped, comp[1], comp[2] - 1, comp[3] - 1, true)
+					end
+				end
+			end
+
+
+		end
+	end)
 end
 
 function MenuVehicleSpawner()
