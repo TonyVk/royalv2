@@ -251,10 +251,10 @@ Citizen.CreateThread(function()
 								if GetDistanceBetweenCoords(locations[k].x, locations[k].y, locations[k].z, GetEntityCoords(GetPlayerPed(-1)), false) < 2 then	
 									TaskStartScenarioInPlace(PlayerPedId(), 'world_human_gardener_plant', 0, false)
 									Citizen.Wait(2000)
+									TriggerEvent('KCoke:new', k)
 									ClearPedTasks(PlayerPedId())
 									ClearPedTasksImmediately(PlayerPedId())
 									TriggerServerEvent('KCoke:get')
-									TriggerEvent('KCoke:new', k)
 								end
 							
 							end
@@ -368,6 +368,7 @@ AddEventHandler('KCoke:new', function(id)
 	
 	local rnX = Config.PickupBlip.x + math.random(-35, 35)
 	local rnY = Config.PickupBlip.y + math.random(-35, 35)
+	
 	
 	local u, Z = GetGroundZFor_3dCoord(rnX ,rnY ,300.0,0)
 	

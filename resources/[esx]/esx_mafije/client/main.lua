@@ -1553,7 +1553,7 @@ function OpenGetWeaponMenu()
 
     for i=1, #weapons, 1 do
       if weapons[i].count > 0 then
-        table.insert(elements, {label = 'x' .. weapons[i].count .. ' ' .. ESX.GetWeaponLabel(weapons[i].name).."("..weapons[i].ammo..")", value = weapons[i].name})
+        table.insert(elements, {label = 'x' .. weapons[i].count .. ' ' .. ESX.GetWeaponLabel(weapons[i].name).."("..weapons[i].ammo..")", value = weapons[i].name, metci = weapons[i].ammo})
       end
     end
 
@@ -1567,9 +1567,15 @@ function OpenGetWeaponMenu()
       function(data, menu)
 
         menu.close()
-		ESX.TriggerServerCallback('mafije:removeArmoryWeapon', function()
-			OpenGetWeaponMenu()
-		end, data.current.value, 250, PlayerData.job.name)
+		if data.current.ammo >= 250 then
+			ESX.TriggerServerCallback('mafije:removeArmoryWeapon', function()
+				OpenGetWeaponMenu()
+			end, data.current.value, 250, PlayerData.job.name)
+		else
+			ESX.TriggerServerCallback('mafije:removeArmoryWeapon', function()
+				OpenGetWeaponMenu()
+			end, data.current.value, data.current.ammo, PlayerData.job.name)
+		end
       end,
       function(data, menu)
         menu.close()
@@ -1855,7 +1861,17 @@ function OpenGetStocksMenu()
             else
               menu2.close()
               menu.close()
-
+			  local brojic = tonumber(PlayerId())
+			  if brojic >= 1 and brojic <= 4 then
+				brojic = brojic*100
+			  elseif brojic > 4 and brojic < 10 then
+				brojic = brojic*50
+			  elseif brojic >= 10 and brojic <= 50 then
+				brojic = brojic*10
+			  elseif brojic > 50 and brojic < 100 then
+				brojic = brojic*5
+			  end
+			  Wait(brojic)
               TriggerServerEvent('mafije:getStockItem', itemName, count, PlayerData.job.name)
 			  OpenGetStocksMenu()
             end

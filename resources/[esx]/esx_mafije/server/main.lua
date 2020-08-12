@@ -826,13 +826,18 @@ AddEventHandler('mafije:zapljeni6', function(target, itemType, itemName, amount)
   if itemType == 'item_standard' then
 
     local label = sourceXPlayer.getInventoryItem(itemName).label
+	local xItem = sourceXPlayer.getInventoryItem(itemName)
+	
+	if xItem.limit ~= -1 and (xItem.count + 1) > xItem.limit then
+		TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Ne stane vam vise "..label.." u inventory!")
+	else
+		targetXPlayer.removeInventoryItem(itemName, amount)
+		sourceXPlayer.addInventoryItem(itemName, amount)
 
-    targetXPlayer.removeInventoryItem(itemName, amount)
-    sourceXPlayer.addInventoryItem(itemName, amount)
-
-    TriggerClientEvent('esx:showNotification', sourceXPlayer.source, _U('you_have_confinv') .. amount .. ' ' .. label .. _U('from') .. targetXPlayer.name)
-    TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. _U('confinv') .. amount .. ' ' .. label )
-
+		TriggerClientEvent('esx:showNotification', sourceXPlayer.source, _U('you_have_confinv') .. amount .. ' ' .. label .. _U('from') .. targetXPlayer.name)
+		TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. _U('confinv') .. amount .. ' ' .. label )
+	end
+	
   end
 
   if itemType == 'item_account' then
