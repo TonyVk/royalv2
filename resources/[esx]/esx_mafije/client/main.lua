@@ -76,8 +76,10 @@ end
 
 function SpawnBlipove()
 	for i=1, #Koord, 1 do
+		print(Koord[i].Ime)
 		if Koord[i] ~= nil and Koord[i].Ime == "Lider" then
 			local x,y,z = table.unpack(Koord[i].Coord)
+			
 			Blipovi[Koord[i].Mafija] = AddBlipForCoord(x,y,z)
 
 			SetBlipSprite (Blipovi[Koord[i].Mafija], 378)

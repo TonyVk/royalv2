@@ -216,31 +216,31 @@ AddEventHandler('mafije:ObrisiMafiju', function(maf)
 				['@ime'] = maf
 			})
 			
-			for i=1, #Koord, 1 do
+			for i=#Koord,1,-1 do
 				if Koord[i] ~= nil and Koord[i].Mafija == maf then
 					table.remove(Koord, i)
 				end
 			end
 			
-			for i=1, #Rankovi, 1 do
+			for i=#Rankovi,1,-1 do
 				if Rankovi[i] ~= nil and Rankovi[i].Mafija == maf then
 					table.remove(Rankovi, i)
 				end
 			end
 			
-			for i=1, #Vozila, 1 do
+			for i=#Vozila,1,-1 do
 				if Vozila[i] ~= nil and Vozila[i].Mafija == maf then
 					table.remove(Vozila, i)
 				end
 			end
 			
-			for i=1, #Oruzja, 1 do
+			for i=#Oruzja,1,-1 do
 				if Oruzja[i] ~= nil and Oruzja[i].Mafija == maf then
 					table.remove(Oruzja, i)
 				end
 			end
 			
-			for i=1, #Boje, 1 do
+			for i=#Boje,1,-1 do
 				if Boje[i] ~= nil and Boje[i].Mafija == maf then
 					table.remove(Boje, i)
 				end
