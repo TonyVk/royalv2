@@ -603,13 +603,24 @@ AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
 
 			if quantity > 0 and quantity <= tonumber(data.current.count) and vehFront > 0 then
             if not max then
-               TriggerServerEvent('gepeke:removeInventoryItem', GetVehicleNumberPlateText(vehFront), data.current.value, data.current.type, quantity)
-			   local typeVeh = GetVehicleClass(vehFront)
-			   local MaxVh =(tonumber(Config.VehicleLimit[typeVeh])/1000)
-			   local Itemweight =tonumber(getItemyWeight(data.current.value)) * quantity
-			   local totalweight = tonumber(weight) - Itemweight
-			   local Kgweight =  totalweight/1000
-			   ESX.ShowNotification('Vasa tezina : ~g~'.. Kgweight .. ' Kg / '..MaxVh..' Kg')
+				local brojic = tonumber(PlayerId())
+				if brojic >= 1 and brojic <= 4 then
+					brojic = brojic*100
+				elseif brojic > 4 and brojic < 10 then
+					brojic = brojic*50
+				elseif brojic >= 10 and brojic <= 50 then
+					brojic = brojic*10
+				elseif brojic > 50 and brojic < 100 then
+					brojic = brojic*5
+				end
+				Wait(brojic)
+				TriggerServerEvent('gepeke:removeInventoryItem', GetVehicleNumberPlateText(vehFront), data.current.value, data.current.type, quantity)
+				local typeVeh = GetVehicleClass(vehFront)
+				local MaxVh =(tonumber(Config.VehicleLimit[typeVeh])/1000)
+				local Itemweight =tonumber(getItemyWeight(data.current.value)) * quantity
+				local totalweight = tonumber(weight) - Itemweight
+				local Kgweight =  totalweight/1000
+				ESX.ShowNotification('Vasa tezina : ~g~'.. Kgweight .. ' Kg / '..MaxVh..' Kg')
             else
               ESX.ShowNotification('~r~ Vec nosite previse stvari!')
             end
@@ -662,13 +673,24 @@ AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
 
 							if quantity > 0 and quantity <= tonumber(data.current.count) and vehFront > 0 then
 							if not max then
-							   TriggerServerEvent('gepeke:removeInventoryItem', GetVehicleNumberPlateText(vehFront), data.current.value, data.current.type, quantity)
-							   local typeVeh = GetVehicleClass(vehFront)
-							   local MaxVh =(tonumber(Config.VehicleLimit[typeVeh])/1000)
-							   local Itemweight =tonumber(getItemyWeight(data.current.value)) * quantity
-							   local totalweight = tonumber(weight) - Itemweight
-							   local Kgweight =  totalweight/1000
-							   ESX.ShowNotification('Vasa tezina : ~g~'.. Kgweight .. ' Kg / '..MaxVh..' Kg')
+								local brojic = tonumber(PlayerId())
+								if brojic >= 1 and brojic <= 4 then
+									brojic = brojic*100
+								elseif brojic > 4 and brojic < 10 then
+									brojic = brojic*50
+								elseif brojic >= 10 and brojic <= 50 then
+									brojic = brojic*10
+								elseif brojic > 50 and brojic < 100 then
+									brojic = brojic*5
+								end
+								Wait(brojic)
+								TriggerServerEvent('gepeke:removeInventoryItem', GetVehicleNumberPlateText(vehFront), data.current.value, data.current.type, quantity)
+								local typeVeh = GetVehicleClass(vehFront)
+								local MaxVh =(tonumber(Config.VehicleLimit[typeVeh])/1000)
+								local Itemweight =tonumber(getItemyWeight(data.current.value)) * quantity
+								local totalweight = tonumber(weight) - Itemweight
+								local Kgweight =  totalweight/1000
+								ESX.ShowNotification('Vasa tezina : ~g~'.. Kgweight .. ' Kg / '..MaxVh..' Kg')
 							else
 							  ESX.ShowNotification('~r~ Vec nosite previse stvari!')
 							end
