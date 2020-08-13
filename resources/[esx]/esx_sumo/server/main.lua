@@ -21,6 +21,7 @@ end)
 TriggerEvent('es:addGroupCommand', 'pokrenisumo', "admin", function(source, args, user)
     if not PokrenutSumo then
 		PokrenutSumo = true
+		ZadnjaPozicija = 1
 		TriggerEvent("sumo:Poruka1")
 		TriggerEvent("sumo:SyncajVrijeme", 60)
 		SetTimeout(30000, function()
@@ -39,6 +40,7 @@ TriggerEvent('es:addGroupCommand', 'zaustavisumo', "admin", function(source, arg
    if PokrenutSumo then
 		PokrenutSumo = false
 		TrajeSumo = false
+		ZadnjaPozicija = 1
 		TriggerClientEvent('esx:showNotification', source, "Sumo je zaustavljen!")
 		TriggerEvent("sumo:ZavrsiSumo")
 	else

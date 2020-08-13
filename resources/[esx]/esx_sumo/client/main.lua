@@ -34,6 +34,17 @@ end)
 RegisterNetEvent("sumo:Joinaj")
 AddEventHandler('sumo:Joinaj', function()
     if not USumo then
+		local brojic = tonumber(PlayerId())
+		if brojic >= 1 and brojic <= 4 then
+			brojic = brojic*100
+		elseif brojic > 4 and brojic < 10 then
+			brojic = brojic*50
+		elseif brojic >= 10 and brojic <= 50 then
+			brojic = brojic*10
+		elseif brojic > 50 and brojic < 100 then
+			brojic = brojic*5
+		end
+		Wait(brojic)
 		ESX.TriggerServerCallback('sumo:DohvatiPoziciju', function(br)
 			if br > 20 then
 				ESX.ShowNotification("Nema vise mjesta!")
@@ -55,6 +66,7 @@ AddEventHandler('sumo:Joinaj', function()
 				ESX.ShowNotification("Usli ste u sumo!")
 				ESX.ShowNotification("Da napustite sumo pisite /napustisumo!")
 				SetEntityCoords(PlayerPedId(), Config.Spawnovi[br].x, Config.Spawnovi[br].y, Config.Spawnovi[br].z, false, false, false, false)
+				FreezeEntityPosition(PlayerPedId(), true)
 				ESX.Game.SpawnVehicle("monster",{
 					x=Config.Spawnovi[br].x,
 					y=Config.Spawnovi[br].y,
@@ -65,6 +77,7 @@ AddEventHandler('sumo:Joinaj', function()
 					TriggerEvent("advancedFuel:setEssence", 100, GetVehicleNumberPlateText(callback_vehicle), GetDisplayNameFromVehicleModel(GetEntityModel(callback_vehicle)))
 					SetVehicleDoorsLocked(callback_vehicle, 4)
 					Vozilo = callback_vehicle
+					FreezeEntityPosition(PlayerPedId(), false)
 				end)
 				TriggerEvent("EoTiIzSalona", 1)
 				Startajj = 1

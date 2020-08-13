@@ -364,9 +364,14 @@ AddEventHandler('loaf_housing:withdrawItem', function(type, item, amount, owner)
 
                 TriggerEvent('esx_addoninventory:getInventory', 'housing', identifier, function(inventory)
                     if inventory.getItem(item)['count'] >= amount then
-                        TriggerClientEvent('esx:showNotification', src, (Strings['You_Withdrew']):format(amount, inventory.getItem(item)['label']))
-                        xPlayer.addInventoryItem(item, amount)
-                        inventory.removeItem(item, amount)
+						local xItem = xPlayer.getInventoryItem(item)
+						if xItem.limit ~= -1 and (xItem.count + amount) > xItem.limit then
+							TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Ne stane vam vise u inventory!")
+						else
+							TriggerClientEvent('esx:showNotification', src, (Strings['You_Withdrew']):format(amount, inventory.getItem(item)['label']))
+							xPlayer.addInventoryItem(item, amount)
+							inventory.removeItem(item, amount)
+						end
                     else
                         TriggerClientEvent('esx:showNotification', src, Strings['Not_Enough_House'])
                     end

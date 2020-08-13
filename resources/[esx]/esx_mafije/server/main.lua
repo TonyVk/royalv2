@@ -828,7 +828,7 @@ AddEventHandler('mafije:zapljeni6', function(target, itemType, itemName, amount)
     local label = sourceXPlayer.getInventoryItem(itemName).label
 	local xItem = sourceXPlayer.getInventoryItem(itemName)
 	
-	if xItem.limit ~= -1 and (xItem.count + 1) > xItem.limit then
+	if xItem.limit ~= -1 and (xItem.count + amount) > xItem.limit then
 		TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Ne stane vam vise "..label.." u inventory!")
 	else
 		targetXPlayer.removeInventoryItem(itemName, amount)

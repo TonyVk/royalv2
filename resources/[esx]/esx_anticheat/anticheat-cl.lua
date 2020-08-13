@@ -183,7 +183,8 @@ CageObjs = {
 	"xs_prop_hamburgher_wl",
 	"sr_prop_spec_tube_xxs_01a",
 	"armytanker",
-	-145066854
+	-145066854,
+	"stt_prop_stunt_track_dwslope30"
 }
 
 PedObjs = {
