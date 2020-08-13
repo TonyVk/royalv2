@@ -601,6 +601,7 @@ data_file 'HANDLING_FILE' 'data/yugo/handling.meta'
 data_file 'VEHICLE_METADATA_FILE' 'data/yugo/vehicles.meta'
 data_file 'CARCOLS_FILE' 'data/yugo/carcols.meta'
 data_file 'VEHICLE_VARIATION_FILE' 'data/yugo/carvariations.meta'
+data_file 'VEHICLE_LAYOUTS_FILE''data/yugo/vehiclelayouts.meta'
 
 data_file 'HANDLING_FILE' 'data/z4/handling.meta'
 data_file 'VEHICLE_METADATA_FILE' 'data/z4/vehicles.meta'
