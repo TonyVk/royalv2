@@ -477,7 +477,17 @@ function SpawnajGa(race)
 	local model = GetHashKey(raceInfo['Vehicle'])
 
     LoadModel(model)
-	
+	local brojic = tonumber(PlayerId())
+	if brojic >= 1 and brojic <= 4 then
+		brojic = brojic*100
+	elseif brojic > 4 and brojic < 10 then
+		brojic = brojic*50
+	elseif brojic >= 10 and brojic <= 50 then
+		brojic = brojic*10
+	elseif brojic > 50 and brojic < 100 then
+		brojic = brojic*5
+	end
+	Wait(brojic)
 	if ucitao == 0 then
 		Lokacija = 1
 		ucitao = 1
