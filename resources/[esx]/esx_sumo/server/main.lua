@@ -18,18 +18,15 @@ AddEventHandler('sumo:SyncajVrijeme', function(sec)
 	end)
 end)
 
-RegisterNetEvent("sumo:TrajeSumo")
-AddEventHandler('sumo:TrajeSumo', function()
-	TrajeSumo = true
-end)
-
 TriggerEvent('es:addGroupCommand', 'pokrenisumo', "admin", function(source, args, user)
     if not PokrenutSumo then
 		PokrenutSumo = true
 		TriggerEvent("sumo:Poruka1")
 		TriggerEvent("sumo:SyncajVrijeme", 60)
 		SetTimeout(30000, function()
-			TriggerEvent("sumo:Poruka2")
+			if PokrenutSumo then
+				TriggerEvent("sumo:Poruka2")
+			end
 		end)
 	else
 		TriggerClientEvent('esx:showNotification', source, "Vec je pokrenut sumo!")
@@ -68,8 +65,20 @@ end)
 
 RegisterNetEvent("sumo:Poruka2")
 AddEventHandler('sumo:Poruka2', function()
-	TriggerClientEvent('esx:showAdvancedNotification', -1, 'Event System', 'Sumo', 'U sumou jos ima mjesta, ukoliko zelite sudjelovati upisite /sjoin!', 'CHAR_PLANESITE', 1)
-	TriggerClientEvent('esx:showAdvancedNotification', -1, 'Event System', 'Sumo', 'Sumo ce poceti za 30 sekundi!', 'CHAR_PLANESITE', 1)
+	if ZadnjaPozicija < 21 then
+		TriggerClientEvent('esx:showAdvancedNotification', -1, 'Event System', 'Sumo', 'U sumou jos ima mjesta, ukoliko zelite sudjelovati upisite /sjoin!', 'CHAR_PLANESITE', 1)
+		TriggerClientEvent('esx:showAdvancedNotification', -1, 'Event System', 'Sumo', 'Sumo ce poceti za 30 sekundi!', 'CHAR_PLANESITE', 1)
+	end
+	SetTimeout(30000, function()
+		if PokrenutSumo then
+			TrajeSumo = true
+			if #Igraci == 0 then
+				TrajeSumo = false
+				PokrenutSumo = false
+				ZadnjaPozicija = 1
+			end
+		end
+	end)
 end)
 
 RegisterNetEvent("sumo:PovecajPoziciju")
@@ -133,6 +142,6 @@ RegisterNetEvent("sumo:Tuljan")
 AddEventHandler('sumo:Tuljan', function()
 	local src = source
 	local xPlayer = ESX.GetPlayerFromId(src)
-	xPlayer.addMoney(7500)
-	TriggerClientEvent('esx:showNotification', xPlayer.source, "Cestitamo!! Prezivjeli ste sumo i dobili $7500!")
+	xPlayer.addMoney(5000)
+	TriggerClientEvent('esx:showNotification', xPlayer.source, "Cestitamo!! Prezivjeli ste sumo i dobili $5000!")
 end)

@@ -35,11 +35,21 @@ RegisterNetEvent("sumo:Joinaj")
 AddEventHandler('sumo:Joinaj', function()
     if not USumo then
 		ESX.TriggerServerCallback('sumo:DohvatiPoziciju', function(br)
-			if br > 10 then
+			if br > 20 then
 				ESX.ShowNotification("Nema vise mjesta!")
 			else
 				TriggerServerEvent("sumo:PovecajPoziciju")
 				USumo = true
+				Citizen.CreateThread(function() 
+					local hashara = GetHashKey("WEAPON_UNARMED")
+					while USumo do
+						Citizen.Wait(5)
+						SetCurrentPedWeapon(PlayerPedId(),hashara,true)
+						DisableControlAction(0, 24, true)
+						DisableControlAction(0, 25, true)
+						SetPlayerCanDoDriveBy(PlayerId(), false)
+					end
+				end)
 				TriggerEvent("iens:Dozvoljeno", false)
 				StareKoord = GetEntityCoords(PlayerPedId())
 				ESX.ShowNotification("Usli ste u sumo!")
@@ -59,7 +69,6 @@ AddEventHandler('sumo:Joinaj', function()
 				TriggerEvent("EoTiIzSalona", 1)
 				Startajj = 1
 				PratiPocetak()
-				OdradiOstalo()
 			end
 		end)
 	else
@@ -70,11 +79,11 @@ end)
 RegisterNetEvent("sumo:Prekini")
 AddEventHandler('sumo:Prekini', function()
     if USumo then
+		USumo = false
 		TriggerEvent("iens:Dozvoljeno", true)
 		ESX.Game.DeleteVehicle(Vozilo)
 		Vozilo = nil
 		SetPlayerCanDoDriveBy(PlayerId(), true)
-        USumo = false
 		SetEntityCoords(PlayerPedId(), StareKoord, false, false, false, false)
 		StareKoord = nil
 	end
@@ -135,8 +144,9 @@ function PratiPocetak()
 							SetPlayerCanDoDriveBy(PlayerId(), true)
 							ESX.ShowNotification("Sumo je zavrsio zato sto ste sami bili!")
 						else
-							FreezeEntityPosition(GetVehiclePedIsUsing(PlayerPedId()), false)
-							TriggerServerEvent("sumo:TrajeSumo")
+							OdradiOstalo()
+							FreezeEntityPosition(GetVehiclePedIsIn(PlayerPedId(), false), false)
+							SetVehicleDoorsLocked(GetVehiclePedIsIn(PlayerPedId(), false), 0)
 							Startajj = 0
 						end
 					end)
@@ -150,14 +160,8 @@ end
 
 function OdradiOstalo()
 	Citizen.CreateThread(function() 
-		local hashara = GetHashKey("WEAPON_UNARMED")
         while USumo do
             Citizen.Wait(5)
-			SetCurrentPedWeapon(PlayerPedId(),hashara,true)
-			DisableControlAction(0, 24, true)
-			DisableControlAction(0, 25, true)
-			SetPlayerCanDoDriveBy(PlayerId(), false)
-			
 			local kord = GetEntityCoords(PlayerPedId())
 			if (kord.z < 34.0 or kord.y > -3133.5) and USumo then
 				TriggerServerEvent("sumo:SmanjiPoziciju")
