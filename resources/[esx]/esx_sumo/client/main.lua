@@ -107,7 +107,7 @@ RegisterCommand("napustisumo", function(source, args, rawCommandString)
 		TriggerServerEvent("sumo:SmanjiPoziciju")
 		TriggerEvent("iens:Dozvoljeno", true)
 		USumo = false
-		ESX.Game.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId(), false))
+		ESX.Game.DeleteVehicle(Vozilo)
 		SetEntityCoords(PlayerPedId(), StareKoord, false, false, false, false)
 		StareKoord = nil
 		SetPlayerCanDoDriveBy(PlayerId(), true)
@@ -151,7 +151,7 @@ function PratiPocetak()
 							Startajj = 0
 							TriggerServerEvent("sumo:SmanjiPoziciju")
 							TriggerEvent("iens:Dozvoljeno", true)
-							ESX.Game.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId(), false))
+							ESX.Game.DeleteVehicle(Vozilo)
 							SetEntityCoords(PlayerPedId(), StareKoord, false, false, false, false)
 							StareKoord = nil
 							SetPlayerCanDoDriveBy(PlayerId(), true)
@@ -180,7 +180,7 @@ function OdradiOstalo()
 				TriggerServerEvent("sumo:SmanjiPoziciju")
 				TriggerEvent("iens:Dozvoljeno", true)
 				USumo = false
-				ESX.Game.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId(), false))
+				ESX.Game.DeleteVehicle(Vozilo)
 				SetEntityCoords(PlayerPedId(), StareKoord, false, false, false, false)
 				StareKoord = nil
 				SetPlayerCanDoDriveBy(PlayerId(), true)

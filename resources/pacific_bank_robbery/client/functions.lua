@@ -162,12 +162,9 @@ end;
 
 OtvoriSef=function(d)
 	local o=Config.Bank[d]["door"]
-	print(d)
-	print(o["pos"])
 	NeDiraj = false
 	Citizen.CreateThread(function()
 		while true do  
-			print("Petljaa")
 			if cachedData["banks"][d] ~= nil and NeDiraj == false then
 				local K = GetClosestObjectOfType(o["pos"], 5.0, 961976194)
 				SetEntityRotation(K, 0.0, 0.0, -19.5)
