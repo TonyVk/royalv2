@@ -65,20 +65,29 @@ AddEventHandler('sumo:Joinaj', function()
 				StareKoord = GetEntityCoords(PlayerPedId())
 				ESX.ShowNotification("Usli ste u sumo!")
 				ESX.ShowNotification("Da napustite sumo pisite /napustisumo!")
-				SetEntityCoords(PlayerPedId(), Config.Spawnovi[br].x, Config.Spawnovi[br].y, Config.Spawnovi[br].z, false, false, false, false)
-				FreezeEntityPosition(PlayerPedId(), true)
-				ESX.Game.SpawnVehicle("monster",{
-					x=Config.Spawnovi[br].x,
-					y=Config.Spawnovi[br].y,
-					z=Config.Spawnovi[br].z											
-				},Config.Spawnovi[br].h, function(callback_vehicle)
-					TaskWarpPedIntoVehicle(GetPlayerPed(-1), callback_vehicle, -1)
-					FreezeEntityPosition(callback_vehicle, true)
-					TriggerEvent("advancedFuel:setEssence", 100, GetVehicleNumberPlateText(callback_vehicle), GetDisplayNameFromVehicleModel(GetEntityModel(callback_vehicle)))
-					SetVehicleDoorsLocked(callback_vehicle, 4)
-					Vozilo = callback_vehicle
-					FreezeEntityPosition(PlayerPedId(), false)
-				end)
+				for i=1, #Config.Spawnovi, 1 do
+					if ESX.Game.IsSpawnPointClear({
+						x = Config.Spawnovi[i].x,
+						y = Config.Spawnovi[i].y,
+						z = Config.Spawnovi[i].z
+					}, 5.0) then
+						SetEntityCoords(PlayerPedId(), Config.Spawnovi[i].x, Config.Spawnovi[i].y, Config.Spawnovi[i].z, false, false, false, false)
+						FreezeEntityPosition(PlayerPedId(), true)
+						ESX.Game.SpawnVehicle("monster",{
+							x=Config.Spawnovi[i].x,
+							y=Config.Spawnovi[i].y,
+							z=Config.Spawnovi[i].z											
+						},Config.Spawnovi[i].h, function(callback_vehicle)
+							TaskWarpPedIntoVehicle(GetPlayerPed(-1), callback_vehicle, -1)
+							FreezeEntityPosition(callback_vehicle, true)
+							TriggerEvent("advancedFuel:setEssence", 100, GetVehicleNumberPlateText(callback_vehicle), GetDisplayNameFromVehicleModel(GetEntityModel(callback_vehicle)))
+							SetVehicleDoorsLocked(callback_vehicle, 4)
+							Vozilo = callback_vehicle
+							FreezeEntityPosition(PlayerPedId(), false)
+						end)
+						break
+					end
+				end
 				TriggerEvent("EoTiIzSalona", 1)
 				Startajj = 1
 				PratiPocetak()
