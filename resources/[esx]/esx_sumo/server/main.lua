@@ -20,6 +20,7 @@ end)
 
 TriggerEvent('es:addGroupCommand', 'pokrenisumo', "admin", function(source, args, user)
     if not PokrenutSumo then
+		Igraci = {}
 		PokrenutSumo = true
 		ZadnjaPozicija = 1
 		TriggerEvent("sumo:Poruka1")

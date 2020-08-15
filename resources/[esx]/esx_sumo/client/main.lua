@@ -66,22 +66,29 @@ AddEventHandler('sumo:Joinaj', function()
 				ESX.ShowNotification("Usli ste u sumo!")
 				ESX.ShowNotification("Da napustite sumo pisite /napustisumo!")
 				local NasoMjesto = false
+				SetEntityCoords(PlayerPedId(), 526.83276367188, -3175.8767089844, 46.312446594238, false, false, false, false)
+				FreezeEntityPosition(PlayerPedId(), true)
+				Wait(200)
 				for i=1, #Config.Spawnovi, 1 do
 					if ESX.Game.IsSpawnPointClear({
 						x = Config.Spawnovi[i].x,
 						y = Config.Spawnovi[i].y,
 						z = Config.Spawnovi[i].z
 					}, 5.0) then
+						print(ESX.Game.IsSpawnPointClear({
+							x = Config.Spawnovi[i].x,
+							y = Config.Spawnovi[i].y,
+							z = Config.Spawnovi[i].z
+						}, 5.0))
 						NasoMjesto = true
-						SetEntityCoords(PlayerPedId(), Config.Spawnovi[i].x, Config.Spawnovi[i].y, Config.Spawnovi[i].z, false, false, false, false)
-						FreezeEntityPosition(PlayerPedId(), true)
 						ESX.Game.SpawnVehicle("monster",{
 							x=Config.Spawnovi[i].x,
 							y=Config.Spawnovi[i].y,
 							z=Config.Spawnovi[i].z											
 						},Config.Spawnovi[i].h, function(callback_vehicle)
-							TaskWarpPedIntoVehicle(GetPlayerPed(-1), callback_vehicle, -1)
 							FreezeEntityPosition(callback_vehicle, true)
+							TaskWarpPedIntoVehicle(GetPlayerPed(-1), callback_vehicle, -1)
+							--FreezeEntityPosition(callback_vehicle, true)
 							TriggerEvent("advancedFuel:setEssence", 100, GetVehicleNumberPlateText(callback_vehicle), GetDisplayNameFromVehicleModel(GetEntityModel(callback_vehicle)))
 							SetVehicleDoorsLocked(callback_vehicle, 4)
 							Vozilo = callback_vehicle
@@ -92,11 +99,13 @@ AddEventHandler('sumo:Joinaj', function()
 				end
 				if NasoMjesto == false then
 					TriggerServerEvent("sumo:SmanjiPoziciju")
+					FreezeEntityPosition(PlayerPedId(), false)
 					ESX.ShowNotification("Nema slobodnog mjesta na eventu")
 					USumo = false
 					TriggerEvent("iens:Dozvoljeno", true)
 					Vozilo = nil
 					SetPlayerCanDoDriveBy(PlayerId(), true)
+					SetEntityCoords(PlayerPedId(), StareKoord, false, false, false, false)
 					StareKoord = nil
 				else
 					TriggerEvent("EoTiIzSalona", 1)
