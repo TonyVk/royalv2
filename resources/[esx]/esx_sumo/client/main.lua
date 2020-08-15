@@ -65,12 +65,14 @@ AddEventHandler('sumo:Joinaj', function()
 				StareKoord = GetEntityCoords(PlayerPedId())
 				ESX.ShowNotification("Usli ste u sumo!")
 				ESX.ShowNotification("Da napustite sumo pisite /napustisumo!")
+				local NasoMjesto = false
 				for i=1, #Config.Spawnovi, 1 do
 					if ESX.Game.IsSpawnPointClear({
 						x = Config.Spawnovi[i].x,
 						y = Config.Spawnovi[i].y,
 						z = Config.Spawnovi[i].z
 					}, 5.0) then
+						NasoMjesto = true
 						SetEntityCoords(PlayerPedId(), Config.Spawnovi[i].x, Config.Spawnovi[i].y, Config.Spawnovi[i].z, false, false, false, false)
 						FreezeEntityPosition(PlayerPedId(), true)
 						ESX.Game.SpawnVehicle("monster",{
@@ -88,9 +90,19 @@ AddEventHandler('sumo:Joinaj', function()
 						break
 					end
 				end
-				TriggerEvent("EoTiIzSalona", 1)
-				Startajj = 1
-				PratiPocetak()
+				if NasoMjesto == false then
+					TriggerServerEvent("sumo:SmanjiPoziciju")
+					ESX.ShowNotification("Nema slobodnog mjesta na eventu")
+					USumo = false
+					TriggerEvent("iens:Dozvoljeno", true)
+					Vozilo = nil
+					SetPlayerCanDoDriveBy(PlayerId(), true)
+					StareKoord = nil
+				else
+					TriggerEvent("EoTiIzSalona", 1)
+					Startajj = 1
+					PratiPocetak()
+				end
 			end
 		end)
 	else
