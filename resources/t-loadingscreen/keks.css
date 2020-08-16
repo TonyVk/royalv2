@@ -30,6 +30,8 @@ strong {
 }
 
 .enable_music {
+	z-index: 1;
+    position: relative;
     color: #cbaa59;
     font-family: 'Raleway', sans-serif;
     text-align: center;
