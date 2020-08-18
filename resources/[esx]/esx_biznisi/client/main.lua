@@ -24,8 +24,8 @@ Citizen.CreateThread(function()
 end)
 
 RegisterCommand("napravibiznis", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
+	ESX.TriggerServerCallback('DajMiPermLevelCall', function(perm)
+		if perm == 69 then
 			if args[1] ~= nil and args[2] ~= nil then
 				local ime = args[1]
 				local naso = 0
@@ -52,8 +52,8 @@ RegisterCommand("napravibiznis", function(source, args, rawCommandString)
 end, false)
 
 RegisterCommand("bizniskoord", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
+	ESX.TriggerServerCallback('DajMiPermLevelCall', function(perm)
+		if perm == 69 then
 			if args[1] ~= nil then
 				local ime = args[1]
 				local naso = 0
@@ -70,6 +70,32 @@ RegisterCommand("bizniskoord", function(source, args, rawCommandString)
 				end
 			else
 				ESX.ShowNotification("[System] /bizniskoord [Ime]")
+			end
+		else
+			ESX.ShowNotification("Nemate pristup ovoj komandi!")
+		end
+	end)
+end, false)
+
+RegisterCommand("biznisvlasnik", function(source, args, rawCommandString)
+	ESX.TriggerServerCallback('DajMiPermLevelCall', function(perm)
+		if perm == 69 then
+			if args[1] ~= nil and args[2] ~= nil then
+				local ime = args[1]
+				local id = args[2]
+				local naso = 0
+				for i=1, #Biznisi, 1 do
+					if Biznisi[i] ~= nil and Biznisi[i].Ime == ime then
+						naso = 1
+						TriggerServerEvent("biznis:PostaviVlasnika", ime, id)
+						break
+					end
+				end
+				if naso == 0 then
+					ESX.ShowNotification("Biznis sa tim imenom ne postoji!")
+				end
+			else
+				ESX.ShowNotification("[System] /biznisvlasnik [Ime][ID]")
 			end
 		else
 			ESX.ShowNotification("Nemate pristup ovoj komandi!")
@@ -182,12 +208,9 @@ function OpenBiznisMenu(ime)
 	if MojBiznis == ime then
 		table.insert(elements, {label = "Stanje sefa", value = 'stanje'})
 		table.insert(elements, {label = "Uzmi iz sefa", value = 'sef'})
-		table.insert(elements, {label = "Prodaj", value = 'prodaj'})
 	else
 		table.insert(elements, {label = "Ovaj biznis nije tvoj!", value = 'error'})
 	end
-  else
-	table.insert(elements, {label = "Kupite biznis", value = 'kupi'})
   end
 
     ESX.UI.Menu.Open(
@@ -202,19 +225,11 @@ function OpenBiznisMenu(ime)
 
       menu.close()
 
-      if data.current.value == 'citizen_wear' then
+      if data.current.value == 'stanje' then
 		
       end
 
-      if data.current.value == 'mafia_wear' then
-		
-      end
-
-      if data.current.value == 'mafia_wear' then
-		
-      end
-
-      if data.current.value == 'lieutenant_wear' then
+      if data.current.value == 'sef' then
 		
       end
 	  

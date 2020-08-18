@@ -85,3 +85,18 @@ AddEventHandler('biznis:PostaviKoord', function(ime, koord)
 	end
 	TriggerClientEvent("biznis:UpdateKoord", -1, Koord)
 end)
+
+RegisterNetEvent('biznis:PostaviVlasnika')
+AddEventHandler('biznis:PostaviVlasnika', function(ime, id)
+	local xPlayer = ESX.GetPlayerFromId(id)
+	MySQL.Async.execute('UPDATE biznisi SET Vlasnik = @vl WHERE Ime = @im', {
+		['@vl'] = xPlayer.identifier,
+		['@im'] = ime
+	})
+	for i=1, #Biznisi, 1 do
+		if Biznisi[i] ~= nil and Biznisi[i].Ime == ime then
+			Biznisi[i].Kupljen = true
+		end
+	end
+	TriggerClientEvent("biznis:UpdateBiznise", -1, Biznisi)
+end)
