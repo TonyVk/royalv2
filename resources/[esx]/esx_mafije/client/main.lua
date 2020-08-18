@@ -78,29 +78,30 @@ function SpawnBlipove()
 	for i=1, #Koord, 1 do
 		if Koord[i] ~= nil and Koord[i].Ime == "Lider" then
 			local x,y,z = table.unpack(Koord[i].Coord)
-			
-			Blipovi[Koord[i].Mafija] = AddBlipForCoord(x,y,z)
+			if x ~= 0 and x ~= nil then
+				Blipovi[Koord[i].Mafija] = AddBlipForCoord(x,y,z)
 
-			SetBlipSprite (Blipovi[Koord[i].Mafija], 378)
-			SetBlipDisplay(Blipovi[Koord[i].Mafija], 4)
-			SetBlipScale  (Blipovi[Koord[i].Mafija], 1.2)
-			for a=1, #Boje, 1 do
-				if Boje[a] ~= nil and Boje[a].Mafija == Koord[i].Mafija and Boje[a].Ime == "Blip" then
-					SetBlipColour(Blipovi[Koord[i].Mafija], tonumber(Boje[a].Boja))
-					break
+				SetBlipSprite (Blipovi[Koord[i].Mafija], 378)
+				SetBlipDisplay(Blipovi[Koord[i].Mafija], 4)
+				SetBlipScale  (Blipovi[Koord[i].Mafija], 1.2)
+				for a=1, #Boje, 1 do
+					if Boje[a] ~= nil and Boje[a].Mafija == Koord[i].Mafija and Boje[a].Ime == "Blip" then
+						SetBlipColour(Blipovi[Koord[i].Mafija], tonumber(Boje[a].Boja))
+						break
+					end
 				end
-			end
-			SetBlipAsShortRange(Blipovi[Koord[i].Mafija], true)
+				SetBlipAsShortRange(Blipovi[Koord[i].Mafija], true)
 
-			BeginTextCommandSetBlipName("STRING")
-			for j=1, #Mafije, 1 do
-				if Mafije[j] ~= nil and Mafije[j].Ime == Koord[i].Mafija then
-					AddTextComponentString(firstToUpper(Mafije[j].Label))
-					break
+				BeginTextCommandSetBlipName("STRING")
+				for j=1, #Mafije, 1 do
+					if Mafije[j] ~= nil and Mafije[j].Ime == Koord[i].Mafija then
+						AddTextComponentString(firstToUpper(Mafije[j].Label))
+						break
+					end
 				end
+				--AddTextComponentString(firstToUpper(Koord[i].Mafija))
+				EndTextCommandSetBlipName(Blipovi[Koord[i].Mafija])
 			end
-			--AddTextComponentString(firstToUpper(Koord[i].Mafija))
-			EndTextCommandSetBlipName(Blipovi[Koord[i].Mafija])
 		end
 	end
 end
@@ -1737,8 +1738,8 @@ function CrateDrop2(parachute)
 	
         soundID = GetSoundId()
         PlaySoundFromEntity(soundID, "Crate_Beeps", crate, "MP_CRATE_DROP_SOUNDS", true, 0)
-		
-        blipa = AddBlipForEntity(crate)
+		local x,y,z = table.unpack(parachute)
+		blipa = AddBlipForCoord(x,y,z)
         SetBlipSprite(blipa, 408)
         SetBlipNameFromTextFile(blipa, "AMD_BLIPN")
         SetBlipScale(blipa, 0.7)
@@ -2228,28 +2229,30 @@ AddEventHandler('mafije:KreirajBlip', function(co, maf)
 		RemoveBlip(Blipovi[maf])
 		Blipovi[maf] = nil
 	end
-	Blipovi[maf] = AddBlipForCoord(x,y,z)
+	if x ~= 0 and x ~= nil then
+		Blipovi[maf] = AddBlipForCoord(x,y,z)
 
-	SetBlipSprite (Blipovi[maf], 378)
-	SetBlipDisplay(Blipovi[maf], 4)
-	SetBlipScale  (Blipovi[maf], 1.2)
-	for i=1, #Boje, 1 do
-		if Boje[i] ~= nil and Boje[i].Mafija == maf and Boje[i].Ime == "Blip" then
-			SetBlipColour (Blipovi[maf], tonumber(Boje[i].Boja))
-			break
+		SetBlipSprite (Blipovi[maf], 378)
+		SetBlipDisplay(Blipovi[maf], 4)
+		SetBlipScale  (Blipovi[maf], 1.2)
+		for i=1, #Boje, 1 do
+			if Boje[i] ~= nil and Boje[i].Mafija == maf and Boje[i].Ime == "Blip" then
+				SetBlipColour (Blipovi[maf], tonumber(Boje[i].Boja))
+				break
+			end
 		end
-	end
-	SetBlipColour (Blipovi[maf], 39)
-	SetBlipAsShortRange(Blipovi[maf], true)
+		SetBlipColour (Blipovi[maf], 39)
+		SetBlipAsShortRange(Blipovi[maf], true)
 
-	BeginTextCommandSetBlipName("STRING")
-	for j=1, #Mafije, 1 do
-		if Mafije[j] ~= nil and Mafije[j].Ime == maf then
-			AddTextComponentString(firstToUpper(Mafije[j].Label))
-			break
+		BeginTextCommandSetBlipName("STRING")
+		for j=1, #Mafije, 1 do
+			if Mafije[j] ~= nil and Mafije[j].Ime == maf then
+				AddTextComponentString(firstToUpper(Mafije[j].Label))
+				break
+			end
 		end
+		EndTextCommandSetBlipName(Blipovi[maf])
 	end
-	EndTextCommandSetBlipName(Blipovi[maf])
 end)
 
 function OpenBuyStvarMenu(station)

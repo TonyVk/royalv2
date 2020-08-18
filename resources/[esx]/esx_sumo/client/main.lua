@@ -75,11 +75,6 @@ AddEventHandler('sumo:Joinaj', function()
 						y = Config.Spawnovi[i].y,
 						z = Config.Spawnovi[i].z
 					}, 5.0) then
-						print(ESX.Game.IsSpawnPointClear({
-							x = Config.Spawnovi[i].x,
-							y = Config.Spawnovi[i].y,
-							z = Config.Spawnovi[i].z
-						}, 5.0))
 						NasoMjesto = true
 						ESX.Game.SpawnVehicle("monster",{
 							x=Config.Spawnovi[i].x,
