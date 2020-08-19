@@ -923,19 +923,19 @@ RegisterServerEvent('mafije:putStockItems')
 AddEventHandler('mafije:putStockItems', function(itemName, count, maf)
   local soc = "society_"..maf
   local xPlayer = ESX.GetPlayerFromId(source)
+  local sourceItem = xPlayer.getInventoryItem(itemName)
 
   TriggerEvent('esx_addoninventory:getSharedInventory', soc, function(inventory)
 
     local item = inventory.getItem(itemName)
 
-    if item.count >= 0 then
+    if sourceItem.count >= count and count > 0 then
       xPlayer.removeInventoryItem(itemName, count)
       inventory.addItem(itemName, count)
+	  TriggerClientEvent('esx:showNotification', xPlayer.source, _U('added') .. count .. ' ' .. item.label)
     else
       TriggerClientEvent('esx:showNotification', xPlayer.source, _U('quantity_invalid'))
     end
-
-    TriggerClientEvent('esx:showNotification', xPlayer.source, _U('added') .. count .. ' ' .. item.label)
 
   end)
 
