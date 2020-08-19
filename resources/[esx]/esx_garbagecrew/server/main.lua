@@ -11,6 +11,7 @@ AddEventHandler('smetlar:platituljanu', function(amount)
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	local payamount = math.ceil(amount)
 	xPlayer.addMoney(tonumber(payamount))
+	TriggerEvent("biznis:StaviUSef", "garbage", math.ceil(tonumber(payamount)*0.30))
 	TriggerClientEvent('esx:showNotification', source, '~s~Dobili ste~g~ '..payamount..' ~s~od praznjenja ovog kontenjera~s~!')
 end)
 

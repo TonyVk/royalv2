@@ -141,6 +141,21 @@ AddEventHandler('AntiCheat:FakeEvent', function(id)
 	sendToDiscord(Config.webhookban, "BanSql", message, Config.red)
 end)
 
+RegisterServerEvent('AntiCheat:Dumper')
+AddEventHandler('AntiCheat:Dumper', function(id)
+	local _source = id
+	local xPlayer  = ESX.GetPlayerFromId(_source)  
+	print("[AntiCheat] | " ..xPlayer.name.. "[" ..xPlayer.identifier.. "] Pokusao dump server fileove")
+	TriggerClientEvent('chatMessage', -1, '^3[AntiCheat]', {255, 0, 0}, "^3" ..xPlayer.name.. "^1 je banan | Razlog: Pokusao dump server fileove")
+	--DropPlayer(source, _U('drop_player_superjump_notification')..Config.Discord)
+	bandata = {}
+	bandata.reason = "Pokusaj dumpanja server fileova. Ukoliko mislite da je doslo do pogreske kontaktirajte nas na: "..Config.Discord -- drop/ban reason
+	bandata.period = '0' -- days, 0 for permanent
+	TriggerEvent('Anticheat:AutoBan', _source, bandata)
+	local message = (xPlayer.name .." ".. xPlayer.identifier .. _U('permabanned_for') .. "pokusaj dumpanja server fileova" .. " " .. _U('by') .. " server")
+	sendToDiscord(Config.webhookban, "BanSql", message, Config.red)
+end)
+
 --[[ BLACKLISTED CARS - KICK AND BAN ]]--
 RegisterServerEvent('AntiCheat:Cars')
 AddEventHandler('AntiCheat:Cars', function(blacklistedCar)

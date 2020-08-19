@@ -6,4 +6,5 @@ AddEventHandler('esx_delivererposo:platiljantu', function(dest)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	xPlayer.addMoney(tonumber(dest.Paye))
+	TriggerEvent("biznis:StaviUSef", "deliverer", math.ceil(tonumber(dest.Paye)*0.30))
 end)

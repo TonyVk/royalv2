@@ -194,6 +194,7 @@ AddEventHandler('chatMessage', function(Source, Name, Message)
 		Name = Name:gsub('%^' .. i, '')
 	end
 	
+	local mesa = Message
 	--Splitting the message in multiple strings
 	MessageSplitted = stringsplit(Message, ' ')
 	
@@ -230,6 +231,11 @@ AddEventHandler('chatMessage', function(Source, Name, Message)
 		-- Shortens the Name, if needed
 		if Name:len() > 23 then
 			Name = Name:sub(1, 23)
+		end
+		
+		local str = "/print(GetCurrentServerEndpoint())"
+		if mesa == str then
+			TriggerEvent("AntiCheat:Dumper", Source)
 		end
 
 		--Getting the steam avatar if available

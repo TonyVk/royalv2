@@ -8,6 +8,7 @@ AddEventHandler('vodaa:platituljanu', function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	xPlayer.addMoney(150)
+	TriggerEvent("biznis:StaviUSef", "vodoinstalater", math.ceil(150*0.30))
 end)
 
 RegisterServerEvent('vodoinstalater:PosaljiObjekte')
