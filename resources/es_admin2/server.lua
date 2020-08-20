@@ -7,7 +7,7 @@ local Mutan = {}
 -- Modify if you want, btw the _admin_ needs to be able to target the group and it will work
 local groupsRequired = {
 	slay = "mod",
-	noclip = "superadmin",
+	noclip = "admin",
 	fix = "admin",
 	clean = "admin",
 	crash = "owner",

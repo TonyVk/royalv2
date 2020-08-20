@@ -64,14 +64,6 @@ function performVersionCheck()
 	end, "GET", "", {what = 'this'})
 end
 
--- Perform version check periodically while server is running. To notify of updates.
-Citizen.CreateThread(function()
-	while true do
-		performVersionCheck()
-		Citizen.Wait(3600000)
-	end
-end)
-
 AddEventHandler('playerDropped', function()
 	local Source = source
 
