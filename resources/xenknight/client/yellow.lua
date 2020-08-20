@@ -27,7 +27,13 @@ RegisterNUICallback('yellow_getPagess', function(data, cb)
 end)
 
 RegisterNUICallback('yellow_postPages', function(data, cb)
-  TriggerServerEvent('xenknight:yellow_postPagess', data.firstname or '', data.phone_number or '', data.lastname or '', data.message)
+	ESX.TriggerServerCallback('rpchat:DohvatiMute', function(odg)
+		if not odg then
+			TriggerServerEvent('xenknight:yellow_postPagess', data.firstname or '', data.phone_number or '', data.lastname or '', data.message)
+		else
+			ESX.ShowNotification("Utisani ste!")
+		end
+	end)
 end)
 
 RegisterNUICallback('deleteYellow', function(data)

@@ -16,6 +16,15 @@ AddEventHandler('es:invalidCommandHandler', function(source, command_args, user)
 	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM ', _U('unknown_command', command_args[1]) } })
 end)
 
+ESX.RegisterServerCallback('rpchat:DohvatiMute', function(source, cb)
+	local src = source
+	if Mute[src] == nil then
+		cb(false)
+	else
+		cb(true)
+	end
+end)
+
 function getIdentity(source)
 	local identifier = GetPlayerIdentifiers(source)[1]
 	local result = MySQL.Sync.fetchAll("SELECT * FROM users WHERE identifier = @identifier", {['@identifier'] = identifier})
