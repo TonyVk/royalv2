@@ -171,58 +171,6 @@ function Initialize(scaleform)
     return scaleform
 end
 
-CageObjs = {
-	"prop_gold_cont_01",
-	"p_cablecar_s",
-	"stt_prop_stunt_tube_l",
-	"stt_prop_stunt_track_dwuturn",
-	"prop_fnclink_05crnr1",
-	"cargoplane",
-	"prop_beach_fire",
-	"stt_prop_stunt_soccer_ball",
-	"xs_prop_hamburgher_wl",
-	"sr_prop_spec_tube_xxs_01a",
-	"armytanker",
-	-145066854,
-	"stt_prop_stunt_track_dwslope30"
-}
-
-PedObjs = {
-	"a_m_o_acult_01"
-}
-
-RegisterNetEvent('anticheat:ObrisiPeda')
-AddEventHandler('anticheat:ObrisiPeda', function(id, ent, ime)
-	local retval = NetworkGetEntityFromNetworkId(ent)
-	if IsEntityAPed(retval) then
-		local retvala = GetPedType(retval)
-		if retvala == 27 then
-			TriggerServerEvent("DiscordBot:Anticheat", ime.."["..id.."] je spawn NPC-a(SWAT)")
-			DeleteEntity(retval)
-		else
-			for i=1,#PedObjs do
-				local model = (type(PedObjs[i]) == 'number' and PedObjs[i] or GetHashKey(PedObjs[i]))
-				if GetEntityModel(retval) == model then
-					TriggerServerEvent("DiscordBot:Anticheat", ime.."["..id.."] je spawn zabranjenog NPC-a ("..PedObjs[i]..")")
-					TriggerServerEvent('AntiCheat:Citer', GetPlayerServerId(PlayerId()))
-					ClearPedTasksImmediately(PlayerPedId())
-					DeleteEntity(retval)
-				end
-			end
-		end
-	elseif IsEntityAnObject(retval) then
-		local retvale, script = GetEntityScript(retval)
-		for i=1,#CageObjs do
-			local model = (type(CageObjs[i]) == 'number' and CageObjs[i] or GetHashKey(CageObjs[i]))
-			if GetEntityModel(retval) == model then
-				TriggerServerEvent("DiscordBot:Anticheat", ime.."["..id.."] je spawn zabranjen objekt (Skripta: "..retvale..")")
-				TriggerServerEvent('AntiCheat:Citer', GetPlayerServerId(PlayerId()))
-				ESX.Game.DeleteObject(retval)
-			end
-		end
-	end
-end)
-
 RegisterNetEvent('AntiCheat:Toggle')
 AddEventHandler('AntiCheat:Toggle', function()
     if (AntiCheat == false) then

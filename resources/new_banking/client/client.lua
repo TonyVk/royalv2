@@ -177,7 +177,7 @@ RegisterNUICallback('kredit', function(data)
 		if br.kredit == 0 then
 			PlayerData = ESX.GetPlayerData()
 			if PlayerData.job.name ~= "unemployed" then
-				if br.brplaca >= 5 then
+				if br.brplaca >= 850 then
 					TriggerServerEvent('banka:podignikredit', tonumber(data.amount))
 					TriggerServerEvent('bank:balance')
 					Wait(200)
@@ -189,7 +189,7 @@ RegisterNUICallback('kredit', function(data)
 						})
 					end)
 				else
-					local brojic = 5-br.brplaca
+					local brojic = 850-br.brplaca
 					if brojic >= 1 and brojic <= 4 then
 						ESX.ShowNotification("Nije vam jos dozvoljeno podizati kredit, moci cete nakon "..brojic.." primljene place!")
 					else

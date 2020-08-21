@@ -89,9 +89,39 @@ AddEventHandler('explosionEvent', function(sender, ev)
     end
 end)
 
-AddEventHandler("entityCreated",  function(entity)
+--[[AddEventHandler("entityCreated",  function(entity)
 	local entID = NetworkGetNetworkIdFromEntity(entity)
 	TriggerClientEvent("anticheat:ObrisiPeda", NetworkGetEntityOwner(entity), NetworkGetEntityOwner(entity), entID, GetPlayerName(NetworkGetEntityOwner(entity)))
+end)]]
+
+BlObjs = {
+	"s_m_y_swat_01",
+	"prop_gold_cont_01",
+	"p_cablecar_s",
+	"stt_prop_stunt_tube_l",
+	"stt_prop_stunt_track_dwuturn",
+	"prop_fnclink_05crnr1",
+	"cargoplane",
+	"prop_beach_fire",
+	"stt_prop_stunt_soccer_ball",
+	"xs_prop_hamburgher_wl",
+	"sr_prop_spec_tube_xxs_01a",
+	"armytanker",
+	-145066854,
+	"stt_prop_stunt_track_dwslope30",
+	"a_m_o_acult_01"
+}
+
+AddEventHandler("entityCreating",  function(entity)
+	for i=1,#BlObjs do
+		local model = (type(BlObjs[i]) == 'number' and BlObjs[i] or GetHashKey(BlObjs[i]))
+		if GetEntityModel(entity) == model then
+			local ime = GetPlayerName(NetworkGetEntityOwner(entity))
+			local id = NetworkGetEntityOwner(entity)
+			TriggerEvent("DiscordBot:Anticheat", ime.."["..id.."] je spawn zabranjen objekt/NPC-a ("..BlObjs[i]..")")
+			CancelEvent()
+		end
+	end
 end)
 
 --Fake eventi
