@@ -607,7 +607,7 @@ end)
 
 -- console / rcon can also utilize es:command events, but breaks since the source isn't a connected player, ending up in error messages
 AddEventHandler('bansql:sendMessage', function(source, message)
-	if source ~= 0 then
+	if source ~= 0 and source ~= nil then
 		TriggerClientEvent('chat:addMessage', source, { args = { '^1Banlist', message } } )
 	else
 		print('SqlBan: ' .. message)

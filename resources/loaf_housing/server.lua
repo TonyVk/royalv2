@@ -366,7 +366,7 @@ AddEventHandler('loaf_housing:withdrawItem', function(type, item, amount, owner)
                     if inventory.getItem(item)['count'] >= amount then
 						local xItem = xPlayer.getInventoryItem(item)
 						if xItem.limit ~= -1 and (xItem.count + amount) > xItem.limit then
-							TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Ne stane vam vise u inventory!")
+							TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise u inventory!")
 						else
 							TriggerClientEvent('esx:showNotification', src, (Strings['You_Withdrew']):format(amount, inventory.getItem(item)['label']))
 							xPlayer.addInventoryItem(item, amount)
