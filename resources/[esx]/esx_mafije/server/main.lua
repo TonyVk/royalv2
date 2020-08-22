@@ -937,7 +937,7 @@ AddEventHandler('mafije:putStockItems', function(itemName, count, maf)
     if sourceItem.count >= count and count > 0 then
       xPlayer.removeInventoryItem(itemName, count)
       inventory.addItem(itemName, count)
-	  TriggerClientEvent('esx:showNotification', xPlayer.source, _U('added') .. count .. ' ' .. item.label)
+	  TriggerClientEvent('esx:showNotification', xPlayer.source, _U('added') .. count .. ' ' .. sourceItem.label)
     else
       TriggerClientEvent('esx:showNotification', xPlayer.source, _U('quantity_invalid'))
     end
