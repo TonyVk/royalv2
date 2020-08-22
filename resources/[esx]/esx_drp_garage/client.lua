@@ -476,11 +476,7 @@ function SpawnPoundedVehicle(vehicle)
 
 	TriggerEvent("esx_property:ProsljediVozilo", GarazaV, Vblip)
 	
-	TriggerServerEvent('eden_garage:modifystate2', vehicle, 1)
-
-	ESX.SetTimeout(10000, function()
-		TriggerServerEvent('eden_garage:modifystate2', vehicle, 0)
-	end)
+	TriggerServerEvent('eden_garage:modifystate2', vehicle, 0)
 end
 
 -- Marker actions
