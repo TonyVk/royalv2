@@ -85,16 +85,21 @@ RegisterServerEvent('esx_zemunski:getStockItem')
 AddEventHandler('esx_zemunski:getStockItem', function(itemName, count)
 
   local xPlayer = ESX.GetPlayerFromId(source)
+  local sourceItem = xPlayer.getInventoryItem(itemName)
 
   TriggerEvent('esx_addoninventory:getSharedInventory', 'society_zemunski', function(inventory)
 
     local item = inventory.getItem(itemName)
 
     if item.count >= count then
-      inventory.removeItem(itemName, count)
-      xPlayer.addInventoryItem(itemName, count)
-	  TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_withdrawn') .. count .. ' ' .. item.label)
-    else
+		if sourceItem.limit ~= -1 and (sourceItem.count + count) <= sourceItem.limit then
+			inventory.removeItem(itemName, count)
+			xPlayer.addInventoryItem(itemName, count)
+			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_withdrawn') .. count .. ' ' .. item.label)
+		else
+			TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise u inventory!")
+		end
+	else
       TriggerClientEvent('esx:showNotification', xPlayer.source, _U('quantity_invalid'))
     end
 
@@ -121,19 +126,20 @@ RegisterServerEvent('esx_zemunski:putStockItems')
 AddEventHandler('esx_zemunski:putStockItems', function(itemName, count)
 
   local xPlayer = ESX.GetPlayerFromId(source)
+  local sourceItem = xPlayer.getInventoryItem(itemName)
 
   TriggerEvent('esx_addoninventory:getSharedInventory', 'society_zemunski', function(inventory)
 
     local item = inventory.getItem(itemName)
 
-    if item.count >= 0 then
+    if sourceItem.count >= count and count > 0 then
       xPlayer.removeInventoryItem(itemName, count)
       inventory.addItem(itemName, count)
     else
       TriggerClientEvent('esx:showNotification', xPlayer.source, _U('quantity_invalid'))
     end
 
-    TriggerClientEvent('esx:showNotification', xPlayer.source, _U('added') .. count .. ' ' .. item.label)
+    TriggerClientEvent('esx:showNotification', xPlayer.source, _U('added') .. count .. ' ' .. sourceItem.label)
 
   end)
 

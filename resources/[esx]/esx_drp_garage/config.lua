@@ -27,38 +27,38 @@ Config = {
 Config.Garages = {
 
 	Garage_Centre = {	
-		Pos = {x=215.800, y=-810.057, z=29.727},
+		Pos = {x=-825.510, y= -440.8749, z= 35.6722},
 		Size  = {x = 3.0, y = 3.0, z = 1.0},
 		Color = {r = 204, g = 204, b = 0},
 		Marker = 1,
 		PrikaziBlip = 1,
 		Ime = "Garaza Centar",
 		SpawnPoint = {
-			Pos = {x=239.700, y= -772.1149, z= 29.5722},
+			Pos = {x=-835.510, y= -401.8749, z= 30.4722},
 			Color = {r=0,g=255,b=0},
 			Size  = {x = 3.0, y = 3.0, z = 1.0},
-			Heading=157.84,
+			Heading= 300.00,
 			Marker = 1		
 		},
 		DeletePoint = {
-			Pos = {x=236.424, y=-739.377, z=29.646},
+			Pos = {x=-828.774, y=-428.77, z=35.646},
 			Color = {r=255,g=0,b=0},
 			Size  = {x = 3.0, y = 3.0, z = 1.0},
 			Marker = 1,
 			
 		},
 		MunicipalPoundPoint = {
-			Pos = {x=482.896, y=-1316.557, z=28.301},
+			Pos = {x=-1981.15, y=-501.200, z=11.201},
 			Color = {r=25,g=25,b=112},
 			Size  = {x = 3.0, y = 3.0, z = 1.0},
 			Marker = 1
 		},
 		SpawnMunicipalPoundPoint = {
-			Pos = {x=490.942, y=-1313.067, z=27.964},
+			Pos = {x = -1978.8090820313, y = -494.64910888672, z = 11.177969932556},
 			Color = {r=0,g=255,b=0},
 			Size  = {x = 3.0, y = 3.0, z = 1.0},
 			Marker = 1,
-			Heading=299.42
+			Heading=321.71
 		},
 	},
 	
@@ -144,23 +144,23 @@ Config.Garages = {
 			Pos = {234.44923400879, -976.57659912109, -99.999954223633},
 		},
 		DeletePoint = {
-			Pos = {x = 245.23, y = -743.14, z = 31.90 },
+			Pos = {x = -1100.23, y = 358.14, z = 68.00 },
 			Color = {r=0,g=255,b=0},
 			Size  = {x = 3.0, y = 3.0, z = 1.0},
 			Marker = 0
 		}
 	},
 	Garage_DodatniMarkeri = {	
-		Pos = {x = 245.23, y = -743.14, z = 31.90 },
+		Pos = {x = -838.8584228516, y = -397.13308837891, z = 30.370678710938 },
 		Size  = {x = 3.0, y = 3.0, z = 1.0},
 		Color = {r = 255, g = 0, b = 0},
 		Marker = 1,
 		Ime = "DodatniMarkeri",
 		PrikaziBlip = 0,
 		SpawnPoint = {
-			Pos = {x = 251.5884228516, y = -760.33308837891, z = 33.570678710938 },
+			Pos = {x = -838.8584228516, y = -397.13308837891, z = 30.370678710938 },
 			Color = {r=0,g=255,b=0},
-			Heading = 345.00,
+			Heading = 300.00,
 			Size  = {x = 3.0, y = 3.0, z = 1.0},
 			Marker = 1
 		},
@@ -171,23 +171,23 @@ Config.Garages = {
 			Pos = {234.44923400879, -976.57659912109, -99.999954223633},
 		},
 		DeletePoint = {
-			Pos = {x = 245.23, y = -742.14, z = 29.70 },
+			Pos = {x = -838.14, y = -413.14, z = 35.80 },
 			Color = {r=255,g=0,b=0},
 			Size  = {x = 3.0, y = 3.0, z = 1.0},
 			Marker = 1
 		}
 	},
 	Garage_DodatniMarkeri2 = {	
-		Pos = {x = 245.23, y = -743.14, z = 31.90 },
+		Pos = {x = -841.3184228516, y = -392.94308837891, z = 30.35678710938 },
 		Size  = {x = 3.0, y = 3.0, z = 1.0},
 		Color = {r = 255, g = 0, b = 0},
 		Marker = 1,
 		Ime = "DodatniMarkeri2",
 		PrikaziBlip = 0,
 		SpawnPoint = {
-			Pos = {x = 242.6184228516, y = -779.94308837891, z = 29.55678710938 },
+			Pos = {x = -841.3184228516, y = -392.94308837891, z = 30.35678710938 },
 			Color = {r=0,g=255,b=0},
-			Heading = 160.07,
+			Heading = 300.00,
 			Size  = {x = 3.0, y = 3.0, z = 1.0},
 			Marker = 1
 		},
@@ -198,23 +198,23 @@ Config.Garages = {
 			Pos = {234.44923400879, -976.57659912109, -99.999954223633},
 		},
 		DeletePoint = {
-			Pos = {x = 252.23, y = -744.44, z = 29.70 },
+			Pos = {x = -859.13, y = -409.39, z = 35.80 },
 			Color = {r=255,g=0,b=0},
 			Size  = {x = 3.0, y = 3.0, z = 1.0},
 			Marker = 1
 		}
 	},
 	Garage_DodatniMarkeri3 = {	
-		Pos = {x = 245.23, y = -743.14, z = 31.90 },
+		Pos = {x = -867.38, y = -428.34, z = 35.80 },
 		Size  = {x = 3.0, y = 3.0, z = 1.0},
 		Color = {r = 255, g = 0, b = 0},
 		Marker = 1,
 		Ime = "DodatniMarkeri2",
 		PrikaziBlip = 0,
 		SpawnPoint = {
-			Pos = {x = 232.0084228516, y = -775.86308837891, z = 29.55678710938 },
+			Pos = {x = -816.3284228516, y = -420.86308837891, z = 44.45678710938 },
 			Color = {r=0,g=255,b=0},
-			Heading = 160.07,
+			Heading = 300.07,
 			Size  = {x = 3.0, y = 3.0, z = 1.0},
 			Marker = 1
 		},
@@ -225,7 +225,7 @@ Config.Garages = {
 			Pos = {234.44923400879, -976.57659912109, -99.999954223633},
 		},
 		DeletePoint = {
-			Pos = {x = 258.83, y = -746.44, z = 29.70 },
+			Pos = {x = -867.38, y = -428.34, z = 35.80 },
 			Color = {r=255,g=0,b=0},
 			Size  = {x = 3.0, y = 3.0, z = 1.0},
 			Marker = 1

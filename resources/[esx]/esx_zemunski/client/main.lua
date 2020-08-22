@@ -314,6 +314,10 @@ function OpenArmoryMenu(station)
   if Config.EnableArmoryManagement then
 
     local elements = {}
+	if PlayerData.job.grade > 2 then
+		table.insert(elements, {label = _U('get_weapon'), value = 'get_weapon'})
+	end
+	table.insert(elements, {label = _U('put_weapon'), value = 'put_weapon'})
 	if PlayerData.job.grade > 1 then
 		table.insert(elements, {label = 'Uzmi stvar',  value = 'get_stock'})
 	end
@@ -329,7 +333,15 @@ function OpenArmoryMenu(station)
         elements = elements,
       },
       function(data, menu)
-        if data.current.value == 'put_stock' then
+			if data.current.value == 'get_weapon' then
+			  OpenGetWeaponMenu()
+			end
+
+			if data.current.value == 'put_weapon' then
+			  OpenPutWeaponMenu()
+			end
+			
+			if data.current.value == 'put_stock' then
               OpenPutStocksMenu()
             end
 
@@ -1014,7 +1026,7 @@ function OpenGetWeaponMenu()
 
     for i=1, #weapons, 1 do
       if weapons[i].count > 0 then
-        table.insert(elements, {label = 'x' .. weapons[i].count .. ' ' .. ESX.GetWeaponLabel(weapons[i].name).."("..weapons[i].ammo..")", value = weapons[i].name, metci = weapons[i].ammo, kolicina = weapons[i].count})
+        table.insert(elements, {label = 'x' .. weapons[i].count .. ' ' .. ESX.GetWeaponLabel(weapons[i].name).."("..weapons[i].ammo..")", value = weapons[i].name, ammo = weapons[i].ammo})
       end
     end
 
@@ -1028,43 +1040,15 @@ function OpenGetWeaponMenu()
       function(data, menu)
 
         menu.close()
-		if data.current.kolicina > 1 then
-			if data.current.metci > 0 then
-				ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'kolicina', {
-						title = "Kolicina metaka"
-					}, function(data2, menu2)
-						local amount = tonumber(data2.value)
-
-						if amount == nil then
-							ESX.ShowNotification("Krivi iznos!")
-						else
-							if amount <= data.current.metci then
-								if amount <= 250 then
-									menu2.close()
-									menu.close()
-									ESX.TriggerServerCallback('esx_zemunski:removeArmoryWeapon', function()
-										OpenGetWeaponMenu()
-									end, data.current.value, amount)
-								else
-									ESX.ShowNotification("Ne mozete vise od 250!")
-								end
-							else
-								menu2.close()
-								ESX.ShowNotification("Nema toliko metaka!")
-							end
-						end
-					end, function(data2, menu2)
-						menu2.close()
-					end)
-			else
-				ESX.TriggerServerCallback('esx_zemunski:removeArmoryWeapon', function()
-					OpenGetWeaponMenu()
-				end, data.current.value, data.current.metci)
-			end
+		
+		if data.current.ammo >= 250 then
+			ESX.TriggerServerCallback('esx_zemunski:removeArmoryWeapon', function()
+				OpenGetWeaponMenu()
+			end, data.current.value, 250, PlayerData.job.name)
 		else
 			ESX.TriggerServerCallback('esx_zemunski:removeArmoryWeapon', function()
 				OpenGetWeaponMenu()
-			end, data.current.value, data.current.metci)
+			end, data.current.value, data.current.ammo)
 		end
       end,
       function(data, menu)

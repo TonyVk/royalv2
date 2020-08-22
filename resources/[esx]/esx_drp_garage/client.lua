@@ -466,7 +466,7 @@ function SpawnPoundedVehicle(vehicle)
 		x=this_Garage.SpawnMunicipalPoundPoint.Pos.x ,
 		y=this_Garage.SpawnMunicipalPoundPoint.Pos.y,
 		z=this_Garage.SpawnMunicipalPoundPoint.Pos.z + 1											
-		},286.85, function(callback_vehicle)
+		},321.71, function(callback_vehicle)
 		ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
 		SetVehRadioStation(callback_vehicle, "OFF")
 		local plate = GetVehicleNumberPlateText(callback_vehicle)
@@ -476,10 +476,10 @@ function SpawnPoundedVehicle(vehicle)
 
 	TriggerEvent("esx_property:ProsljediVozilo", GarazaV, Vblip)
 	
-	TriggerServerEvent('eden_garage:modifystate', vehicle, 1)
+	TriggerServerEvent('eden_garage:modifystate2', vehicle, 1)
 
 	ESX.SetTimeout(10000, function()
-		TriggerServerEvent('eden_garage:modifystate', vehicle, 0)
+		TriggerServerEvent('eden_garage:modifystate2', vehicle, 0)
 	end)
 end
 
