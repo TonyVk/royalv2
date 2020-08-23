@@ -128,10 +128,12 @@ end)
 
 RegisterNetEvent('EoSvimaGorivo')
 AddEventHandler('EoSvimaGorivo', function(nid, gor) 
-	local retval = NetworkGetEntityFromNetworkId(nid)
-	if DoesEntityExist(retval) then
-		SetVehicleFuelLevel(retval, gor + 0.0)
-		DecorSetFloat(retval, Config.FuelDecor, GetVehicleFuelLevel(retval))
+	if NetworkDoesNetworkIdExist(nid) then
+		local retval = NetworkGetEntityFromNetworkId(nid)
+		if DoesEntityExist(retval) then
+			SetVehicleFuelLevel(retval, gor + 0.0)
+			DecorSetFloat(retval, Config.FuelDecor, GetVehicleFuelLevel(retval))
+		end
 	end
 end)
 

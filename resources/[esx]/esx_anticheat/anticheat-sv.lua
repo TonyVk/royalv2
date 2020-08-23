@@ -86,6 +86,10 @@ AddEventHandler('explosionEvent', function(sender, ev)
     end
 end)
 
+AddEventHandler("clearPedTasksEvent", function(sender, data)
+	TriggerEvent("DiscordBot:Anticheat", "[TESTIRANJE] "..GetPlayerName(sender).."("..sender..") je izbacio iz vozila!")
+end)
+
 --[[AddEventHandler("entityCreated",  function(entity)
 	local entID = NetworkGetNetworkIdFromEntity(entity)
 	TriggerClientEvent("anticheat:ObrisiPeda", NetworkGetEntityOwner(entity), NetworkGetEntityOwner(entity), entID, GetPlayerName(NetworkGetEntityOwner(entity)))
