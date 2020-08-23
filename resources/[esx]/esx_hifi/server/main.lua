@@ -1,19 +1,8 @@
 ESX = nil
 local PermLvl = 0
+local Vrijeme = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-
-RegisterCommand("hifi", function(source, args, rawCommandString)
-	TriggerEvent("DajMiPermLevel2", source)
-	if PermLvl > 0 then
-		TriggerClientEvent('esx_hifi:place_hifi', source)
-		TriggerClientEvent('esx:showNotification', source, _U('put_hifi'))
-	else
-		name = "System"..":"
-		message = " Nemate pristup ovoj komandi"
-		TriggerClientEvent('chat:addMessage', source, { args = { name, message }, color = r,g,b })	
-	end
-end, false)
 
 RegisterNetEvent('VratiPermLevel2')
 AddEventHandler('VratiPermLevel2', function(perm)
@@ -37,7 +26,12 @@ end)
 
 RegisterNetEvent('radio:SyncajVrijeme')
 AddEventHandler('radio:SyncajVrijeme', function(vr, id)
-	TriggerClientEvent("radio:SyncVr", -1, vr, id)
+	Vrijeme[id] = vr
+	--TriggerClientEvent("radio:SyncVr", -1, vr, id)
+end)
+
+ESX.RegisterServerCallback('radio:DohvatiVrijeme', function(source, cb, id)
+	cb(Vrijeme[id])
 end)
 
 RegisterServerEvent('esx_hifi:play_music')

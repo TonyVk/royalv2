@@ -33,12 +33,42 @@ Citizen.CreateThread(function()
     ESX.PlayerData = ESX.GetPlayerData()
 end)
 
+RegisterCommand("hifi", function(source, args, rawCommandString)
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if br == 1 then
+			TriggerEvent('esx_hifi:place_hifi')
+			TriggerEvent('esx:showNotification', _U('put_hifi'))
+		else
+			name = "System"..":"
+			message = " Nemate pristup ovoj komandi"
+			TriggerEvent('chat:addMessage', { args = { name, message }, color = r,g,b })	
+		end
+	end)
+end, false)
+
 RegisterNetEvent('esx_hifi:place_hifi')
 AddEventHandler('esx_hifi:place_hifi', function()
     startAnimation("anim@heists@money_grab@briefcase","put_down_case")
     Citizen.Wait(1000)
     ClearPedTasks(PlayerPedId())
-    TriggerEvent('esx:spawnObject', 'prop_boombox_01')
+	local playerPed = PlayerPedId()
+	local coords    = GetEntityCoords(playerPed)
+	local forward   = GetEntityForwardVector(playerPed)
+	local x, y, z   = table.unpack(coords + forward * 1.0)
+
+	ESX.Game.SpawnObject('prop_boombox_01', {
+		x = x,
+		y = y,
+		z = z
+	}, function(obj)
+		SetEntityHeading(obj, GetEntityHeading(playerPed))
+		PlaceObjectOnGroundProperly(obj)
+		NetworkRequestControlOfEntity(obj)
+		local neid = ObjToNet(obj)
+		SetNetworkIdExistsOnAllMachines(neid, true)
+		SetNetworkIdCanMigrate(neid, true)
+	end)
+    --TriggerEvent('esx:spawnObject', 'prop_boombox_01')
 	Ped = PlayerPedId()
 end)
 
@@ -81,8 +111,9 @@ AddEventHandler('esx_hifi:play_music', function(id, object)
 	Citizen.CreateThread(function()
 		while true do
 			Citizen.Wait(100)
+				local objecte = nil
+				objecte = GetClosestObjectOfType(object, 10.0, GetHashKey('prop_boombox_01'), false, false, false)
 				if UKrugu == 1 then
-					local objecte = GetClosestObjectOfType(object, 10.0, GetHashKey('prop_boombox_01'), false, false, false)
 					if objecte == nil or objecte == -1 or objecte == 0 then
 						UKrugu = 0
 						lastEntity = nil
@@ -99,43 +130,50 @@ AddEventHandler('esx_hifi:play_music', function(id, object)
 					end
 				else
 					if UKrugu == 0 then
+						local pid = NetworkGetEntityOwner(objecte)
+						local ide = GetPlayerServerId(pid)
+						if ide ~= GetPlayerServerId(PlayerId()) then
+							ESX.TriggerServerCallback('radio:DohvatiVrijeme', function(br)
+								TriggerEvent("radio:SyncVr", br)
+							end, ide)
+						end
 						TriggerEvent("resumemp3")
 						UKrugu = 1
 					end
 				end
-				if distance(object) <= 1 then
+				if distance(object) >= 0 and distance(object) <= 1 then
 					if UKrugu == 1 then
 							TriggerEvent("volmp3", 1.0)
 					end
-				elseif distance(object) <= 2 then
+				elseif distance(object) <= 2 and distance(object) > 1 then
 					if UKrugu == 1 then
 							TriggerEvent("volmp3", 0.9)
 					end
-				elseif distance(object) <= 3 then
+				elseif distance(object) <= 3 and distance(object) > 2 then
 					if UKrugu == 1 then
 							TriggerEvent("volmp3", 0.8)
 					end
-				elseif distance(object) <= 4 then
+				elseif distance(object) <= 4 and distance(object) > 3 then
 					if UKrugu == 1 then
 							TriggerEvent("volmp3", 0.7)
 					end
-				elseif distance(object) <= 5 then
+				elseif distance(object) <= 5 and distance(object) > 4 then
 					if UKrugu == 1 then
 							TriggerEvent("volmp3", 0.6)
 					end
-				elseif distance(object) <= 6 then
+				elseif distance(object) <= 6 and distance(object) > 5 then
 					if UKrugu == 1 then
 							TriggerEvent("volmp3", 0.5)
 					end
-				elseif distance(object) <= 7 then
+				elseif distance(object) <= 7 and distance(object) > 6 then
 					if UKrugu == 1 then
 							TriggerEvent("volmp3", 0.4)
 					end
-				elseif distance(object) <= 8 then
+				elseif distance(object) <= 8 and distance(object) > 7 then
 					if UKrugu == 1 then
 							TriggerEvent("volmp3", 0.3)
 					end
-				elseif distance(object) <= 9 then
+				elseif distance(object) <= 9 and distance(object) > 8 then
 					if UKrugu == 1 then
 							TriggerEvent("volmp3", 0.2)
 					end

@@ -27,13 +27,11 @@ AddEventHandler("radio:SyncGa", function(id)
 end)
 
 RegisterNetEvent("radio:SyncVr")
-AddEventHandler("radio:SyncVr", function(vr, id)
-	if id ~= GetPlayerServerId(PlayerId()) then
-		SendNUIMessage({
-			syncmp = true,
-			sound = vr
-		})
-	end
+AddEventHandler("radio:SyncVr", function(vr)
+	SendNUIMessage({
+		syncmp = true,
+		sound = vr
+	})
 end)
 
 RegisterNetEvent("playboomboxyt")

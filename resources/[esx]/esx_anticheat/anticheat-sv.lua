@@ -77,14 +77,11 @@ AddEventHandler('explosionEvent', function(sender, ev)
 		else
 			TriggerEvent("DiscordBot:Anticheat", GetPlayerName(sender).."("..sender..") je napravio eksploziju (Tip eksplozije: "..ev.explosionType..")")
 		end
-		if ev.explosionType == 18 or ev.explosionType == 4 or ev.explosionType == 29 or ev.explosionType == 1 or ev.explosionType == 5 or ev.explosionType == 2 then
-			TriggerEvent("AntiCheat:Citer", sender)
-		end
 	end
 	for _, v in ipairs(BlockedExplosions) do
 		if ev.explosionType == v then
+			TriggerEvent("AntiCheat:Citer", sender)
 			CancelEvent()
-			return
 		end
     end
 end)
