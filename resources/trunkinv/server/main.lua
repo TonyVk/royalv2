@@ -86,14 +86,17 @@ AddEventHandler('gepeke:removeInventoryItem', function(plate, item, itemType, co
                     if xPlayer ~= nil then
                         if itemType == 'item_standard' then
                             xPlayer.addInventoryItem(item, count)
+							TriggerEvent("DiscordBot:Gepek", GetPlayerName(_source).."[".._source.."] je izvadio iz gepeka "..count.." "..item..". Tablica vozila: "..plate)
                         end
                         
                         if itemType == 'item_account' then
                             xPlayer.addAccountMoney(item, count)
+							TriggerEvent("DiscordBot:Gepek", GetPlayerName(_source).."[".._source.."] je izvadio iz gepeka "..count.." "..item..". Tablica vozila: "..plate)
                         end
                         
                         if itemType == 'item_weapon' then
                             xPlayer.addWeapon(item, count)
+							TriggerEvent("DiscordBot:Gepek", GetPlayerName(_source).."[".._source.."] je izvadio iz gepeka "..count.." "..item..". Tablica vozila: "..plate)
                         end
                     end
                 
@@ -116,6 +119,7 @@ AddEventHandler('gepeke:addInventoryItem', function(type, model, plate, item, qt
                 if playerItemCount >= qtty then
                     xPlayer.removeInventoryItem(item, qtty)
                     putInTrunk(plate, qtty, item, name, itemType, ownedV)
+					TriggerEvent("DiscordBot:Gepek", GetPlayerName(_source).."[".._source.."] je stavio u gepek "..qtty.." "..item..". Tablica vozila: "..plate)
                 else
                     TriggerClientEvent('esx:showNotification', _source, 'Kriva kolicina')
                 end
@@ -126,6 +130,7 @@ AddEventHandler('gepeke:addInventoryItem', function(type, model, plate, item, qt
                 if playerAccountMoney >= qtty then
                     xPlayer.removeAccountMoney(item, qtty)
                     putInTrunk(plate, qtty, item, name, itemType, ownedV)
+					TriggerEvent("DiscordBot:Gepek", GetPlayerName(_source).."[".._source.."] je stavio u gepek "..qtty.." "..item..". Tablica vozila: "..plate)
                 end
             end
             
@@ -135,6 +140,7 @@ AddEventHandler('gepeke:addInventoryItem', function(type, model, plate, item, qt
                     if currentLoadout[i].name == item then
                         xPlayer.removeWeapon(item, qtty)
                         putInTrunk(plate, qtty, item, name, itemType, ownedV)
+						TriggerEvent("DiscordBot:Gepek", GetPlayerName(_source).."[".._source.."] je stavio u gepek "..qtty.." "..item..". Tablica vozila: "..plate)
                     end
                 end
             end

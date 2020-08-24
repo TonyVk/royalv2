@@ -6,6 +6,7 @@ DiscordWebhookVozila = 'https://discordapp.com/api/webhooks/732283440073932950/o
 DiscordWebhookInventory = 'https://discordapp.com/api/webhooks/732283507686113340/-MYGlTN5cG76ZmYvdbI4R7Y7tc-3bs5khc-vAm9-qI8evrpANcGdXU4G0vl3c-aAqd-d'
 DiscordWebhookAnticheat = 'https://discordapp.com/api/webhooks/732283580746825778/0MwBtKGivnz3QaJtb2PxVBlDu0Finf4E7Yy5iqsH_yfu7KdaMkMZWcqbKbnW8ryCamho'
 DiscordWebhookMarkeri = 'https://discordapp.com/api/webhooks/733851348457619477/5NDuaumeuORaf3ZX3eR6O3wW42DUoMER4Qf4Q0N_6wt5waJtegOxfHwtyiBPFYC_hNpH'
+DiscordWebhookGepek = 'https://discordapp.com/api/webhooks/747412906551017522/EpRXAzmF0X3NOBbvCoyiqBEmqAlTOawBCtCiPz4KfLm5rrCt55ADffj1RjLD-RNhujkg'
 
 SystemAvatar = 'https://purepng.com/public/uploads/large/purepng.com-sealanimalssealsea-lion-981524671319vlofh.png'
 

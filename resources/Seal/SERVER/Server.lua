@@ -91,6 +91,16 @@ else
 		end
 	end)
 end
+
+if DiscordWebhookGepek == 'WEBHOOK_LINK_HERE' then
+	print('\n\nERROR\n' .. GetCurrentResourceName() .. ': Please add your "Markeri" webhook\n\n')
+else
+	PerformHttpRequest(DiscordWebhookChat, function(Error, Content, Head)
+		if Content == '{"code": 50027, "message": "Invalid Webhook Token"}' then
+			print('\n\nERROR\n' .. GetCurrentResourceName() .. ': "Anticheat" webhook non-existing!\n\n')
+		end
+	end)
+end
 	
 -- System Infos
 PerformHttpRequest(DiscordWebhookSystemInfos, function(Error, Content, Head) end, 'POST', json.encode({username = SystemName, content = '**FiveM server webhook started**'}), { ['Content-Type'] = 'application/json' })
@@ -182,6 +192,19 @@ AddEventHandler('DiscordBot:Markeri', function(Message)
 	if date.min < 10 then date.min = '0' .. tostring(date.min) end
 	if date.sec < 10 then date.sec = '0' .. tostring(date.sec) end
 	TriggerEvent('DiscordBot:ToDiscord', DiscordWebhookMarkeri, SystemName, Message .. ' `' .. date.day .. '.' .. date.month .. '.' .. date.year .. ' - ' .. date.hour .. ':' .. date.min .. ':' .. date.sec .. '`', SystemAvatar, false)
+end)
+
+-- Gepek Log
+RegisterNetEvent('DiscordBot:Gepek')
+AddEventHandler('DiscordBot:Gepek', function(Message)
+	local date = os.date('*t')
+	
+	if date.day < 10 then date.day = '0' .. tostring(date.day) end
+	if date.month < 10 then date.month = '0' .. tostring(date.month) end
+	if date.hour < 10 then date.hour = '0' .. tostring(date.hour) end
+	if date.min < 10 then date.min = '0' .. tostring(date.min) end
+	if date.sec < 10 then date.sec = '0' .. tostring(date.sec) end
+	TriggerEvent('DiscordBot:ToDiscord', DiscordWebhookGepek, SystemName, Message .. ' `' .. date.day .. '.' .. date.month .. '.' .. date.year .. ' - ' .. date.hour .. ':' .. date.min .. ':' .. date.sec .. '`', SystemAvatar, false)
 end)
 
 -- Chat
