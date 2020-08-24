@@ -71,10 +71,12 @@ Citizen.CreateThread(function()
         local FoundLastDamagedBone, LastDamagedBone = GetPedLastDamageBone(PlayerPedId())
         if FoundLastDamagedBone and not retval and retval2 and not retval3 then
             if LastDamagedBone == 31086 and poslao == 0 then
-                TriggerEvent("esx_hitna:umrisine")
+				SetEntityHealth(PlayerPedId(), 0)
 				TriggerServerEvent('DiscordBot:playerDied', GetPlayerName(PlayerId()) .. ' je dobio metak u glavu')
 				TriggerEvent('chat:addMessage', { args = { '[HITNA]', 'Pogođeni ste u glavu i nije vam bilo spasa!' } })
 				poslao = 1
+				Wait(505)
+				TriggerEvent("esx_hitna:umrisine")
 				Wait(1000)
 				poslao = 0
             end
@@ -108,17 +110,18 @@ AddEventHandler('playerSpawned', function()
 			exports.spawnmanager:setAutoSpawn(false) -- disable respawn
 			FirstSpawn = false
 
-			ESX.TriggerServerCallback('esx_ambulancejob:getDeathStatus', function(isDead)
-				Wait(500)
-				if isDead and Config.AntiCombatLog then
-					while not PlayerLoaded do
-						Citizen.Wait(1000)
-					end
-
-					ESX.ShowNotification(_U('combatlog_message'))
-					RemoveItemsAfterRPDeath()
+			if Config.AntiCombatLog then
+				while not PlayerLoaded do
+					Citizen.Wait(1000)
 				end
-			end)
+
+				ESX.TriggerServerCallback('esx_ambulancejob:getDeathStatus', function(shouldDie)
+					if shouldDie then
+						ESX.ShowNotification(_U('combatlog_message'))
+						RemoveItemsAfterRPDeath()
+					end
+				end)
+			end
 		end
 end)
 

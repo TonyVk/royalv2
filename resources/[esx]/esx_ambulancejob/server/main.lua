@@ -291,8 +291,7 @@ ESX.RegisterUsableItem('bandage', function(source)
 end)
 
 ESX.RegisterServerCallback('esx_ambulancejob:getDeathStatus', function(source, cb)
-	local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
+	local xPlayer = ESX.GetPlayerFromId(source)
 
 	MySQL.Async.fetchScalar('SELECT is_dead FROM users WHERE identifier = @identifier', {
 		['@identifier'] = xPlayer.identifier
