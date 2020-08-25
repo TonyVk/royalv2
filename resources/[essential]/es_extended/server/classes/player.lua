@@ -382,19 +382,20 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	end
 
 	self.addWeapon = function(weaponName, ammo)
-		local weaponLabel = ESX.GetWeaponLabel(weaponName)
-
 		if not self.hasWeapon(weaponName) then
+			local weaponLabel = ESX.GetWeaponLabel(weaponName)
+
 			table.insert(self.loadout, {
 				name = weaponName,
 				ammo = ammo,
 				label = weaponLabel,
-				components = {}
+				components = {},
+				tintIndex = 0
 			})
-		end
 
-		TriggerClientEvent('esx:addWeapon', self.source, weaponName, ammo)
-		TriggerClientEvent('esx:addInventoryItem', self.source, {label = weaponLabel}, 1)
+			TriggerClientEvent('esx:addWeapon', self.source, weaponName, ammo)
+			TriggerClientEvent('esx:addInventoryItem', self.source, {label = weaponLabel}, 1)
+		end
 	end
 
 	self.addWeaponComponent = function(weaponName, weaponComponent)
@@ -409,18 +410,18 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 		TriggerClientEvent('esx:addWeaponComponent', self.source, weaponName, weaponComponent)
 	end
 
-	self.removeWeapon = function(weaponName, ammo)
+	self.removeWeapon = function(weaponName)
 		local weaponLabel
 
-		for i=1, #self.loadout, 1 do
-			if self.loadout[i].name == weaponName then
-				weaponLabel = self.loadout[i].label
+		for k,v in ipairs(self.loadout) do
+			if v.name == weaponName then
+				weaponLabel = v.label
 
-				for j=1, #self.loadout[i].components, 1 do
-					TriggerClientEvent('esx:removeWeaponComponent', self.source, weaponName, self.loadout[i].components[j])
+				for k2,v2 in ipairs(v.components) do
+					self.removeWeaponComponent(weaponName, v2)
 				end
 
-				table.remove(self.loadout, i)
+				table.remove(self.loadout, k)
 				break
 			end
 		end
@@ -465,8 +466,8 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	end
 
 	self.hasWeapon = function(weaponName)
-		for i=1, #self.loadout, 1 do
-			if self.loadout[i].name == weaponName then
+		for k,v in ipairs(self.loadout) do
+			if v.name == weaponName then
 				return true
 			end
 		end

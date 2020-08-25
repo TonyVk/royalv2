@@ -165,5 +165,17 @@ end)
 RegisterServerEvent('prodajoruzje:DajOruzjeItem')
 AddEventHandler('prodajoruzje:DajOruzjeItem', function(weap)
   local xPlayer = ESX.GetPlayerFromId(source)
-  xPlayer.addInventoryItem(weap, math.random(1,3))
+  local rand = math.random(1,3)
+  local xItem = xPlayer.getInventoryItem(weap)
+  local label = xPlayer.getInventoryItem(weap).label
+  if xItem.limit ~= -1 and (xItem.count + rand) > xItem.limit then
+	if xItem.limit == xItem.count then
+		TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise "..label.." u inventory!")
+	else
+		rand = xItem.limit-xItem.count
+		xPlayer.addInventoryItem(weap, rand)
+	end
+  else
+	xPlayer.addInventoryItem(weap, rand)
+  end
 end)

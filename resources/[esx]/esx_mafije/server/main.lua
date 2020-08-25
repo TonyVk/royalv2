@@ -1217,10 +1217,19 @@ ESX.RegisterServerCallback('mafije:addArmoryWeapon', function(source, cb, weapon
 end)
 
 ESX.RegisterServerCallback('mafije:removeArmoryWeapon', function(source, cb, weaponName, am, maf)
+  local src = source
   local soc = "society_"..maf
-  local xPlayer = ESX.GetPlayerFromId(source)
-
-  xPlayer.addWeapon(weaponName, am)
+  local xPlayer = ESX.GetPlayerFromId(src)
+  if xPlayer.hasWeapon(weaponName) then
+	local sourceItem = xPlayer.getInventoryItem(weaponName)
+	if sourceItem.limit ~= -1 and (sourceItem.count + 1) <= sourceItem.limit then
+		xPlayer.addInventoryItem(weaponName, 1)
+	else
+		TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise u inventory!")
+	end
+  else
+	xPlayer.addWeapon(weaponName, am)
+  end
 
   TriggerEvent('esx_datastore:getSharedDataStore', soc, function(store)
 

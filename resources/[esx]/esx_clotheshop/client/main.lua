@@ -130,6 +130,7 @@ function OpenShopMenu()
 		'chain_2',
 		'helmet_1',
 		'helmet_2',
+		'bags_1',
 		'glasses_1',
 		'glasses_2'
 	})
