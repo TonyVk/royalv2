@@ -924,6 +924,12 @@ AddEventHandler('mafije:SpremiIme', function(ime, br)
     TriggerClientEvent('mafije:VratiIme', -1, ime, br)
 end)
 
+RegisterServerEvent('mafije:makniOruzjeItem')
+AddEventHandler('mafije:makniOruzjeItem', function(itemName, count)
+  local xPlayer = ESX.GetPlayerFromId(source)
+  xPlayer.removeInventoryItem(itemName, count)
+end)
+
 RegisterServerEvent('mafije:putStockItems')
 AddEventHandler('mafije:putStockItems', function(itemName, count, maf)
   local soc = "society_"..maf

@@ -652,6 +652,24 @@ Config.Weapons = {
 		name = 'WEAPON_REVOLVER_MK2',
 		label = "heavy revolver mk2",
 		components = {}
+	},
+	
+	{
+		name = 'WEAPON_ASSAULTRIFLE_MK2',
+		label = "assault rifle mk2",
+		components = {}
+	},
+	
+	{
+		name = 'WEAPON_MARKSMANRIFLE_MK2',
+		label = "marksman rifle mk2",
+		components = {}
+	},
+	
+	{
+		name = 'WEAPON_CARBINERIFLE_MK2',
+		label = "carbine rifle mk2",
+		components = {}
 	}
 
 }

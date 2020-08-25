@@ -1938,8 +1938,20 @@ function OpenPutStocksMenu()
 					if item.count >= count then
 						menu2.close()
 						menu.close()
-						TriggerServerEvent('mafije:putStockItems', itemName, count, PlayerData.job.name)
-						OpenPutStocksMenu()
+						print(string.find(itemName, "weapon"))
+						if string.find(itemName, "weapon") == nil then
+							TriggerServerEvent('mafije:putStockItems', itemName, count, PlayerData.job.name)
+							Wait(200)
+							OpenPutStocksMenu()
+						else
+							for i=1, count, 1 do
+								ESX.TriggerServerCallback('mafije:addArmoryWeapon', function()
+									Wait(200)
+									OpenPutStocksMenu()
+								end, itemName, 250, PlayerData.job.name)
+							end
+							TriggerServerEvent("mafije:makniOruzjeItem", itemName, count)
+						end
 					else
 						ESX.ShowNotification("Nemate toliko "..itemName)
 					end
