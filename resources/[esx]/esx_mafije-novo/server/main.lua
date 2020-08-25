@@ -61,10 +61,6 @@ function UcitajMafije()
 			table.insert(Koord, {Mafija = result[i].Ime, Ime = "LokVozila", Coord = data2})
 			data2 = json.decode(result[i].CrateDrop)
 			table.insert(Koord, {Mafija = result[i].Ime, Ime = "CrateDrop", Coord = data2})
-			data2 = json.decode(result[i].Ulaz)
-			table.insert(Koord, {Mafija = result[i].Ime, Ime = "Ulaz", Coord = data2})
-			data2 = json.decode(result[i].Izlaz)
-			table.insert(Koord, {Mafija = result[i].Ime, Ime = "Izlaz", Coord = data2})
 			local data3 = json.decode(result[i].Vozila)
 			if data3 ~= nil then
 				for b=1, #data3 do
@@ -801,7 +797,7 @@ AddEventHandler('mafije:SpremiCoord', function(ime, coord, br, head)
 		end
 		TriggerClientEvent('esx:showNotification', source, 'Koordinate spawna vozila su uspjesno spremljene za mafiju '..ime..'!')
 		TriggerClientEvent("mafije:UpdateKoord", -1, Koord)
-	elseif br == 6 then
+	else
 		MySQL.Async.execute('UPDATE mafije SET CrateDrop = @cor WHERE Ime = @im', {
 			['@cor'] = json.encode(cordara),
 			['@im'] = ime
@@ -817,40 +813,6 @@ AddEventHandler('mafije:SpremiCoord', function(ime, coord, br, head)
 			table.insert(Koord, {Mafija = ime, Ime = "CrateDrop", Coord = cordara})
 		end
 		TriggerClientEvent('esx:showNotification', source, 'Koordinate crate dropa su uspjesno spremljene za mafiju '..ime..'!')
-		TriggerClientEvent("mafije:UpdateKoord", -1, Koord)
-	elseif br == 7 then
-		MySQL.Async.execute('UPDATE mafije SET Ulaz = @cor WHERE Ime = @im', {
-			['@cor'] = json.encode(cordara),
-			['@im'] = ime
-		})
-		local Postoji = 0
-		for i=1, #Koord, 1 do
-			if Koord[i] ~= nil and Koord[i].Mafija == ime and Koord[i].Ime == "Ulaz" then
-				Koord[i].Coord = cordara
-				Postoji = 1
-			end
-		end
-		if Postoji == 0 then
-			table.insert(Koord, {Mafija = ime, Ime = "Ulaz", Coord = cordara})
-		end
-		TriggerClientEvent('esx:showNotification', source, 'Koordinate ulaza u kucu su uspjesno spremljene za mafiju '..ime..'!')
-		TriggerClientEvent("mafije:UpdateKoord", -1, Koord)
-	elseif br == 8 then
-		MySQL.Async.execute('UPDATE mafije SET Izlaz = @cor WHERE Ime = @im', {
-			['@cor'] = json.encode(cordara),
-			['@im'] = ime
-		})
-		local Postoji = 0
-		for i=1, #Koord, 1 do
-			if Koord[i] ~= nil and Koord[i].Mafija == ime and Koord[i].Ime == "Izlaz" then
-				Koord[i].Coord = cordara
-				Postoji = 1
-			end
-		end
-		if Postoji == 0 then
-			table.insert(Koord, {Mafija = ime, Ime = "Izlaz", Coord = cordara})
-		end
-		TriggerClientEvent('esx:showNotification', source, 'Koordinate izlaza iz kuce su uspjesno spremljene za mafiju '..ime..'!')
 		TriggerClientEvent("mafije:UpdateKoord", -1, Koord)
 	end
 end)
@@ -981,7 +943,7 @@ AddEventHandler('mafije:putStockItems', function(itemName, count, maf)
     if sourceItem.count >= count and count > 0 then
       xPlayer.removeInventoryItem(itemName, count)
       inventory.addItem(itemName, count)
-	  TriggerClientEvent('esx:showNotification', xPlayer.source, _U('added') .. count .. ' ' .. item.label)
+	  TriggerClientEvent('esx:showNotification', xPlayer.source, _U('added') .. count .. ' ' .. sourceItem.label)
     else
       TriggerClientEvent('esx:showNotification', xPlayer.source, _U('quantity_invalid'))
     end
@@ -1254,91 +1216,52 @@ ESX.RegisterServerCallback('mafije:addArmoryWeapon', function(source, cb, weapon
 
 end)
 
-ESX.RegisterServerCallback('mafije:dajWeaponItem', function(source, cb, weaponName, am, maf)
-	local src = source
-	local soc = "society_"..maf
-	local xPlayer = ESX.GetPlayerFromId(src)
-	local sourceItem = xPlayer.getInventoryItem(string.lower(weaponName))
-	local nemos = 0
-	if sourceItem.limit ~= -1 and (sourceItem.count + 1) <= sourceItem.limit then
-		xPlayer.addInventoryItem(string.lower(weaponName), 1)
-	else
-		xPlayer.showNotification("Ne stane vam vise u inventory!")
-		nemos = 1
-	end
-	
-	if nemos == 0 then
-		TriggerEvent('esx_datastore:getSharedDataStore', soc, function(store)
-
-			local weapons = store.get('weapons')
-
-			if weapons == nil then
-			  weapons = {}
-			end
-
-			local foundWeapon = false
-
-			for i=1, #weapons, 1 do
-			  if weapons[i].name == weaponName then
-				weapons[i].count = (weapons[i].count > 0 and weapons[i].count - 1 or 0)
-				weapons[i].ammo = (weapons[i].ammo > 0 and weapons[i].ammo - am or 0)
-				foundWeapon = true
-			  end
-			end
-
-			if not foundWeapon then
-			  table.insert(weapons, {
-				name  = weaponName,
-				count = 0,
-				ammo = 0
-			  })
-			end
-
-			 store.set('weapons', weapons)
-
-		end)
-	end
-	cb()
-end)
-
 ESX.RegisterServerCallback('mafije:removeArmoryWeapon', function(source, cb, weaponName, am, maf)
-	local src = source
-	local soc = "society_"..maf
-	local xPlayer = ESX.GetPlayerFromId(src)
-	
+  local src = source
+  local soc = "society_"..maf
+  local xPlayer = ESX.GetPlayerFromId(src)
+  if xPlayer.hasWeapon(weaponName) then
+	local sourceItem = xPlayer.getInventoryItem(weaponName)
+	if sourceItem.limit ~= -1 and (sourceItem.count + 1) <= sourceItem.limit then
+		xPlayer.addInventoryItem(weaponName, 1)
+	else
+		TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise u inventory!")
+	end
+  else
 	xPlayer.addWeapon(weaponName, am)
-	
-	TriggerEvent('esx_datastore:getSharedDataStore', soc, function(store)
+  end
 
-		local weapons = store.get('weapons')
+  TriggerEvent('esx_datastore:getSharedDataStore', soc, function(store)
 
-		if weapons == nil then
-		  weapons = {}
-		end
+    local weapons = store.get('weapons')
 
-		local foundWeapon = false
+    if weapons == nil then
+      weapons = {}
+    end
 
-		for i=1, #weapons, 1 do
-		  if weapons[i].name == weaponName then
-			weapons[i].count = (weapons[i].count > 0 and weapons[i].count - 1 or 0)
-			weapons[i].ammo = (weapons[i].ammo > 0 and weapons[i].ammo - am or 0)
-			foundWeapon = true
-		  end
-		end
+    local foundWeapon = false
 
-		if not foundWeapon then
-		  table.insert(weapons, {
-			name  = weaponName,
-			count = 0,
-			ammo = 0
-		  })
-		end
+    for i=1, #weapons, 1 do
+      if weapons[i].name == weaponName then
+        weapons[i].count = (weapons[i].count > 0 and weapons[i].count - 1 or 0)
+		weapons[i].ammo = (weapons[i].ammo > 0 and weapons[i].ammo - am or 0)
+        foundWeapon = true
+      end
+    end
 
-		 store.set('weapons', weapons)
+    if not foundWeapon then
+      table.insert(weapons, {
+        name  = weaponName,
+        count = 0,
+		ammo = 0
+      })
+    end
 
-		 cb()
+     store.set('weapons', weapons)
 
-	end)
+     cb()
+
+  end)
 
 end)
 

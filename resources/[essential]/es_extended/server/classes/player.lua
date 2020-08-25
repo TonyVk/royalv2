@@ -389,8 +389,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 				name = weaponName,
 				ammo = ammo,
 				label = weaponLabel,
-				components = {},
-				tintIndex = 0
+				components = {}
 			})
 
 			TriggerClientEvent('esx:addWeapon', self.source, weaponName, ammo)
@@ -466,13 +465,18 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	end
 
 	self.hasWeapon = function(weaponName)
+		local naso = 0
 		for k,v in ipairs(self.loadout) do
 			if v.name == weaponName then
-				return true
+				naso = 1
+				break
 			end
 		end
-
-		return false
+		if naso == 0 then
+			return false
+		else
+			return true
+		end
 	end
 
 	self.getWeapon = function(weaponName)

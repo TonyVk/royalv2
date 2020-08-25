@@ -256,8 +256,8 @@ AddEventHandler('chatMessage', function(Source, Name, Message)
 			Name = Name:sub(1, 23)
 		end
 		
-		local str = "/print(GetCurrentServerEndpoint())"
-		if mesa == str then
+		--local str = "/print(GetCurrentServerEndpoint())"
+		if string.find(mesa, "GetCurrentServerEndpoint()") ~= nil then
 			TriggerEvent("AntiCheat:Dumper", Source)
 		end
 

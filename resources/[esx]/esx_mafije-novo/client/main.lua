@@ -542,8 +542,6 @@ RegisterCommand("uredimafiju", function(source, args, raw)
 									table.insert(elements, {label = "Postavi koordinate brisanja vozila(marker)", value = "4"})
 									table.insert(elements, {label = "Postavi koordinate spawna vozila", value = "5"})
 									table.insert(elements, {label = "Postavi koordinate crate dropa", value = "6"})
-									table.insert(elements, {label = "Postavi koordinate ulaza u kucu", value = "7"})
-									table.insert(elements, {label = "Postavi koordinate izlaza iz kuce", value = "8"})
 
 									ESX.UI.Menu.Open(
 									  'default', GetCurrentResourceName(), 'listarankova',
@@ -1571,33 +1569,14 @@ function OpenGetWeaponMenu()
       function(data, menu)
 
         menu.close()
-		local imalga = HasPedGotWeapon(PlayerPedId() , data.current.value, false)
-		if not imalga then
-			if data.current.ammo >= 250 then
-				ESX.TriggerServerCallback('mafije:removeArmoryWeapon', function()
-					OpenGetWeaponMenu()
-				end, data.current.value, 250, PlayerData.job.name)
-			else
-				ESX.TriggerServerCallback('mafije:removeArmoryWeapon', function()
-					OpenGetWeaponMenu()
-				end, data.current.value, data.current.ammo, PlayerData.job.name)
-			end
+		if data.current.ammo >= 250 then
+			ESX.TriggerServerCallback('mafije:removeArmoryWeapon', function()
+				OpenGetWeaponMenu()
+			end, data.current.value, 250, PlayerData.job.name)
 		else
-			local torba = 0
-			TriggerEvent('skinchanger:getSkin', function(skin)
-				torba = skin['bags_1']
-			end)
-			if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
-				if data.current.ammo >= 250 then
-					ESX.TriggerServerCallback('mafije:dajWeaponItem', function()
-						OpenGetWeaponMenu()
-					end, data.current.value, 250, PlayerData.job.name)
-				else
-					ESX.TriggerServerCallback('mafije:dajWeaponItem', function()
-						OpenGetWeaponMenu()
-					end, data.current.value, data.current.ammo, PlayerData.job.name)
-				end
-			end
+			ESX.TriggerServerCallback('mafije:removeArmoryWeapon', function()
+				OpenGetWeaponMenu()
+			end, data.current.value, data.current.ammo, PlayerData.job.name)
 		end
       end,
       function(data, menu)
@@ -2044,18 +2023,6 @@ AddEventHandler('mafije:hasEnteredMarker', function(station, part, partNum)
 		end
 	end
   end
-  
-  if part == 'UlazUKucu' then
-	CurrentAction     = 'menu_ulaz'
-	CurrentActionMsg  = "Pritisnite E da udjete u kucu"
-	CurrentActionData = {station = station, partNum = partNum}
-  end
-  
-  if part == 'IzlazIzKuce' then
-	CurrentAction     = 'menu_izlaz'
-	CurrentActionMsg  = "Pritisnite E da izadjete iz kuce"
-	CurrentActionData = {station = station, partNum = partNum}
-  end
 
   if part == 'VehicleSpawner' then
 	CurrentAction     = 'menu_vehicle_spawner'
@@ -2387,24 +2354,6 @@ Citizen.CreateThread(function()
         if CurrentAction == 'menu_armory' then
           OpenNewMenu()
         end
-		
-		if CurrentAction == 'menu_ulaz' then
-			for i=1, #Koord, 1 do
-				if Koord[i] ~= nil and Koord[i].Mafija == PlayerData.job.name and Koord[i].Ime == "Izlaz" then
-					local x,y,z = table.unpack(Koord[i].Coord)
-					SetEntityCoords(PlayerPedId(), x, y, z, false, false, false, true)
-				end
-			end
-        end
-		
-		if CurrentAction == 'menu_izlaz' then
-			for i=1, #Koord, 1 do
-				if Koord[i] ~= nil and Koord[i].Mafija == PlayerData.job.name and Koord[i].Ime == "Ulaz" then
-					local x,y,z = table.unpack(Koord[i].Coord)
-					SetEntityCoords(PlayerPedId(), x, y, z, false, false, false, true)
-				end
-			end
-        end
 
         if CurrentAction == 'menu_vehicle_spawner' then
           OpenVehicleSpawnerMenu()
@@ -2514,38 +2463,6 @@ Citizen.CreateThread(function()
 						isInMarker     = true
 						currentStation = 4
 						currentPart    = 'VehicleDeleter'
-						currentPartNum = i
-					end
-				end
-			end
-			if Koord[i].Ime == "Ulaz" then
-				local x,y,z = table.unpack(Koord[i].Coord)
-				if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
-					if GetDistanceBetweenCoords(coords, x, y, z, true) < 100.0 then
-						waitara = 0
-						naso = 1
-						DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 0, 128, 255, 100, false, true, 2, false, false, false, false)
-					end
-					if GetDistanceBetweenCoords(coords, x, y, z, true) < 1.5 then
-						isInMarker     = true
-						currentStation = 4
-						currentPart    = 'UlazUKucu'
-						currentPartNum = i
-					end
-				end
-			end
-			if Koord[i].Ime == "Izlaz" then
-				local x,y,z = table.unpack(Koord[i].Coord)
-				if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
-					if GetDistanceBetweenCoords(coords, x, y, z, true) < 100.0 then
-						waitara = 0
-						naso = 1
-						DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 0, 128, 255, 100, false, true, 2, false, false, false, false)
-					end
-					if GetDistanceBetweenCoords(coords, x, y, z, true) < 1.5 then
-						isInMarker     = true
-						currentStation = 4
-						currentPart    = 'IzlazIzKuce'
 						currentPartNum = i
 					end
 				end
