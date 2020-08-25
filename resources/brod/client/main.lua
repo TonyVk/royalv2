@@ -81,43 +81,45 @@ end)
 Citizen.CreateThread(function()
 	local waitara = 1000
 	while true do
-		local naso = 0
-		local koord = GetEntityCoords(PlayerPedId())
-		for i=1, #Kutije, 1 do
-			if Kutije[i].Pokupljeno == false then
-				if GetDistanceBetweenCoords(koord, Kutije[i].x, Kutije[i].y, Kutije[i].z, true) <= 20 then
-					naso = 1
-					waitara = 0
-					DrawMarker(23, Kutije[i].x, Kutije[i].y, Kutije[i].z-0.9, 0, 0, 0, 0, 0, 0, 1.501, 1.5001, 0.5001, 0, 204, 204, 200, 0, 0, 0, 0)
-				end
-				if GetDistanceBetweenCoords(koord, Kutije[i].x, Kutije[i].y, Kutije[i].z, true) <= 2.0 then
-					SetTextComponentFormat('STRING')
-					AddTextComponentString("Pritisnite E da pokupite oruzje!")
-					DisplayHelpTextFromStringLabel(0, 0, 1, -1)
-					if IsControlPressed(0,  38) and (GetGameTimer() - GUI.Time) > 150 then
-						local torba = 0
-						TriggerEvent('skinchanger:getSkin', function(skin)
-							torba = skin['bags_1']
-						end)
-						if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
-							Kutije[i].Pokupljeno = true
-							TriggerServerEvent("brod:PosaljiKutije", Kutije)
-							GUI.Time = GetGameTimer()
-							FreezeEntityPosition(PlayerPedId(), true)
-							TaskStartScenarioInPlace(PlayerPedId(), "PROP_HUMAN_BUM_BIN", 0, true)
-							Citizen.Wait(5000)
-							ClearPedTasks(PlayerPedId())
-							FreezeEntityPosition(PlayerPedId(), false)
-							TriggerServerEvent("prodajoruzje:DajOruzjeItem", Kutije[i].Oruzje)
-						else
-							ESX.ShowNotification("Morate imati torbu!")
+		if #Pedare ~= 0 then
+			local naso = 0
+			local koord = GetEntityCoords(PlayerPedId())
+			for i=1, #Kutije, 1 do
+				if Kutije[i].Pokupljeno == false then
+					if GetDistanceBetweenCoords(koord, Kutije[i].x, Kutije[i].y, Kutije[i].z, true) <= 20 then
+						naso = 1
+						waitara = 0
+						DrawMarker(23, Kutije[i].x, Kutije[i].y, Kutije[i].z-0.9, 0, 0, 0, 0, 0, 0, 1.501, 1.5001, 0.5001, 0, 204, 204, 200, 0, 0, 0, 0)
+					end
+					if GetDistanceBetweenCoords(koord, Kutije[i].x, Kutije[i].y, Kutije[i].z, true) <= 2.0 then
+						SetTextComponentFormat('STRING')
+						AddTextComponentString("Pritisnite E da pokupite oruzje!")
+						DisplayHelpTextFromStringLabel(0, 0, 1, -1)
+						if IsControlPressed(0,  38) and (GetGameTimer() - GUI.Time) > 150 then
+							local torba = 0
+							TriggerEvent('skinchanger:getSkin', function(skin)
+								torba = skin['bags_1']
+							end)
+							if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+								Kutije[i].Pokupljeno = true
+								TriggerServerEvent("brod:PosaljiKutije", Kutije)
+								GUI.Time = GetGameTimer()
+								FreezeEntityPosition(PlayerPedId(), true)
+								TaskStartScenarioInPlace(PlayerPedId(), "PROP_HUMAN_BUM_BIN", 0, true)
+								Citizen.Wait(5000)
+								ClearPedTasks(PlayerPedId())
+								FreezeEntityPosition(PlayerPedId(), false)
+								TriggerServerEvent("prodajoruzje:DajOruzjeItem", Kutije[i].Oruzje)
+							else
+								ESX.ShowNotification("Morate imati torbu!")
+							end
 						end
 					end
 				end
 			end
-		end
-		if naso == 0 then
-			waitara = 1000
+			if naso == 0 then
+				waitara = 1000
+			end
 		end
 		Citizen.Wait(waitara)
 	end
