@@ -1,5 +1,7 @@
 local GUI                       = {}
 
+local Posao = nil
+
 local Pedare = {}
 local Kutije = {
 	{x = 3084.095703125, y = -4819.9482421875, z = 2.0384743213654, h = 107.46464538574, Oruzje = "weapon_appistol", Pokupljeno = false}, --kutija1
@@ -69,6 +71,12 @@ Citizen.CreateThread(function()
     TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
     Citizen.Wait(0)
   end
+  Posao = ESX.GetPlayerData().job
+end)
+
+RegisterNetEvent('esx:setJob')
+AddEventHandler('esx:setJob', function(job)
+  Posao = job
 end)
 
 AddEventHandler("playerSpawned", function()
@@ -100,7 +108,9 @@ Citizen.CreateThread(function()
 						local koord = GetEntityCoords(Pedara)
 						local koord2 = GetEntityCoords(PlayerPedId())
 						if GetDistanceBetweenCoords(koord, koord2, false) <= 300 then
-							TaskCombatPed(Pedara, PlayerPedId(), 0, 16)
+							if Posao.name ~= "police" and Posao.name ~= "sipa" then
+								TaskCombatPed(Pedara, PlayerPedId(), 0, 16)
+							end
 							SetPedDropsWeaponsWhenDead(Pedara, false)
 						end
 						if IsEntityDead(Pedara) then
@@ -131,32 +141,34 @@ Citizen.CreateThread(function()
 			local koord = GetEntityCoords(PlayerPedId())
 			for i=1, #Kutije, 1 do
 				if Kutije[i].Pokupljeno == false then
-					if GetDistanceBetweenCoords(koord, Kutije[i].x, Kutije[i].y, Kutije[i].z, true) <= 20 then
-						naso = 1
-						waitara = 0
-						DrawMarker(23, Kutije[i].x, Kutije[i].y, Kutije[i].z-0.9, 0, 0, 0, 0, 0, 0, 1.501, 1.5001, 0.5001, 0, 204, 204, 200, 0, 0, 0, 0)
-					end
-					if GetDistanceBetweenCoords(koord, Kutije[i].x, Kutije[i].y, Kutije[i].z, true) <= 2.0 then
-						SetTextComponentFormat('STRING')
-						AddTextComponentString("Pritisnite E da pokupite oruzje!")
-						DisplayHelpTextFromStringLabel(0, 0, 1, -1)
-						if IsControlPressed(0,  38) and (GetGameTimer() - GUI.Time) > 150 then
-							local torba = 0
-							TriggerEvent('skinchanger:getSkin', function(skin)
-								torba = skin['bags_1']
-							end)
-							if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
-								Kutije[i].Pokupljeno = true
-								TriggerServerEvent("brod:PosaljiKutije", Kutije)
-								GUI.Time = GetGameTimer()
-								FreezeEntityPosition(PlayerPedId(), true)
-								TaskStartScenarioInPlace(PlayerPedId(), "PROP_HUMAN_BUM_BIN", 0, true)
-								Citizen.Wait(5000)
-								ClearPedTasks(PlayerPedId())
-								FreezeEntityPosition(PlayerPedId(), false)
-								TriggerServerEvent("prodajoruzje:DajOruzjeItem", Kutije[i].Oruzje, i)
-							else
-								ESX.ShowNotification("Morate imati torbu!")
+					if Posao.name ~= "police" and Posao.name ~= "sipa" then
+						if GetDistanceBetweenCoords(koord, Kutije[i].x, Kutije[i].y, Kutije[i].z, true) <= 20 then
+							naso = 1
+							waitara = 0
+							DrawMarker(23, Kutije[i].x, Kutije[i].y, Kutije[i].z-0.9, 0, 0, 0, 0, 0, 0, 1.501, 1.5001, 0.5001, 0, 204, 204, 200, 0, 0, 0, 0)
+						end
+						if GetDistanceBetweenCoords(koord, Kutije[i].x, Kutije[i].y, Kutije[i].z, true) <= 2.0 then
+							SetTextComponentFormat('STRING')
+							AddTextComponentString("Pritisnite E da pokupite oruzje!")
+							DisplayHelpTextFromStringLabel(0, 0, 1, -1)
+							if IsControlPressed(0,  38) and (GetGameTimer() - GUI.Time) > 150 then
+								local torba = 0
+								TriggerEvent('skinchanger:getSkin', function(skin)
+									torba = skin['bags_1']
+								end)
+								if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+									Kutije[i].Pokupljeno = true
+									TriggerServerEvent("brod:PosaljiKutije", Kutije)
+									GUI.Time = GetGameTimer()
+									FreezeEntityPosition(PlayerPedId(), true)
+									TaskStartScenarioInPlace(PlayerPedId(), "PROP_HUMAN_BUM_BIN", 0, true)
+									Citizen.Wait(5000)
+									ClearPedTasks(PlayerPedId())
+									FreezeEntityPosition(PlayerPedId(), false)
+									TriggerServerEvent("prodajoruzje:DajOruzjeItem", Kutije[i].Oruzje, i)
+								else
+									ESX.ShowNotification("Morate imati torbu!")
+								end
 							end
 						end
 					end
@@ -201,6 +213,7 @@ RegisterCommand("pokrenibrod", function(source, args, rawCommandString)
 					TriggerServerEvent("prodajoruzje:SpremiNetID", Pedare)
 				end
 			end
+			TriggerServerEvent("brod:Obavijest")
 			SetModelAsNoLongerNeeded(GetHashKey('s_m_y_marine_03'))
 		end
 	end)

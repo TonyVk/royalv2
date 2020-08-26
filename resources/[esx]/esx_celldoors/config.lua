@@ -2,7 +2,69 @@ Config = {}
 Config.Locale = 'hr'
 
 Config.DoorList = {
-
+	
+	-- 
+	-- BurgeriSeSutaju Lock
+	--
+	
+	{
+		textCoords = vector3(-1195.27, -897.07, 14.2),
+		authorizedJobs = { 'hermanos' },
+		locked = true,
+		distance = 2.5,
+		doors = {
+			{
+				objName = 'bs_cj_int_door_24',
+				objYaw = 125.0,
+				objCoords = vector3(-1195.27, -897.07, 14.0)
+			},
+		}
+	},
+	
+	{
+		textCoords = vector3(-1194.13, -899.87, 14.2),
+		authorizedJobs = { 'hermanos' },
+		locked = true,
+		distance = 2.5,
+		doors = {
+			{
+				objName = 'bs_cj_int_door_24',
+				objYaw = 125.0,
+				objCoords = vector3(-1194.13, -899.87, 14.0)
+			},
+		}
+	},
+	
+	{
+		textCoords = vector3(-1200.60, -892.01, 14.2),
+		authorizedJobs = { 'hermanos' },
+		locked = true,
+		distance = 2.5,
+		doors = {
+			{
+				objName = 'bs_cj_int_door_24',
+				objYaw = -145.0,
+				objCoords = vector3(-1200.60, -892.01, 14.0)
+			}
+		}
+	},
+	
+	
+	-- vanjska vrata
+	{
+		textCoords = vector3(-1178.65, -891.73, 14.2),
+		authorizedJobs = { 'hermanos' },
+		locked = true,
+		distance = 2.5,
+		doors = {
+			{
+				objName = 'p_bs_map_door_01_s',
+				objYaw = 125.0,
+				objCoords = vector3(-1178.65, -891.73, 14.0)
+			}
+		}
+	},
+	
 	--
 	-- Mission Row First Floor
 	--
@@ -337,28 +399,26 @@ Config.DoorList = {
 	}
 	--]]
 	
-	-- FBI Entrance Door--
-	
+	-- SIPA Entrance Door--
 	{
-		objName = 'v_ilev_fibl_door02',
-		objYaw = 78.5,
-		objCoords  = vector3(106.3793, -742.6982, 46.5000),
-		textCoords = vector3(105.3793, -742.6982, 47.0000),
-		authorizedJobs = { 'sipa' },
-		locked = true,
-		distance = 14,
-		size = 2
-	},
-	-- FBI Entrance Door Right--
-	{
-		objName = 'v_ilev_fibl_door01',
-		objYaw = 84.0,
-		objCoords  = vector3(105.7607, -746.646, 46.5000),
 		textCoords = vector3(104.7607, -744.642, 47.0000),
 		authorizedJobs = { 'sipa' },
 		locked = true,
-		distance = 14,
-		size = 2
+		distance = 5,
+		size = 2,
+		doors = {
+			{
+				objName = 'v_ilev_fibl_door02',
+				objYaw = 78.5,
+				objCoords  = vector3(106.3793, -742.6982, 46.5000)
+			},
+
+			{
+				objName = 'v_ilev_fibl_door01',
+				objYaw = 84.0,
+				objCoords  = vector3(105.7607, -746.646, 46.5000)
+			}
+		}
 	},
 	-- Racing Doors--
 	{
