@@ -1,6 +1,8 @@
 local GUI                       = {}
 
 local Posao = nil
+local Blip = nil
+local PrviSpawn = false
 
 local Pedare = {}
 local Kutije = {
@@ -79,7 +81,25 @@ AddEventHandler('esx:setJob', function(job)
   Posao = job
 end)
 
+RegisterNetEvent('brod:PostaviBlip')
+AddEventHandler('brod:PostaviBlip', function()
+	Blip = AddBlipForCoord(3097.6840820313, -4800.4282226563, 2.0371627807617)
+	SetBlipSprite (Blip, 455)
+	SetBlipDisplay(Blip, 2)
+	SetBlipScale  (Blip, 1.2)
+	SetBlipColour (Blip, 49)
+	SetBlipAsShortRange(Blip, true)
+
+	BeginTextCommandSetBlipName("STRING")
+	AddTextComponentString("Brod Event")
+	EndTextCommandSetBlipName(Blip)
+end)
+
 AddEventHandler("playerSpawned", function()
+	if not PrviSpawn and #Pedare ~= 0 then
+		PrviSpawn = true
+		TriggerEvent("brod:PostaviBlip")
+	end
 	ESX.TriggerServerCallback('prodajoruzje:DajNetID', function(vr)
 		Pedare = vr.Net
 		if vr.Kut[1] ~= nil then
@@ -214,6 +234,7 @@ RegisterCommand("pokrenibrod", function(source, args, rawCommandString)
 				end
 			end
 			TriggerServerEvent("brod:Obavijest")
+			TriggerServerEvent("brod:StaviBlip")
 			SetModelAsNoLongerNeeded(GetHashKey('s_m_y_marine_03'))
 		end
 	end)

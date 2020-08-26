@@ -56,6 +56,11 @@ AddEventHandler('brod:Obavijest', function()
 	TriggerClientEvent('esx:showNotification', -1, "[EVENT] Event brod je zapoceo, sretno svima!")
 end)
 
+RegisterNetEvent("brod:StaviBlip")
+AddEventHandler('brod:StaviBlip', function()
+	TriggerClientEvent("brod:PostaviBlip", -1)
+end)
+
 RegisterNetEvent("prodajoruzje:SpremiNetID")
 AddEventHandler('prodajoruzje:SpremiNetID', function(pid)
 	NetID = pid
