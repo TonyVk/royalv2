@@ -71,11 +71,9 @@ Citizen.CreateThread(function()
         local FoundLastDamagedBone, LastDamagedBone = GetPedLastDamageBone(PlayerPedId())
         if FoundLastDamagedBone and not retval and retval2 and not retval3 then
             if LastDamagedBone == 31086 and poslao == 0 then
-				SetEntityHealth(PlayerPedId(), 0)
 				TriggerServerEvent('DiscordBot:playerDied', GetPlayerName(PlayerId()) .. ' je dobio metak u glavu')
 				TriggerEvent('chat:addMessage', { args = { '[HITNA]', 'Pogođeni ste u glavu i nije vam bilo spasa!' } })
 				poslao = 1
-				Wait(505)
 				TriggerEvent("esx_hitna:umrisine")
 				Wait(1000)
 				poslao = 0
