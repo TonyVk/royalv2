@@ -672,7 +672,7 @@ AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
 						  --fin test
 
 
-							if quantity > 0 and quantity <= tonumber(data.current.count) and vehFront > 0 then
+							if quantity >= 0 and quantity <= tonumber(data.current.count) and vehFront > 0 then
 							if not max then
 								local brojic = tonumber(PlayerId())
 								if brojic >= 1 and brojic <= 4 then

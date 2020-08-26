@@ -48,14 +48,23 @@ AddEventHandler('gepeke:getInventory', function(plate)
         function(inventory)
             if inventory ~= nil and #inventory > 0 then
                 for i = 1, #inventory, 1 do
-                    if inventory[i].count > 0 then
-                        table.insert(inventory_, {
-                            label = inventory[i].name,
-                            name = inventory[i].item,
-                            count = inventory[i].count,
-                            type = inventory[i].itemt
-                        })
-                    end
+					if inventory[i].itemt ~= "item_weapon" then
+						if inventory[i].count > 0 then
+							table.insert(inventory_, {
+								label = inventory[i].name,
+								name = inventory[i].item,
+								count = inventory[i].count,
+								type = inventory[i].itemt
+							})
+						end
+					else
+						table.insert(inventory_, {
+							label = inventory[i].name,
+							name = inventory[i].item,
+							count = inventory[i].count,
+							type = inventory[i].itemt
+						})
+					end
                 end
             end
             local weight = (getInventoryWeight(inventory_))
@@ -195,7 +204,7 @@ AddEventHandler('gepeke:RemoveVehicleList', function(plate)
 end)
 
 AddEventHandler('onMySQLReady', function()
-    MySQL.Async.execute('DELETE FROM `truck_inventory` WHERE `count` = 0', {})
+    MySQL.Async.execute('DELETE FROM `truck_inventory` WHERE `count` = 0 AND `itemt` != "item_weapon" ', {})
 end)
 
 function getInventoryWeight(inventory)
