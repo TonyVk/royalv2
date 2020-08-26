@@ -404,30 +404,3 @@ function GetIDFromSource(Type, ID) --(Thanks To WolfKnight [forum.FiveM.net])
     return nil
 end
 
--- Version Checking down here, better don't touch this
-local CurrentVersion = '1.5.1'
-local GithubResourceName = 'DiscordBot'
-
-PerformHttpRequest('https://raw.githubusercontent.com/Flatracer/FiveM_Resources/master/' .. GithubResourceName .. '/VERSION', function(Error, NewestVersion, Header)
-	PerformHttpRequest('https://raw.githubusercontent.com/Flatracer/FiveM_Resources/master/' .. GithubResourceName .. '/CHANGES', function(Error, Changes, Header)
-		print('\n')
-		print('##############')
-		print('## ' .. GetCurrentResourceName())
-		print('##')
-		print('## Current Version: ' .. CurrentVersion)
-		print('## Newest Version: ' .. NewestVersion)
-		print('##')
-		if CurrentVersion ~= NewestVersion then
-			print('## Outdated')
-			print('## Check the Topic')
-			print('## For the newest Version!')
-			print('##############')
-			print('CHANGES: ' .. Changes)
-		else
-			print('## Up to date!')
-			print('##############')
-		end
-		print('\n')
-	end)
-end)
-

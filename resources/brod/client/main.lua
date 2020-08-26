@@ -73,6 +73,9 @@ Citizen.CreateThread(function()
     TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
     Citizen.Wait(0)
   end
+  while ESX.GetPlayerData().job == nil do
+	Citizen.Wait(100)
+  end
   Posao = ESX.GetPlayerData().job
 end)
 
@@ -98,6 +101,7 @@ end)
 AddEventHandler("playerSpawned", function()
 	if not PrviSpawn and #Pedare ~= 0 then
 		PrviSpawn = true
+		Posao = ESX.GetPlayerData().job
 		TriggerEvent("brod:PostaviBlip")
 	end
 	ESX.TriggerServerCallback('prodajoruzje:DajNetID', function(vr)
