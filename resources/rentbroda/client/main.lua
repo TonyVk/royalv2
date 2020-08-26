@@ -67,7 +67,7 @@ Citizen.CreateThread(function()
 						elements = elements,
 					  },
 					  function(data, menu)
-						ESX.TriggerServerCallback('rentbroda:OduzmiPare', function(platio)
+						ESX.TriggerServerCallback('rentbroda:ImalPara', function(platio)
 							if platio then
 								if Vozilo ~= nil then
 									ESX.Game.DeleteVehicle(Vozilo)
@@ -89,13 +89,13 @@ Citizen.CreateThread(function()
 											Vozilo = callback_vehicle
 											TaskWarpPedIntoVehicle(PlayerPedId(), callback_vehicle, -1)
 										end)
+										TriggerServerEvent("rentbroda:SviSuTuljani")
 										ESX.ShowNotification("Unrentati mozete sa /bunrent")
 										break
 									end
 								end
 								if Mjesto == false then
 									ESX.ShowNotification("Trenutno nema slobodnog mjesta za gliser!")
-									TriggerServerEvent("rentbroda:SviSuTuljani")
 								end
 							else
 								ESX.ShowNotification("Nemate dovoljno novca!")

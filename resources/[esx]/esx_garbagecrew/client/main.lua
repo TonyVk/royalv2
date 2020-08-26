@@ -660,6 +660,9 @@ function SelectBinandCrew()
 	work_truck = GetVehiclePedIsIn(GetPlayerPed(-1), true)
 	bagsoftrash = math.random(4, 10)
 	local NewBin, NewBinDistance = ESX.Game.GetClosestObject(Config.DumpstersAvaialbe)
+	if NewBinDistance > 20.0 then
+		NewBin = -1
+	end
 	if NewBin == -1 then
 		ESX.Game.SpawnLocalObject(destination.Model, destination.kPos, function(obj)
 			SetEntityHeading(obj, destination.kHeading)
