@@ -102,13 +102,13 @@ AddEventHandler("playerSpawned", function()
 	if not PrviSpawn and #Pedare ~= 0 then
 		PrviSpawn = true
 		Posao = ESX.GetPlayerData().job
-		TriggerEvent("brod:PostaviBlip")
 	end
 	ESX.TriggerServerCallback('prodajoruzje:DajNetID', function(vr)
 		Pedare = vr.Net
 		if vr.Kut[1] ~= nil then
 			Kutije = vr.Kut
 		end
+		TriggerEvent("brod:PostaviBlip")
 	end)
 end)
 
