@@ -114,7 +114,7 @@ RegisterServerEvent('esx_gun:ProdajFirmu')
 AddEventHandler('esx_gun:ProdajFirmu', function(firma)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
-	xPlayer.addMoney(4000000)
+	xPlayer.addMoney(2500000)
 	MySQL.Async.execute('UPDATE weashops2 SET `owner` = null WHERE name = @st', {
 		['@st'] = firma
 	})

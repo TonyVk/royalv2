@@ -92,7 +92,7 @@ function OpenShopMenu(zone)
 								price      = 0,
 							})
 							table.insert(elements, {
-								label      = "Prodaj ($5000000)",
+								label      = "Prodaj ($1000000)",
 								label_real = "prodaj",
 								item       = "prodajt",
 								price      = 0,
