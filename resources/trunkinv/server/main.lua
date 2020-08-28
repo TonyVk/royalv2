@@ -85,12 +85,14 @@ AddEventHandler('gepeke:removeInventoryItem', function(plate, item, itemType, co
                 ['@itemt'] = itemType
             }, function(countincar)
                 if countincar >= count then
+					print(count)
+					print(countincar)
 					if itemType == "item_weapon" then
-						if count == 0 then
+						if countincar == count then
 							MySQL.Async.execute('DELETE FROM `truck_inventory` WHERE `plate` = @plate AND `item`= @item AND `itemt`= @itemt', {
-								['@plate'] = plate,
-								['@item'] = item,
-								['@itemt'] = itemType
+									['@plate'] = plate,
+									['@item'] = item,
+									['@itemt'] = itemType
 							})
 						end
 					end

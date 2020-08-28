@@ -86,16 +86,18 @@ end)
 
 RegisterNetEvent('brod:PostaviBlip')
 AddEventHandler('brod:PostaviBlip', function()
-	Blip = AddBlipForCoord(3097.6840820313, -4800.4282226563, 2.0371627807617)
-	SetBlipSprite (Blip, 455)
-	SetBlipDisplay(Blip, 2)
-	SetBlipScale  (Blip, 1.2)
-	SetBlipColour (Blip, 49)
-	SetBlipAsShortRange(Blip, true)
+	if Posao.name ~= "police" and Posao.name ~= "sipa" and Posao.name ~= "ambulance" and Posao.name ~= "reporter" and Posao.name ~= "mechanic" then
+		Blip = AddBlipForCoord(3097.6840820313, -4800.4282226563, 2.0371627807617)
+		SetBlipSprite (Blip, 455)
+		SetBlipDisplay(Blip, 2)
+		SetBlipScale  (Blip, 1.2)
+		SetBlipColour (Blip, 49)
+		SetBlipAsShortRange(Blip, true)
 
-	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentString("Brod Event")
-	EndTextCommandSetBlipName(Blip)
+		BeginTextCommandSetBlipName("STRING")
+		AddTextComponentString("Brod Event")
+		EndTextCommandSetBlipName(Blip)
+	end
 end)
 
 AddEventHandler("playerSpawned", function()
@@ -108,7 +110,11 @@ AddEventHandler("playerSpawned", function()
 		if vr.Kut[1] ~= nil then
 			Kutije = vr.Kut
 		end
-		TriggerEvent("brod:PostaviBlip")
+	end)
+	ESX.TriggerServerCallback('brod:JelTraje', function(br)
+		if br then
+			TriggerEvent("brod:PostaviBlip")
+		end
 	end)
 end)
 
@@ -132,7 +138,7 @@ Citizen.CreateThread(function()
 						local koord = GetEntityCoords(Pedara)
 						local koord2 = GetEntityCoords(PlayerPedId())
 						if GetDistanceBetweenCoords(koord, koord2, false) <= 300 then
-							if Posao.name ~= "police" and Posao.name ~= "sipa" then
+							if Posao.name ~= "police" and Posao.name ~= "sipa" and Posao.name ~= "ambulance" and Posao.name ~= "reporter" and Posao.name ~= "mechanic" then
 								TaskCombatPed(Pedara, PlayerPedId(), 0, 16)
 							end
 							SetPedDropsWeaponsWhenDead(Pedara, false)
@@ -165,7 +171,7 @@ Citizen.CreateThread(function()
 			local koord = GetEntityCoords(PlayerPedId())
 			for i=1, #Kutije, 1 do
 				if Kutije[i].Pokupljeno == false then
-					if Posao.name ~= "police" and Posao.name ~= "sipa" then
+					if Posao.name ~= "police" and Posao.name ~= "sipa" and Posao.name ~= "ambulance" and Posao.name ~= "reporter" and Posao.name ~= "mechanic" then
 						if GetDistanceBetweenCoords(koord, Kutije[i].x, Kutije[i].y, Kutije[i].z, true) <= 20 then
 							naso = 1
 							waitara = 0
@@ -209,37 +215,43 @@ end)
 RegisterCommand("pokrenibrod", function(source, args, rawCommandString)
 	ESX.TriggerServerCallback('DajMiPermLevelCall', function(perm)
 		if perm == 69 then
-			RequestModel(GetHashKey('s_m_y_marine_03'))
-			while not HasModelLoaded(GetHashKey('s_m_y_marine_03')) do
-				Wait(100)
-			end
-			for i=1, #Pedovi, 1 do
-				if Pedovi[i].Mrtav == false then
-					local Pedara = CreatePed(29, GetHashKey('s_m_y_marine_03'), Pedovi[i].x, Pedovi[i].y, Pedovi[i].z, Pedovi[i].h, true, true)
-					SetPedDropsWeaponsWhenDead(Pedara, false)
-					SetPedCanSwitchWeapon(Pedara, true)
-					local br = math.random(1,3)
-					if br == 1 then
-						GiveWeaponToPed(Pedara, GetHashKey('WEAPON_ASSAULTRIFLE'), 9999, 1, 1)
-					elseif br == 2 then
-						GiveWeaponToPed(Pedara, GetHashKey('WEAPON_PISTOL'), 9999, 1, 1)
-					else
-						GiveWeaponToPed(Pedara, GetHashKey('WEAPON_SMG'), 9999, 1, 1)
+			ESX.TriggerServerCallback('brod:JelTraje', function(br)
+				if not br then
+					RequestModel(GetHashKey('s_m_y_marine_03'))
+					while not HasModelLoaded(GetHashKey('s_m_y_marine_03')) do
+						Wait(100)
 					end
-					SetEntityAsMissionEntity(Pedara, true, true)
-					NetworkRegisterEntityAsNetworked(Pedara)
-					local netID = PedToNet(Pedara)
-					Pedovi[i].NetID = netID
-					NetworkSetNetworkIdDynamic(netID, false)
-					SetNetworkIdCanMigrate(netID, true)
-					SetNetworkIdExistsOnAllMachines(netID, true)
-					table.insert(Pedare, netID)
-					TriggerServerEvent("prodajoruzje:SpremiNetID", Pedare)
+					for i=1, #Pedovi, 1 do
+						if Pedovi[i].Mrtav == false then
+							local Pedara = CreatePed(29, GetHashKey('s_m_y_marine_03'), Pedovi[i].x, Pedovi[i].y, Pedovi[i].z, Pedovi[i].h, true, true)
+							SetPedDropsWeaponsWhenDead(Pedara, false)
+							SetPedCanSwitchWeapon(Pedara, true)
+							local br = math.random(1,3)
+							if br == 1 then
+								GiveWeaponToPed(Pedara, GetHashKey('WEAPON_ASSAULTRIFLE'), 9999, 1, 1)
+							elseif br == 2 then
+								GiveWeaponToPed(Pedara, GetHashKey('WEAPON_PISTOL'), 9999, 1, 1)
+							else
+								GiveWeaponToPed(Pedara, GetHashKey('WEAPON_SMG'), 9999, 1, 1)
+							end
+							SetEntityAsMissionEntity(Pedara, true, true)
+							NetworkRegisterEntityAsNetworked(Pedara)
+							local netID = PedToNet(Pedara)
+							Pedovi[i].NetID = netID
+							NetworkSetNetworkIdDynamic(netID, false)
+							SetNetworkIdCanMigrate(netID, true)
+							SetNetworkIdExistsOnAllMachines(netID, true)
+							table.insert(Pedare, netID)
+							TriggerServerEvent("prodajoruzje:SpremiNetID", Pedare)
+						end
+					end
+					TriggerServerEvent("brod:Obavijest")
+					TriggerServerEvent("brod:StaviBlip")
+					SetModelAsNoLongerNeeded(GetHashKey('s_m_y_marine_03'))
+				else
+					ESX.ShowNotification("Event je vec pokrenut!")
 				end
-			end
-			TriggerServerEvent("brod:Obavijest")
-			TriggerServerEvent("brod:StaviBlip")
-			SetModelAsNoLongerNeeded(GetHashKey('s_m_y_marine_03'))
+			end)
 		end
 	end)
 end, false)

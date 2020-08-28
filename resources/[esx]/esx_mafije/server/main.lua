@@ -97,6 +97,15 @@ AddEventHandler('mafije:ImalKoga', function(id, id2)
 	TriggerClientEvent("mafije:JelTiOtvoren", id2, id)
 end)
 
+for i=1, #Config.Weapons, 1 do
+	ESX.RegisterUsableItem(string.lower(Config.Weapons[i].name), function(source)
+		local xPlayer = ESX.GetPlayerFromId(source)
+		TriggerClientEvent('esx:showNotification', source, "Uzeli ste "..Config.Weapons[i].label.." iz inventoryja!")
+		xPlayer.removeInventoryItem(string.lower(Config.Weapons[i].name), 1)
+		xPlayer.addWeapon(Config.Weapons[i].name, 250)
+	end)
+end
+
 RegisterCommand("f", function(source, args, rawCommandString)
 	local _source = source
 	local targetXPlayer = ESX.GetPlayerFromId(_source)

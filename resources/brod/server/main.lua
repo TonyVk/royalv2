@@ -3,6 +3,7 @@ ESX = nil
 local NetID = {}
 local Kutije = {}
 local Pedovi = {}
+local TrajeEvent = false
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -53,6 +54,7 @@ end)
 
 RegisterNetEvent("brod:Obavijest")
 AddEventHandler('brod:Obavijest', function()
+	TrajeEvent = true
 	TriggerClientEvent('esx:showNotification', -1, "[EVENT] Event brod je zapoceo, sretno svima!")
 end)
 
@@ -87,13 +89,17 @@ AddEventHandler('brod:PosaljiKutije', function(kut)
     )
 end)
 
+ESX.RegisterServerCallback('brod:JelTraje', function(source, cb)
+	cb(TrajeEvent)
+end)
+
 ESX.RegisterServerCallback('prodajoruzje:DajNetID', function(source, cb)
 	local vracaj = {Net = NetID, Kut = Kutije}
 	cb(vracaj)
 end)
 
 --Kad bude spremno prebaci te registere negdje dalje
-ESX.RegisterUsableItem('weapon_appistol', function(source)
+--[[ESX.RegisterUsableItem('weapon_appistol', function(source)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	TriggerClientEvent('esx:showNotification', source, "Uzeli ste AP pistolj iz inventoryja!")
 	xPlayer.removeInventoryItem("weapon_appistol", 1)
@@ -112,6 +118,13 @@ ESX.RegisterUsableItem('weapon_combatpistol', function(source)
 	TriggerClientEvent('esx:showNotification', source, "Uzeli ste combat pistolj iz inventoryja!")
 	xPlayer.removeInventoryItem("weapon_combatpistol", 1)
 	xPlayer.addWeapon("weapon_combatpistol", 250)
+end)
+
+ESX.RegisterUsableItem('weapon_firework', function(source)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	TriggerClientEvent('esx:showNotification', source, "Uzeli ste firework iz inventoryja!")
+	xPlayer.removeInventoryItem("weapon_firework", 1)
+	xPlayer.addWeapon("weapon_firework", 250)
 end)
 
 ESX.RegisterUsableItem('weapon_pumpshotgun', function(source)
@@ -231,7 +244,7 @@ ESX.RegisterUsableItem('weapon_assaultrifle_mk2', function(source)
 	TriggerClientEvent('esx:showNotification', source, "Uzeli ste assault rifle mk2 iz inventoryja!")
 	xPlayer.removeInventoryItem("weapon_assaultrifle_mk2", 1)
 	xPlayer.addWeapon("weapon_assaultrifle_mk2", 250)
-end)
+end)]]
 
 RegisterServerEvent('prodajoruzje:DajOruzjeItem')
 AddEventHandler('prodajoruzje:DajOruzjeItem', function(weap, i)
