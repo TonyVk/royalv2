@@ -66,6 +66,7 @@ end)
 RegisterNetEvent("prodajoruzje:SpremiNetID")
 AddEventHandler('prodajoruzje:SpremiNetID', function(pid)
 	NetID = pid
+	TriggerClientEvent("brod:VratiNetID", pid)
 end)
 
 RegisterNetEvent("brod:PosaljiKutije")

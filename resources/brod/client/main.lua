@@ -84,6 +84,11 @@ AddEventHandler('esx:setJob', function(job)
   Posao = job
 end)
 
+RegisterNetEvent('brod:VratiNetID')
+AddEventHandler('brod:VratiNetID', function(br)
+	Pedare = br
+end)
+
 RegisterNetEvent('brod:PostaviBlip')
 AddEventHandler('brod:PostaviBlip', function()
 	if Posao.name ~= "police" and Posao.name ~= "sipa" and Posao.name ~= "ambulance" and Posao.name ~= "reporter" and Posao.name ~= "mechanic" then
@@ -101,7 +106,7 @@ AddEventHandler('brod:PostaviBlip', function()
 end)
 
 AddEventHandler("playerSpawned", function()
-	if not PrviSpawn and #Pedare ~= 0 then
+	if not PrviSpawn then
 		PrviSpawn = true
 		Posao = ESX.GetPlayerData().job
 	end
@@ -166,48 +171,50 @@ end)
 Citizen.CreateThread(function()
 	local waitara = 1000
 	while true do
-		if #Pedare ~= 0 then
-			local naso = 0
-			local koord = GetEntityCoords(PlayerPedId())
-			for i=1, #Kutije, 1 do
-				if Kutije[i].Pokupljeno == false then
-					if Posao.name ~= "police" and Posao.name ~= "sipa" and Posao.name ~= "ambulance" and Posao.name ~= "reporter" and Posao.name ~= "mechanic" then
-						if GetDistanceBetweenCoords(koord, Kutije[i].x, Kutije[i].y, Kutije[i].z, true) <= 20 then
-							naso = 1
-							waitara = 0
-							DrawMarker(23, Kutije[i].x, Kutije[i].y, Kutije[i].z-0.9, 0, 0, 0, 0, 0, 0, 1.501, 1.5001, 0.5001, 0, 204, 204, 200, 0, 0, 0, 0)
-						end
-						if GetDistanceBetweenCoords(koord, Kutije[i].x, Kutije[i].y, Kutije[i].z, true) <= 2.0 then
-							SetTextComponentFormat('STRING')
-							AddTextComponentString("Pritisnite E da pokupite oruzje!")
-							DisplayHelpTextFromStringLabel(0, 0, 1, -1)
-							if IsControlPressed(0,  38) and (GetGameTimer() - GUI.Time) > 150 then
-								local torba = 0
-								TriggerEvent('skinchanger:getSkin', function(skin)
-									torba = skin['bags_1']
-								end)
-								if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
-									Kutije[i].Pokupljeno = true
-									TriggerServerEvent("brod:PosaljiKutije", Kutije)
-									GUI.Time = GetGameTimer()
-									FreezeEntityPosition(PlayerPedId(), true)
-									TaskStartScenarioInPlace(PlayerPedId(), "PROP_HUMAN_BUM_BIN", 0, true)
-									Citizen.Wait(5000)
-									ClearPedTasks(PlayerPedId())
-									FreezeEntityPosition(PlayerPedId(), false)
-									TriggerServerEvent("prodajoruzje:DajOruzjeItem", Kutije[i].Oruzje, i)
-								else
-									ESX.ShowNotification("Morate imati torbu!")
+		ESX.TriggerServerCallback('brod:JelTraje', function(br)
+			if br then
+				local naso = 0
+				local koord = GetEntityCoords(PlayerPedId())
+				for i=1, #Kutije, 1 do
+					if Kutije[i].Pokupljeno == false then
+						if Posao.name ~= "police" and Posao.name ~= "sipa" and Posao.name ~= "ambulance" and Posao.name ~= "reporter" and Posao.name ~= "mechanic" then
+							if GetDistanceBetweenCoords(koord, Kutije[i].x, Kutije[i].y, Kutije[i].z, true) <= 20 then
+								naso = 1
+								waitara = 0
+								DrawMarker(23, Kutije[i].x, Kutije[i].y, Kutije[i].z-0.9, 0, 0, 0, 0, 0, 0, 1.501, 1.5001, 0.5001, 0, 204, 204, 200, 0, 0, 0, 0)
+							end
+							if GetDistanceBetweenCoords(koord, Kutije[i].x, Kutije[i].y, Kutije[i].z, true) <= 2.0 then
+								SetTextComponentFormat('STRING')
+								AddTextComponentString("Pritisnite E da pokupite oruzje!")
+								DisplayHelpTextFromStringLabel(0, 0, 1, -1)
+								if IsControlPressed(0,  38) and (GetGameTimer() - GUI.Time) > 150 then
+									local torba = 0
+									TriggerEvent('skinchanger:getSkin', function(skin)
+										torba = skin['bags_1']
+									end)
+									if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+										Kutije[i].Pokupljeno = true
+										TriggerServerEvent("brod:PosaljiKutije", Kutije)
+										GUI.Time = GetGameTimer()
+										FreezeEntityPosition(PlayerPedId(), true)
+										TaskStartScenarioInPlace(PlayerPedId(), "PROP_HUMAN_BUM_BIN", 0, true)
+										Citizen.Wait(5000)
+										ClearPedTasks(PlayerPedId())
+										FreezeEntityPosition(PlayerPedId(), false)
+										TriggerServerEvent("prodajoruzje:DajOruzjeItem", Kutije[i].Oruzje, i)
+									else
+										ESX.ShowNotification("Morate imati torbu!")
+									end
 								end
 							end
 						end
 					end
 				end
+				if naso == 0 then
+					waitara = 1000
+				end
 			end
-			if naso == 0 then
-				waitara = 1000
-			end
-		end
+		end)
 		Citizen.Wait(waitara)
 	end
 end)
@@ -242,10 +249,10 @@ RegisterCommand("pokrenibrod", function(source, args, rawCommandString)
 							SetNetworkIdCanMigrate(netID, true)
 							SetNetworkIdExistsOnAllMachines(netID, true)
 							table.insert(Pedare, netID)
-							TriggerServerEvent("prodajoruzje:SpremiNetID", Pedare)
 						end
 					end
-					TriggerServerEvent("brod:Obavijest")
+					TriggerServerEvent("prodajoruzje:SpremiNetID", Pedare)
+					--TriggerServerEvent("brod:Obavijest")
 					TriggerServerEvent("brod:StaviBlip")
 					SetModelAsNoLongerNeeded(GetHashKey('s_m_y_marine_03'))
 				else
