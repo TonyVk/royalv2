@@ -2,8 +2,8 @@
 <CVehicleModelInfoVarGlobal>    
   <Kits>
     <Item>
-      <kitName>907_x6m_modkit</kitName>
-      <id value="907" />	 	  
+      <kitName>469_x6m_modkit</kitName>
+      <id value="469" />	 	  
       <kitType>MKT_SUV</kitType>
       <visibleMods> 
       </visibleMods>
@@ -513,7 +513,7 @@
   </Kits>
     <Lights>
 	<Item>
-      <id value="907" />
+      <id value="469" />
       <indicator>
         <intensity value="0.375000" />
         <falloffMax value="2.500000" />

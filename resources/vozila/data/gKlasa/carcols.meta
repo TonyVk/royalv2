@@ -11,8 +11,8 @@
 
   <Kits>
     <Item>
-      <kitName>135_gmcs_modkit</kitName>
-      <id value="135" />	 	  
+      <kitName>369_gmcs_modkit</kitName>
+      <id value="369" />	 	  
       <kitType>MKT_SPECIAL</kitType>
       <visibleMods>
       </visibleMods>
@@ -617,7 +617,7 @@
         <zBias value="0.250000" />
         <pullCoronaIn value="false" />
       </reversingLightCorona>
-      <name>gmcs</name>
+      <name>gclas9</name>
     </Item>
     </Lights>
 

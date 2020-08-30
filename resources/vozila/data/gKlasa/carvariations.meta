@@ -13,7 +13,7 @@
 
 
     <Item>
-      <modelName>gmcs</modelName>
+      <modelName>gclas9</modelName>
       <colors>
         <Item>
           <indices content="char_array">
@@ -160,7 +160,7 @@
         </Item>
       </colors>
       <kits>
-        <Item>0_default_modkit</Item>
+        <Item>369_gmcs_modkit</Item>
       </kits>
       <windowsWithExposedEdges />
       <plateProbabilities>

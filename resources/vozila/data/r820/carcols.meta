@@ -2,8 +2,8 @@
 <CVehicleModelInfoVarGlobal>    
   <Kits>
    <Item>
-      <kitName>128_r820_modkit</kitName>
-      <id value="128" />	 	  
+      <kitName>569_r820_modkit</kitName>
+      <id value="569" />	 	  
       <kitType>MKT_SPECIAL</kitType>
       <visibleMods>
 	  <Item>
@@ -894,7 +894,7 @@
   </Kits>
     <Lights>
 	<Item>
-      <id value="128" />
+      <id value="1010" />
       <indicator>
         <intensity value="0.400000" />
         <falloffMax value="2.500000" />

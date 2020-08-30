@@ -366,20 +366,22 @@ function GetAction(data)
 					end
 				elseif v.modType == 11 or v.modType == 12 or v.modType == 13 or v.modType == 15 or v.modType == 16 then
 					local modCount = GetNumVehicleMods(vehicle, v.modType) -- UPGRADES
-					for j = 0, modCount, 1 do
-						local _label = ''
-						if j == currentMods[k] then
-							_label = _U('level', j+1) .. ' - <span style="color:cornflowerblue;">'.. _U('installed') ..'</span>'
-						else
-							if v.price[j+1] == nil then
-								v.price[j+1] = v.price[j]+30
+					if modCount > 0 then
+						for j = 0, modCount, 1 do
+							local _label = ''
+							if j == currentMods[k] then
+								_label = _U('level', j+1) .. ' - <span style="color:cornflowerblue;">'.. _U('installed') ..'</span>'
+							else
+								if v.price[j+1] == nil then
+									v.price[j+1] = v.price[j]+30
+								end
+								price = math.floor((vehiclePrice * v.price[j+1] / 800)*1.30)
+								_label = _U('level', j+1) .. ' - <span style="color:green;">$' .. price .. ' </span>'
 							end
-							price = math.floor((vehiclePrice * v.price[j+1] / 800)*1.30)
-							_label = _U('level', j+1) .. ' - <span style="color:green;">$' .. price .. ' </span>'
-						end
-						table.insert(elements, {label = _label, modType = k, modNum = j})
-						if j == modCount-1 then
-							break
+							table.insert(elements, {label = _label, modType = k, modNum = j})
+							if j == modCount-1 then
+								break
+							end
 						end
 					end
 				elseif v.modType == 17 then -- TURBO

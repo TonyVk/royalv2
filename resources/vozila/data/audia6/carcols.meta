@@ -11,8 +11,8 @@
 
   <Kits>
     <Item>
-      <kitName>135_A6AVANT_modkit</kitName>
-      <id value="135" />	 	  
+      <kitName>669_A6AVANT_modkit</kitName>
+      <id value="669" />	 	  
       <kitType>MKT_SPECIAL</kitType>
       <visibleMods>
       </visibleMods>
@@ -486,8 +486,8 @@
       </liveryNames>
     </Item>
 		<Item>
-      <kitName>135_A6AVANT_modkit</kitName>
-      <id value="135" />	 	  
+      <kitName>669_A6AVANT_modkit</kitName>
+      <id value="669" />	 	  
       <kitType>MKT_SPECIAL</kitType>
       <visibleMods>
       </visibleMods>
@@ -1092,7 +1092,7 @@
         <zBias value="0.250000" />
         <pullCoronaIn value="false" />
       </reversingLightCorona>
-      <name>A6AVANT</name>
+      <name>a6avant</name>
     </Item>
     </Lights>
 
