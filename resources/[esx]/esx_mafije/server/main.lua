@@ -881,8 +881,8 @@ AddEventHandler('mafije:zapljeni6', function(target, itemType, itemName, amount)
 		targetXPlayer.removeInventoryItem(itemName, amount)
 		sourceXPlayer.addInventoryItem(itemName, amount)
 
-		TriggerClientEvent('esx:showNotification', sourceXPlayer.source, _U('you_have_confinv') .. amount .. ' ' .. label .. _U('from') .. targetXPlayer.name)
-		TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. _U('confinv') .. amount .. ' ' .. label )
+		TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x" .. amount .. ' ' .. label .."~s~ od ~b~" .. targetXPlayer.name)
+		TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x" .. amount .. ' ' .. label )
 	end
 	
   end
@@ -892,8 +892,8 @@ AddEventHandler('mafije:zapljeni6', function(target, itemType, itemName, amount)
     targetXPlayer.removeAccountMoney(itemName, amount)
     sourceXPlayer.addAccountMoney(itemName, amount)
 
-    TriggerClientEvent('esx:showNotification', sourceXPlayer.source, _U('you_have_confdm') .. amount .. _U('from') .. targetXPlayer.name)
-    TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. _U('confdm') .. amount)
+    TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~$" .. amount .. "~s~ od ~b~" .. targetXPlayer.name)
+    TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~$" .. amount)
 
   end
 
@@ -902,8 +902,8 @@ AddEventHandler('mafije:zapljeni6', function(target, itemType, itemName, amount)
     targetXPlayer.removeWeapon(itemName)
     sourceXPlayer.addWeapon(itemName, amount)
 
-    TriggerClientEvent('esx:showNotification', sourceXPlayer.source, _U('you_have_confweapon') .. ESX.GetWeaponLabel(itemName) .. _U('from') .. targetXPlayer.name)
-    TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. _U('confweapon') .. ESX.GetWeaponLabel(itemName))
+    TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x1" .. ESX.GetWeaponLabel(itemName) .. "~s~ od ~b~" .. targetXPlayer.name)
+    TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x1 " .. ESX.GetWeaponLabel(itemName))
 
   end
 
@@ -944,12 +944,12 @@ AddEventHandler('mafije:getStockItem', function(itemName, count, maf)
 	  if sourceItem.limit ~= -1 and (sourceItem.count + count) <= sourceItem.limit then
 		inventory.removeItem(itemName, count)
 		xPlayer.addInventoryItem(itemName, count)
-		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_withdrawn') .. count .. ' ' .. item.label)
+		TriggerClientEvent('esx:showNotification', xPlayer.source, "Uzeli ste x" .. count .. ' ' .. item.label)
 	  else
 		TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise u inventory!")
 	  end
     else
-      TriggerClientEvent('esx:showNotification', xPlayer.source, _U('quantity_invalid'))
+      TriggerClientEvent('esx:showNotification', xPlayer.source, "Krivi iznos")
     end
 
   end)
@@ -990,9 +990,9 @@ AddEventHandler('mafije:putStockItems', function(itemName, count, maf)
     if sourceItem.count >= count and count > 0 then
       xPlayer.removeInventoryItem(itemName, count)
       inventory.addItem(itemName, count)
-	  TriggerClientEvent('esx:showNotification', xPlayer.source, _U('added') .. count .. ' ' .. item.label)
+	  TriggerClientEvent('esx:showNotification', xPlayer.source, "Dodali ste x" .. count .. ' ' .. item.label)
     else
-      TriggerClientEvent('esx:showNotification', xPlayer.source, _U('quantity_invalid'))
+      TriggerClientEvent('esx:showNotification', xPlayer.source, "Krivi iznos")
     end
 
   end)
