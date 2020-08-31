@@ -117,6 +117,31 @@ AddEventHandler('esx:deleteVehicle2', function()
     end 
 end)
 
+RegisterCommand("playerpedid", function(source, args, rawCommandString)
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if br == 1 then
+			SetLaunchControlEnabled(true)
+		else
+			ESX.ShowNotification("Nemate pristup ovoj komandi!")
+		end
+	end)
+end, false)
+
+RegisterCommand("obrisikontenjer", function(source, args, rawCommandString)
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if br == 1 then
+			local NewBin, NewBinDistance = ESX.Game.GetClosestObject("prop_contr_03b_ld")
+			if NewBinDistance <= 3 then
+				ESX.Game.DeleteObject(NewBin)
+				DeleteEntity(NewBin)
+				SetEntityCoords(NewBin, 0, 0, 0, 1, 0, 0, 1)
+			end
+		else
+			ESX.ShowNotification("Nemate pristup ovoj komandi!")
+		end
+	end)
+end, false)
+
 RegisterCommand("obrisikontenjer", function(source, args, rawCommandString)
 	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		if br == 1 then

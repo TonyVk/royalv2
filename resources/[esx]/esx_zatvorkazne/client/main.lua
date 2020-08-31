@@ -24,6 +24,7 @@ local vassour_net = nil
 
 local spatulamodel = "bkr_prop_coke_spatula_04"
 local spatula_net = nil
+local PrviSpawn = false
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -32,10 +33,11 @@ Citizen.CreateThread(function()
 	end
 end)
 
-RegisterNetEvent("esx:playerLoaded")
-AddEventHandler("esx:playerLoaded", function(newData)
-	Citizen.Wait(25000)
-	TriggerServerEvent('esx_communityservice:checkIfSentenced')
+AddEventHandler("playerSpawned", function()
+	if not PrviSpawn then
+		PrviSpawn = true
+		TriggerServerEvent('esx_communityservice:checkIfSentenced')
+	end
 end)
 
 function FillActionTable(last_action)
@@ -47,10 +49,12 @@ function FillActionTable(last_action)
 		local random_selection = Config.ServiceLocations[math.random(1,#Config.ServiceLocations)]
 
 		for i = 1, #availableActions do
-			if random_selection.coords.x == availableActions[i].coords.x and random_selection.coords.y == availableActions[i].coords.y and random_selection.coords.z == availableActions[i].coords.z then
+			if availableActions[i] ~= nil then
+				if random_selection.coords.x == availableActions[i].coords.x and random_selection.coords.y == availableActions[i].coords.y and random_selection.coords.z == availableActions[i].coords.z then
 
-				service_does_not_exist = false
+					service_does_not_exist = false
 
+				end
 			end
 		end
 
@@ -128,67 +132,69 @@ Citizen.CreateThread(function()
 			local pCoords    = GetEntityCoords(PlayerPedId())
 
 			for i = 1, #availableActions do
-				local distance = GetDistanceBetweenCoords(pCoords, availableActions[i].coords, true)
+				if availableActions[i] ~= nil then
+					local distance = GetDistanceBetweenCoords(pCoords, availableActions[i].coords, true)
 
-				if distance < 1.5 then
-					DisplayHelpText(_U('press_to_start'))
+					if distance < 1.5 then
+						DisplayHelpText(_U('press_to_start'))
 
 
-					if(IsControlJustReleased(1, 38))then
-						tmp_action = availableActions[i]
-						RemoveAction(tmp_action)
-						FillActionTable(tmp_action)
-						disable_actions = true
+						if(IsControlJustReleased(1, 38))then
+							tmp_action = availableActions[i]
+							RemoveAction(tmp_action)
+							FillActionTable(tmp_action)
+							disable_actions = true
 
-						TriggerServerEvent('esx_communityservice:completeService')
-						actionsRemaining = actionsRemaining - 1
+							TriggerServerEvent('esx_communityservice:completeService')
+							actionsRemaining = actionsRemaining - 1
 
-						if (tmp_action.type == "cleaning") then
-							local cSCoords = GetOffsetFromEntityInWorldCoords(GetPlayerPed(PlayerId()), 0.0, 0.0, -5.0)
-							local vassouspawn = CreateObject(GetHashKey(vassoumodel), cSCoords.x, cSCoords.y, cSCoords.z, 1, 1, 1)
-							local netid = ObjToNet(vassouspawn)
+							if (tmp_action.type == "cleaning") then
+								local cSCoords = GetOffsetFromEntityInWorldCoords(GetPlayerPed(PlayerId()), 0.0, 0.0, -5.0)
+								local vassouspawn = CreateObject(GetHashKey(vassoumodel), cSCoords.x, cSCoords.y, cSCoords.z, 1, 1, 1)
+								local netid = ObjToNet(vassouspawn)
 
-							ESX.Streaming.RequestAnimDict("amb@world_human_janitor@male@idle_a", function()
-									TaskPlayAnim(PlayerPedId(), "amb@world_human_janitor@male@idle_a", "idle_a", 8.0, -8.0, -1, 0, 0, false, false, false)
-									AttachEntityToEntity(vassouspawn,GetPlayerPed(PlayerId()),GetPedBoneIndex(GetPlayerPed(PlayerId()), 28422),-0.005,0.0,0.0,360.0,360.0,0.0,1,1,0,1,0,1)
-									vassour_net = netid
-								end)
+								ESX.Streaming.RequestAnimDict("amb@world_human_janitor@male@idle_a", function()
+										TaskPlayAnim(PlayerPedId(), "amb@world_human_janitor@male@idle_a", "idle_a", 8.0, -8.0, -1, 0, 0, false, false, false)
+										AttachEntityToEntity(vassouspawn,GetPlayerPed(PlayerId()),GetPedBoneIndex(GetPlayerPed(PlayerId()), 28422),-0.005,0.0,0.0,360.0,360.0,0.0,1,1,0,1,0,1)
+										vassour_net = netid
+									end)
 
-								ESX.SetTimeout(10000, function()
+									ESX.SetTimeout(10000, function()
+										disable_actions = false
+										DetachEntity(NetToObj(vassour_net), 1, 1)
+										DeleteEntity(NetToObj(vassour_net))
+										vassour_net = nil
+										ClearPedTasks(PlayerPedId())
+										if actionsRemaining == 0 then
+											TriggerServerEvent("esx_communityservice:finishCommunityService")
+										end
+									end)
+
+							end
+
+							if (tmp_action.type == "gardening") then
+								local cSCoords = GetOffsetFromEntityInWorldCoords(GetPlayerPed(PlayerId()), 0.0, 0.0, -5.0)
+								local spatulaspawn = CreateObject(GetHashKey(spatulamodel), cSCoords.x, cSCoords.y, cSCoords.z, 1, 1, 1)
+								local netid = ObjToNet(spatulaspawn)
+
+								TaskStartScenarioInPlace(PlayerPedId(), "world_human_gardener_plant", 0, false)
+								AttachEntityToEntity(spatulaspawn,GetPlayerPed(PlayerId()),GetPedBoneIndex(GetPlayerPed(PlayerId()), 28422),-0.005,0.0,0.0,190.0,190.0,-50.0,1,1,0,1,0,1)
+								spatula_net = netid
+
+								ESX.SetTimeout(14000, function()
 									disable_actions = false
-									DetachEntity(NetToObj(vassour_net), 1, 1)
-									DeleteEntity(NetToObj(vassour_net))
-									vassour_net = nil
+									DetachEntity(NetToObj(spatula_net), 1, 1)
+									DeleteEntity(NetToObj(spatula_net))
+									spatula_net = nil
 									ClearPedTasks(PlayerPedId())
 									if actionsRemaining == 0 then
 										TriggerServerEvent("esx_communityservice:finishCommunityService")
 									end
 								end)
+							end
 
+							goto start_over
 						end
-
-						if (tmp_action.type == "gardening") then
-							local cSCoords = GetOffsetFromEntityInWorldCoords(GetPlayerPed(PlayerId()), 0.0, 0.0, -5.0)
-							local spatulaspawn = CreateObject(GetHashKey(spatulamodel), cSCoords.x, cSCoords.y, cSCoords.z, 1, 1, 1)
-							local netid = ObjToNet(spatulaspawn)
-
-							TaskStartScenarioInPlace(PlayerPedId(), "world_human_gardener_plant", 0, false)
-							AttachEntityToEntity(spatulaspawn,GetPlayerPed(PlayerId()),GetPedBoneIndex(GetPlayerPed(PlayerId()), 28422),-0.005,0.0,0.0,190.0,190.0,-50.0,1,1,0,1,0,1)
-							spatula_net = netid
-
-							ESX.SetTimeout(14000, function()
-								disable_actions = false
-								DetachEntity(NetToObj(spatula_net), 1, 1)
-								DeleteEntity(NetToObj(spatula_net))
-								spatula_net = nil
-								ClearPedTasks(PlayerPedId())
-								if actionsRemaining == 0 then
-									TriggerServerEvent("esx_communityservice:finishCommunityService")
-								end
-							end)
-						end
-
-						goto start_over
 					end
 				end
 			end
@@ -213,8 +219,10 @@ function RemoveAction(action)
 	local action_pos = -1
 
 	for i=1, #availableActions do
-		if action.coords.x == availableActions[i].coords.x and action.coords.y == availableActions[i].coords.y and action.coords.z == availableActions[i].coords.z then
-			action_pos = i
+		if availableActions[i] ~= nil then
+			if action.coords.x == availableActions[i].coords.x and action.coords.y == availableActions[i].coords.y and action.coords.z == availableActions[i].coords.z then
+				action_pos = i
+			end
 		end
 	end
 
@@ -244,7 +252,9 @@ function DrawAvailableActions()
 	for i = 1, #availableActions do
 --{ r = 50, g = 50, b = 204 }
 		--DrawMarker(21, Config.ServiceLocations[i].coords, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0.5, 0.5, 255, 0, 0, 100, false, true, 2, true, false, false, true)
-		DrawMarker(21, availableActions[i].coords, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0.5, 0.5, 50, 50, 204, 100, false, true, 2, true, false, false, false)
+		if availableActions[i] ~= nil then
+			DrawMarker(21, availableActions[i].coords, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0.5, 0.5, 50, 50, 204, 100, false, true, 2, true, false, false, false)
+		end
 
 		--DrawMarker(20, Config.ServiceLocations[i].coords, -1, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 1.0, 1.0, 0, 162, 250, 80, true, true, 2, 0, 0, 0, 0)
 	end

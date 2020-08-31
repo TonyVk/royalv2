@@ -48,8 +48,26 @@ local table_remove = table.remove
 
 Queue.InitHostName = Queue.InitHostName ~= "default FXServer" and Queue.InitHostName or false
 
-for id, power in pairs(Config.Priority) do
-    _Queue.Priority[string_lower(id)] = power
+MySQL.ready(function()
+	LoadPriority()
+	--[[for id, power in pairs(Config.Priority) do
+		_Queue.Priority[string_lower(id)] = power
+	end]]
+end)
+
+function LoadPriority()
+	_Queue.Priority = {}
+	MySQL.Async.fetchAll(
+      'SELECT * FROM priority',
+      {},
+      function(result)
+		if result ~= nil then
+			for i=1, #result, 1 do
+				_Queue.Priority[string_lower(result[i].identifier)] = result[i].power
+			end
+		end
+      end
+    )
 end
 
 function Queue:DebugPrint(msg)
@@ -858,6 +876,25 @@ commands.setdata = function(args)
     end
 
     Queue:DebugPrint("SET " .. data.name .. "'s " .. args[2] .. " DATA TO " .. args[3])
+end
+
+commands.addp = function(args)
+	if not args[1] or not args[2] then return end
+	if _Queue.Priority[string_lower(args[1])] == nil then
+		MySQL.Async.execute('INSERT INTO priority (identifier, power) VALUES (@id, @pow)',{
+			['@id'] = string_lower(args[1]),
+			['@pow'] = args[2]
+		})
+		LoadPriority()
+		Queue:DebugPrint("Igrac dodan u priority queue!")
+	else
+		Queue:DebugPrint("Igrac vec ima priority!")
+	end
+end
+
+commands.refreshq = function()
+	LoadPriority()
+    Queue:DebugPrint("Priority queue je refreshan!")
 end
 
 commands.commands = function()

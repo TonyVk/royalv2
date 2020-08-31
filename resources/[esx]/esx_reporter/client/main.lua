@@ -127,12 +127,15 @@ RegisterCommand("live", function(source, args, raw)
 		if Moze == 0 then
 			TvojaLokacija = GetEntityCoords(PlayerPedId())
 			local lPed = GetPlayerPed(ID_Igraca)
-			Kamerica = CreateCam("DEFAULT_SCRIPTED_FLY_CAMERA", true)
+			Kamerica = CreateCam("DEFAULT_SCRIPTED_CAMERA", true)
+			while not DoesCamExist(Kamerica) do
+				Kamerica = CreateCam("DEFAULT_SCRIPTED_CAMERA", true)
+				Wait(0)
+			end
 			local fov = (fov_max+fov_min)*0.5
 			AttachCamToEntity(Kamerica, lPed, 0.0,0.0,1.0, true)
 			SetCamRot(Kamerica, 2.0,1.0,GetEntityHeading(lPed))
 			SetCamFov(Kamerica, fov)
-			RenderScriptCams(true, false, 0, 1, 0)
 			NetworkSetTalkerProximity(19.0)
 			TriggerServerEvent("PovecajLjude")
 			ESX.ShowNotification("Da napusite live upisite /live")
@@ -337,12 +340,13 @@ function NarediLive()
 		local lPed = GetPlayerPed(-1)
 		local TajPed = GetPlayerPed(ID_Igraca)
 		local vehicle = GetVehiclePedIsIn(lPed)
-		--local cam2 = CreateCam("DEFAULT_SCRIPTED_FLY_CAMERA", true)
+		--local cam2 = CreateCam("DEFAULT_SCRIPTED_CAMERA", true)
 
 		--AttachCamToEntity(cam2, lPed, 0.0,0.0,1.0, true)
 		--SetCamRot(cam2, 2.0,1.0,GetEntityHeading(lPed))
 		--SetCamFov(cam2, fov)
 		--RenderScriptCams(true, false, 0, 1, 0)
+		RenderScriptCams(true, false, 0, 1, 0)
 		PushScaleformMovieFunction(scaleform, "SET_CAM_LOGO")
 		PushScaleformMovieFunction(scaleform2, "breaking_news")
 		PopScaleformMovieFunctionVoid()
@@ -432,7 +436,7 @@ Citizen.CreateThread(function()
 
 			local lPed = GetPlayerPed(-1)
 			local vehicle = GetVehiclePedIsIn(lPed)
-			local cam2 = CreateCam("DEFAULT_SCRIPTED_FLY_CAMERA", true)
+			local cam2 = CreateCam("DEFAULT_SCRIPTED_CAMERA", true)
 			
 			TriggerServerEvent("PrebaciIDKamere", PlayerId())
 
