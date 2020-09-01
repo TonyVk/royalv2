@@ -324,8 +324,10 @@ end)
 
 -- DISPLAY MISSION MARKERS AND MARKERS
 Citizen.CreateThread(function()
+	local waitara = 500
 	while true do
-		Citizen.Wait(0)
+		Citizen.Wait(waitara)
+		local naso = 0
 		if IsJobKamion() then
 
 			local coords      = GetEntityCoords(GetPlayerPed(-1))
@@ -349,6 +351,8 @@ Citizen.CreateThread(function()
 			if kont ~= nil then
 				if Vozilo ~= nil then
 					if GetVehiclePedIsIn(PlayerPedId(), false) == Vozilo and zakacio == false and utovario == false then
+						waitara = 0
+						naso = 1
 						local corde = GetEntityCoords(kont)
 						local x,y,z = table.unpack(corde)
 						DrawMarker(0, x, y, z+4.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
@@ -357,6 +361,8 @@ Citizen.CreateThread(function()
 			end
 			
 			if zakacio == true and utovario == false then
+				waitara = 0
+				naso = 1
 				local corde = GetEntityCoords(prikolica)
 				local x,y,z = table.unpack(corde)
 				DrawMarker(0, x, y, z+2.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
@@ -364,11 +370,15 @@ Citizen.CreateThread(function()
 			
 			if kamion ~= nil and utovario == true then
 				if GetVehiclePedIsIn(PlayerPedId(), false) ~= kamion then
+					waitara = 0
+					naso = 1
 					local corde = GetEntityCoords(kamion)
 					local x,y,z = table.unpack(corde)
 					DrawMarker(0, x, y, z+4.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
 				else
 					if zakacioprikolicu == false then
+						waitara = 0
+						naso = 1
 						local corde = GetEntityCoords(kont)
 						local x,y,z = table.unpack(corde)
 						DrawMarker(0, x, y, z+4.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
@@ -378,6 +388,8 @@ Citizen.CreateThread(function()
 			
 			if Lokacija ~= nil then
 				if GetDistanceBetweenCoords(coords, Lokacija, true) < 100 then
+					waitara = 0
+					naso = 1
 					local x,y,z = table.unpack(Lokacija)
 					DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
 				end
@@ -401,6 +413,8 @@ Citizen.CreateThread(function()
 			
 			for k,v in pairs(Config.Zones) do
 					if isInService and (v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+						waitara = 0
+						naso = 1
 						DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 					end
 			end
@@ -408,10 +422,15 @@ Citizen.CreateThread(function()
 			for k,v in pairs(Config.Cloakroom) do
 
 				if(v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+					waitara = 0
+					naso = 1
 					DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 				end
 
 			end
+		end
+		if naso == 0 then
+			waitara = 500
 		end
 	end
 end)
@@ -491,6 +510,18 @@ function StartajPosao(br)
 			end
 			while not utovario do
 				Citizen.Wait(300)
+				if not IsEntityAttachedToHandlerFrame(Vozilo, kont) then
+					zakacio = false
+					while not zakacio do
+						Wait(300)
+						if IsHandlerFrameAboveContainer(Vozilo, kont) then
+							Citizen.InvokeNative(0x6a98c2ecf57fa5d4, Vozilo, kont)
+							FreezeEntityPosition(kont, false)
+							zakacio = true
+							RemoveBlip(Blipara)
+						end
+					end
+				end
 				local corda = GetEntityCoords(prikolica)
 				local corda2 = GetEntityCoords(kont)
 				if GetDistanceBetweenCoords(corda, corda2, true) <= 1.0 then

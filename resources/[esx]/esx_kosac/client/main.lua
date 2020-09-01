@@ -648,10 +648,14 @@ end)
 
 -- DISPLAY MISSION MARKERS AND MARKERS
 Citizen.CreateThread(function()
+	local waitara = 500
 	while true do
-		Wait(0)
+		Citizen.Wait(waitara)
+		local naso = 0
 		if IsJobKosac() then
 			if prop_ent ~= nil then
+				waitara = 0
+				naso = 1
 				SetCurrentPedWeapon(PlayerPedId(),GetHashKey("WEAPON_UNARMED"),true)
 				ResetPedMovementClipset(PlayerPedId())
 				DisableControlAction(0, 21, true)
@@ -701,12 +705,16 @@ Citizen.CreateThread(function()
 
 		
 			if SpawnMarker and GetDistanceBetweenCoords(coords, 1062.2674560547, -396.4440612793, 65.810272216797, true) < Config.DrawDistance then
+				waitara = 0
+				naso = 1
 				DrawMarker(1, 1062.2674560547, -396.4440612793, 65.810272216797, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
 			end
 			
 			for k,v in pairs(Config.Zones) do
 
 				if isInService and (v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+					waitara = 0
+					naso = 1
 					DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 				end
 
@@ -715,10 +723,15 @@ Citizen.CreateThread(function()
 			for k,v in pairs(Config.Cloakroom) do
 
 				if(v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+					waitara = 0
+					naso = 1
 					DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 				end
 
 			end
+		end
+		if naso == 0 then
+			waitara = 500
 		end
 	end
 end)

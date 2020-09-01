@@ -522,7 +522,7 @@ end)
 Citizen.CreateThread(function()
 	local waitara = 500
 	while true do
-		Wait(waitara)
+		Citizen.Wait(waitara)
 		local naso = 0
 		if IsJobDrvosjeca() then
 			local coords      = GetEntityCoords(GetPlayerPed(-1))

@@ -316,8 +316,10 @@ end)
 
 -- DISPLAY MISSION MARKERS AND MARKERS
 Citizen.CreateThread(function()
+	local waitara = 500
 	while true do
-		Citizen.Wait(0)
+		Citizen.Wait(waitara)
+		local naso = 0
 		if IsJobVodoinstalater() then
 
 			local coords      = GetEntityCoords(GetPlayerPed(-1))
@@ -356,6 +358,8 @@ Citizen.CreateThread(function()
 
 		
 			if SpawnMarker and GetDistanceBetweenCoords(coords, Lokacija, true) < Config.DrawDistance then
+				waitara = 0
+				naso = 1
 				local x,y,z = table.unpack(Lokacija)
 				DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
 			end
@@ -363,6 +367,8 @@ Citizen.CreateThread(function()
 			for k,v in pairs(Config.Zones) do
 
 				if isInService and (v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+					waitara = 0
+					naso = 1
 					DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 				end
 
@@ -371,6 +377,8 @@ Citizen.CreateThread(function()
 			for k,v in pairs(Config.Cloakroom) do
 
 				if(v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+					waitara = 0
+					naso = 1
 					DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 				end
 
