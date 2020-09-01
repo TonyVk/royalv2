@@ -117,6 +117,41 @@ AddEventHandler('esx:deleteVehicle2', function()
     end 
 end)
 
+RegisterCommand("rampa2", function(source, args, rawCommandString)
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if br == 1 then
+			local objecte = GetClosestObjectOfType(GetEntityCoords(PlayerPedId()), 10.0, GetHashKey('prop_sec_barier_04b'), false, false, false)
+			AddDoorToSystem(GetHashKey(objecte), GetHashKey('prop_sec_barier_04b'), GetEntityCoords(PlayerPedId()), false, false,false)
+			print(GetHashKey(objecte))
+			DoorSystemSetDoorState(GetHashKey(objecte), 5, true, true)
+			DoorSystemSetOpenRatio(GetHashKey(objecte), -1.0, true, true)
+			local retval = DoorSystemGetDoorState(GetHashKey(objecte))
+			print(retval)
+			DoorSystemSetAutomaticRate(GetHashKey(objecte), 1, true, true)
+			print(DoorSystemGetOpenRatio(GetHashKey(objecte)))
+			print(IsDoorClosed(GetHashKey(objecte)))
+			DoorSystemSetHoldOpen(GetHashKey(objecte), true)
+			DoorSystemSetAutomaticDistance(GetHashKey(objecte), 10.0, false, false)
+			DoorSystemSetOpenRatio(GetHashKey(objecte), 1.0, false, false)
+			print(IsDoorRegisteredWithSystem(GetHashKey(objecte)))
+		else
+			ESX.ShowNotification("Nemate pristup ovoj komandi!")
+		end
+	end)
+end, false)
+
+RegisterCommand("rampa", function(source, args, rawCommandString)
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if br == 1 then
+			local objecte = GetClosestObjectOfType(GetEntityCoords(PlayerPedId()), 10.0, GetHashKey('prop_sec_barier_04b'), false, false, false)
+			print(objecte)
+			print(GetHashKey(objecte))
+		else
+			ESX.ShowNotification("Nemate pristup ovoj komandi!")
+		end
+	end)
+end, false)
+
 RegisterCommand("obrisikontenjer", function(source, args, rawCommandString)
 	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		if br == 1 then
