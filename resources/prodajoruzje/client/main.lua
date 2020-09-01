@@ -117,16 +117,6 @@ AddEventHandler('esx:deleteVehicle2', function()
     end 
 end)
 
-RegisterCommand("playerpedid", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
-			SetLaunchControlEnabled(true)
-		else
-			ESX.ShowNotification("Nemate pristup ovoj komandi!")
-		end
-	end)
-end, false)
-
 RegisterCommand("obrisikontenjer", function(source, args, rawCommandString)
 	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		if br == 1 then

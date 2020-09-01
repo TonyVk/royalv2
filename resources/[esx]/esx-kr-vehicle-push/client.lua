@@ -8,7 +8,7 @@ Citizen.CreateThread(function()
 end)
 
 Config = {} 
-Config.DamageNeeded = 90.0 -- 100.0 being broken and 1000.0 being fixed a lower value than 100.0 will break it
+Config.DamageNeeded = 200.0 -- 100.0 being broken and 1000.0 being fixed a lower value than 100.0 will break it
 Config.MaxWidth = 5.0 -- Will complete soon
 Config.MaxHeight = 5.0
 Config.MaxLength = 5.0

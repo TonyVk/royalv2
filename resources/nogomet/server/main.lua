@@ -2,13 +2,8 @@ local Min = 0
 local Lopta = nil
 
 RegisterNetEvent("SpawnLoptu")
-AddEventHandler("SpawnLoptu", function(id, net)
-	TriggerClientEvent("EoTiLopta", -1, id, net)
-end)
-
-RegisterNetEvent("SaljiForce")
-AddEventHandler("SaljiForce", function(forc, id)
-	TriggerClientEvent("VratiForce", -1, forc, id)
+AddEventHandler("SpawnLoptu", function(net)
+	TriggerClientEvent("EoTiLopta", -1, net)
 end)
 
 RegisterNetEvent("nogomet:pozovi")
@@ -37,8 +32,6 @@ RegisterNetEvent("nogomet:SyncSpawnove")
 AddEventHandler('nogomet:SyncSpawnove', function(tim, br)
 	TriggerClientEvent("nogomet:VratioSpawnove", -1, tim, br)
 end)
-
-local Jesam = false
 
 RegisterNetEvent("nogomet:SyncajScore")
 AddEventHandler('nogomet:SyncajScore', function(tim1, tim2)

@@ -171,11 +171,13 @@ RegisterCommand("npokreni", function(source, args, rawCommandString)
 					local loptee = "p_ld_soc_ball_01"
 					ESX.Streaming.RequestModel(loptee)
 					NLopta = CreateObject(GetHashKey(loptee), 771.25549316406, -233.44470214844, 65.114479064941,true,false,false)
-					Wait(200)
-					local netid = ObjToNet(NLopta)
-					SetNetworkIdExistsOnAllMachines(netid, true)
-					TriggerServerEvent("SpawnLoptu", PlayerId(), netid)
 					SetEntityAsMissionEntity(NLopta, true, true)
+					NetworkRegisterEntityAsNetworked(NLopta)
+					local netid = ObjToNet(NLopta)
+					NetworkSetNetworkIdDynamic(netid, false)
+					SetNetworkIdCanMigrate(netid, true)
+					SetNetworkIdExistsOnAllMachines(netid, true)
+					TriggerServerEvent("SpawnLoptu", netid)
 					SetModelAsNoLongerNeeded(GetHashKey(loptee))
 					TriggerServerEvent("nogomet:pokreni", vrijeme*60)
 				else
@@ -308,45 +310,16 @@ AddEventHandler("nogomet:start", function(vr)
 end)
 
 RegisterNetEvent("EoTiLopta")
-AddEventHandler("EoTiLopta", function(id, net)
-	--if id ~= PlayerId() then
-		--[[local model = "p_ld_soc_ball_01"
-		ESX.Streaming.RequestModel(model)
-		local objecte = GetClosestObjectOfType(771.25549316406, -233.44470214844, 65.114479064941, 30.0, GetHashKey(model), false, false, false)
-		while objecte == nil or objecte == -1 or objecte == 0 do
-			Wait(0)
-			objecte = GetClosestObjectOfType(771.25549316406, -233.44470214844, 65.114479064941, 30.0, GetHashKey(model), false, false, false)
-			print(objecte)
-		end]]
+AddEventHandler("EoTiLopta", function(net)
+	if NetworkDoesNetworkIdExist(net) then
 		NLopta = NetToObj(net)
-		print(NLopta)
-		--SetModelAsNoLongerNeeded(GetHashKey(model))
-		--SetEntityAsMissionEntity(NLopta, true, true)
-	--end
+	end
 end)
 
 RegisterNetEvent("nogomet:PoslaoPoruku")
 AddEventHandler("nogomet:PoslaoPoruku", function(poruka)
 	if Tim > 0 then
 		ESX.ShowNotification(poruka)
-	end
-end)
-
-RegisterNetEvent("VratiForce")
-AddEventHandler("VratiForce", function(farc, id)
-	if PlayerId() ~= id then
-		if NLopta ~= nil then
-			local forceType = forceTypes.MaxForceRot2
-			local direction = farc
-			local rotation = vector3(0.0, 0.0, 0.0)
-			local boneIndex = 0
-			local isDirectionRel = false
-			local ignoreUpVec = true
-			local isForceRel = true
-			local p12 = false
-			local p13 = true
-			ApplyForceToEntity(NLopta,forceType,direction,rotation,boneIndex,isDirectionRel,ignoreUpVec,isForceRel,p12,p13)
-		end
 	end
 end)
 
@@ -397,8 +370,8 @@ Citizen.CreateThread(function()
 					local cora = GetEntityCoords(PlayerPedId())
 					if GetDistanceBetweenCoords(cor, cora, false) <= 1.0 then
 						while not NetworkHasControlOfEntity(NLopta) do 
-							Citizen.Wait(0)
 							NetworkRequestControlOfEntity(NLopta)
+							Citizen.Wait(0)
 						end
 						local cordsa = GetOffsetFromEntityInWorldCoords(PlayerPedId(), 0.0, 22.0 , 0.0)
 						local fcor = cor-cordsa
@@ -412,7 +385,6 @@ Citizen.CreateThread(function()
 						local p12 = false
 						local p13 = true
 						ApplyForceToEntity(NLopta,forceType,direction,rotation,boneIndex,isDirectionRel,ignoreUpVec,isForceRel,p12,p13)
-						--TriggerServerEvent("SaljiForce", direction, PlayerId())
 					end
 				end
 			end
@@ -422,8 +394,8 @@ Citizen.CreateThread(function()
 					local cora = GetEntityCoords(PlayerPedId())
 					if GetDistanceBetweenCoords(cor, cora, false) <= 1.0 then
 						while not NetworkHasControlOfEntity(NLopta) do 
-							Citizen.Wait(0)
 							NetworkRequestControlOfEntity(NLopta)
+							Citizen.Wait(0)
 						end
 						local cordsa = GetOffsetFromEntityInWorldCoords(PlayerPedId(), 0.0, 22.0 , 7.0)
 						local fcor = cor-cordsa
@@ -437,7 +409,6 @@ Citizen.CreateThread(function()
 						local p12 = false
 						local p13 = true
 						ApplyForceToEntity(NLopta,forceType,direction,rotation,boneIndex,isDirectionRel,ignoreUpVec,isForceRel,p12,p13)
-						--TriggerServerEvent("SaljiForce", direction, PlayerId())
 					end
 				end
 			end
@@ -482,7 +453,6 @@ function StartProvjeru()
 					SetEntityCoords(NLopta, 771.25549316406, -233.44470214844, 65.214479064941, 0, 0, 0, true)
 					FreezeEntityPosition(NLopta, false)
 					Tim1Score = Tim1Score+1
-					print("kolko")
 					TriggerServerEvent("nogomet:SyncajScore", Tim1Score, Tim2Score)
 					TriggerServerEvent("nogomet:SaljiPoruku", "Gooool! Tim 1 je zabio timu 2!")
 					--TriggerEvent("nogomet:VratiScore", Tim1Score, Tim2Score)
@@ -498,7 +468,6 @@ function StartProvjeru()
 					TriggerServerEvent("nogomet:SyncajScore", Tim1Score, Tim2Score)
 					--TriggerEvent("nogomet:VratiScore", Tim1Score, Tim2Score)
 					TriggerServerEvent("nogomet:SaljiPoruku", "Gooool! Tim 2 je zabio timu 1!")
-					print("kolko2")
 					Wait(100)
 					Cekaj = false
 				end
