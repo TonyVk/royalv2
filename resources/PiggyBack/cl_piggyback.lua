@@ -113,7 +113,7 @@ function GetClosestPlayer(radius)
 
     for index,value in ipairs(players) do
         local target = GetPlayerPed(value)
-        if(target ~= ply) then
+        if(target ~= ply) and not IsEntityDead(target) then
             local targetCoords = GetEntityCoords(GetPlayerPed(value), 0)
             local distance = GetDistanceBetweenCoords(targetCoords['x'], targetCoords['y'], targetCoords['z'], plyCoords['x'], plyCoords['y'], plyCoords['z'], true)
             if(closestDistance == -1 or closestDistance > distance) then
