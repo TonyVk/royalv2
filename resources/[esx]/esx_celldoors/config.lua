@@ -431,4 +431,37 @@ Config.DoorList = {
 		distance = 14,
 		size = 2
 	},
+	-- Granica --
+	{
+		objName = 'prop_sec_barrier_ld_02a',
+		objYaw = -35.0,
+		objCoords  = vector3(1455.4477539063, 760.55328369141, 77.254493713379),
+		textCoords = vector3(1455.4477539063, 760.55328369141, 77.254493713379),
+		authorizedJobs = { 'police', 'sipa' },
+		locked = false,
+		distance = 3,
+		size = 1
+	},
+	
+	{
+		objName = 'prop_sec_barrier_ld_02a',
+		objYaw = 145.0,
+		objCoords  = vector3(1451.0988769531, 763.52484130859, 77.268585205078),
+		textCoords = vector3(1451.0988769531, 763.52484130859, 77.268585205078),
+		authorizedJobs = { 'police', 'sipa' },
+		locked = false,
+		distance = 3,
+		size = 1
+	},
+	
+	{
+		objName = 'prop_sec_barrier_ld_02a',
+		objYaw = -40.0,
+		objCoords  = vector3(1432.8041992188, 722.60601806641, 78.021430969238),
+		textCoords = vector3(1432.8041992188, 722.60601806641, 78.021430969238),
+		authorizedJobs = { 'police', 'sipa' },
+		locked = true,
+		distance = 3,
+		size = 1
+	},
 }

@@ -94,13 +94,15 @@ AddEventHandler("Otkljucaj", function()
 	end)
 end)
 
--- Get objects every second, instead of every frame
 Citizen.CreateThread(function()
+	local waitara = 500
 	while true do
-		local coord = GetEntityCoords(PlayerPedId())
+		Citizen.Wait(waitara)
+		local brojac = 0
+		local playerCoords = GetEntityCoords(PlayerPedId())
 		for _,doorID in ipairs(Config.DoorList) do
 			if doorID.doors then
-				local udalj = GetDistanceBetweenCoords(doorID.doors[1].objCoords, coord, false)
+				local udalj = GetDistanceBetweenCoords(doorID.doors[1].objCoords, playerCoords, false)
 				if udalj < 5.0 then
 					for k,v in ipairs(doorID.doors) do
 						if not v.object or not DoesEntityExist(v.object) then
@@ -109,24 +111,14 @@ Citizen.CreateThread(function()
 					end
 				end
 			else
-				local udalj = GetDistanceBetweenCoords(doorID.objCoords, coord, false)
-				if udalj < 5.0 then
+				local udalj = GetDistanceBetweenCoords(doorID.objCoords, playerCoords, false)
+				if udalj < 30.0 then
 					if not doorID.object or not DoesEntityExist(doorID.object) then
-						doorID.object = GetClosestObjectOfType(doorID.objCoords, 1.0, GetHashKey(doorID.objName), false, false, false)
+						doorID.object = GetClosestObjectOfType(doorID.objCoords, 30.0, GetHashKey(doorID.objName), false, false, false)
 					end
 				end
 			end
 		end
-		Citizen.Wait(1000)
-	end
-end)
-
-Citizen.CreateThread(function()
-	local waitara = 500
-	while true do
-		Citizen.Wait(waitara)
-		local brojac = 0
-		local playerCoords = GetEntityCoords(PlayerPedId())
 
 		for k,doorID in ipairs(Config.DoorList) do
 			local distance
@@ -144,7 +136,7 @@ Citizen.CreateThread(function()
 				maxDistance = doorID.distance
 			end
 
-			if distance < 50 then
+			if distance < 100 then
 				waitara = 0
 				if doorID.doors then
 					for _,v in ipairs(doorID.doors) do
