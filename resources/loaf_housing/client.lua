@@ -1256,6 +1256,9 @@ AddEventHandler('loaf_housing:knockAccept', function(coords, house, storage, spa
             end
         end
     end
+	for k, v in pairs(placed_furniture) do
+        DeleteObject(v)
+    end
 end)
 
 RegisterNetEvent('loaf_housing:reloadHouses')
