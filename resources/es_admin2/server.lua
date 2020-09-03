@@ -38,6 +38,7 @@ end, true)
 function loadExistingPlayers()
 	TriggerEvent("es:getPlayers", function(curPlayers)
 		for k,v in pairs(curPlayers)do
+			print(v.get('group'))
 			TriggerClientEvent("es_admin:setGroup", v.get('source'), v.get('group'))
 		end
 	end)
@@ -423,7 +424,7 @@ end, {help = "Pokazuje koji ste level admina i koja ste grupa"})
 TriggerEvent('es:addGroupCommand', 'viewname', "admin", function(source, args, user)
     TriggerClientEvent("es_admin:viewname", source)
 end, function(source, args, user)
-    TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Insufficient permissions!")
+    TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Nemate ovlasti!")
 end)
 --test
 -- Report to admins

@@ -117,39 +117,54 @@ AddEventHandler('esx:deleteVehicle2', function()
     end 
 end)
 
-RegisterCommand("rampa2", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
-			local objecte = GetClosestObjectOfType(GetEntityCoords(PlayerPedId()), 10.0, GetHashKey('prop_sec_barier_04b'), false, false, false)
-			AddDoorToSystem(GetHashKey(objecte), GetHashKey('prop_sec_barier_04b'), GetEntityCoords(PlayerPedId()), false, false,false)
-			print(GetHashKey(objecte))
-			DoorSystemSetDoorState(GetHashKey(objecte), 5, true, true)
-			DoorSystemSetOpenRatio(GetHashKey(objecte), -1.0, true, true)
-			local retval = DoorSystemGetDoorState(GetHashKey(objecte))
-			print(retval)
-			DoorSystemSetAutomaticRate(GetHashKey(objecte), 1, true, true)
-			print(DoorSystemGetOpenRatio(GetHashKey(objecte)))
-			print(IsDoorClosed(GetHashKey(objecte)))
-			DoorSystemSetHoldOpen(GetHashKey(objecte), true)
-			DoorSystemSetAutomaticDistance(GetHashKey(objecte), 10.0, false, false)
-			DoorSystemSetOpenRatio(GetHashKey(objecte), 1.0, false, false)
-			print(IsDoorRegisteredWithSystem(GetHashKey(objecte)))
-		else
-			ESX.ShowNotification("Nemate pristup ovoj komandi!")
-		end
-	end)
+RegisterCommand("cigla", function(source, args, rawCommandString)
+	local corde = GetEntityCoords(PlayerPedId())
+	local retval, outPosition, outRotation = GetCoordsAndRotationOfClosestObjectOfType(corde.x, corde.y, corde.z, 1.0, GetHashKey('prop_wallbrick_01'), 2)
+	print("Koord: "..outPosition)
+	print("Rotation: "..outRotation) 
 end, false)
 
-RegisterCommand("rampa", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
-			local objecte = GetClosestObjectOfType(GetEntityCoords(PlayerPedId()), 10.0, GetHashKey('prop_sec_barier_04b'), false, false, false)
-			print(objecte)
-			print(GetHashKey(objecte))
-		else
-			ESX.ShowNotification("Nemate pristup ovoj komandi!")
+local cigla = nil
+local cigla2 = nil
+local cigla3 = nil
+local cigla4 = nil
+local prva = 0
+RegisterCommand("cigla2", function(source, args, rawCommandString)
+	if prva == 0 then
+		cigla = CreateObject(GetHashKey('prop_wallbrick_01'), 1373.352, -781.0687, 66.01108, true, true, true)
+		SetEntityRotation(cigla, -0.08805062, -0.0002665851, -9.770086, 2, true)
+		prva = 1
+	elseif prva == 1 then
+		local prosla = cigla
+		for i = 1, 14 do
+			local prvioffset = GetOffsetFromEntityInWorldCoords(prosla, -0.42, 0.0, -0.073) --lijevo
+			cigla2 = CreateObject(GetHashKey('prop_wallbrick_01'), prvioffset, true, true, true)
+			SetEntityRotation(cigla2, -0.08805062, -0.0002665851, -9.770086, 2, true)
+			prosla = cigla2
 		end
-	end)
+		prva = 2
+	elseif prva == 2 then
+		local zadnja = cigla
+		for i = 1, 5 do
+			local prvioffset = GetOffsetFromEntityInWorldCoords(zadnja, 0.0, 0.0, 0.07) --gore
+			cigla4 = CreateObject(GetHashKey('prop_wallbrick_01'), prvioffset, true, true, true)
+			SetEntityRotation(cigla4, -0.08805062, -0.0002665851, -9.770086, 2, true)
+			local prosla = cigla4
+			for i = 1, 14 do
+				local prvioffset = GetOffsetFromEntityInWorldCoords(prosla, -0.42, 0.0, -0.073) --lijevo
+				cigla3 = CreateObject(GetHashKey('prop_wallbrick_01'), prvioffset, true, true, true)
+				SetEntityRotation(cigla3, -0.08805062, -0.0002665851, -9.770086, 2, true)
+				prosla = cigla3
+			end
+			zadnja = cigla4
+		end
+		prva = 3
+	else
+		DeleteObject(cigla)
+		DeleteObject(cigla2)
+		DeleteObject(cigla3)
+		prva = 0
+	end
 end, false)
 
 RegisterCommand("obrisikontenjer", function(source, args, rawCommandString)
@@ -204,14 +219,12 @@ RegisterCommand("aodg", function(source, args, rawCommandString)
 			local playerIdx = GetPlayerFromServerId(tonumber(args[1]))
 			if playerIdx ~= -1 then
 				if args[1] ~= nil and args[2] ~= nil then
-					local test = rawCommandString
-					local str = "aodg "..args[1]
-					test = string.gsub(test, str, "")
-					TriggerServerEvent("prodajoruzje:PosaljiAdmOdgovor", args[1], test)
+					local razlog = table.concat(args, " ", 2)
+					TriggerServerEvent("prodajoruzje:PosaljiAdmOdgovor", args[1], razlog)
 					local playerName = GetPlayerName(PlayerId())
 					local retval = GetPlayerFromServerId(args[1])
 					local playerName2 = GetPlayerName(playerIdx)
-					TriggerServerEvent("prodajoruzje:SaljiInfoSvima", test, playerName, playerName2)
+					TriggerServerEvent("prodajoruzje:SaljiInfoSvima", razlog, playerName, playerName2)
 				else
 					name = "Admin"..":"
 					message = "/aodg [ID igraca][Odgovor]"

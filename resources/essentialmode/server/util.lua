@@ -17,7 +17,7 @@ settings.defaultSettings = {
 	['enableLogging'] = GetConvar('es_enableLogging', 'false'),
 	['enableCustomData'] = GetConvar('es_enableCustomData', 'false'),
 	['defaultDatabase'] = GetConvar('es_defaultDatabase', '1'),
-	['disableCommandHandler'] = GetConvar('es_disableCommandHandler', 'false')
+	['disableCommandHandler'] = true
 }
 settings.sessionSettings = {}
 commandSuggestions = {}

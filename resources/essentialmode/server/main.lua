@@ -317,14 +317,22 @@ function addGroupCommand(command, group, callback, callbackfailed, suggestion, a
 	end
 
 	ExecuteCommand('add_ace group.' .. group .. ' command.' .. command .. ' allow')
-
+	
 	if(settings.defaultSettings.disableCommandHandler ~= 'false')then
 		RegisterCommand(command, function(source, args)
 			local Source = source
 
 			-- Console check
 			if(source ~= 0)then
-				if IsPlayerAceAllowed(Source, "command." .. command) or groups[Users[source].getGroup()]:canTarget(group) then
+				local identifier = GetPlayerIdentifiers(source)[1]
+				local result = MySQL.Sync.fetchAll("SELECT group FROM users WHERE identifier = @identifier", {
+					['@identifier'] = identifier
+				})
+				local gr = result[1].group
+				print(gr)
+				print(group)
+				--if IsPlayerAceAllowed(Source, "command." .. command) or groups[Users[source].getGroup()]:canTarget(group) then
+				if gr == group then
 					if((#args <= commands[command].arguments and #args == commands[command].arguments) or commands[command].arguments == -1)then
 						callback(source, args, Users[source])
 					else
@@ -340,7 +348,7 @@ function addGroupCommand(command, group, callback, callbackfailed, suggestion, a
 					TriggerEvent("es:incorrectAmountOfArguments", source, commands[command].arguments, #args, Users[source])
 				end
 			end
-		end, true)
+		end, false)
 	end
 
 	debugMsg("Group command added: " .. command .. ", requires group: " .. group)
