@@ -324,15 +324,19 @@ function addGroupCommand(command, group, callback, callbackfailed, suggestion, a
 
 			-- Console check
 			if(source ~= 0)then
+				local permisija = 0
+				if group == "admin" or group == "jobmaster" then
+					permisija = 1
+				elseif group == "superadmin" then
+					permisija = 69
+				end
 				local identifier = GetPlayerIdentifiers(source)[1]
-				local result = MySQL.Sync.fetchAll("SELECT group FROM users WHERE identifier = @identifier", {
+				local result = MySQL.Sync.fetchAll('SELECT * FROM users WHERE identifier = @identifier', {
 					['@identifier'] = identifier
 				})
-				local gr = result[1].group
-				print(gr)
-				print(group)
+				local perm = result[1].permission_level
 				--if IsPlayerAceAllowed(Source, "command." .. command) or groups[Users[source].getGroup()]:canTarget(group) then
-				if gr == group then
+				if perm >= permisija then
 					if((#args <= commands[command].arguments and #args == commands[command].arguments) or commands[command].arguments == -1)then
 						callback(source, args, Users[source])
 					else
