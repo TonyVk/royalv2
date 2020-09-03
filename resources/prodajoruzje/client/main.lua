@@ -117,56 +117,6 @@ AddEventHandler('esx:deleteVehicle2', function()
     end 
 end)
 
-RegisterCommand("cigla", function(source, args, rawCommandString)
-	local corde = GetEntityCoords(PlayerPedId())
-	local retval, outPosition, outRotation = GetCoordsAndRotationOfClosestObjectOfType(corde.x, corde.y, corde.z, 1.0, GetHashKey('prop_wallbrick_01'), 2)
-	print("Koord: "..outPosition)
-	print("Rotation: "..outRotation) 
-end, false)
-
-local cigla = nil
-local cigla2 = nil
-local cigla3 = nil
-local cigla4 = nil
-local prva = 0
-RegisterCommand("cigla2", function(source, args, rawCommandString)
-	if prva == 0 then
-		cigla = CreateObject(GetHashKey('prop_wallbrick_01'), 1373.352, -781.0687, 66.01108, true, true, true)
-		SetEntityRotation(cigla, -0.08805062, -0.0002665851, -9.770086, 2, true)
-		prva = 1
-	elseif prva == 1 then
-		local prosla = cigla
-		for i = 1, 14 do
-			local prvioffset = GetOffsetFromEntityInWorldCoords(prosla, -0.42, 0.0, -0.073) --lijevo
-			cigla2 = CreateObject(GetHashKey('prop_wallbrick_01'), prvioffset, true, true, true)
-			SetEntityRotation(cigla2, -0.08805062, -0.0002665851, -9.770086, 2, true)
-			prosla = cigla2
-		end
-		prva = 2
-	elseif prva == 2 then
-		local zadnja = cigla
-		for i = 1, 5 do
-			local prvioffset = GetOffsetFromEntityInWorldCoords(zadnja, 0.0, 0.0, 0.07) --gore
-			cigla4 = CreateObject(GetHashKey('prop_wallbrick_01'), prvioffset, true, true, true)
-			SetEntityRotation(cigla4, -0.08805062, -0.0002665851, -9.770086, 2, true)
-			local prosla = cigla4
-			for i = 1, 14 do
-				local prvioffset = GetOffsetFromEntityInWorldCoords(prosla, -0.42, 0.0, -0.073) --lijevo
-				cigla3 = CreateObject(GetHashKey('prop_wallbrick_01'), prvioffset, true, true, true)
-				SetEntityRotation(cigla3, -0.08805062, -0.0002665851, -9.770086, 2, true)
-				prosla = cigla3
-			end
-			zadnja = cigla4
-		end
-		prva = 3
-	else
-		DeleteObject(cigla)
-		DeleteObject(cigla2)
-		DeleteObject(cigla3)
-		prva = 0
-	end
-end, false)
-
 RegisterCommand("obrisikontenjer", function(source, args, rawCommandString)
 	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		if br == 1 then

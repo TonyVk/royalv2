@@ -113,6 +113,76 @@ AddEventHandler('playerDropped', function(Reason)
 	TriggerEvent('DiscordBot:ToDiscord', DiscordWebhookSystemInfos, SystemName, '```fix\n' .. GetPlayerName(source) .. ' left (' .. Reason .. ')\n```', SystemAvatar, false)
 end)
 
+-- RegisterCommand Log
+RegisterServerEvent('DiscordBot:RegCmd')
+AddEventHandler('DiscordBot:RegCmd', function(Source, Message)
+	local Name = GetPlayerName(Source)
+	local Webhook = DiscordWebhookChat; TTS = false
+
+	--Removing Color Codes (^0, ^1, ^2 etc.) from the name and the message
+	for i = 0, 9 do
+		Message = Message:gsub('%^' .. i, '')
+		Name = Name:gsub('%^' .. i, '')
+	end
+
+	--Splitting the message in multiple strings
+	MessageSplitted = stringsplit(Message, ' ')
+	
+	--Checking if the message contains a blacklisted command
+	if not IsCommand(MessageSplitted, 'Blacklisted') then
+		--Checking if the message contains a command which has his own webhook
+		if IsCommand(MessageSplitted, 'HavingOwnWebhook') then
+			Webhook = GetOwnWebhook(MessageSplitted)
+		end
+		
+		--Checking if the message contains a special command
+		if IsCommand(MessageSplitted, 'Special') then
+			MessageSplitted = ReplaceSpecialCommand(MessageSplitted)
+		end
+		
+		---Checking if the message contains a command which belongs into a tts channel
+		if IsCommand(MessageSplitted, 'TTS') then
+			TTS = true
+		end
+		
+		--Combining the message to one string again
+		Message = ''
+		
+		for Key, Value in ipairs(MessageSplitted) do
+			Message = Message .. Value .. ' '
+		end
+		
+		--Adding the username if needed
+		Message = Message:gsub('USERNAME_NEEDED_HERE', GetPlayerName(Source))
+		
+		--Adding the userid if needed
+		Message = Message:gsub('USERID_NEEDED_HERE', Source)
+		
+		-- Shortens the Name, if needed
+		if Name:len() > 23 then
+			Name = Name:sub(1, 23)
+		end
+
+		--Getting the steam avatar if available
+		local AvatarURL = UserAvatar
+		if GetIDFromSource('steam', Source) then
+			PerformHttpRequest('http://steamcommunity.com/profiles/' .. tonumber(GetIDFromSource('steam', Source), 16) .. '/?xml=1', function(Error, Content, Head)
+				local SteamProfileSplitted = stringsplit(Content, '\n')
+				for i, Line in ipairs(SteamProfileSplitted) do
+					if Line:find('<avatarFull>') then
+						AvatarURL = Line:gsub('	<avatarFull><!%[CDATA%[', ''):gsub(']]></avatarFull>', '')
+						TriggerEvent('DiscordBot:ToDiscord', Webhook, Name .. ' [ID: ' .. Source .. ']', Message, AvatarURL, false, Source, TTS) --Sending the message to discord
+						break
+					end
+				end
+			end)
+		else
+			--Using the default avatar if no steam avatar is available
+			TriggerEvent('DiscordBot:ToDiscord', Webhook, Name .. ' [ID: ' .. Source .. ']', Message, AvatarURL, false, Source, TTS) --Sending the message to discord
+		end
+	end
+end)
+
 -- Killing Log
 RegisterServerEvent('DiscordBot:playerDied')
 AddEventHandler('DiscordBot:playerDied', function(Message, Weapon)

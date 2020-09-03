@@ -325,7 +325,7 @@ function addGroupCommand(command, group, callback, callbackfailed, suggestion, a
 			-- Console check
 			if(source ~= 0)then
 				local permisija = 0
-				if group == "admin" or group == "jobmaster" then
+				if group == "admin" or group == "jobmaster" or group == "mod" then
 					permisija = 1
 				elseif group == "superadmin" then
 					permisija = 69
@@ -352,6 +352,7 @@ function addGroupCommand(command, group, callback, callbackfailed, suggestion, a
 					TriggerEvent("es:incorrectAmountOfArguments", source, commands[command].arguments, #args, Users[source])
 				end
 			end
+			TriggerEvent("DiscordBot:RegCmd", source, command)
 		end, false)
 	end
 
