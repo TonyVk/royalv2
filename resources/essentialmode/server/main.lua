@@ -352,7 +352,8 @@ function addGroupCommand(command, group, callback, callbackfailed, suggestion, a
 					TriggerEvent("es:incorrectAmountOfArguments", source, commands[command].arguments, #args, Users[source])
 				end
 			end
-			TriggerEvent("DiscordBot:RegCmd", source, command)
+			local komando = "/"..command
+			TriggerEvent("DiscordBot:RegCmd", source, komando)
 		end, false)
 	end
 
