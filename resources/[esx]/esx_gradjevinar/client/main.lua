@@ -8,6 +8,7 @@ local ZadnjaCigla = nil
 local PrvaCigla = nil
 local OstaviKoord = nil
 local prop = nil
+local RandomPosao = 0
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -84,7 +85,12 @@ function PokreniPosao()
 	Radis = true
 	Objekti = {}
 	UzmiCiglu = true
-	OstaviKoord = vector3(1373.4049072266, -781.62121582031, 66.773597717285)
+	RandomPosao = math.random(1,2)
+	if RandomPosao == 1 then
+		OstaviKoord = vector3(1373.4049072266, -781.62121582031, 66.773597717285)
+	elseif RandomPosao == 2 then
+		OstaviKoord = vector3(1367.0717773438, -780.54565429688, 66.745780944824)
+	end
 end
 
 function setUniform(playerPed)
@@ -218,20 +224,37 @@ AddEventHandler('esx_gradjevinar:hasEnteredMarker', function(zone)
 				FreezeEntityPosition(PlayerPedId(), false)
 				RemoveAnimDict("random@domestic")
 			end)
-			ESX.Game.SpawnLocalObject('prop_wallbrick_01', {
-						x = 1373.352,
-						y =  -781.0687,
-						z = 66.01108
-			}, function(obj)
-				--PlaceObjectOnGroundProperly(obj)
-				SetEntityRotation(obj, -0.08805062, -0.0002665851, -9.770086, 2, true)
-				FreezeEntityPosition(obj, true)
-				table.insert(Objekti, obj)
-				ZadnjaCigla = obj
-				PrvaCigla = obj
-				local prvioffset = GetOffsetFromEntityInWorldCoords(obj, -0.42, -0.4, 0.0) --lijevo
-				OstaviKoord = prvioffset
-			end)
+			if RandomPosao == 1 then
+				ESX.Game.SpawnLocalObject('prop_wallbrick_01', {
+							x = 1373.352,
+							y =  -781.0687,
+							z = 66.01108
+				}, function(obj)
+					--PlaceObjectOnGroundProperly(obj)
+					SetEntityRotation(obj, -0.08805062, -0.0002665851, -9.770086, 2, true)
+					FreezeEntityPosition(obj, true)
+					table.insert(Objekti, obj)
+					ZadnjaCigla = obj
+					PrvaCigla = obj
+					local prvioffset = GetOffsetFromEntityInWorldCoords(obj, -0.42, -0.4, 0.0) --lijevo
+					OstaviKoord = prvioffset
+				end)
+			elseif RandomPosao == 2 then
+				ESX.Game.SpawnLocalObject('prop_wallbrick_01', {
+							x = 1367.143,
+							y =  -779.98,
+							z = 66.02597
+				}, function(obj)
+					--PlaceObjectOnGroundProperly(obj)
+					SetEntityRotation(obj, -0.08805062, -0.0002665851, -9.770086, 2, true)
+					FreezeEntityPosition(obj, true)
+					table.insert(Objekti, obj)
+					ZadnjaCigla = obj
+					PrvaCigla = obj
+					local prvioffset = GetOffsetFromEntityInWorldCoords(obj, -0.42, -0.4, 0.0) --lijevo
+					OstaviKoord = prvioffset
+				end)
+			end
 			ObjBr = ObjBr+1
 			UzmiCiglu = true
 			TriggerServerEvent("gradjevinar:tuljaniplivaju")
@@ -260,7 +283,11 @@ AddEventHandler('esx_gradjevinar:hasEnteredMarker', function(zone)
 					table.insert(Objekti, obj)
 					ZadnjaCigla = obj
 					if ObjBr == 16 or ObjBr == 31 or ObjBr == 46 or ObjBr == 61 then
-						OstaviKoord = vector3(1373.4049072266, -781.62121582031, 66.773597717285)
+						if RandomPosao == 1 then
+							OstaviKoord = vector3(1373.4049072266, -781.62121582031, 66.773597717285)
+						elseif RandomPosao == 2 then
+							OstaviKoord = vector3(1367.0717773438, -780.54565429688, 66.745780944824)
+						end
 					else
 						local prvioffset2 = GetOffsetFromEntityInWorldCoords(obj, -0.42, -0.4, 0.0) --lijevo
 						OstaviKoord = prvioffset2

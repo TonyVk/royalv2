@@ -65,6 +65,7 @@ function MenuCloakRoom()
 				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
 	    			TriggerEvent('skinchanger:loadSkin', skin)
 				end)
+				TriggerEvent("dpemotes:Radim", false)
 			end
 			if data.current.value == 'job_wear' then
 				isInService = true
@@ -117,6 +118,7 @@ function MenuVehicleSpawner()
 			plaquevehicule = "WAL"..platenum			
 			TaskWarpPedIntoVehicle(GetPlayerPed(-1), Vozilo, -1)
 			Radis = true
+			TriggerEvent("dpemotes:Radim", true)
 			SpawnObjekte()
 		elseif data.current.value == "kosilica" then
 			SetEntityCoords(PlayerPedId(), -1348.0754394531, 128.62022399902, 55.238655090332, false, false, false, true)
@@ -132,6 +134,7 @@ function MenuVehicleSpawner()
 			prop_ent = CreateObject(GetHashKey(modele), GetOffsetFromEntityInWorldCoords(PlayerPedId(), 0.0, 0.0, -5.0), true, false, false)
 			AttachEntityToEntityPhysically(prop_ent, PlayerPedId(), 0, GetEntityBoneIndexByName(PlayerPedId(), "SKEL_Pelvis"), 0.175, 0.90, -0.86, -0.075, 0.90, -0.86, 0.0, 0.5, 181.0, 10000.0, true, true, true, false, 2)
 			SetModelAsNoLongerNeeded(modele)
+			TriggerEvent("dpemotes:Radim", true)
 			SendNUIMessage({
 				start = true
 			})
@@ -203,6 +206,7 @@ function MenuVehicleSpawner()
 				while not IsScreenFadedIn() do
 					Wait(1)
 				end
+				TriggerEvent("dpemotes:Radim", true)
 				ESX.ShowNotification("Odite na lokaciju i pokosite travu!")
 			else
 				ESX.ShowNotification("Trenutno nemamo slobodnih kosilica!")
@@ -452,6 +456,7 @@ function ZavrsiPosao()
 		Radis = false
 		Ulica = false
 		SpawnMarker = false
+		TriggerEvent("dpemotes:Radim", false)
 	elseif prop_ent == nil then
 		for i=1, #Config.Objekti, 1 do
 			if Objekti[i] ~= nil then
@@ -468,6 +473,7 @@ function ZavrsiPosao()
 		end
 		Spawno = false
 		Radis = false
+		TriggerEvent("dpemotes:Radim", false)
 	else
 		for i=1, #Config.Objekti2, 1 do
 			if Objekti[i] ~= nil then
@@ -486,6 +492,7 @@ function ZavrsiPosao()
 		})
 		prop_ent = nil
 		ClearPedSecondaryTask(PlayerPedId())
+		TriggerEvent("dpemotes:Radim", false)
 	end
 end
 
@@ -527,6 +534,7 @@ Citizen.CreateThread(function()
 										Radis = false
 										Broj = 0
 										ESX.ShowNotification("Uspjesno zavrsen posao!")
+										TriggerEvent("dpemotes:Radim", false)
 									end
 								end
 							end
@@ -593,6 +601,7 @@ Citizen.CreateThread(function()
 												Wait(1)
 											end
 											ESX.ShowNotification("Uspjesno zavrsen posao, sada vratite kosilicu do sjedista!")
+											TriggerEvent("dpemotes:Radim", false)
 										end
 										--break
 									--end
@@ -625,6 +634,7 @@ Citizen.CreateThread(function()
 								Broj = 0
 								ClearPedSecondaryTask(PlayerPedId())
 								ESX.ShowNotification("Uspjesno zavrsen posao!")
+								TriggerEvent("dpemotes:Radim", false)
 							end
 						end
 					end

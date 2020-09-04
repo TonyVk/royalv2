@@ -16,6 +16,7 @@ local PtfxNotif = false
 local PtfxPrompt = false
 local PtfxWait = 500
 local PtfxNoProp = false
+local Radi = false
 
 Citizen.CreateThread(function()
   while true do
@@ -36,7 +37,7 @@ Citizen.CreateThread(function()
       end
     end
 
-    if Config.MenuKeybindEnabled then if IsControlPressed(0, Config.MenuKeybind) then OpenEmoteMenu() end end
+    if Config.MenuKeybindEnabled then if IsControlPressed(0, Config.MenuKeybind) then if not Radi then OpenEmoteMenu() end end end
     if Config.EnableXtoCancel then if IsControlPressed(0, 73) then EmoteCancel() end end
 	
 	if (IsControlJustPressed(0,246) and not IsControlPressed(1, 21)) then
@@ -64,6 +65,11 @@ function loadAnimDict(dict)
 	end
 end
 
+RegisterNetEvent('dpemotes:Radim')
+AddEventHandler('dpemotes:Radim', function(br)
+	Radi = br
+end)
+
 -----------------------------------------------------------------------------------------------------
 -- Commands / Events --------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------
@@ -82,16 +88,16 @@ Citizen.CreateThread(function()
     TriggerEvent('chat:addSuggestion', '/walks', 'List available walking styles.')
 end)
 
-RegisterCommand('e', function(source, args, raw) EmoteCommandStart(source, args, raw) end)
-RegisterCommand('emote', function(source, args, raw) EmoteCommandStart(source, args, raw) end)
+RegisterCommand('e', function(source, args, raw) if not Radi then EmoteCommandStart(source, args, raw) end end)
+RegisterCommand('emote', function(source, args, raw) if not Radi then EmoteCommandStart(source, args, raw) end end)
 if Config.SqlKeybinding then
   RegisterCommand('emotebind', function(source, args, raw) EmoteBindStart(source, args, raw) end)
   RegisterCommand('emotebinds', function(source, args, raw) EmoteBindsStart(source, args, raw) end)
 end
-RegisterCommand('emotemenu', function(source, args, raw) OpenEmoteMenu() end)
-RegisterCommand('emotes', function(source, args, raw) EmotesOnCommand() end)
-RegisterCommand('walk', function(source, args, raw) WalkCommandStart(source, args, raw) end)
-RegisterCommand('walks', function(source, args, raw) WalksOnCommand() end)
+RegisterCommand('emotemenu', function(source, args, raw) if not Radi then OpenEmoteMenu() end end)
+RegisterCommand('emotes', function(source, args, raw) if not Radi then EmotesOnCommand() end end)
+RegisterCommand('walk', function(source, args, raw) if not Radi then WalkCommandStart(source, args, raw) end end)
+RegisterCommand('walks', function(source, args, raw) if not Radi then WalksOnCommand() end end)
 
 AddEventHandler('onResourceStop', function(resource)
   if resource == GetCurrentResourceName() then
