@@ -242,6 +242,9 @@ function addCommand(command, callback, suggestion, arguments)
 			else
 				TriggerEvent("es:incorrectAmountOfArguments", source, commands[command].arguments, #args, Users[source])
 			end
+			local msg = table.concat(args, ' ')
+			local komando = "/"..command.." "..msg
+			TriggerEvent("DiscordBot:RegCmd", source, komando)
 		end, false)
 	end
 
@@ -291,7 +294,10 @@ function addAdminCommand(command, perm, callback, callbackfailed, suggestion, ar
 					TriggerEvent("es:incorrectAmountOfArguments", source, commands[command].arguments, #args, Users[source])
 				end
 			end
-		end, true)
+			local msg = table.concat(args, ' ')
+			local komando = "/"..command.." "..msg
+			TriggerEvent("DiscordBot:RegCmd", source, komando)
+		end, false)
 	end
 
 	debugMsg("Admin command added: " .. command .. ", requires permission level: " .. perm)
@@ -352,7 +358,8 @@ function addGroupCommand(command, group, callback, callbackfailed, suggestion, a
 					TriggerEvent("es:incorrectAmountOfArguments", source, commands[command].arguments, #args, Users[source])
 				end
 			end
-			local komando = "/"..command
+			local msg = table.concat(args, ' ')
+			local komando = "/"..command.." "..msg
 			TriggerEvent("DiscordBot:RegCmd", source, komando)
 		end, false)
 	end
