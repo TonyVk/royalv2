@@ -65,15 +65,18 @@ RegisterCommand("restartsrw", function(source, args, rawCommandString)
 	local Source = source
 	local Vrati = 0
 	if Source ~= 0 then
-		TriggerEvent('es:getPlayerFromId', source, function(user)
-			TriggerEvent('es:canGroupTarget', user.getGroup(), "admin", function(available)
-				if available or user.getGroup() == "admin" then
-					Vrati = 1
-				else
-					Vrati = 0
-				end
-			end)
-		end)
+		local id = Source
+		local xPlayer = ESX.GetPlayerFromId(id)
+		local Vrati = 0
+		local result = MySQL.Sync.fetchAll('SELECT permission_level FROM users WHERE identifier = @identifier', {
+			['@identifier'] = xPlayer.identifier
+		})
+		local vr = result[1].permission_level
+		if vr > 0 then
+			Vrati = 1
+		else
+			Vrati = 0
+		end
 	else
 		Vrati = 1
 	end
@@ -121,33 +124,34 @@ end)
 
 --esx_getout
 ESX.RegisterServerCallback('esx_getout:DohvatiPermisiju', function(source, cb)
-    local Source = source
-	TriggerEvent('es:getPlayerFromId', source, function(user)
-		if user ~= nil then
-			TriggerEvent('es:canGroupTarget', user.getGroup(), "admin", function(available)
-				if available or user.getGroup() == "admin" then
-					Vrati = 1
-				else
-					Vrati = 0
-				end
-				cb(Vrati)
-			end)
-		end
-	end)
+    local id = source
+    local xPlayer = ESX.GetPlayerFromId(id)
+	local Vrati = 0
+	local result = MySQL.Sync.fetchAll('SELECT permission_level FROM users WHERE identifier = @identifier', {
+		['@identifier'] = xPlayer.identifier
+	})
+	local vr = result[1].permission_level
+	if vr > 0 then
+		Vrati = 1
+	else
+		Vrati = 0
+	end
+	cb(Vrati)
 end)
 
 RegisterServerEvent("esx_getout:DajAdmina")
 AddEventHandler("esx_getout:DajAdmina", function()
-    TriggerEvent('es:getPlayerFromId', source, function(user)
-		if user ~= nil then
-			TriggerEvent('es:canGroupTarget', user.getGroup(), "admin", function(available)
-				if available or user.getGroup() == "admin" then
-					Vrati = 1
-				else
-					Vrati = 0
-				end
-				TriggerClientEvent("esx_getout:VratiAdmina", source, Vrati)
-			end)
-		end
-	end)
+	local id = source
+    local xPlayer = ESX.GetPlayerFromId(id)
+	local Vrati = 0
+	local result = MySQL.Sync.fetchAll('SELECT permission_level FROM users WHERE identifier = @identifier', {
+		['@identifier'] = xPlayer.identifier
+	})
+	local vr = result[1].permission_level
+	if vr > 0 then
+		Vrati = 1
+	else
+		Vrati = 0
+	end
+	TriggerClientEvent("esx_getout:VratiAdmina", source, Vrati)
 end)

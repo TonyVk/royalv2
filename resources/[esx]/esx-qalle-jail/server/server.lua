@@ -5,16 +5,18 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 RegisterCommand("jail", function(src, args, raw)
 
 	local xPlayer = ESX.GetPlayerFromId(src)
+	local id = src
+    local xPlayer = ESX.GetPlayerFromId(id)
 	local Vrati = 0
-	TriggerEvent('es:getPlayerFromId', src, function(user)
-		TriggerEvent('es:canGroupTarget', user.getGroup(), "admin", function(available)
-			if available or user.getGroup() == "admin" then
-				Vrati = 1
-			else
-				Vrati = 0
-			end
-		end)
-	end)
+	local result = MySQL.Sync.fetchAll('SELECT permission_level FROM users WHERE identifier = @identifier', {
+		['@identifier'] = xPlayer.identifier
+	})
+	local vr = result[1].permission_level
+	if vr > 0 then
+		Vrati = 1
+	else
+		Vrati = 0
+	end
 
 	if xPlayer["job"]["name"] == "police" or xPlayer["job"]["name"] == "sipa" or Vrati == 1 then
 
@@ -54,16 +56,18 @@ end)
 RegisterCommand("unjail", function(src, args)
 
 	local xPlayer = ESX.GetPlayerFromId(src)
+	local id = src
+    local xPlayer = ESX.GetPlayerFromId(id)
 	local Vrati = 0
-	TriggerEvent('es:getPlayerFromId', src, function(user)
-		TriggerEvent('es:canGroupTarget', user.getGroup(), "admin", function(available)
-			if available or user.getGroup() == "admin" then
-				Vrati = 1
-			else
-				Vrati = 0
-			end
-		end)
-	end)
+	local result = MySQL.Sync.fetchAll('SELECT permission_level FROM users WHERE identifier = @identifier', {
+		['@identifier'] = xPlayer.identifier
+	})
+	local vr = result[1].permission_level
+	if vr > 0 then
+		Vrati = 1
+	else
+		Vrati = 0
+	end
 
 	if xPlayer["job"]["name"] == "police" or xPlayer["job"]["name"] == "sipa" or Vrati == 1 then
 
@@ -87,16 +91,18 @@ AddEventHandler("esx-qalle-jail:jailPlayer", function(targetSrc, jailTime, jailR
 	local src = source
 	local targetSrc = tonumber(targetSrc)
 	local xPlayer = ESX.GetPlayerFromId(src)
+	local id = src
+    local xPlayer = ESX.GetPlayerFromId(id)
 	local Vrati = 0
-	TriggerEvent('es:getPlayerFromId', src, function(user)
-		TriggerEvent('es:canGroupTarget', user.getGroup(), "admin", function(available)
-			if available or user.getGroup() == "admin" then
-				Vrati = 1
-			else
-				Vrati = 0
-			end
-		end)
-	end)
+	local result = MySQL.Sync.fetchAll('SELECT permission_level FROM users WHERE identifier = @identifier', {
+		['@identifier'] = xPlayer.identifier
+	})
+	local vr = result[1].permission_level
+	if vr > 0 then
+		Vrati = 1
+	else
+		Vrati = 0
+	end
 	if xPlayer.job.name == 'police' or xPlayer.job.name == "sipa" or Vrati == 1 then
 
 	JailPlayer(targetSrc, jailTime)

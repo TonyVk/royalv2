@@ -233,9 +233,11 @@ Citizen.CreateThread(function()
 		
 		if IsControlJustReleased(1, 163) or IsDisabledControlJustReleased(1, 163) then
 			print('triggered')
-			if group ~= "user" then
-				TriggerEvent('esx_spectate:spectate')
-			end
+			ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+				if br == 1 then
+					TriggerEvent('esx_spectate:spectate')
+				end
+			end)
 		end
 	end
 end)

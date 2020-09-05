@@ -17,10 +17,12 @@ Citizen.CreateThread(function()
 		Citizen.Wait(0)
 		
 		if (IsControlJustPressed(1, 212) and IsControlJustPressed(1, 213)) then
-			if group ~= "user" then
-				SetNuiFocus(true, true)
-				SendNUIMessage({type = 'open', players = getPlayers()})
-			end
+			ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+				if br == 1 then
+					SetNuiFocus(true, true)
+					SendNUIMessage({type = 'open', players = getPlayers()})
+				end
+			end)
 		end
 	end
 end)

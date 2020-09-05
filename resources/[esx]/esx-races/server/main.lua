@@ -65,20 +65,19 @@ AddEventHandler('DajMiPermLevel2', function(id)
 end)
 
 ESX.RegisterServerCallback('esx-races:DohvatiPermisiju', function(source, cb)
-    local Source = source
+	local id = source
+    local xPlayer = ESX.GetPlayerFromId(id)
 	local Vrati = 0
-	local xPlayer = ESX.GetPlayerFromId(Source)
-	if xPlayer ~= nil then
-		local grup = xPlayer.getGroup()
-		TriggerEvent('es:canGroupTarget', grup, "admin", function(available)
-			if available or grup == "admin" then
-				Vrati = 1
-			else
-				Vrati = 0
-			end
-			cb(Vrati)
-		end)
+	local result = MySQL.Sync.fetchAll('SELECT permission_level FROM users WHERE identifier = @identifier', {
+		['@identifier'] = xPlayer.identifier
+	})
+	local vr = result[1].permission_level
+	if vr > 0 then
+		Vrati = 1
+	else
+		Vrati = 0
 	end
+	cb(Vrati)
 end)
 
 function PokreniAutoUtrku()
