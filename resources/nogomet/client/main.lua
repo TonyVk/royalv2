@@ -170,8 +170,8 @@ RegisterCommand("npokreni", function(source, args, rawCommandString)
 				if vrijeme > 0 then
 					local loptee = "p_ld_soc_ball_01"
 					ESX.Streaming.RequestModel(loptee)
-					NLopta = CreateObject(GetHashKey(loptee), 771.25549316406, -233.44470214844, 65.114479064941,true,false,false)
-					SetEntityAsMissionEntity(NLopta, true, true)
+					NLopta = CreateObject(GetHashKey(loptee), 771.25549316406, -233.44470214844, 65.114479064941,true,true,false)
+					Wait(300)
 					NetworkRegisterEntityAsNetworked(NLopta)
 					local netid = ObjToNet(NLopta)
 					NetworkSetNetworkIdDynamic(netid, false)
@@ -313,6 +313,7 @@ RegisterNetEvent("EoTiLopta")
 AddEventHandler("EoTiLopta", function(net)
 	if NetworkDoesNetworkIdExist(net) then
 		NLopta = NetToObj(net)
+		print("Uso")
 	end
 end)
 
@@ -373,6 +374,7 @@ Citizen.CreateThread(function()
 							NetworkRequestControlOfEntity(NLopta)
 							Citizen.Wait(0)
 						end
+						print("Uso vamo")
 						local cordsa = GetOffsetFromEntityInWorldCoords(PlayerPedId(), 0.0, 22.0 , 0.0)
 						local fcor = cor-cordsa
 						local forceType = forceTypes.MaxForceRot2

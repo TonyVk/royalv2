@@ -163,6 +163,7 @@ Citizen.CreateThread(function()
 										disable_actions = false
 										DetachEntity(NetToObj(vassour_net), 1, 1)
 										DeleteEntity(NetToObj(vassour_net))
+										ESX.Game.DeleteObject(vassouspawn)
 										vassour_net = nil
 										ClearPedTasks(PlayerPedId())
 										if actionsRemaining == 0 then
@@ -185,6 +186,7 @@ Citizen.CreateThread(function()
 									disable_actions = false
 									DetachEntity(NetToObj(spatula_net), 1, 1)
 									DeleteEntity(NetToObj(spatula_net))
+									ESX.Game.DeleteObject(spatulaspawn)
 									spatula_net = nil
 									ClearPedTasks(PlayerPedId())
 									if actionsRemaining == 0 then
