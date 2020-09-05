@@ -68,14 +68,16 @@ ESX.RegisterServerCallback('esx-races:DohvatiPermisiju', function(source, cb)
 	local id = source
     local xPlayer = ESX.GetPlayerFromId(id)
 	local Vrati = 0
-	local result = MySQL.Sync.fetchAll('SELECT permission_level FROM users WHERE identifier = @identifier', {
-		['@identifier'] = xPlayer.identifier
-	})
-	local vr = result[1].permission_level
-	if vr > 0 then
-		Vrati = 1
-	else
-		Vrati = 0
+	if xPlayer ~= nil then
+		local result = MySQL.Sync.fetchAll('SELECT permission_level FROM users WHERE identifier = @identifier', {
+			['@identifier'] = xPlayer.identifier
+		})
+		local vr = result[1].permission_level
+		if vr > 0 then
+			Vrati = 1
+		else
+			Vrati = 0
+		end
 	end
 	cb(Vrati)
 end)

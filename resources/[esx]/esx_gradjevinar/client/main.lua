@@ -55,6 +55,7 @@ function MenuCloakRoom()
 				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
 	    			TriggerEvent('skinchanger:loadSkin', skin)
 				end)
+				TriggerEvent("dpemotes:Radim", false)
 			end
 			if data.current.value == 'job_wear' then
 				if not Radis then
@@ -83,6 +84,7 @@ end
 function PokreniPosao()
 	ObjBr = 1
 	Radis = true
+	TriggerEvent("dpemotes:Radim", true)
 	Objekti = {}
 	UzmiCiglu = true
 	RandomPosao = math.random(1,2)
@@ -91,6 +93,7 @@ function PokreniPosao()
 	elseif RandomPosao == 2 then
 		OstaviKoord = vector3(1367.0717773438, -780.54565429688, 66.745780944824)
 	end
+	ESX.ShowNotification("Idite do markera da uzmete blok!")
 end
 
 function setUniform(playerPed)
@@ -208,6 +211,7 @@ AddEventHandler('esx_gradjevinar:hasEnteredMarker', function(zone)
 		prop = CreateObject(GetHashKey("prop_wallbrick_01"), x, y, z+2, false, false, false)
 		local boneIndex = GetPedBoneIndex(playerPed, 57005)
 		AttachEntityToEntity(prop, playerPed, boneIndex, 0.12, 0.068, -0.241, 0.0, 90.0, 20.0, true, true, false, true, 1, true)
+		ESX.ShowNotification("Idite do markera da ostavite blok!")
 	end
 	
 	if zone == 'Ostaviciglu' then
@@ -296,6 +300,7 @@ AddEventHandler('esx_gradjevinar:hasEnteredMarker', function(zone)
 				ObjBr = ObjBr+1
 				if ObjBr == 76 then
 					ESX.ShowNotification("Zavrsili ste sa poslom!")
+					ESX.ShowNotification("Da pocnete ponovno raditi ostavite i uzmite opremu!")
 				else
 					UzmiCiglu = true
 				end
@@ -343,6 +348,7 @@ function ZavrsiPosao()
 			end
 		end
 		Radis = false
+		TriggerEvent("dpemotes:Radim", false)
 		OstaviCiglu = false
 		UzmiCiglu = false
 		ZadnjaCigla = nil
@@ -379,7 +385,7 @@ Citizen.CreateThread(function()
 				end
 			end
 			
-			if Radis and UzmiCiglu and (GetDistanceBetweenCoords(coords, 1379.76171875, -774.95593261719, 67.307548522949, true) < 0.5) then
+			if Radis and UzmiCiglu and (GetDistanceBetweenCoords(coords, 1380.8416748047, -773.89587402344, 66.999649047852, true) < 1.5) then
 				isInMarker  = true
 				currentZone = "Uzmiciglu"
 			end
@@ -401,10 +407,10 @@ Citizen.CreateThread(function()
 			end
 
 		
-			if Radis and UzmiCiglu and GetDistanceBetweenCoords(coords, 1379.76171875, -774.95593261719, 67.307548522949, true) < Config.DrawDistance then
+			if Radis and UzmiCiglu and GetDistanceBetweenCoords(coords, 1380.8416748047, -773.89587402344, 66.999649047852, true) < Config.DrawDistance then
 				waitara = 0
 				naso = 1
-				DrawMarker(1, 1379.76171875, -774.95593261719, 66.307548522949, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
+				DrawMarker(1, 1380.8416748047, -773.89587402344, 65.999649047852, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
 			end
 			
 			if Radis and OstaviCiglu and GetDistanceBetweenCoords(coords, OstaviKoord, true) < Config.DrawDistance then

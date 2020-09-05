@@ -13,7 +13,6 @@ local Keys = {
 local ESX = nil
 local PlayerData	= {}
 local CurrentAction		= nil
-local group = 0
 local Valja = false
 local perm = nil
 local isDead = false
@@ -120,7 +119,7 @@ Citizen.CreateThread(function()
         Citizen.Wait(0)
     end
 	--esx_getout
-	TriggerServerEvent("esx_getout:DajAdmina")
+	--TriggerServerEvent("esx_getout:DajAdmina")
 	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		perm = br
 	end)
@@ -412,14 +411,6 @@ function PredajSe()
         end     
     end
 end
-
---esx_getout
-RegisterNetEvent('esx_getout:VratiAdmina')
-AddEventHandler('esx_getout:VratiAdmina', function(g)
-	if g == 1 then
-		group = 1
-	end
-end)
 
 function loadAnimDict( dict )
     while ( not HasAnimDictLoaded( dict ) ) do
@@ -778,7 +769,7 @@ Citizen.CreateThread(function()
 				PlayerData = ESX.GetPlayerData()
 				if vehicleClass == 19 then
 					if GetPedInVehicleSeat(vehicle, -1) == ped then
-						if group ~= 1 then
+						if perm < 1 then
 							ClearPedTasksImmediately(ped)
 							TaskLeaveVehicle(ped,vehicle,0)
 							ESX.ShowNotification("Ne mozete voziti vojna vozila!")
@@ -788,7 +779,7 @@ Citizen.CreateThread(function()
 					end
 				elseif vehicleClass == 18 then
 					if GetPedInVehicleSeat(vehicle, -1) == ped then
-						if PlayerData.job.name ~= 'police' and PlayerData.job.name ~= 'ambulance' and PlayerData.job.name ~= 'mechanic' and PlayerData.job.name ~= 'hitman' and PlayerData.job.name ~= 'sipa' and group ~= 1 and hash ~= GetHashKey("firetruk") then
+						if PlayerData.job.name ~= 'police' and PlayerData.job.name ~= 'ambulance' and PlayerData.job.name ~= 'mechanic' and PlayerData.job.name ~= 'hitman' and PlayerData.job.name ~= 'sipa' and perm < 1 and hash ~= GetHashKey("firetruk") then
 							ClearPedTasksImmediately(ped)
 							TaskLeaveVehicle(ped,vehicle,0)
 							ESX.ShowNotification("Ne mozete voziti sluzbena vozila!")
@@ -812,7 +803,7 @@ end)
 AddEventHandler("playerSpawned", function()
     NetworkSetFriendlyFireOption(true)
     SetCanAttackFriendly(PlayerPedId(), true, true)
-	TriggerServerEvent("esx_getout:DajAdmina")
+	--TriggerServerEvent("esx_getout:DajAdmina")
 	if not prvispawn then
 		SendNUIMessage({
 			prikazi = true,
