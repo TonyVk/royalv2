@@ -618,3 +618,8 @@ data_file 'HANDLING_FILE' 'data/contgt18/handling.meta'
 data_file 'VEHICLE_METADATA_FILE' 'data/contgt18/vehicles.meta'
 data_file 'CARCOLS_FILE' 'data/contgt18/carcols.meta'
 data_file 'VEHICLE_VARIATION_FILE' 'data/contgt18/carvariations.meta'
+
+data_file 'HANDLING_FILE' 'data/c63/handling.meta'
+data_file 'VEHICLE_METADATA_FILE' 'data/c63/vehicles.meta'
+data_file 'CARCOLS_FILE' 'data/c63/carcols.meta'
+data_file 'VEHICLE_VARIATION_FILE' 'data/c63/carvariations.meta'

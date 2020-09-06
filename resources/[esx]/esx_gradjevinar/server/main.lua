@@ -5,6 +5,6 @@ RegisterServerEvent('gradjevinar:tuljaniplivaju')
 AddEventHandler('gradjevinar:tuljaniplivaju', function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
-	xPlayer.addMoney(20)
-	TriggerEvent("biznis:StaviUSef", "gradjevinar", math.ceil(20*0.30))
+	xPlayer.addMoney(50)
+	TriggerEvent("biznis:StaviUSef", "gradjevinar", math.ceil(50*0.30))
 end)

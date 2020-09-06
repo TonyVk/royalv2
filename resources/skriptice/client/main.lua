@@ -559,60 +559,6 @@ Citizen.CreateThread(function()
     end
 end)
 
-Citizen.CreateThread(function()
-	local waitara = 500
-    while true do
-        Citizen.Wait(waitara)
-        if IsControlPressed(1, 48) then
-			waitara = 0
-            for i=0,99 do
-                N_0x31698aa80e0223f8(i)
-            end
-            for id = 0, 255 do
-                if  NetworkIsPlayerActive( id ) and GetPlayerPed( id ) ~= GetPlayerPed( -1 ) then
- 
-                x1, y1, z1 = table.unpack( GetEntityCoords( GetPlayerPed( -1 ), true ) )
-                x2, y2, z2 = table.unpack( GetEntityCoords( GetPlayerPed( id ), true ) )
-                distance = math.floor(GetDistanceBetweenCoords(x1,  y1,  z1,  x2,  y2,  z2,  true))
-				local ime = GetPlayerName(id).." ("..GetPlayerServerId(id)..")"
-                if(ignorePlayerNameDistance) then
-					if NetworkIsPlayerTalking(id) then
-						red = 0
-						green = 0
-						blue = 255
-						DrawText3D(x2, y2, z2 + displayIDHeight, ime)
-					else
-						red = 255
-						green = 255
-						blue = 255
-						DrawText3D(x2, y2, z2 + displayIDHeight, ime)
-					end
-                end
-
-                if ((distance < playerNamesDist)) then
-                    if not (ignorePlayerNameDistance) then
-						if NetworkIsPlayerTalking(id) then
-							red = 0
-							green = 0
-							blue = 255
-							DrawText3D(x2, y2, z2 + displayIDHeight, ime)
-						else
-							red = 255
-							green = 255
-							blue = 255
-							DrawText3D(x2, y2, z2 + displayIDHeight, ime)
-						end
-                    end
-                end  
-            end
-        end
-        elseif not IsControlPressed(1, 48) then
-			waitara = 500
-            DrawText3D(0, 0, 0, "")
-        end
-    end
-end)
-
 local function startPointing()
     local ped = GetPlayerPed(-1)
     RequestAnimDict("anim@mp_point")
