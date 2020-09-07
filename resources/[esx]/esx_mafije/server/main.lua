@@ -1065,7 +1065,7 @@ ESX.RegisterServerCallback('mafije:getOtherPlayerData', function(source, cb, tar
     TriggerEvent('esx_status:getStatus', target, 'drunk', function(status)
 
       if status ~= nil then
-        data.drunk = status.getPercent()
+        data.drunk = math.floor(status.percent)
       end
 
     end)

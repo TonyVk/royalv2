@@ -623,3 +623,56 @@ data_file 'HANDLING_FILE' 'data/c63/handling.meta'
 data_file 'VEHICLE_METADATA_FILE' 'data/c63/vehicles.meta'
 data_file 'CARCOLS_FILE' 'data/c63/carcols.meta'
 data_file 'VEHICLE_VARIATION_FILE' 'data/c63/carvariations.meta'
+
+data_file 'HANDLING_FILE' 'data/91195/handling.meta'
+data_file 'VEHICLE_METADATA_FILE' 'data/91195/vehicles.meta'
+data_file 'VEHICLE_VARIATION_FILE' 'data/91195/carvariations.meta'
+
+data_file 'HANDLING_FILE' 'data/b5s4/handling.meta'
+data_file 'VEHICLE_METADATA_FILE' 'data/b5s4/vehicles.meta'
+data_file 'CARCOLS_FILE' 'data/b5s4/carcols.meta'
+data_file 'VEHICLE_VARIATION_FILE' 'data/b5s4/carvariations.meta'
+
+data_file 'HANDLING_FILE' 'data/bmwe39/handling.meta'
+data_file 'VEHICLE_METADATA_FILE' 'data/bmwe39/vehicles.meta'
+data_file 'CARCOLS_FILE' 'data/bmwe39/carcols.meta'
+data_file 'VEHICLE_VARIATION_FILE' 'data/bmwe39/carvariations.meta'
+data_file 'VEHICLE_LAYOUTS_FILE''data/bmwe39/vehiclelayouts.meta'
+
+data_file 'HANDLING_FILE' 'data/bmwl7/handling.meta'
+data_file 'VEHICLE_METADATA_FILE' 'data/bmwl7/vehicles.meta'
+data_file 'VEHICLE_VARIATION_FILE' 'data/bmwl7/carvariations.meta'
+
+data_file 'HANDLING_FILE' 'data/e36/handling.meta'
+data_file 'VEHICLE_METADATA_FILE' 'data/e36/vehicles.meta'
+data_file 'VEHICLE_VARIATION_FILE' 'data/e36/carvariations.meta'
+
+data_file 'HANDLING_FILE' 'data/gs350/handling.meta'
+data_file 'VEHICLE_METADATA_FILE' 'data/gs350/vehicles.meta'
+data_file 'CARCOLS_FILE' 'data/gs350/carcols.meta'
+data_file 'VEHICLE_VARIATION_FILE' 'data/gs350/carvariations.meta'
+
+data_file 'HANDLING_FILE' 'data/lc500/handling.meta'
+data_file 'VEHICLE_METADATA_FILE' 'data/lc500/vehicles.meta'
+data_file 'CARCOLS_FILE' 'data/lc500/carcols.meta'
+data_file 'VEHICLE_VARIATION_FILE' 'data/lc500/carvariations.meta'
+data_file 'VEHICLE_LAYOUTS_FILE''data/lc500/vehiclelayouts.meta'
+
+data_file 'HANDLING_FILE' 'data/q50/handling.meta'
+data_file 'VEHICLE_METADATA_FILE' 'data/q50/vehicles.meta'
+data_file 'VEHICLE_VARIATION_FILE' 'data/q50/carvariations.meta'
+
+data_file 'HANDLING_FILE' 'data/rx7tunable/handling.meta'
+data_file 'VEHICLE_METADATA_FILE' 'data/rx7tunable/vehicles.meta'
+data_file 'CARCOLS_FILE' 'data/rx7tunable/carcols.meta'
+data_file 'VEHICLE_VARIATION_FILE' 'data/rx7tunable/carvariations.meta'
+
+data_file 'HANDLING_FILE' 'data/s8d2/handling.meta'
+data_file 'VEHICLE_METADATA_FILE' 'data/s8d2/vehicles.meta'
+data_file 'CARCOLS_FILE' 'data/s8d2/carcols.meta'
+data_file 'VEHICLE_VARIATION_FILE' 'data/s8d2/carvariations.meta'
+
+data_file 'HANDLING_FILE' 'data/threeladyz/handling.meta'
+data_file 'VEHICLE_METADATA_FILE' 'data/threeladyz/vehicles.meta'
+data_file 'CARCOLS_FILE' 'data/threeladyz/carcols.meta'
+data_file 'VEHICLE_VARIATION_FILE' 'data/threeladyz/carvariations.meta'

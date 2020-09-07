@@ -28,7 +28,8 @@ Config.PoliceStations = {
 			Sprite  = 60,
 			Display = 4,
 			Scale   = 1.2,
-			Colour  = 29
+			Colour  = 29,
+			Naziv = "Policijska Stanica"
 		},
 
 		Cloakrooms = {
@@ -75,6 +76,50 @@ Config.PoliceStations = {
 
 		BossActions = {
 			vector3(448.4, -973.2, 30.6)
+		}
+
+	},
+	Sheriff = {
+
+		Blip = {
+			Coords  = vector3(-434.03021240234, 6004.7690429688, 31.716245651245),
+			Sprite  = 60,
+			Display = 4,
+			Scale   = 1.2,
+			Colour  = 28,
+			Naziv = "Serif"
+		},
+
+		Cloakrooms = {
+			vector3(-434.03021240234, 6004.7690429688, 31.716245651245)
+		},
+
+		Armories = {
+			vector3(-437.51455688477, 5988.5581054688, 31.716186523438)
+		},
+
+		Vehicles = {
+			{
+				Spawner = vector3(-446.79956054688, 5994.3051757813, 31.340545654297),
+				InsideShop = vector3(228.5, -993.5, -99.5),
+				SpawnPoints = {
+					{ coords = vector3(-466.48382568359, 6016.40234375, 30.776239395142), heading = 316.10, radius = 6.0 },
+				}
+			},
+		},
+
+		Helicopters = {
+			{
+				Spawner = vector3(461.1, -981.5, 43.6),
+				InsideShop = vector3(477.0, -1106.4, 43.0),
+				SpawnPoints = {
+					{ coords = vector3(449.5, -981.2, 43.6), heading = 92.6, radius = 10.0 }
+				}
+			}
+		},
+
+		BossActions = {
+			vector3(-440.98263549805, 6001.3413085938, 31.716176986694)
 		}
 
 	}
@@ -172,10 +217,8 @@ Config.AuthorizedVehicles = {
 	},
 
 	intendent = {
-		{ model = 'riot', label = 'Int oklopno', price = 0},
-		{ model = 'fbi2', label = 'VW Touareg', price = 0},
-		{ model = 'police4', label = 'BMW 520d', price = 0 },
-		{ model = 'Sheriff2', label = 'Mercedes G', price = 0},
+		{ model = 'pranger', label = 'Ranger', price = 0},
+		{ model = 'sheriff', label = 'Sheriff', price = 0},
 	},
 
 	lieutenant = {
@@ -471,46 +514,47 @@ Config.Uniforms = {
 		male = {
 			ped = 'mp_m_freemode_01',
 			props = {
-				{ 0, 76, 1 },
+				{ 0, 14, 1 },
 				{ 1, 0, 0 },
 				{ 2, 0, 0 },
 				{ 6, 0, 0 },
 			},
 			components = {
-				{ 1, 53, 1 }, --maska
-				{ 11, 54, 1 }, --torso
-				{ 3, 97, 1 }, --ruke
-				{ 10, 6, 1 }, --decals
-				{ 8, 16, 1 }, --majica
-				{ 4, 38, 1 }, --hlace
-				{ 6, 26, 1 }, --cizme
-				{ 7, 111, 1 }, --lancic
-				{ 9, 17, 3 }, --bproof
-				{ 5, 49, 1 }, --torba
+				{ 1, 1, 1 },
+				{ 11, 201, 3 },
+				{ 3, 5, 1 },
+				{ 10, 1, 1 },
+				{ 8, 39, 2 },
+				{ 4, 26, 1 },
+				{ 6, 52, 1 },
+				{ 7, 9, 1 },
+				{ 9, 1, 1 },
+				{ 5, 54, 1 },
 			}
 		},
 		female = {
 			ped = 'mp_f_freemode_01',
 			props = {
-				{ 0, 75, 1 },
+				{ 0, 14, 1 },
 				{ 1, 0, 0 },
 				{ 2, 0, 0 },
 				{ 6, 0, 0 },
 			},
 			components = {
-				{ 1, 53, 1 },
-				{ 11, 47, 1 },
-				{ 3, 112, 1 },
-				{ 10, 6, 1 },
-				{ 8, 16, 1 },
-				{ 4, 37, 1 },
-				{ 6, 26, 1 },
-				{ 7, 82, 1 },
-				{ 9, 19, 3 },
-				{ 5, 49, 1 },
+				{ 1, 1, 1 },
+				{ 11, 203, 3 },
+				{ 3, 4, 1 },
+				{ 10, 1, 1 },
+				{ 8, 52, 2 },
+				{ 4, 42, 2 },
+				{ 6, 53, 1 },
+				{ 7, 9, 1 },
+				{ 9, 1, 1 },
+				{ 5, 54, 1 },
 			}
 		}
 	},
+	
 	lieutenant_wear = {
 		EUP = true,
 		male = {
