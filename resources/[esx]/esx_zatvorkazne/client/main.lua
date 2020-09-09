@@ -33,11 +33,10 @@ Citizen.CreateThread(function()
 	end
 end)
 
-AddEventHandler("playerSpawned", function()
-	if not PrviSpawn then
-		PrviSpawn = true
-		TriggerServerEvent('esx_communityservice:checkIfSentenced')
-	end
+RegisterNetEvent('esx:playerLoaded')
+AddEventHandler('esx:playerLoaded', function(xPlayer)
+	Wait(2000)
+	TriggerServerEvent('esx_communityservice:checkIfSentenced')
 end)
 
 function FillActionTable(last_action)

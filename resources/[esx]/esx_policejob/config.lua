@@ -554,7 +554,6 @@ Config.Uniforms = {
 			}
 		}
 	},
-	
 	lieutenant_wear = {
 		EUP = true,
 		male = {

@@ -15,6 +15,7 @@ AddEventHandler('esx_drogica:useItem', function(itemName)
 		ESX.UI.Menu.CloseAll()
 
 		if itemName == 'cocaine' then
+			onDrugs = true
 			local lib, anim = 'anim@mp_player_intcelebrationmale@face_palm', 'face_palm'
 			local playerPed = PlayerPedId()
 			ESX.ShowNotification('Osjecate kako vam zivci pocinju raditi protiv vas...')
@@ -61,7 +62,6 @@ AddEventHandler('esx_drogica:runMan', function()
     while not HasAnimSetLoaded("move_m@hurry_butch@b") do
         Citizen.Wait(0)
     end
-    onDrugs = true
 	count = 0
     DoScreenFadeOut(1000)
     Citizen.Wait(1000)
