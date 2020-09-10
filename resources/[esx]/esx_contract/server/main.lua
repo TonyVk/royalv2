@@ -6,7 +6,6 @@ RegisterServerEvent('ugovor:prodajtuljanu2')
 AddEventHandler('ugovor:prodajtuljanu2', function(target, plate, price, veh)
 	local _target = target
 	local _source = source
-	print(veh)
 	TriggerClientEvent('esx:showNotification', _target, "Zelite li kupiti vozilo sa tablicom "..plate.." za $"..price)
 	TriggerClientEvent('esx:showNotification', _target, "Upisite /prihvativozilo da kupite vozilo!")
 	TriggerClientEvent('esx_contract:PoslaoMu', _target, 1, plate, price, _source, veh)

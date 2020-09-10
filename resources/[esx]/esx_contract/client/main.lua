@@ -6,12 +6,18 @@ local tablica
 local GarazaV = nil
 local Vblip = nil
 local Vozilo = nil
+local Vehicles = {}
 
 Citizen.CreateThread(function()
 	while ESX == nil do
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(0)
 	end
+	Citizen.Wait(10000)
+
+	ESX.TriggerServerCallback('esx_vehicleshop:getVehicles', function(vehicles)
+		Vehicles = vehicles
+	end)
 end)
 
 RegisterNetEvent('esx_contract:PoslaoMu')
@@ -21,6 +27,11 @@ AddEventHandler('esx_contract:PoslaoMu', function(br, tabl, cij, igr, veh)
 	cijena = cij
 	vlasnik = igr
 	Vozilo = veh
+end)
+
+RegisterNetEvent('esx_vehicleshop:sendVehicles')
+AddEventHandler('esx_vehicleshop:sendVehicles', function(vehicles)
+	Vehicles = vehicles
 end)
 
 RegisterNetEvent('contract:ZamjenaVozila')
@@ -87,28 +98,41 @@ AddEventHandler('esx_contract:getVehicle', function()
 		local vehiclecoords = GetEntityCoords(vehicle)
 		local vehDistance = GetDistanceBetweenCoords(coords, vehiclecoords, true)
 		if DoesEntityExist(vehicle) and (vehDistance <= 3) then
-			TriggerEvent("esx_invh:closeinv")
-			ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'cijenica_vozila', {
-				title = "Upisite cijenu vozila"
-			}, function(data, menu)
-
-				local amount = tonumber(data.value)
-
-				if amount == nil then
-					ESX.ShowNotification("Niste unjeli cijenu")
-				else
-					menu.close()
-					local vehProps = ESX.Game.GetVehicleProperties(vehicle)
-					ESX.TriggerServerCallback('garaza:JelIstiModel', function(dane)
-						if (dane) then
-							ESX.ShowNotification(_U('writingcontract', vehProps.plate))
-							TriggerServerEvent('ugovor:prodajtuljanu2', GetPlayerServerId(closestPlayer), vehProps.plate, amount, GarazaV)
-						end
-					end, vehProps.model)
+			local JelDonatorski = false
+			for i=1, #Vehicles, 1 do
+				if GetHashKey(Vehicles[i].model) == GetEntityModel(vehicle) then
+					if Vehicles[i].category == "donatorski" then
+						JelDonatorski = true
+						break
+					end
 				end
-			end, function(data, menu)
-				menu.close()
-			end)
+			end
+			if not JelDonatorski then
+				TriggerEvent("esx_invh:closeinv")
+				ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'cijenica_vozila', {
+					title = "Upisite cijenu vozila"
+				}, function(data, menu)
+
+					local amount = tonumber(data.value)
+
+					if amount == nil then
+						ESX.ShowNotification("Niste unjeli cijenu")
+					else
+						menu.close()
+						local vehProps = ESX.Game.GetVehicleProperties(vehicle)
+						ESX.TriggerServerCallback('garaza:JelIstiModel', function(dane)
+							if (dane) then
+								ESX.ShowNotification(_U('writingcontract', vehProps.plate))
+								TriggerServerEvent('ugovor:prodajtuljanu2', GetPlayerServerId(closestPlayer), vehProps.plate, amount, GarazaV)
+							end
+						end, vehProps.model)
+					end
+				end, function(data, menu)
+					menu.close()
+				end)
+			else
+				ESX.ShowNotification("Ne smijete prodavati donatorsko vozilo!")
+			end
 		else
 			ESX.ShowNotification(_U('nonearby'))
 		end

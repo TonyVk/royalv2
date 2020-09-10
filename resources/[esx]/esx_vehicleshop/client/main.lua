@@ -1583,7 +1583,8 @@ AddEventHandler('esx_vehicleshop:hasEnteredMarker', function(zone)
 										label = vehicleData.name,
 										price = resellPrice,
 										model = model,
-										plate = plate
+										plate = plate,
+										kategorija = vehicleData.category
 									}
 								end
 							end
@@ -1772,39 +1773,43 @@ Citizen.CreateThread(function()
 				elseif CurrentAction == 'resell_vehicle' then
 					local koord = GetEntityCoords(PlayerPedId())
 					if GetDistanceBetweenCoords(koord, -44.569271087646, -1081.7122802734, 25.685205459595, true) <= 3.0 then
-						ESX.TriggerServerCallback('esx_vehicleshop:resellVehicle', function(vehicleSold)
-							if vehicleSold then
-								if GarazaV ~= nil and DoesEntityExist(GarazaV) then
-									local prop = ESX.Game.GetVehicleProperties(GarazaV)
-									local pla = prop.plate:gsub("^%s*(.-)%s*$", "%1")
-									ESX.Game.DeleteVehicle(GarazaV)
-									TriggerServerEvent("garaza:SpremiModel", pla, nil)
-									GarazaV = nil
-									TriggerEvent("esx_property:ProsljediVozilo", nil, nil)
-									if Vblip ~= nil then
-										RemoveBlip(Vblip)
-										Vblip = nil
+						if CurrentActionData.kategorija ~= "donatorski" then
+							ESX.TriggerServerCallback('esx_vehicleshop:resellVehicle', function(vehicleSold)
+								if vehicleSold then
+									if GarazaV ~= nil and DoesEntityExist(GarazaV) then
+										local prop = ESX.Game.GetVehicleProperties(GarazaV)
+										local pla = prop.plate:gsub("^%s*(.-)%s*$", "%1")
+										ESX.Game.DeleteVehicle(GarazaV)
+										TriggerServerEvent("garaza:SpremiModel", pla, nil)
+										GarazaV = nil
+										TriggerEvent("esx_property:ProsljediVozilo", nil, nil)
+										if Vblip ~= nil then
+											RemoveBlip(Vblip)
+											Vblip = nil
+										end
+									else
+										local veh = GetVehiclePedIsIn(PlayerPedId())
+										local prop = ESX.Game.GetVehicleProperties(veh)
+										local pla = prop.plate:gsub("^%s*(.-)%s*$", "%1")
+										ESX.Game.DeleteVehicle(veh)
+										TriggerServerEvent("garaza:SpremiModel", pla, nil)
+										GarazaV = nil
+										TriggerEvent("esx_property:ProsljediVozilo", nil, nil)
+										if Vblip ~= nil then
+											RemoveBlip(Vblip)
+											Vblip = nil
+										end
 									end
+									ESX.ShowNotification(_U('vehicle_sold_for', CurrentActionData.label, ESX.Math.GroupDigits(CurrentActionData.price)))
+									CurrentAction = nil
+									CurrentActionData = {}
 								else
-									local veh = GetVehiclePedIsIn(PlayerPedId())
-									local prop = ESX.Game.GetVehicleProperties(veh)
-									local pla = prop.plate:gsub("^%s*(.-)%s*$", "%1")
-									ESX.Game.DeleteVehicle(veh)
-									TriggerServerEvent("garaza:SpremiModel", pla, nil)
-									GarazaV = nil
-									TriggerEvent("esx_property:ProsljediVozilo", nil, nil)
-									if Vblip ~= nil then
-										RemoveBlip(Vblip)
-										Vblip = nil
-									end
+									ESX.ShowNotification(_U('not_yours'))
 								end
-								ESX.ShowNotification(_U('vehicle_sold_for', CurrentActionData.label, ESX.Math.GroupDigits(CurrentActionData.price)))
-								CurrentAction = nil
-								CurrentActionData = {}
-							else
-								ESX.ShowNotification(_U('not_yours'))
-							end
-						end, CurrentActionData.plate, CurrentActionData.model)
+							end, CurrentActionData.plate, CurrentActionData.model)
+						else
+							ESX.ShowNotification("Ne smijete prodati donatorsko vozilo!")
+						end
 					else
 						CurrentAction = nil
 					end
