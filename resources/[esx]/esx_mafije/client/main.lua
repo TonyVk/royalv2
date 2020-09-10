@@ -1120,6 +1120,8 @@ function OpenVehicleSpawnerMenu()
 		BVozilo = CreateVehicle(model, x,y,z,h, true, false)
         TaskWarpPedIntoVehicle(playerPed,  BVozilo,  -1)
         SetVehicleMaxMods(BVozilo)
+		SetEntityAsMissionEntity(BVozilo,true,true)
+		SetVehicleHasBeenOwnedByPlayer(BVozilo, true)
 		for i=1, #Boje, 1 do
 			if Boje[i].Mafija == PlayerData.job.name and Boje[i].Ime == "Vozilo" then
 				SetVehicleCustomPrimaryColour(BVozilo, tonumber(Boje[i].R), tonumber(Boje[i].G), tonumber(Boje[i].B))
