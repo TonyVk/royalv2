@@ -14,7 +14,6 @@ server_scripts {
   'locales/es.lua',
   'locales/hr.lua',
   '@mysql-async/lib/MySQL.lua',
-  'config.lua',
   '@es_extended/locales/hr.lua',
   '@es_extended/config.lua',
   '@es_extended/config.weapons.lua',

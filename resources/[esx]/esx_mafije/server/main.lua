@@ -751,9 +751,7 @@ AddEventHandler('mafije:SpremiCoord', function(ime, coord, br, head)
 		end
 		TriggerClientEvent('esx:showNotification', source, 'Koordinate lider menua su uspjesno spremljene za mafiju '..ime..'!')
 		TriggerClientEvent("mafije:UpdateKoord", -1, Koord)
-		if Config.Blipovi == true then
-			TriggerClientEvent("mafije:KreirajBlip", -1, cordara, ime)
-		end
+		TriggerClientEvent("mafije:KreirajBlip", -1, cordara, ime)
 	elseif br == 3 then
 		MySQL.Async.execute('UPDATE mafije SET SpawnV = @cor WHERE Ime = @im', {
 			['@cor'] = json.encode(cordara),

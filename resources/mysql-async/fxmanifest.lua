@@ -1,16 +1,19 @@
-fx_version 'bodacious'
-game 'gta5'
+fx_version 'adamant'
+game 'common'
 
-
-version '3.2.0'
+name 'mysql-async'
+description 'MySQL Middleware for lua.'
+author 'Joel Wurtz & Matthias Mandelartz'
+version '3.3.2'
+url 'https://github.com/brouznouf/fivem-mysql-async'
 
 server_script 'mysql-async.js'
-client_script 'mysql-async-client.js'
+client_script 'mysql-async-client.lua'
 
 files {
   'ui/index.html',
-  'ui/app.js',
-  'ui/app.css',
+  'ui/js/app.js',
+  'ui/css/app.css',
   'ui/fonts/fira-sans-v9-latin-700.woff',
   'ui/fonts/fira-sans-v9-latin-700.woff2',
   'ui/fonts/fira-sans-v9-latin-italic.woff',

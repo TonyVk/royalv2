@@ -15,6 +15,7 @@ AddEventHandler('esx_koristiHeroin:useItem', function(itemName)
 		ESX.UI.Menu.CloseAll()
 
 		if itemName == 'heroin' then
+			onDrugs = true
 			local lib, anim = 'anim@mp_player_intcelebrationmale@face_palm', 'face_palm'
 			local playerPed = PlayerPedId()
 			ESX.ShowNotification('Osjecate kako vam zivci pocinju raditi protiv vas...')
@@ -62,7 +63,6 @@ AddEventHandler('esx_koristiHeroin:runMan', function()
     while not HasAnimSetLoaded("move_m@hurry_butch@b") do
         Citizen.Wait(0)
     end
-    onDrugs = true
 	count = 0
     DoScreenFadeOut(1000)
     Citizen.Wait(1000)
@@ -344,8 +344,8 @@ AddEventHandler('Heroin:start', function()
 	local set = false
 	Citizen.Wait(10)
 	
-	local rnX = Config.PickupBlip.x + math.random(-55, 55)
-	local rnY = Config.PickupBlip.y + math.random(-55, 55)
+	local rnX = Config.PickupBlip.x + math.random(-40, 40)
+	local rnY = Config.PickupBlip.y + math.random(-40, 40)
 	
 	local u, Z = GetGroundZFor_3dCoord(rnX ,rnY ,300.0,0)
 	
@@ -365,8 +365,8 @@ AddEventHandler('Heroin:new', function(id)
 	Citizen.Wait(10)
 	
 	
-	local rnX = Config.PickupBlip.x + math.random(-55, 55)
-	local rnY = Config.PickupBlip.y + math.random(-55, 55)
+	local rnX = Config.PickupBlip.x + math.random(-40, 40)
+	local rnY = Config.PickupBlip.y + math.random(-40, 40)
 	
 	local u, Z = GetGroundZFor_3dCoord(rnX ,rnY ,300.0,0)
 	

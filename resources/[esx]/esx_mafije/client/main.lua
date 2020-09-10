@@ -2270,34 +2270,35 @@ end)
 
 RegisterNetEvent('mafije:KreirajBlip')
 AddEventHandler('mafije:KreirajBlip', function(co, maf)
-	local x,y,z = table.unpack(co)
-	if Blipovi[maf] ~= nil then
-		RemoveBlip(Blipovi[maf])
-		Blipovi[maf] = nil
-	end
-	if x ~= 0 and x ~= nil then
-		Blipovi[maf] = AddBlipForCoord(x,y,z)
-
-		SetBlipSprite (Blipovi[maf], 378)
-		SetBlipDisplay(Blipovi[maf], 4)
-		SetBlipScale  (Blipovi[maf], 1.2)
-		for i=1, #Boje, 1 do
-			if Boje[i] ~= nil and Boje[i].Mafija == maf and Boje[i].Ime == "Blip" then
-				SetBlipColour (Blipovi[maf], tonumber(Boje[i].Boja))
-				break
-			end
+	if Config.Blipovi == true then
+		local x,y,z = table.unpack(co)
+		if Blipovi[maf] ~= nil then
+			RemoveBlip(Blipovi[maf])
+			Blipovi[maf] = nil
 		end
-		SetBlipColour (Blipovi[maf], 39)
-		SetBlipAsShortRange(Blipovi[maf], true)
+		if x ~= 0 and x ~= nil then
+			Blipovi[maf] = AddBlipForCoord(x,y,z)
 
-		BeginTextCommandSetBlipName("STRING")
-		for j=1, #Mafije, 1 do
-			if Mafije[j] ~= nil and Mafije[j].Ime == maf then
-				AddTextComponentString(firstToUpper(Mafije[j].Label))
-				break
+			SetBlipSprite (Blipovi[maf], 378)
+			SetBlipDisplay(Blipovi[maf], 4)
+			SetBlipScale  (Blipovi[maf], 1.2)
+			for i=1, #Boje, 1 do
+				if Boje[i] ~= nil and Boje[i].Mafija == maf and Boje[i].Ime == "Blip" then
+					SetBlipColour (Blipovi[maf], tonumber(Boje[i].Boja))
+					break
+				end
 			end
+			SetBlipAsShortRange(Blipovi[maf], true)
+
+			BeginTextCommandSetBlipName("STRING")
+			for j=1, #Mafije, 1 do
+				if Mafije[j] ~= nil and Mafije[j].Ime == maf then
+					AddTextComponentString(firstToUpper(Mafije[j].Label))
+					break
+				end
+			end
+			EndTextCommandSetBlipName(Blipovi[maf])
 		end
-		EndTextCommandSetBlipName(Blipovi[maf])
 	end
 end)
 
