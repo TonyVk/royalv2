@@ -262,6 +262,7 @@ AddEventHandler('esx_kamion:hasEnteredMarker', function(zone)
 			SetBlipRoute(Blipara, true)
 			ESX.ShowNotification("Vratite kamion nazad do firme!")
 			TriggerServerEvent("kamiooon:platituljanu")
+			TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.job.name)
 			TriggerServerEvent("kamion:MaknutObjekt", GetPlayerServerId(PlayerId()))
 		else
 			ESX.ShowNotification("Dosli ste bez prikolice!")

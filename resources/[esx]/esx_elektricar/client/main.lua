@@ -245,6 +245,7 @@ AddEventHandler('esx_elektricar:hasEnteredMarker', function(zone)
         Wait(10000)
 		ClearPedTasksImmediately(PlayerPedId())
 		TriggerServerEvent("elektricar:platituljanu")
+		TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.job.name)
 		BrTura = BrTura+1
 		if BrTura ~= 10 then
 			SpucajPosao()

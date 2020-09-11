@@ -446,6 +446,7 @@ Citizen.CreateThread(function()
 									end
 									Broj = Broj-1
 									TriggerServerEvent("seljacina:platituljanu")
+									TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.job.name)
 									if Broj == 0 then
 										for k,v in pairs(Config.Zones) do
 											if k == "VehicleDeletePoint" then
@@ -476,6 +477,7 @@ Citizen.CreateThread(function()
 									end
 									Broj = Broj-1
 									TriggerServerEvent("seljacina:platituljanu")
+									TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.job.name)
 									if Broj == 0 then
 										for k,v in pairs(Config.Zones) do
 											if k == "VehicleDeletePoint" then
@@ -506,6 +508,7 @@ Citizen.CreateThread(function()
 									end
 									Broj = Broj-1
 									TriggerServerEvent("seljacina:platituljanu")
+									TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.job.name)
 									if Broj == 0 then
 										for k,v in pairs(Config.Zones) do
 											if k == "VehicleDeletePoint" then
@@ -536,6 +539,7 @@ Citizen.CreateThread(function()
 									end
 									Broj = Broj-1
 									TriggerServerEvent("seljacina:platituljanu")
+									TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.job.name)
 									if Broj == 0 then
 										for k,v in pairs(Config.Zones) do
 											if k == "VehicleDeletePoint" then

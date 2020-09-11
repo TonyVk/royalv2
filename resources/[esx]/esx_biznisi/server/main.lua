@@ -3,6 +3,7 @@ ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 local Biznisi = {}
+local Sati = {}
 
 MySQL.ready(function()
 	UcitajBiznise()
@@ -23,6 +24,30 @@ function UcitajBiznise()
 					local im = Firstname.." "..Lastname
 					table.insert(Biznisi, {Ime = result[i].Ime, Label = result[i].Label, Posao = result[i].Posao, Kupljen = true, Sef = result[i].Sef, VlasnikIme = im, Coord = data2})
 				end)
+			end
+			local data3 = json.decode(result[i].Sati)
+			if data3 ~= nil then
+				for b=1, #data3 do
+					table.insert(Sati, {Ime = data3[b].Ime, Identifier = data3[b].Identifier, Ture = data3[b].Ture, Posao = data3[b].Posao})
+				end
+			end
+        end
+      end
+    )
+end
+
+function UcitajSate()
+	Sati = {}
+	MySQL.Async.fetchAll(
+      'SELECT * FROM biznisi',
+      {},
+      function(result)
+        for i=1, #result, 1 do
+			local data3 = json.decode(result[i].Sati)
+			if data3 ~= nil then
+				for b=1, #data3 do
+					table.insert(Sati, {Ime = data3[b].Ime, Identifier = data3[b].Identifier, Ture = data3[b].Ture, Posao = data3[b].Posao})
+				end
 			end
         end
       end
@@ -148,6 +173,38 @@ AddEventHandler('biznis:PostaviVlasnika', function(ime, id)
 	end
 end)
 
+RegisterNetEvent('biznis:DodajTuru')
+AddEventHandler('biznis:DodajTuru', function(posao)
+	local _source = source
+	local ime = GetPlayerName(_source)
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	local naso = false
+	for i=1, #Sati, 1 do
+		if Sati[i] ~= nil and Sati[i].Identifier == xPlayer.identifier and Sati[i].Posao == posao then
+			naso = true
+			Sati[i].Ture = Sati[i].Ture+1
+			break
+		end
+	end
+	if not naso then
+		table.insert(Sati, {Ime = ime, Identifier = xPlayer.identifier, Ture = 1, Posao = posao})
+	end
+	local Temp = {}
+	for i=1, #Sati, 1 do
+		if Sati[i] ~= nil and Sati[i].Posao == posao then
+			table.insert(Temp, {Ime = Sati[i].Ime, Identifier = Sati[i].Identifier, Ture = Sati[i].Ture, Posao = Sati[i].Posao})
+		end
+	end
+	MySQL.Async.execute('UPDATE biznisi SET Sati = @sa WHERE Posao = @im', {
+		['@sa'] = json.encode(Temp),
+		['@im'] = posao
+	})
+end)
+
+ESX.RegisterServerCallback('biznis:DohvatiRadnike', function(source, cb)
+	cb(Sati)
+end)
+
 RegisterNetEvent('biznis:PostaviPosao')
 AddEventHandler('biznis:PostaviPosao', function(ime, posao)
 	MySQL.Async.execute('UPDATE biznisi SET Posao = @po WHERE Ime = @im', {
@@ -208,3 +265,15 @@ AddEventHandler('biznis:StaviUSef', function(posao, cifra)
 		end
 	end
 end)
+
+function BrisiZaposlenike(d, h, m)
+	if d == 1 then
+		MySQL.Async.execute('UPDATE biznisi SET Sati = @st', {
+			['@st'] = "{}"
+		}, function()
+			UcitajSate()
+		end)
+	end
+end
+
+TriggerEvent('cron:runAt', 0, 0, BrisiZaposlenike)

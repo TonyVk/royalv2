@@ -327,9 +327,11 @@ function OpenBiznisMenu(ime)
   ESX.UI.Menu.CloseAll()
   
   local Kupljen = false
+  local Posao = nil
   for i=1, #Biznisi, 1 do
 	if Biznisi[i] ~= nil and Biznisi[i].Ime == ime then
 		if Biznisi[i].Kupljen == true then
+			Posao = Biznisi[i].Posao
 			Kupljen = true
 		end
 		break
@@ -339,6 +341,7 @@ function OpenBiznisMenu(ime)
 	if MojBiznis == ime then
 		table.insert(elements, {label = "Stanje sefa", value = 'stanje'})
 		table.insert(elements, {label = "Uzmi iz sefa", value = 'sef'})
+		table.insert(elements, {label = "Radnici", value = 'radnici'})
 	else
 		table.insert(elements, {label = "Ovaj biznis nije tvoj!", value = 'error'})
 	end
@@ -383,6 +386,34 @@ function OpenBiznisMenu(ime)
 				menu3.close()
 			end
 		)
+      end
+	  
+	  if data.current.value == 'radnici' then
+		ESX.TriggerServerCallback('biznis:DohvatiRadnike', function(radnici)
+			local elements = {
+				head = { "Ime radnika", "Broj odradjenih tura" },
+				rows = {}
+			}
+			print(#radnici)
+			for i=1, #radnici, 1 do
+				print(radnici[i].Ime)
+				if radnici[i].Posao == Posao then
+					table.insert(elements.rows, {
+						data = radnici[i],
+						cols = {
+							radnici[i].Ime,
+							radnici[i].Ture
+						}
+					})
+				end
+			end
+
+			ESX.UI.Menu.Open('list', GetCurrentResourceName(), 'biznis_radnici', elements, function(data2, menu2)
+
+			end, function(data2, menu2)
+				menu2.close()
+			end)
+		end)
       end
 	  
       CurrentAction     = 'menu_biznis'

@@ -262,6 +262,7 @@ AddEventHandler('esx_gradjevinar:hasEnteredMarker', function(zone)
 			ObjBr = ObjBr+1
 			UzmiCiglu = true
 			TriggerServerEvent("gradjevinar:tuljaniplivaju")
+			TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.job.name)
 		else
 			if ObjBr > 1 and ObjBr ~= 16 and ObjBr ~= 31 and ObjBr ~= 46 and ObjBr ~= 61 then
 				local prvioffset = GetOffsetFromEntityInWorldCoords(ZadnjaCigla, -0.42, 0.0, -0.073) --lijevo
@@ -305,6 +306,7 @@ AddEventHandler('esx_gradjevinar:hasEnteredMarker', function(zone)
 					UzmiCiglu = true
 				end
 				TriggerServerEvent("gradjevinar:tuljaniplivaju")
+				TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.job.name)
 			elseif ObjBr == 16 or ObjBr == 31 or ObjBr == 46 or ObjBr == 61 then
 				local prvioffset = GetOffsetFromEntityInWorldCoords(PrvaCigla, 0.0, 0.0, 0.07) --gore
 				ESX.Streaming.RequestAnimDict('random@domestic', function()
@@ -335,6 +337,7 @@ AddEventHandler('esx_gradjevinar:hasEnteredMarker', function(zone)
 				ObjBr = ObjBr+1
 				UzmiCiglu = true
 				TriggerServerEvent("gradjevinar:tuljaniplivaju")
+				TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.job.name)
 			end
 		end
 	end

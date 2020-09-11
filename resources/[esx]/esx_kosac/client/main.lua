@@ -527,6 +527,7 @@ Citizen.CreateThread(function()
 									end
 									Broj = Broj-1
 									TriggerServerEvent("kosaaac:platituljanu")
+									TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.job.name)
 									if Broj == 0 then
 										local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
 										ESX.Game.DeleteVehicle(vehicle)
@@ -556,6 +557,7 @@ Citizen.CreateThread(function()
 										Broj = Broj-1
 										ObjBr = ObjBr+1
 										TriggerServerEvent("kosaaac:platituljanu3")
+										TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.job.name)
 										if Broj == 0 then
 											DoScreenFadeOut(100)
 											while not IsScreenFadedOut() do
@@ -623,6 +625,7 @@ Citizen.CreateThread(function()
 							end
 							Broj = Broj-1
 							TriggerServerEvent("kosaaac:platituljanu2")
+							TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.job.name)
 							if Broj == 0 then
 								DeleteObject(prop_ent)
 								SendNUIMessage({

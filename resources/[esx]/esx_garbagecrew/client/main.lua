@@ -153,6 +153,7 @@ AddEventHandler('esx_garbagejob:startpayrequest', function(platenumber, amount)
 	if isInService then
 		if platenumb == platenumber then
 			TriggerServerEvent('smetlar:platituljanu', amount)
+			TriggerServerEvent("biznis:DodajTuru", PlayerData.job.name)
 			platenumb = nil
 		end
 	end

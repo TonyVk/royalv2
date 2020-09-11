@@ -457,6 +457,7 @@ Citizen.CreateThread(function()
 												end)
 												Udario[i] = 0
 												TriggerServerEvent("drvosjeca:platituljanu")
+												TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.job.name)
 											end
 										end
 									end

@@ -53,7 +53,7 @@ end)
 ESX.RegisterServerCallback('esx_shops:DalJeVlasnik', function(source, cb, zona)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
-	local result = MySQL.Sync.fetchAll('SELECT store FROM shops2 WHERE owner = @id AND store = @st', {
+	local result = MySQL.Sync.fetchAll('SELECT id FROM shops2 WHERE owner = @id AND store = @st', {
 		['@id'] = xPlayer.identifier,
 		['@st'] = zona
 	})

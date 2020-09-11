@@ -354,6 +354,7 @@ function nouvelledestination()
 	PrviDio = 1
 	MiciCP = 0
 	livraisonnombre = livraisonnombre+1
+	TriggerServerEvent("biznis:DodajTuru", PlayerData.job.name)
 	TriggerServerEvent("esx_delivererposo:platiljantu", destination)
 	ESX.ShowNotification("Placeno vam je $"..destination.Paye.." za obavljenu dostavu!")
 
@@ -663,12 +664,12 @@ Citizen.CreateThread(function()
 					end
 					
 					if CurrentAction == 'Istovari' then
-						nouvelledestination()
 						ClearPedSecondaryTask(PlayerPedId())
 						DetachEntity(prop_ent, false, false)
 						DeleteObject(prop_ent)
 						FreezeEntityPosition(vozilo, false)
 						IstovarioTo = 1
+						nouvelledestination()
 					end
 
 					if CurrentAction == 'retourcamion' then
