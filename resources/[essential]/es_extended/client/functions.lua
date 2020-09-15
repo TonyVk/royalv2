@@ -659,6 +659,8 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 
 		wheels            = GetVehicleWheelType(vehicle),
 		windowTint        = GetVehicleWindowTint(vehicle),
+		
+		fuel			  = GetVehicleFuelLevel(vehicle),
 
 		neonEnabled       = {
 			IsVehicleNeonLightEnabled(vehicle, 0),
@@ -979,6 +981,10 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 	
 	if props.svijetlaColor ~= nil then
 		SetVehicleHeadlightsColour(vehicle, props.svijetlaColor)
+	end
+	
+	if props.fuel ~= nil then
+		SetVehicleFuelLevel(vehicle, props.fuel + 0.0)
 	end
 end
 
