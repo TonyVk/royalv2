@@ -73,8 +73,8 @@ AddEventHandler('War:VratiScore', function(t1, t2)
 	if UWaru == true then
 		Tim1Score = t1
 		Tim2Score = t2
-		local str1 = "Tim 1: "..t1
-		local str2 = "Tim 2: "..t2
+		local str1 = "Crveni: "..t1
+		local str2 = "Plavi: "..t2
 		SendNUIMessage({
 			team1 = true,
 			team2 = true,
@@ -98,30 +98,30 @@ AddEventHandler('War:VratiKill', function(id, isti)
 		if isti == 0 then
 			if Tim == 1 then
 				Tim1Score = Tim1Score+5
-				local str = "[Tim 1] ~r~"..GetPlayerName(PlayerId()).." ~w~je ubio [Tim 2] ~r~"..GetPlayerName(GetPlayerFromServerId(id)).." ~w~(+5 bodova za tim 1)"
+				local str = "[Crveni] ~r~"..GetPlayerName(PlayerId()).." ~w~je ubio [Plavi] ~r~"..GetPlayerName(GetPlayerFromServerId(id)).." ~w~(+5 bodova za crvene)"
 				TriggerServerEvent("War:PosaljiPoruku", str)
 				TriggerServerEvent("War:SyncajScore", Tim1Score, Tim2Score)
 			elseif Tim == 2 then
 				Tim2Score = Tim2Score+5
-				local str = "[Tim 2] ~r~"..GetPlayerName(PlayerId()).." ~w~je ubio [Tim 1] ~r~"..GetPlayerName(GetPlayerFromServerId(id)).." ~w~(+5 bodova za tim 2)"
+				local str = "[Plavi] ~r~"..GetPlayerName(PlayerId()).." ~w~je ubio [Crveni] ~r~"..GetPlayerName(GetPlayerFromServerId(id)).." ~w~(+5 bodova za plave)"
 				TriggerServerEvent("War:PosaljiPoruku", str)
 				TriggerServerEvent("War:SyncajScore", Tim1Score, Tim2Score)
 			end
 		else
 			if Tim == 1 then
 				Tim1Score = Tim1Score-2
-				local str = "[Tim 1] ~r~"..GetPlayerName(PlayerId()).." ~w~je ubio svoga clana tima (-2 boda za tim 1)"
+				local str = "[Crveni] ~r~"..GetPlayerName(PlayerId()).." ~w~je ubio svoga clana tima (-2 boda za crvene)"
 				TriggerServerEvent("War:PosaljiPoruku", str)
 				TriggerServerEvent("War:SyncajScore", Tim1Score, Tim2Score)
 			elseif Tim == 2 then
 				Tim2Score = Tim2Score-2
-				local str = "[Tim 2] ~r~"..GetPlayerName(PlayerId()).." ~w~je ubio svoga clana tima (-2 boda za tim 2)"
+				local str = "[Plavi] ~r~"..GetPlayerName(PlayerId()).." ~w~je ubio svoga clana tima (-2 boda za plave)"
 				TriggerServerEvent("War:PosaljiPoruku", str)
 				TriggerServerEvent("War:SyncajScore", Tim1Score, Tim2Score)
 			end
 		end
-		local str1 = "Tim 1: "..Tim1Score
-		local str2 = "Tim 2: "..Tim2Score
+		local str1 = "Crveni: "..Tim1Score
+		local str2 = "Plavi: "..Tim2Score
 		SendNUIMessage({
 			team1 = true,
 			team2 = true,
@@ -147,11 +147,11 @@ AddEventHandler('esx:onPlayerDeath', function(data)
 		else
 			if Tim == 1 then
 				Tim1Score = Tim1Score-1
-				local str = "[Tim 1] ~r~"..GetPlayerName(PlayerId()).." ~w~se ubio sam (-1 bod za tim 1)"
+				local str = "[Crveni] ~r~"..GetPlayerName(PlayerId()).." ~w~se ubio sam (-1 bod za crvene)"
 				TriggerServerEvent("War:PosaljiPoruku", str)
 			elseif Tim == 2 then
 				Tim2Score = Tim2Score-1
-				local str = "[Tim 2] ~r~"..GetPlayerName(PlayerId()).." ~w~se ubio sam (-1 bod za tim 2)"
+				local str = "[Plavi] ~r~"..GetPlayerName(PlayerId()).." ~w~se ubio sam (-1 bod za plave)"
 				TriggerServerEvent("War:PosaljiPoruku", str)
 			end
 			TriggerServerEvent("War:SyncajScore", Tim1Score, Tim2Score)
@@ -213,6 +213,8 @@ AddEventHandler('War:ZavrsiIgracu', function()
 		TriggerEvent("pullout:PostaviGa", false)
 		TriggerEvent("esx:ZabraniInv", false)
 		TriggerEvent("Muvaj:PostaviGa", false)
+		TriggerEvent("dpemotes:Radim", false)
+		TriggerEvent("glava:NemojGa", false)
 		TriggerServerEvent("War:ObrisiLoadout")
 		ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
           local model = nil
@@ -253,64 +255,78 @@ AddEventHandler('War:ZavrsiIgracu', function()
 end)
 
 RegisterNetEvent("War:Zavrsi")
-AddEventHandler('War:Zavrsi', function()
+AddEventHandler('War:Zavrsi', function(nest)
 	if UWaru == true then
 		if tonumber(Tim1Score) > tonumber(Tim2Score) then
-			local str = "~r~Tim 1 ~w~je pobjedio ~b~tim 2 ~w~("..Tim1Score..":"..Tim2Score..")"
+			local str = "~r~Crveni ~w~su pobjedili ~b~plave ~w~("..Tim1Score..":"..Tim2Score..")"
 			ESX.ShowNotification(str)
 			if Tim == 1 then
 				if Poslao1 == 0 then
-					ESX.TriggerServerCallback('War:DohvatiPosao', function(job)
-						TriggerServerEvent("War:SpremiGa", job, 1)
-					end)
+					if nest == nil then
+						ESX.TriggerServerCallback('War:DohvatiPosao', function(job)
+							TriggerServerEvent("War:SpremiGa", job, 1)
+						end)
+					end
 				end
 				Poslao1 = 1
 				TriggerServerEvent("War:SyncajPoslao", 1, Poslao1)
 			elseif Tim == 2 then
 				if Poslao2 == 0 then
-					ESX.TriggerServerCallback('War:DohvatiPosao', function(job)
-						TriggerServerEvent("War:SpremiGa", job, 2)
-					end)
+					if nest == nil then
+						ESX.TriggerServerCallback('War:DohvatiPosao', function(job)
+							TriggerServerEvent("War:SpremiGa", job, 2)
+						end)
+					end
 				end
 				Poslao2 = 1
 				TriggerServerEvent("War:SyncajPoslao", 2, Poslao2)
 			end
 		elseif tonumber(Tim1Score) < tonumber(Tim2Score) then
-			local str = "~b~Tim 2 ~w~je pobjedio ~r~tim 1 ~w~("..Tim2Score..":"..Tim1Score..")"
+			local str = "~b~Plavi ~w~su pobjedili ~r~crvene ~w~("..Tim2Score..":"..Tim1Score..")"
 			ESX.ShowNotification(str)
 			if Tim == 1 then
 				if Poslao1 == 0 then
-					ESX.TriggerServerCallback('War:DohvatiPosao', function(job)
-						TriggerServerEvent("War:SpremiGa", job, 2)
-					end)
+					if nest == nil then
+						ESX.TriggerServerCallback('War:DohvatiPosao', function(job)
+							TriggerServerEvent("War:SpremiGa", job, 2)
+						end)
+					end
 				end
 				Poslao1 = 1
 				TriggerServerEvent("War:SyncajPoslao", 1, Poslao1)
 			elseif Tim == 2 then
 				if Poslao2 == 0 then
-					ESX.TriggerServerCallback('War:DohvatiPosao', function(job)
-						TriggerServerEvent("War:SpremiGa", job, 1)
-					end)
+					if nest == nil then
+						ESX.TriggerServerCallback('War:DohvatiPosao', function(job)
+							TriggerServerEvent("War:SpremiGa", job, 1)
+						end)
+					end
 				end
 				Poslao2 = 1
 				TriggerServerEvent("War:SyncajPoslao", 2, Poslao2)
 			end
 		else
-			local str = "War je zavrsio izjednaceno ("..Tim1Score..":"..Tim2Score..")"
-			ESX.ShowNotification(str)
+			if nest == nil then
+				local str = "War je zavrsio izjednaceno ("..Tim1Score..":"..Tim2Score..")"
+				ESX.ShowNotification(str)
+			end
 			if Tim == 1 then
 				if Poslao1 == 0 then
-					ESX.TriggerServerCallback('War:DohvatiPosao', function(job)
-						TriggerServerEvent("War:SpremiGa", job, 1)
-					end)
+					if nest == nil then
+						ESX.TriggerServerCallback('War:DohvatiPosao', function(job)
+							TriggerServerEvent("War:SpremiGa", job, 1)
+						end)
+					end
 				end
 				Poslao1 = 1
 				TriggerServerEvent("War:SyncajPoslao", 1, Poslao1)
 			elseif Tim == 2 then
 				if Poslao2 == 0 then
-					ESX.TriggerServerCallback('War:DohvatiPosao', function(job)
-						TriggerServerEvent("War:SpremiGa", job, 1)
-					end)
+					if nest == nil then
+						ESX.TriggerServerCallback('War:DohvatiPosao', function(job)
+							TriggerServerEvent("War:SpremiGa", job, 1)
+						end)
+					end
 				end
 				Poslao2 = 1
 				TriggerServerEvent("War:SyncajPoslao", 2, Poslao2)
@@ -334,6 +350,8 @@ AddEventHandler('War:Zavrsi', function()
 		TriggerEvent("esx_ambulancejob:PostaviGa", false)
 		TriggerEvent("pullout:PostaviGa", false)
 		TriggerEvent("esx:ZabraniInv", false)
+		TriggerEvent("glava:NemojGa", false)
+		TriggerEvent("dpemotes:Radim", false)
 		TriggerEvent("Muvaj:PostaviGa", false)
 		for i=1, #Config.Weapons, 1 do
 			local weaponHash = GetHashKey(Config.Weapons[i].name)
@@ -422,7 +440,7 @@ RegisterCommand("warpozovi", function(source, args, rawCommandString)
 								ESX.ShowNotification("Vec imate max broj igraca u waru!")
 							end
 						else
-							ESX.ShowNotification("Igrac nije u vasoj bandi!")
+							ESX.ShowNotification("Igrac nije u vasoj mafiji!")
 							name = "Admin"..":"
 							message = "/warpozovi [ID igraca]"
 							TriggerEvent('chat:addMessage', { args = { name, message }, color = r,g,b })
@@ -454,7 +472,7 @@ RegisterCommand("warizbaci", function(source, args, rawCommandString)
 						if br == 1 then
 							TriggerServerEvent("War:ZaustaviIgracu", tonumber(igrac))
 						else
-							ESX.ShowNotification("Igrac nije u vasoj bandi!")
+							ESX.ShowNotification("Igrac nije u vasoj mafiji!")
 							name = "Admin"..":"
 							message = "/warizbaci [ID igraca]"
 							TriggerEvent('chat:addMessage', { args = { name, message }, color = r,g,b })
@@ -598,33 +616,38 @@ function PratiPocetak()
 				AhaGo = 1
 				Minuta = -1
 				FreezeEntityPosition(PlayerPedId(), false)
-				TrajeWar = 1
-				TriggerServerEvent("War:SyncajTraje", TrajeWar)
-				TriggerServerEvent("War:SyncajKraj", Minute)
-				PratiKraj()
-				StartajWar = 0
-				local str1 = "Tim 1: "..Tim1Score
-				local str2 = "Tim 2: "..Tim2Score
-				local str
-				if Minute == 2 or Minute == 3 or Minute == 4 then
-					str = Minute.." minute"
+				if Tim1Igr ~= Tim2Igr then
+					TriggerEvent("War:Zavrsi", 1)
+					ESX.ShowNotification("War nije poceo zato sto nije bio isti broj igraca u timovima!")
 				else
-					str = Minute.." minuta"
+					TrajeWar = 1
+					TriggerServerEvent("War:SyncajTraje", TrajeWar)
+					TriggerServerEvent("War:SyncajKraj", Minute)
+					PratiKraj()
+					StartajWar = 0
+					local str1 = "Crveni: "..Tim1Score
+					local str2 = "Plavi: "..Tim2Score
+					local str
+					if Minute == 2 or Minute == 3 or Minute == 4 then
+						str = Minute.." minute"
+					else
+						str = Minute.." minuta"
+					end
+					SendNUIMessage({
+						vrijeme = true,
+						minuta = str,
+						prikaziscore = true,
+						team1 = true,
+						team2 = true,
+						score1 = str1,
+						score2 = str2,
+						ubio = true,
+						kill = Kill,
+						mrtav = true,
+						death = Death
+					})
+					TriggerServerEvent("War:DajOruzja")
 				end
-				SendNUIMessage({
-					vrijeme = true,
-					minuta = str,
-					prikaziscore = true,
-					team1 = true,
-					team2 = true,
-					score1 = str1,
-					score2 = str2,
-					ubio = true,
-					kill = Kill,
-					mrtav = true,
-					death = Death
-				})
-				TriggerServerEvent("War:DajOruzja")
 			end
 		end
 	end)
@@ -692,14 +715,12 @@ Citizen.CreateThread(function()
 			if T1 < Tim1Igr then
 				Tim1Igr = T1
 				TriggerServerEvent("War:SyncTimove", Tim1Igr, Tim2Igr)
-				ESX.ShowNotification(Tim1Igr)
 			end
 		end
 		if T2 ~= 0 then
 			if T2 < Tim2Igr then
 				Tim2Igr = T2
 				TriggerServerEvent("War:SyncTimove", Tim1Igr, Tim2Igr)
-				ESX.ShowNotification(Tim2Igr)
 			end
 		end
 		Citizen.Wait(10000)
@@ -725,13 +746,6 @@ AddEventHandler('War:Pozivam', function(tim)
 			Wait(500)
 		end
 	end
-	Citizen.CreateThread(function()
-		while UWaru == true do
-			Citizen.Wait(0)
-			SetPedDensityMultiplierThisFrame(0.0)
-			SetScenarioPedDensityMultiplierThisFrame(0.0, 0.0)
-		end
-	end)
 	if tim == 1 then
 		if T1Spawn == 0 then
 			SetEntityCoords(GetPlayerPed(-1), -1057.9150390625, 4944.314453125, 209.8247680664, 1, 0, 0, 1)
@@ -754,7 +768,7 @@ AddEventHandler('War:Pozivam', function(tim)
 		Tim1Igr = Tim1Igr+1
 		Tim1 = true
 		local clothesSkin = {
-				['tshirt_1'] = 16, ['tshirt_2'] = 2,
+				['tshirt_1'] = 0, ['tshirt_2'] = 2,
 				['torso_1'] = 7, ['torso_2'] = 5
 			}
 		ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
@@ -792,7 +806,7 @@ AddEventHandler('War:Pozivam', function(tim)
 		Tim2Igr = Tim2Igr+1
 		Tim2 = true
 		local clothesSkin = {
-				['tshirt_1'] = 16, ['tshirt_2'] = 1,
+				['tshirt_1'] = 0, ['tshirt_2'] = 2,
 				['torso_1'] = 7, ['torso_2'] = 3
 			}
 		ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
@@ -816,8 +830,6 @@ AddEventHandler('War:Pozivam', function(tim)
 		StartajWar = 1
 		PratiPocetak()
 	end
-	TriggerEvent("esx_ambulancejob:PostaviGa", true)
-	TriggerEvent("pullout:PostaviGa", true)
 	Kill = 0
 	Death = 0
 	if TrajeWar == 1 then
@@ -829,8 +841,8 @@ AddEventHandler('War:Pozivam', function(tim)
 		else
 			str = MinutaKr.." minuta"
 		end
-		local str1 = "Tim 1: "..Tim1Score
-		local str2 = "Tim 2: "..Tim2Score
+		local str1 = "Crveni: "..Tim1Score
+		local str2 = "Plavi: "..Tim2Score
 		SendNUIMessage({
 			vrijeme = true,
 			minuta = str,
@@ -848,7 +860,9 @@ AddEventHandler('War:Pozivam', function(tim)
 	TriggerEvent("esx_ambulancejob:PostaviGa", true)
 	TriggerEvent("pullout:PostaviGa", true)
 	TriggerEvent("Muvaj:PostaviGa", true)
+	TriggerEvent("dpemotes:Radim", true)
 	TriggerEvent("esx:ZabraniInv", true)
+	TriggerEvent("glava:NemojGa", true)
 	ESX.ShowNotification("Pozvani ste u war!")
 end)
 
@@ -870,13 +884,6 @@ AddEventHandler('War:Saljem', function(kol, tim)
 			Wait(500)
 		end
 	end
-	Citizen.CreateThread(function()
-		while UWaru == true do
-			Citizen.Wait(0)
-			SetPedDensityMultiplierThisFrame(0.0)
-			SetScenarioPedDensityMultiplierThisFrame(0.0, 0.0)
-		end
-	end)
 	if tim == 1 then
 		if T1Spawn == 0 then
 			SetEntityCoords(GetPlayerPed(-1), -1057.9150390625, 4944.314453125, 209.8247680664, 1, 0, 0, 1)
@@ -899,7 +906,7 @@ AddEventHandler('War:Saljem', function(kol, tim)
 		Tim1Igr = Tim1Igr+1
 		Tim1 = true
 		local clothesSkin = {
-				['tshirt_1'] = 16, ['tshirt_2'] = 2,
+				['tshirt_1'] = 0, ['tshirt_2'] = 2,
 				['torso_1'] = 7, ['torso_2'] = 5
 			}
 		ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
@@ -937,7 +944,7 @@ AddEventHandler('War:Saljem', function(kol, tim)
 		Tim2Igr = Tim2Igr+1
 		Tim2 = true
 		local clothesSkin = {
-				['tshirt_1'] = 16, ['tshirt_2'] = 1,
+				['tshirt_1'] = 0, ['tshirt_2'] = 2,
 				['torso_1'] = 7, ['torso_2'] = 3
 			}
 		ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
@@ -961,10 +968,15 @@ AddEventHandler('War:Saljem', function(kol, tim)
 	TriggerServerEvent("War:SyncTimove", Tim1Igr, Tim2Igr)
 	FreezeEntityPosition(PlayerPedId(), true)
 	PlaceObjectOnGroundProperly(PlayerPedId())
+	ESX.ShowNotification("War ce poceti za 60 sekundi!")
+	ESX.ShowNotification("Ukoliko nemate izjednacen broj igraca u oba tima war ce biti prekinut!")
+	ESX.ShowNotification("Da pozovete clanove svoje mafije u war pisite /warpozovi! Da nekoga izbacite iz wara pisite /warizbaci!")
 	StartajWar = 1
 	TriggerEvent("esx_ambulancejob:PostaviGa", true)
 	TriggerEvent("pullout:PostaviGa", true)
+	TriggerEvent("dpemotes:Radim", true)
 	TriggerEvent("Muvaj:PostaviGa", true)
+	TriggerEvent("glava:NemojGa", true)
 	TriggerEvent("esx:ZabraniInv", true)
 	PratiPocetak()
 end)

@@ -168,7 +168,7 @@ RegisterCommand("npokreni", function(source, args, rawCommandString)
 			local vrijeme = tonumber(args[1])
 			if vrijeme ~= nil then
 				if vrijeme > 0 then
-					local loptee = "p_ld_soc_ball_01"
+					--[[local loptee = "p_ld_soc_ball_01"
 					ESX.Streaming.RequestModel(loptee)
 					NLopta = CreateObject(GetHashKey(loptee), 771.25549316406, -233.44470214844, 65.114479064941,true,true,false)
 					Wait(300)
@@ -178,7 +178,7 @@ RegisterCommand("npokreni", function(source, args, rawCommandString)
 					SetNetworkIdCanMigrate(netid, true)
 					SetNetworkIdExistsOnAllMachines(netid, true)
 					TriggerServerEvent("SpawnLoptu", netid)
-					SetModelAsNoLongerNeeded(GetHashKey(loptee))
+					SetModelAsNoLongerNeeded(GetHashKey(loptee))--]]
 					TriggerServerEvent("nogomet:pokreni", vrijeme*60)
 				else
 					name = "System"..":"
@@ -277,8 +277,9 @@ AddEventHandler('nogomet:VratiTimove', function(t1, t2)
 end)
 
 RegisterNetEvent("nogomet:start")
-AddEventHandler("nogomet:start", function(vr)
+AddEventHandler("nogomet:start", function(vr,nid)
 	if Tim > 0 then
+		NLopta = NetworkGetEntityFromNetworkId(nid)
 		MinutaKr = vr
 		SendNUIMessage({
 			vrijeme = true,
@@ -313,7 +314,6 @@ RegisterNetEvent("EoTiLopta")
 AddEventHandler("EoTiLopta", function(net)
 	if NetworkDoesNetworkIdExist(net) then
 		NLopta = NetToObj(net)
-		print("Uso")
 	end
 end)
 
@@ -370,11 +370,10 @@ Citizen.CreateThread(function()
 					local cor = GetEntityCoords(NLopta)
 					local cora = GetEntityCoords(PlayerPedId())
 					if GetDistanceBetweenCoords(cor, cora, false) <= 1.0 then
-						while not NetworkHasControlOfEntity(NLopta) do 
-							NetworkRequestControlOfEntity(NLopta)
-							Citizen.Wait(0)
-						end
-						print("Uso vamo")
+						--while not NetworkHasControlOfEntity(NLopta) do 
+							--NetworkRequestControlOfEntity(NLopta)
+							--Citizen.Wait(0)
+						--end
 						local cordsa = GetOffsetFromEntityInWorldCoords(PlayerPedId(), 0.0, 22.0 , 0.0)
 						local fcor = cor-cordsa
 						local forceType = forceTypes.MaxForceRot2
@@ -395,10 +394,10 @@ Citizen.CreateThread(function()
 					local cor = GetEntityCoords(NLopta)
 					local cora = GetEntityCoords(PlayerPedId())
 					if GetDistanceBetweenCoords(cor, cora, false) <= 1.0 then
-						while not NetworkHasControlOfEntity(NLopta) do 
-							NetworkRequestControlOfEntity(NLopta)
-							Citizen.Wait(0)
-						end
+						--while not NetworkHasControlOfEntity(NLopta) do 
+							--NetworkRequestControlOfEntity(NLopta)
+							--Citizen.Wait(0)
+						--end
 						local cordsa = GetOffsetFromEntityInWorldCoords(PlayerPedId(), 0.0, 22.0 , 7.0)
 						local fcor = cor-cordsa
 						local forceType = forceTypes.MaxForceRot2

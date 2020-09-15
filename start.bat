@@ -1,1 +1,1 @@
-C:\Users\tonis\Desktop\FXServer\run.cmd +exec server.cfg +set onesync_enabled 1
+C:\Users\tonis\Desktop\FXServer\run.cmd +exec server.cfg +set onesync on +set onesync_population false

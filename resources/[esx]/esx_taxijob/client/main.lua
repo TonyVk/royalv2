@@ -121,7 +121,6 @@ function OpenCloakroom()
 			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
 				TriggerEvent('skinchanger:loadSkin', skin)
 			end)
-			StopTaxiJob()
 		elseif data.current.value == 'recrue_wear' then
 			setUniform(data.current.value, PlayerPedId())
 		end
@@ -224,8 +223,10 @@ function OpenVehicleSpawnerMenu()
 			ESX.Game.SpawnVehicle(data.current.model, Config.Zones.VehicleSpawnPoint.Pos, Config.Zones.VehicleSpawnPoint.Heading, function(vehicle)
 				local playerPed = PlayerPedId()
 				TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
+				SetVehicleCustomPrimaryColour(vehicle, 255,105,180)
+				SetVehicleCustomSecondaryColour(vehicle, 255,105,180)
 			end)
-			ESX.ShowNotification("Da zapocnete sa poslom ili date racun pritisnite F6!")
+			ESX.ShowNotification("Da date nekome racun pritisnite F6!")
 			Wait(500)
 			if OnJob then
 				StopTaxiJob()
@@ -313,7 +314,7 @@ function OpenMobileTaxiActionsMenu()
 			}, function(data, menu)
 
 				local amount = tonumber(data.value)
-				if amount == nil or amount > 1000 then
+				if amount == nil or amount > 5000 then
 					ESX.ShowNotification(_U('amount_invalid'))
 				else
 					menu.close()
@@ -465,6 +466,10 @@ AddEventHandler('esx_taxijob:hasEnteredMarker', function(zone)
 			CurrentActionMsg  = _U('store_veh')
 			CurrentActionData = { vehicle = vehicle }
 		end
+	elseif zone == 'TaxiActions' then
+		CurrentAction     = 'taxi_actions_menu'
+		CurrentActionMsg  = _U('press_to_open')
+		CurrentActionData = {}
 	elseif zone == 'Cloakroom' then
 		CurrentAction     = 'cloakroom'
 		CurrentActionMsg  = _U('cloakroom_prompt')
@@ -555,6 +560,8 @@ Citizen.CreateThread(function()
 			if IsControlJustReleased(0, 38) and ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
 				if CurrentAction == 'cloakroom' then
 					OpenCloakroom()
+				elseif CurrentAction == 'taxi_actions_menu' then
+					OpenTaxiActionsMenu()
 				elseif CurrentAction == 'vehicle_spawner' then
 					OpenVehicleSpawnerMenu()
 				elseif CurrentAction == 'delete_vehicle' then

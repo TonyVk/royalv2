@@ -14,6 +14,7 @@ local FirstSpawn, PlayerLoaded = true, false
 local NemojUmrijet = false
 local NemojOdbrojavat = 0
 local poslao = 0
+local Glava = false
 
 IsDead = false
 ESX = nil
@@ -67,18 +68,20 @@ Citizen.CreateThread(function()
         Citizen.Wait(0)
 		local koord = GetEntityCoords(PlayerPedId())
 		if GetDistanceBetweenCoords(koord, 3097.6840820313, -4800.4282226563, 2.0371627807617, false) > 300 then
-			local retval = HasPedBeenDamagedByWeapon(PlayerPedId(), 0, 1)
-			local retval2 = HasPedBeenDamagedByWeapon(PlayerPedId(), 0, 2)
-			local retval3 = HasPedBeenDamagedByWeapon(PlayerPedId(), GetHashKey("WEAPON_STUNGUN"), 0)
-			local FoundLastDamagedBone, LastDamagedBone = GetPedLastDamageBone(PlayerPedId())
-			if FoundLastDamagedBone and not retval and retval2 and not retval3 then
-				if LastDamagedBone == 31086 and poslao == 0 then
-					TriggerServerEvent('DiscordBot:playerDied', GetPlayerName(PlayerId()) .. ' je dobio metak u glavu')
-					TriggerEvent('chat:addMessage', { args = { '[HITNA]', 'Pogođeni ste u glavu i nije vam bilo spasa!' } })
-					poslao = 1
-					TriggerEvent("esx_hitna:umrisine")
-					Wait(1000)
-					poslao = 0
+			if not Glava then
+				local retval = HasPedBeenDamagedByWeapon(PlayerPedId(), 0, 1)
+				local retval2 = HasPedBeenDamagedByWeapon(PlayerPedId(), 0, 2)
+				local retval3 = HasPedBeenDamagedByWeapon(PlayerPedId(), GetHashKey("WEAPON_STUNGUN"), 0)
+				local FoundLastDamagedBone, LastDamagedBone = GetPedLastDamageBone(PlayerPedId())
+				if FoundLastDamagedBone and not retval and retval2 and not retval3 then
+					if LastDamagedBone == 31086 and poslao == 0 then
+						TriggerServerEvent('DiscordBot:playerDied', GetPlayerName(PlayerId()) .. ' je dobio metak u glavu')
+						TriggerEvent('chat:addMessage', { args = { '[HITNA]', 'Pogođeni ste u glavu i nije vam bilo spasa!' } })
+						poslao = 1
+						TriggerEvent("esx_hitna:umrisine")
+						Wait(1000)
+						poslao = 0
+					end
 				end
 			end
 		end
@@ -93,6 +96,11 @@ function GetKeyOfValue(Table, SearchedFor)
     end
     return nil
 end
+
+RegisterNetEvent('glava:NemojGa')
+AddEventHandler('glava:NemojGa', function(br)
+	Glava = br
+end)
 
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)

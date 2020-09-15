@@ -676,3 +676,8 @@ data_file 'HANDLING_FILE' 'data/gtbs/handling.meta'
 data_file 'VEHICLE_METADATA_FILE' 'data/gtbs/vehicles.meta'
 data_file 'CARCOLS_FILE' 'data/gtbs/carcols.meta'
 data_file 'VEHICLE_VARIATION_FILE' 'data/gtbs/carvariations.meta'
+
+data_file 'HANDLING_FILE' 'data/q820/handling.meta'
+data_file 'VEHICLE_METADATA_FILE' 'data/q820/vehicles.meta'
+data_file 'CARCOLS_FILE' 'data/q820/carcols.meta'
+data_file 'VEHICLE_VARIATION_FILE' 'data/q820/carvariations.meta'

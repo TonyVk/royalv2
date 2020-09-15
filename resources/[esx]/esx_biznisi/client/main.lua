@@ -394,9 +394,7 @@ function OpenBiznisMenu(ime)
 				head = { "Ime radnika", "Broj odradjenih tura" },
 				rows = {}
 			}
-			print(#radnici)
 			for i=1, #radnici, 1 do
-				print(radnici[i].Ime)
 				if radnici[i].Posao == Posao then
 					table.insert(elements.rows, {
 						data = radnici[i],

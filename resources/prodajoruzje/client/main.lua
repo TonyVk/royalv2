@@ -889,28 +889,32 @@ end)
 
 RegisterNetEvent("prodajoruzje:PosaljiRadio")
 AddEventHandler('prodajoruzje:PosaljiRadio', function(odg, ime, posao)
-	if ESX.PlayerData.job.name == posao then
-		if ESX.PlayerData.job.name == "police" then
-			TriggerEvent('chat:addMessage', {
-						template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(0, 51, 204, 0.6); border-radius: 3px;"><i class="fas fa-info-circle"></i>[Policija] {0}:<br> {1}</div>',
-						args = { ime, odg }
-			})
-		else
-			TriggerEvent('chat:addMessage', {
-						template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(0, 51, 204, 0.6); border-radius: 3px;"><i class="fas fa-info-circle"></i>[Novinari] {0}:<br> {1}</div>',
-						args = { ime, odg }
-			})
+	if ESX.PlayerData.job ~= nil then
+		if ESX.PlayerData.job.name == posao then
+			if ESX.PlayerData.job.name == "police" then
+				TriggerEvent('chat:addMessage', {
+							template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(0, 51, 204, 0.6); border-radius: 3px;"><i class="fas fa-info-circle"></i>[Policija] {0}:<br> {1}</div>',
+							args = { ime, odg }
+				})
+			else
+				TriggerEvent('chat:addMessage', {
+							template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(0, 51, 204, 0.6); border-radius: 3px;"><i class="fas fa-info-circle"></i>[Novinari] {0}:<br> {1}</div>',
+							args = { ime, odg }
+				})
+			end
 		end
 	end
 end)
 
 RegisterNetEvent("prodajoruzje:PosaljiMafia")
 AddEventHandler('prodajoruzje:PosaljiMafia', function(odg, ime, posao)
-	if ESX.PlayerData.job.name == posao then
-		TriggerEvent('chat:addMessage', {
-					template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(255, 204, 0, 0.6); border-radius: 3px;"><i class="fas fa-info-circle"></i>[F CHAT] {0}:<br> {1}</div>',
-					args = { ime, odg }
-		})
+	if ESX.PlayerData.job ~= nil then
+		if ESX.PlayerData.job.name == posao then
+			TriggerEvent('chat:addMessage', {
+						template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(255, 204, 0, 0.6); border-radius: 3px;"><i class="fas fa-info-circle"></i>[F CHAT] {0}:<br> {1}</div>',
+						args = { ime, odg }
+			})
+		end
 	end
 end)
 

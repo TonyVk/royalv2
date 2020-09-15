@@ -35,6 +35,13 @@ Config.Zones = {
 		Type    = -1, Rotate = false,
 		Heading = 225.0
 	},
+	
+	TaxiActions = {
+		Pos   = {x = 903.32, y = -170.55, z = 74.0},
+		Size  = {x = 1.0, y = 1.0, z = 1.0},
+		Color = {r = 204, g = 204, b = 0},
+		Type  = 20, Rotate = true
+	},
 
 	VehicleDeleter = {
 		Pos   = {x = 908.317, y = -183.070, z = 73.201},
