@@ -36,7 +36,7 @@ local Tim1Score = 0
 local Tim2Score = 0
 local Poslao1 = 0
 local Poslao2 = 0
-local Minute = 10
+local Minute = 0
 local PrviSpawn = false
 
 ESX                             = nil
@@ -410,6 +410,11 @@ AddEventHandler('War:VratiTraje', function(br)
 	TrajeWar = br
 end)
 
+RegisterNetEvent("War:VratiVrijeme")
+AddEventHandler('War:VratiVrijeme', function(br)
+	Minute = br
+end)
+
 RegisterNetEvent("War:VratiPoslao")
 AddEventHandler('War:VratiPoslao', function(tip, br)
 	if tip == 1 then
@@ -528,8 +533,10 @@ RegisterCommand("pokreniwar", function(source, args, rawCommandString)
 						if br == 1 then
 							if broj ~= nil and tonumber(broj) > 0 then
 								if vrijeme ~= nil and tonumber(vrijeme) > 0 then
-								local Sekundice = 10
+								local Sekundice = 60
 								TriggerServerEvent("War:SyncajVrijeme", Sekundice)
+								Minute = tonumber(vrijeme)
+								TriggerServerEvent("War:SyncVrijeme", Minute)
 								ESX.ShowNotification("Pokrenuli ste war!")
 								PoceoWar = 1
 								T1Spawn = 0
@@ -616,10 +623,10 @@ function PratiPocetak()
 				AhaGo = 1
 				Minuta = -1
 				FreezeEntityPosition(PlayerPedId(), false)
-				if Tim1Igr ~= Tim2Igr then
-					TriggerEvent("War:Zavrsi", 1)
-					ESX.ShowNotification("War nije poceo zato sto nije bio isti broj igraca u timovima!")
-				else
+				--if Tim1Igr ~= Tim2Igr then
+					--TriggerEvent("War:Zavrsi", 1)
+					--ESX.ShowNotification("War nije poceo zato sto nije bio isti broj igraca u timovima!")
+				--else
 					TrajeWar = 1
 					TriggerServerEvent("War:SyncajTraje", TrajeWar)
 					TriggerServerEvent("War:SyncajKraj", Minute)
@@ -647,7 +654,7 @@ function PratiPocetak()
 						death = Death
 					})
 					TriggerServerEvent("War:DajOruzja")
-				end
+				--end
 			end
 		end
 	end)
@@ -969,7 +976,6 @@ AddEventHandler('War:Saljem', function(kol, tim)
 	FreezeEntityPosition(PlayerPedId(), true)
 	PlaceObjectOnGroundProperly(PlayerPedId())
 	ESX.ShowNotification("War ce poceti za 60 sekundi!")
-	ESX.ShowNotification("Ukoliko nemate izjednacen broj igraca u oba tima war ce biti prekinut!")
 	ESX.ShowNotification("Da pozovete clanove svoje mafije u war pisite /warpozovi! Da nekoga izbacite iz wara pisite /warizbaci!")
 	StartajWar = 1
 	TriggerEvent("esx_ambulancejob:PostaviGa", true)

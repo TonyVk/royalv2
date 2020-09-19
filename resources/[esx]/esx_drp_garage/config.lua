@@ -231,4 +231,33 @@ Config.Garages = {
 			Marker = 1
 		}
 	},
+	Garage_Marina = {	
+		Pos = {x=-857.86236572266, y = -1328.017578125, z = 0.30489677190781},
+		Size  = {x = 3.0, y = 3.0, z = 1.0},
+		Color = {r = 204, g = 204, b = 0},
+		Marker = 1,
+		PrikaziBlip = 1,
+		Brod = true,
+		Ime = "Marina",
+		SpawnMarker = {
+			Pos = {x=-860.48217773438, y = -1323.0462646484, z = 0.6051669120789},
+			Color = {r=0,g=255,b=0},
+			Size  = {x = 3.0, y = 3.0, z = 1.0},
+			Marker = 1
+		},
+		SpawnPoint = {
+			Pos = {x=-857.86236572266, y = -1328.017578125, z = 0.31225422024727},
+			Color = {r=0,g=255,b=0},
+			Heading = 109.53,
+			Size  = {x = 3.0, y = 3.0, z = 1.0},
+			Marker = 1
+		},
+		DeletePoint = {
+			Pos = {x=-854.32318115234, y = -1336.2690429688, z = 0.31225422024727},
+			Color = {r=255,g=0,b=0},
+			Size  = {x = 3.0, y = 3.0, z = 1.0},
+			Marker = 1
+		},
+		Vracanje = vector3(-855.33941650391, -1331.8586425781, 1.5952188968658)
+	},
 }

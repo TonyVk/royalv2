@@ -285,6 +285,24 @@ ESX.RegisterServerCallback('autosalon:sealion', function(source, cb, model, plat
 		else
 			cb(false)
 		end
+	elseif mjenjac == 3 then
+		if modelPrice and xPlayer.getMoney() >= modelPrice then
+			xPlayer.removeMoney(modelPrice)
+			MySQL.Async.execute('INSERT INTO owned_vehicles (owner, plate, vehicle, mjenjac, brod) VALUES (@owner, @plate, @vehicle, @mj, @br)', {
+				['@owner']   = xPlayer.identifier,
+				['@plate']   = plate,
+				['@vehicle'] = json.encode(vd),
+				['@mj'] = 1,
+				['@br'] = 1
+			}, function(rowsChanged)
+				TriggerClientEvent('esx:showNotification', _source, _U('vehicle_belongs', plate))
+				TriggerEvent("DiscordBot:Vozila", GetPlayerName(_source).." je kupio "..modelName.."(brod)["..plate.."] u salonu za $"..modelPrice)
+				TriggerClientEvent("EoTiIzSalona", _source, 1)
+				cb(true)
+			end)
+		else
+			cb(false)
+		end
 	end
 end)
 

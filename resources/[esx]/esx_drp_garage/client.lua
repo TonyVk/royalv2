@@ -163,19 +163,35 @@ function ListVehiclesMenu()
 	ESX.TriggerServerCallback('eden_garage:getVehicles', function(vehicles)
 
  	for _,v in pairs(vehicles) do
-
-        	local hashVehicule = v.vehicle.model
-        	local vehicleName = GetDisplayNameFromVehicleModel(hashVehicule)
-        	local labelvehicle
-        	if v.state == 1 then
-				labelvehicle = vehicleName..' <font color="green">U garazi</font>'
-        	elseif v.state == 2 then
-				labelvehicle = vehicleName..' <font color="red">Ukradeno</font>'
-			elseif v.state == 0 then
-				labelvehicle = vehicleName..' <font color="red">Izvan garaze</font>'
-        	end    
-        	table.insert(elements, {label =labelvehicle , value = v})
-        
+		if this_Garage.Brod == nil then
+			if v.brod == 0 then
+				local hashVehicule = v.vehicle.model
+				local vehicleName = GetDisplayNameFromVehicleModel(hashVehicule)
+				local labelvehicle
+				if v.state == 1 then
+					labelvehicle = vehicleName..' <font color="green">U garazi</font>'
+				elseif v.state == 2 then
+					labelvehicle = vehicleName..' <font color="red">Ukradeno</font>'
+				elseif v.state == 0 then
+					labelvehicle = vehicleName..' <font color="red">Izvan garaze</font>'
+				end    
+				table.insert(elements, {label =labelvehicle , value = v})
+			end
+        else
+			if v.brod == 1 then
+				local hashVehicule = v.vehicle.model
+				local vehicleName = GetDisplayNameFromVehicleModel(hashVehicule)
+				local labelvehicle
+				if v.state == 1 then
+					labelvehicle = vehicleName..' <font color="green">U garazi</font>'
+				elseif v.state == 2 then
+					labelvehicle = vehicleName..' <font color="red">Ukradeno</font>'
+				elseif v.state == 0 then
+					labelvehicle = vehicleName..' <font color="red">Izvan garaze</font>'
+				end    
+				table.insert(elements, {label =labelvehicle , value = v})
+			end
+		end
    	 end
 
 		ESX.UI.Menu.Open(
@@ -309,6 +325,9 @@ AddEventHandler('eden_garage:deletevehicle_cl', function(plate)
 				if (DoesEntityExist(entity)) then 
 					DeleteEntity(entity)
 				end 
+			end
+			if this_Garage.Brod ~= nil then
+				SetEntityCoords(PlayerPedId(), this_Garage.Vracanje)
 			end
 		end
 	end
@@ -560,7 +579,11 @@ Citizen.CreateThread(function()
 			if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
 				waitara = 0
 				nasosta = 1
-				DrawMarker(v.SpawnPoint.Marker, v.SpawnPoint.Pos.x, v.SpawnPoint.Pos.y, v.SpawnPoint.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.SpawnPoint.Size.x, v.SpawnPoint.Size.y, v.SpawnPoint.Size.z, v.SpawnPoint.Color.r, v.SpawnPoint.Color.g, v.SpawnPoint.Color.b, 100, false, true, 2, false, false, false, false)	
+				if v.Brod == nil then
+					DrawMarker(v.SpawnPoint.Marker, v.SpawnPoint.Pos.x, v.SpawnPoint.Pos.y, v.SpawnPoint.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.SpawnPoint.Size.x, v.SpawnPoint.Size.y, v.SpawnPoint.Size.z, v.SpawnPoint.Color.r, v.SpawnPoint.Color.g, v.SpawnPoint.Color.b, 100, false, true, 2, false, false, false, false)	
+				else
+					DrawMarker(v.SpawnMarker.Marker, v.SpawnMarker.Pos.x, v.SpawnMarker.Pos.y, v.SpawnMarker.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.SpawnMarker.Size.x, v.SpawnMarker.Size.y, v.SpawnMarker.Size.z, v.SpawnMarker.Color.r, v.SpawnMarker.Color.g, v.SpawnMarker.Color.b, 100, false, true, 2, false, false, false, false)
+				end
 				DrawMarker(v.DeletePoint.Marker, v.DeletePoint.Pos.x, v.DeletePoint.Pos.y, v.DeletePoint.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.DeletePoint.Size.x, v.DeletePoint.Size.y, v.DeletePoint.Size.z, v.DeletePoint.Color.r, v.DeletePoint.Color.g, v.DeletePoint.Color.b, 100, false, true, 2, false, false, false, false)	
 			end
 			if v.MunicipalPoundPoint ~= nil then
@@ -576,10 +599,18 @@ Citizen.CreateThread(function()
 		local isInMarker  = false
 
 		for _,v in pairs(Config.Garages) do
-			if(GetDistanceBetweenCoords(coords, v.SpawnPoint.Pos.x, v.SpawnPoint.Pos.y, v.SpawnPoint.Pos.z, true) < v.Size.x) then
-				isInMarker  = true
-				this_Garage = v
-				currentZone = 'spawn'
+			if v.Brod == nil then
+				if(GetDistanceBetweenCoords(coords, v.SpawnPoint.Pos.x, v.SpawnPoint.Pos.y, v.SpawnPoint.Pos.z, true) < v.Size.x) then
+					isInMarker  = true
+					this_Garage = v
+					currentZone = 'spawn'
+				end
+			else
+				if(GetDistanceBetweenCoords(coords, v.SpawnMarker.Pos.x, v.SpawnMarker.Pos.y, v.SpawnMarker.Pos.z, true) < v.Size.x) then
+					isInMarker  = true
+					this_Garage = v
+					currentZone = 'spawn'
+				end
 			end
 
 			if(GetDistanceBetweenCoords(coords, v.DeletePoint.Pos.x, v.DeletePoint.Pos.y, v.DeletePoint.Pos.z, true) < v.Size.x) then

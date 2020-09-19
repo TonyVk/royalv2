@@ -39,7 +39,7 @@ ESX.RegisterServerCallback('War:DohvatiLidera', function(source, cb, id, id2)
 	})
 	local result4 = MySQL.Sync.fetchAll('SELECT name FROM job_grades WHERE grade = @gra AND job_name = @jname', {
 		['@gra'] = result2[1].job_grade,
-		['@jname'] = result[1].job
+		['@jname'] = result2[1].job
 	})
 	if (result3[1].name == 'boss' or result3[1].name == 'vlasnik') and (result4[1].name == 'boss' or result4[1].name == 'vlasnik') then
 		cb(1)
@@ -270,6 +270,11 @@ end)
 RegisterNetEvent("War:SyncTimove")
 AddEventHandler('War:SyncTimove', function(t1, t2)
 	TriggerClientEvent('War:VratiTimove', -1, t1, t2)
+end)
+
+RegisterNetEvent("War:SyncVrijeme")
+AddEventHandler('War:SyncVrijeme', function(mi)
+	TriggerClientEvent('War:VratiVrijeme', -1, mi)
 end)
 
 RegisterNetEvent("War:SyncajVrijeme")
