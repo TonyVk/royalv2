@@ -877,7 +877,7 @@ function OpenShopMenu()
 			return a.name < b.name
 		end)
 	end
-
+	local NasoGa = false
 	for i=1, #Categories, 1 do
 		if not Brod then
 			if Categories[i].brod == 0 then
@@ -917,12 +917,12 @@ function OpenShopMenu()
 				local category         = Categories[i]
 				local categoryVehicles = vehiclesByCategory[category.name]
 				local options          = {}
-				local NasoGa = false
 				for j=1, #categoryVehicles, 1 do
 					local vehicle = categoryVehicles[j]
-					if j == 1 and not NasoGa then
+					if not NasoGa then
 						firstVehicleData = vehicle
 						NasoGa = true
+						break
 					end
 
 					table.insert(options, ('%s <span style="color:green;">%s</span>'):format(vehicle.name, _U('generic_shopitem', ESX.Math.GroupDigits(vehicle.price))))
