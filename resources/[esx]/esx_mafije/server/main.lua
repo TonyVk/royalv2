@@ -872,15 +872,17 @@ AddEventHandler('mafije:zapljeni6', function(target, itemType, itemName, amount)
 
     local label = sourceXPlayer.getInventoryItem(itemName).label
 	local xItem = sourceXPlayer.getInventoryItem(itemName)
-	
+	 
 	if xItem.limit ~= -1 and (xItem.count + amount) > xItem.limit then
 		TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Ne stane vam vise "..label.." u inventory!")
 	else
-		targetXPlayer.removeInventoryItem(itemName, amount)
-		sourceXPlayer.addInventoryItem(itemName, amount)
+		if targetXPlayer ~= nil then
+			targetXPlayer.removeInventoryItem(itemName, amount)
+			sourceXPlayer.addInventoryItem(itemName, amount)
 
-		TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x" .. amount .. ' ' .. label .."~s~ od ~b~" .. targetXPlayer.name)
-		TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x" .. amount .. ' ' .. label )
+			TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x" .. amount .. ' ' .. label .."~s~ od ~b~" .. targetXPlayer.name)
+			TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x" .. amount .. ' ' .. label )
+		end
 	end
 	
   end

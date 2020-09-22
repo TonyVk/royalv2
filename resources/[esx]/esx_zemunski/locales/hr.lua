@@ -116,7 +116,7 @@ Locales['hr'] = {
   ['police_stock'] = 'Police Stock',
   -- Misc
   ['remove_object'] = 'pritisnite ~INPUT_CONTEXT~ da obrisete objekt',
-  ['map_blip'] = 'Zemunski klan',
+  ['map_blip'] = 'Automafija',
   -- Notifications
   ['from'] = '~s~ od ~b~',
   ['you_have_confinv'] = 'oduzeli ste ~y~x',

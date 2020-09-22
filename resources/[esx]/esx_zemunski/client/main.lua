@@ -1684,27 +1684,6 @@ AddEventHandler('esx_zemunski:OutVehicle', function(t)
   SetEntityCoords(GetPlayerPed(-1), xnew, ynew, plyPos.z)
 end)
 
--- Create blips
-Citizen.CreateThread(function()
-
-  for k,v in pairs(Config.ZemunskiStations) do
-
-    local blip = AddBlipForCoord(v.Blip.Pos.x, v.Blip.Pos.y, v.Blip.Pos.z)
-
-    SetBlipSprite (blip, v.Blip.Sprite)
-    SetBlipDisplay(blip, v.Blip.Display)
-    SetBlipScale  (blip, v.Blip.Scale)
-    SetBlipColour (blip, v.Blip.Colour)
-    SetBlipAsShortRange(blip, true)
-
-    BeginTextCommandSetBlipName("STRING")
-    AddTextComponentString(_U('map_blip'))
-    EndTextCommandSetBlipName(blip)
-
-  end
-
-end)
-
 -- Display markers
 Citizen.CreateThread(function()
   while true do

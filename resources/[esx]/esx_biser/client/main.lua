@@ -34,7 +34,7 @@ AddEventHandler('esx_biser:hasEnteredMarker', function(zone)
 
 	ESX.UI.Menu.CloseAll()
 	
-	if zone == 'Biser' then
+	if zone == 'BiserSkupljanje' then
 		CurrentAction     = zone
 		CurrentActionMsg  = _U('carrega_para_apanhares_frutos')
 		CurrentActionData = {}
@@ -44,7 +44,7 @@ AddEventHandler('esx_biser:hasEnteredMarker', function(zone)
 			CurrentActionMsg  = _U('carrega_para_colocares_frutos_dentro_dos_sacos')
 			CurrentActionData = {}
 		end
-	elseif zone == 'BiserSkupljanje' then
+	elseif zone == 'Biser' then
 		if koda_poochQTE >= 1 then
 			CurrentAction     = zone
 			CurrentActionMsg  = _U('carrega_para_venderes_os_sacos')
@@ -57,11 +57,11 @@ AddEventHandler('esx_biser:hasExitedMarker', function(zone)
 	CurrentAction = nil
 	ESX.UI.Menu.CloseAll()
 
-	if zone == 'Biser' then
+	if zone == 'BiserSkupljanje' then
 		TriggerServerEvent('esx_biser:stopHarvestKoda')
 	elseif zone == 'Prerada' then
 	TriggerServerEvent('esx_biser:stopTransformKoda')
-	elseif zone == 'BiserSkupljanje' then
+	elseif zone == 'Biser' then
 		TriggerServerEvent('esx_biser:stopSellKoda')
 	end
 end)
@@ -147,9 +147,9 @@ Citizen.CreateThread(function()
 
 			if IsControlJustReleased(0, Keys['E']) and IsPedOnFoot(PlayerPedId()) then
 				local coords = GetEntityCoords(PlayerPedId())
-				if CurrentAction == 'Biser' then
+				if CurrentAction == 'BiserSkupljanje' then
 					for k,v in pairs(Config.Zones) do
-						if k == "Biser" then
+						if k == "BiserSkupljanje" then
 							if(GetDistanceBetweenCoords(coords, v.x, v.y, v.z, true) < Config.ZoneSize.x / 2) then
 								TriggerServerEvent('esx_biser:startHarvestKoda')
 							else
@@ -160,9 +160,9 @@ Citizen.CreateThread(function()
 					end
 				elseif CurrentAction == 'Prerada' then
 					TriggerServerEvent('esx_biser:startTransformKoda')
-				elseif CurrentAction == 'BiserSkupljanje' then
+				elseif CurrentAction == 'Biser' then
 					for k,v in pairs(Config.Zones) do
-						if k == "BiserSkupljanje" then
+						if k == "Biser" then
 							if(GetDistanceBetweenCoords(coords, v.x, v.y, v.z, true) < Config.ZoneSize.x / 2) then
 								TriggerServerEvent('esx_biser:startSellKoda')
 							else
