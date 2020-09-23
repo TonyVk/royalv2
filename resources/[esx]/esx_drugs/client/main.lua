@@ -15,10 +15,9 @@ local menuOpen = false
 local wasOpen = false
 local spawnedWeeds = 0
 local weedPlants = {}
+local Travica = {}
 local isPickingUp, isProcessing = false, false
-local br = 1
-local blip = {}
-local Mafije = {}
+local Sadnice = {}
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -29,37 +28,11 @@ Citizen.CreateThread(function()
 	while ESX.GetPlayerData().job == nil do
 		Citizen.Wait(100)
 	end
-	ESX.TriggerServerCallback('mafije:DohvatiMafijev2', function(mafija)
-		Mafije = mafija
-	end)
 	ProvjeriPosao()
 end)
 
 function ProvjeriPosao()
 	ESX.PlayerData = ESX.GetPlayerData()
-	local naso = 0
-	for i=1, #Mafije, 1 do
-		if Mafije[i] ~= nil and Mafije[i].Ime == ESX.PlayerData.job.name then
-			naso = 1
-			break
-		end
-	end
-	if naso == 1 or ESX.PlayerData.job.name == "ballas" then
-		local i = 1
-		for k,zone in pairs(Config.CircleZones) do
-			if not DoesBlipExist(blip[i]) then
-				CreateBlipCircle(zone.coords, zone.name, zone.radius, zone.color, zone.sprite)
-			end
-			i = i+2
-		end
-	else
-		for i=1, br, 1 do
-			if DoesBlipExist(blip[i]) then
-				RemoveBlip(blip[i])
-			end
-		end
-		br = 1
-	end
 end
 
 RegisterNetEvent('esx:playerLoaded')
@@ -70,29 +43,6 @@ end)
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
 	ESX.PlayerData.job = job
-	local naso = 0
-	for i=1, #Mafije, 1 do
-		if Mafije[i] ~= nil and Mafije[i].Ime == ESX.PlayerData.job.name then
-			naso = 1
-			break
-		end
-	end
-	if naso == 1 or ESX.PlayerData.job.name == "ballas" then
-		local i = 1
-		for k,zone in pairs(Config.CircleZones) do
-			if not DoesBlipExist(blip[i]) then
-				CreateBlipCircle(zone.coords, zone.name, zone.radius, zone.color, zone.sprite)
-			end
-			i = i+2
-		end
-	else
-		for i=1, br, 1 do
-			if DoesBlipExist(blip[i]) then
-				RemoveBlip(blip[i])
-			end
-		end
-		br = 1
-	end
 end)
 
 local connected = false
@@ -102,42 +52,9 @@ AddEventHandler("playerSpawned", function()
 		while ESX.PlayerData.job == nil do
 			Citizen.Wait(100)
 		end
-		ESX.TriggerServerCallback('mafije:DohvatiMafijev2', function(mafija)
-			Mafije = mafija
-		end)
-		Wait(500)
-		local naso = 0
-		for i=1, #Mafije, 1 do
-			if Mafije[i] ~= nil and Mafije[i].Ime == ESX.PlayerData.job.name then
-				naso = 1
-				break
-			end
-		end
-		if naso == 1 or ESX.PlayerData.job.name == "ballas" then
-			print("tri")
-			local i = 1
-			for k,zone in pairs(Config.CircleZones) do
-				if not DoesBlipExist(blip[i]) then
-					CreateBlipCircle(zone.coords, zone.name, zone.radius, zone.color, zone.sprite)
-					print("cetri")
-				end
-				i = i+2
-			end
-		else
-			for i=1, br, 1 do
-				if DoesBlipExist(blip[i]) then
-					RemoveBlip(blip[i])
-				end
-			end
-			br = 1
-		end
+		TriggerServerEvent("trava:ProvjeriSadnice")
 		connected = true
 	end
-end)
-
-RegisterNetEvent('mafije:UpdateMafije')
-AddEventHandler('mafije:UpdateMafije', function(maf)
-	Mafije = maf
 end)
 
 Citizen.CreateThread(function()
@@ -151,20 +68,11 @@ Citizen.CreateThread(function()
 
 		if GetDistanceBetweenCoords(coords, Config.CircleZones.DrugDealer.coords, true) < 0.5 then
 			if not menuOpen then
-				local naso = 0
-				for i=1, #Mafije, 1 do
-					if Mafije[i] ~= nil and Mafije[i].Ime == ESX.PlayerData.job.name then
-						naso = 1
-						break
-					end
-				end
-				if naso == 1 or ESX.PlayerData.job.name == "ballas" then
-					ESX.ShowHelpNotification(_U('dealer_prompt'))
+				ESX.ShowHelpNotification(_U('dealer_prompt'))
 
-					if IsControlJustReleased(0, Keys['E']) then
-						wasOpen = true
-						OpenDrugShop()
-					end
+				if IsControlJustReleased(0, Keys['E']) then
+					wasOpen = true
+					OpenDrugShop()
 				end
 			else
 				Citizen.Wait(500)
@@ -232,9 +140,6 @@ AddEventHandler('onResourceStop', function(resource)
 		if menuOpen then
 			ESX.UI.Menu.CloseAll()
 		end
-		for k, v in pairs(weedPlants) do
-			ESX.Game.DeleteObject(v)
-		end
 	end
 end)
 
@@ -281,26 +186,55 @@ function OpenBuyLicenseMenu(licenseName)
 end
 
 RegisterCommand("posadi", function(source, args, rawCommandString)
-	local naso = 0
-	for i=1, #Mafije, 1 do
-		if Mafije[i] ~= nil and Mafije[i].Ime == ESX.PlayerData.job.name then
-			naso = 1
-			break
-		end
-	end
-	if naso == 1 or ESX.PlayerData.job.name == "ballas" then
-		for k, v in pairs(ESX.GetPlayerData().inventory) do
-			if v.name == "seed" then
-				if v.count > 0 then
-					local coords = GetEntityCoords(PlayerPedId())
-					if GetDistanceBetweenCoords(coords, Config.CircleZones.WeedField.coords, true) < 50 then
-						SpawnWeedPlants()
+	TriggerServerEvent("trava:Posadi")
+end, false)
+
+RegisterNetEvent("trava:EoTiNetID")
+AddEventHandler('trava:EoTiNetID', function(netid)
+	table.insert(Sadnice, {NetID = netid, Stanje = 1})
+	local ObjID = NetworkGetEntityFromNetworkId(netid)
+	table.insert(Travica, {NetID = netid, Objekt = ObjID})
+end)
+
+RegisterNetEvent("trava:PromjeniNetID")
+AddEventHandler('trava:PromjeniNetID', function(oldnet, newnet, stanje)
+	for i=1, #Sadnice, 1 do
+		if Sadnice[i] ~= nil then
+			if Sadnice[i].NetID == oldnet then
+				local ObjID = NetworkGetEntityFromNetworkId(newnet)
+				Sadnice[i].NetID = newnet
+				for i=1, #Travica, 1 do
+					if Travica[i] ~= nil then
+						if Travica[i].NetID == oldnet then
+							Travica[i].NetID = newnet
+							Travica[i].Objekt = ObjID
+							break
+						end
 					end
 				end
+				if stanje == 3 then
+					table.insert(weedPlants, ObjID)
+				end
+				break
 			end
 		end
 	end
-end, false)
+end)
+
+RegisterNetEvent("trava:PratiRast")
+AddEventHandler('trava:PratiRast', function(netid, stanje)
+	local ObjID = NetworkGetEntityFromNetworkId(netid)
+	if stanje == 3 then
+		table.insert(weedPlants, ObjID)
+	else
+		Citizen.CreateThread(function()
+			local Idic = netid
+			local stanjic = stanje
+			Wait(30000)
+			TriggerServerEvent("trava:Izrasti", Idic, stanjic+1)
+		end)
+	end
+end)
 
 RegisterNetEvent("esx_drugs:Animacija")
 AddEventHandler('esx_drugs:Animacija', function()
@@ -317,6 +251,9 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
+		while ESX.PlayerData.job == nil do
+			Citizen.Wait(100)
+		end
 		local playerPed = PlayerPedId()
 		local coords = GetEntityCoords(playerPed)
 
@@ -371,47 +308,113 @@ end
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
+		while ESX.PlayerData.job == nil do
+			Citizen.Wait(100)
+		end
 		local playerPed = PlayerPedId()
 		local coords = GetEntityCoords(playerPed)
 		local nearbyObject, nearbyID
+		local Travara = false
 
 		for i=1, #weedPlants, 1 do
 			if GetDistanceBetweenCoords(coords, GetEntityCoords(weedPlants[i]), false) < 1 then
 				nearbyObject, nearbyID = weedPlants[i], i
 			end
 		end
+		
+		if ESX.PlayerData.job.name == "police" or ESX.PlayerData.job.name == "sipa" then
+			for i=1, #Travica, 1 do
+				if GetDistanceBetweenCoords(coords, GetEntityCoords(Travica[i].Objekt), false) < 1 then
+					nearbyObject, nearbyID = Travica[i].Objekt, i
+					Travara = true
+				end
+			end
+		end
 
 		if nearbyObject and IsPedOnFoot(playerPed) then
-
+			local netid = NetworkGetNetworkIdFromEntity(nearbyObject)
 			if not isPickingUp then
-				ESX.ShowHelpNotification(_U('weed_pickupprompt'))
+				if ESX.PlayerData.job.name == "police" or ESX.PlayerData.job.name == "sipa" then
+					ESX.ShowHelpNotification('Pritisnite ~INPUT_CONTEXT~ da zapljenite stabljiku ~g~kanabisa~s~.')
+				else
+					ESX.ShowHelpNotification(_U('weed_pickupprompt'))
+				end
 			end
 
 			if IsControlJustReleased(0, Keys['E']) and not isPickingUp then
 				isPickingUp = true
+				if ESX.PlayerData.job.name == "police" or ESX.PlayerData.job.name == "sipa" then
+					TaskStartScenarioInPlace(playerPed, 'world_human_gardener_plant', 0, false)
 
-				ESX.TriggerServerCallback('esx_drugs:canPickUp', function(canPickUp)
-
-					if canPickUp then
-						TaskStartScenarioInPlace(playerPed, 'world_human_gardener_plant', 0, false)
-
-						Citizen.Wait(2000)
-						ClearPedTasks(playerPed)
-						Citizen.Wait(1500)
-		
-						ESX.Game.DeleteObject(nearbyObject)
-		
+					Citizen.Wait(2000)
+					ClearPedTasks(playerPed)
+					Citizen.Wait(1500)
+			
+					if Travara == false then
 						table.remove(weedPlants, nearbyID)
-						spawnedWeeds = spawnedWeeds - 1
-		
-						TriggerServerEvent('esx_drugs:EoTiKanabisa')
-					else
-						ESX.ShowNotification(_U('weed_inventoryfull'))
 					end
-
+					spawnedWeeds = spawnedWeeds - 1
+							
+					for i=1, #Travica, 1 do
+						if Travica[i] ~= nil then
+							if Travica[i].NetID == netid then
+								table.remove(Travica, i)
+								break
+							end
+						end
+					end
+					for a=1, #Sadnice, 1 do
+						if Sadnice[a] ~= nil then
+							if Sadnice[a].NetID == netid then
+								TriggerServerEvent("trava:ObrisiSadnicu", netid)
+								table.remove(Sadnice, a)
+								break
+							end
+						end
+					end
 					isPickingUp = false
+				else
+					ESX.TriggerServerCallback('esx_drugs:canPickUp', function(canPickUp)
 
-				end, 'cannabis')
+						if canPickUp then
+							TaskStartScenarioInPlace(playerPed, 'world_human_gardener_plant', 0, false)
+
+							Citizen.Wait(2000)
+							ClearPedTasks(playerPed)
+							Citizen.Wait(1500)
+			
+							--ESX.Game.DeleteObject(nearbyObject)
+			
+							table.remove(weedPlants, nearbyID)
+							spawnedWeeds = spawnedWeeds - 1
+			
+							TriggerServerEvent('esx_drugs:EoTiKanabisa')
+							
+							for i=1, #Travica, 1 do
+								if Travica[i] ~= nil then
+									if Travica[i].NetID == netid then
+										table.remove(Travica, i)
+										break
+									end
+								end
+							end
+							for a=1, #Sadnice, 1 do
+								if Sadnice[a] ~= nil then
+									if Sadnice[a].NetID == netid then
+										TriggerServerEvent("trava:ObrisiSadnicu", netid)
+										table.remove(Sadnice, a)
+										break
+									end
+								end
+							end
+						else
+							ESX.ShowNotification(_U('weed_inventoryfull'))
+						end
+
+						isPickingUp = false
+
+					end, 'cannabis')
+				end
 			end
 
 		else
@@ -501,28 +504,4 @@ function GetCoordZ(x, y)
 	end
 
 	return 43.0
-end
-
-function CreateBlipCircle(coords, text, radius, color, sprite)
-	blip[br] = AddBlipForRadius(coords, radius)
-
-	SetBlipHighDetail(blip[br], true)
-	SetBlipColour(blip[br], 1)
-	SetBlipAlpha (blip[br], 128)
-	
-	br = br+1
-
-	-- create a blip in the middle
-	blip[br] = AddBlipForCoord(coords)
-
-	SetBlipHighDetail(blip[br], true)
-	SetBlipSprite (blip[br], sprite)
-	SetBlipScale  (blip[br], 1.0)
-	SetBlipColour (blip[br], color)
-	SetBlipAsShortRange(blip[br], true)
-
-	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentString(text)
-	EndTextCommandSetBlipName(blip[br])
-	br = br+1
 end

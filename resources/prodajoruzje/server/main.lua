@@ -70,6 +70,40 @@ function getIdentity(source)
 	end
 end
 
+local Marih = nil
+local Prvi = 0
+
+RegisterCommand("marihuana", function(source, args, rawCommandString)
+	if Prvi == 0 then
+		local mara = "bkr_prop_weed_01_small_01a"
+		local player = source
+		local ped = GetPlayerPed(player)
+		local playerCoords = GetEntityCoords(ped)
+		Marih = CreateObjectNoOffset(GetHashKey(mara), playerCoords.x,  playerCoords.y,  playerCoords.z-1.0,true,false)
+		Prvi = 1
+	elseif Prvi == 1 then
+		local corda = GetEntityCoords(Marih)
+		DeleteEntity(Marih)
+		Marih = nil
+		local mara = "bkr_prop_weed_med_01a"
+		local player = source
+		Marih = CreateObjectNoOffset(GetHashKey(mara), corda.x,  corda.y,  corda.z,true,false)
+		Prvi = 2
+	elseif Prvi == 2 then
+		local corda = GetEntityCoords(Marih)
+		DeleteEntity(Marih)
+		Marih = nil
+		local mara = "bkr_prop_weed_lrg_01a"
+		local player = source
+		Marih = CreateObjectNoOffset(GetHashKey(mara), corda.x,  corda.y,  corda.z,true,false)
+		Prvi = 3
+	else
+		DeleteEntity(Marih)
+		Marih = nil
+		Prvi = 0
+	end
+end, false)
+
 RegisterCommand("svilideri", function(source, args, rawCommandString)
 		local elements = {}
 		MySQL.Async.fetchAll('SELECT name, job, job_grade FROM users', {}, function(result)
