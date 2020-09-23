@@ -199,12 +199,22 @@ AddEventHandler('trava:ObrisiSadnicu', function(nid)
 	end
 end)
 
+function distanceFrom(x1,y1,x2,y2) return math.sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2) end
+
 function PosadiTravu(src)
+	local player = src
+	local ped = GetPlayerPed(player)
+	local playerCoords = GetEntityCoords(ped)
 	local broj = 0
+	local dist = false
 	for i=1, #Sadnice, 1 do
 		if Sadnice[i] ~= nil then
 			if Sadnice[i].ID == src then
 				broj = broj+1
+			end
+			local kord = GetEntityCoords(Sadnice[i].Objekt)
+			if distanceFrom(kord.x, kord.y, playerCoords.x, playerCoords.y) < 2.0 then
+				dist = true
 			end
 		end
 	end
@@ -212,29 +222,30 @@ function PosadiTravu(src)
 	local xSeed = xPlayer.getInventoryItem('seed')
 	if xSeed.count >= 1 then
 		if broj < 5 then
-			xPlayer.removeInventoryItem('seed', 1)
-			local mara = "bkr_prop_weed_01_small_01a"
-			local player = src
-			local ped = GetPlayerPed(player)
-			local playerCoords = GetEntityCoords(ped)
-			local Marih
-			Marih = CreateObjectNoOffset(GetHashKey(mara), playerCoords.x,  playerCoords.y,  playerCoords.z-1.0,true,false)
-			table.insert(Sadnice, {ID = src, Objekt = Marih, Stanje = 1})
-			Wait(100)
-			local netid = NetworkGetNetworkIdFromEntity(Marih)
-			TriggerClientEvent("trava:EoTiNetID", -1, netid)
-			TriggerClientEvent("trava:PratiRast", src, netid, 1)
-			local Temp = {}
-			for i=1, #Sadnice, 1 do
-				if Sadnice[i] ~= nil and Sadnice[i].ID == src then
-					local coord = GetEntityCoords(Sadnice[i].Objekt)
-					table.insert(Temp, {Stanje = Sadnice[i].Stanje, Koord = coord})
+			if dist == false then
+				xPlayer.removeInventoryItem('seed', 1)
+				local mara = "bkr_prop_weed_01_small_01a"
+				local Marih
+				Marih = CreateObjectNoOffset(GetHashKey(mara), playerCoords.x,  playerCoords.y,  playerCoords.z-1.0,true,false)
+				table.insert(Sadnice, {ID = src, Objekt = Marih, Stanje = 1})
+				Wait(100)
+				local netid = NetworkGetNetworkIdFromEntity(Marih)
+				TriggerClientEvent("trava:EoTiNetID", -1, netid)
+				TriggerClientEvent("trava:PratiRast", src, netid, 1)
+				local Temp = {}
+				for i=1, #Sadnice, 1 do
+					if Sadnice[i] ~= nil and Sadnice[i].ID == src then
+						local coord = GetEntityCoords(Sadnice[i].Objekt)
+						table.insert(Temp, {Stanje = Sadnice[i].Stanje, Koord = coord})
+					end
 				end
+				MySQL.Async.execute('UPDATE users SET sadnice = @sad WHERE identifier = @id', {
+					['@sad'] = json.encode(Temp),
+					['@id'] = xPlayer.identifier
+				})
+			else
+				xPlayer.showNotification("Preblizu ste drugoj sadnici!")
 			end
-			MySQL.Async.execute('UPDATE users SET sadnice = @sad WHERE identifier = @id', {
-				['@sad'] = json.encode(Temp),
-				['@id'] = xPlayer.identifier
-			})
 		else
 			xPlayer.showNotification("Vec imate posadjeno 5 sadnica")
 		end
