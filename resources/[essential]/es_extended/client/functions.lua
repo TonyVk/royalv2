@@ -280,16 +280,27 @@ ESX.Game.GetPedMugshot = function(ped)
 end
 
 ESX.Game.Teleport = function(entity, coords, cb)
-	RequestCollisionAtCoord(coords.x, coords.y, coords.z)
-
-	while not HasCollisionLoadedAroundEntity(entity) do
+	if DoesEntityExist(entity) then
 		RequestCollisionAtCoord(coords.x, coords.y, coords.z)
-		Citizen.Wait(0)
+		local timeout = 0
+
+		-- we can get stuck here if any of the axies are "invalid"
+		while not HasCollisionLoadedAroundEntity(entity) and timeout < 2000 do
+			Citizen.Wait(0)
+			timeout = timeout + 1
+		end
+		
+		SetEntityCoords(entity, coords.x, coords.y, coords.z, false, false, false, false)
+		FreezeEntityPosition(entity, true)
+		Wait(1000)
+		FreezeEntityPosition(entity, false)
+
+		if type(coords) == 'table' and coords.heading then
+			SetEntityHeading(entity, coords.heading)
+		end
 	end
 
-	SetEntityCoords(entity, coords.x, coords.y, coords.z)
-
-	if cb ~= nil then
+	if cb then
 		cb()
 	end
 end

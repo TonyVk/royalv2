@@ -222,12 +222,12 @@ end)
 RegisterNetEvent('ac:IzasoVezan')
 AddEventHandler('ac:IzasoVezan', function(ime)
 	print("[AntiCheat] | " ..ime.. " je napustio server dok je bio vezan")
-	TriggerClientEvent('chatMessage', -1, '^3[AntiCheat]', {255, 0, 0}, "^3" ..ime.. "^1 je napustio server dok je bio vezan (1 dan ban)")
+	TriggerClientEvent('chatMessage', -1, '^3[AntiCheat]', {255, 0, 0}, "^3" ..ime.. "^1 je napustio server dok je bio vezan (3 dana ban)")
 	bandata = {}
 	bandata.reason = "AntiCheat: ( Izaso dok si bio vezan ). Ukoliko je doslo do greske, javite se na discordu: "..Config.Discord -- drop/ban reason
-	bandata.period = '1' -- days, 0 for permanent
+	bandata.period = '3' -- days, 0 for permanent
 	TriggerEvent('Anticheat:OffABan', ime, bandata)
-	local message = (ime .. _U('banned_for') .. 1 .. _U('days_for') .. "izaso dok je bio vezan".." ".. _U('by') .." server")
+	local message = (ime .. _U('banned_for') .. 3 .. _U('days_for') .. "izaso dok je bio vezan".." ".. _U('by') .." server")
 	sendToDiscord(Config.webhookban, "BanSql", message, Config.red)
 end)
 
