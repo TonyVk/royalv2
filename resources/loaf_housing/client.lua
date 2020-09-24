@@ -723,6 +723,7 @@ AddEventHandler('loaf_housing:spawnHouse', function(coords, furniture)
         table.insert(placed_furniture, object)
 		table.insert(ofseti, GetOffsetFromEntityInWorldCoords(house, vector3(v['offset'][1], v['offset'][2], v['offset'][3])))
     end
+	TriggerServerEvent("kuce:UKuci", true)
     SetEntityHeading(house, 0.0)
     local exit = GetOffsetFromEntityInWorldCoords(house, Config.Offsets[prop]['door'])
     local storage = GetOffsetFromEntityInWorldCoords(house, Config.Offsets[prop]['storage'])
@@ -1081,6 +1082,7 @@ AddEventHandler("playerSpawned", function()
 				}
 				ESX.SetPlayerData('lastPosition', formattedCoords)
 				SetEntityCoords(PlayerPedId(), xa, ya, za)
+				TriggerServerEvent("kuce:UKuci", false)
 				TriggerServerEvent("loaf_housing:MakniSpremljenuKucu")
 			end
 		end)
@@ -1103,6 +1105,7 @@ AddEventHandler('loaf_housing:leaveHouse', function(house)
     end
     DoScreenFadeIn(1500)
 	UKuci = false
+	TriggerServerEvent("kuce:UKuci", false)
 end)
 
 RegisterNetEvent('loaf_housing:leaveHouse2')
@@ -1124,6 +1127,7 @@ AddEventHandler('loaf_housing:leaveHouse2', function(house)
     DeleteObject(prop)
     DoScreenFadeIn(1500)
 	UKuci = false
+	TriggerServerEvent("kuce:UKuci", false)
     TriggerServerEvent('loaf_housing:leaveHouse', house)
 end)
 
@@ -1151,6 +1155,7 @@ AddEventHandler('loaf_housing:knockAccept', function(coords, house, storage, spa
     while not IsScreenFadedOut() do Wait(0) end
     SetEntityCoords(PlayerPedId(), coords)
 	UKuci = true
+	TriggerServerEvent("kuce:UKuci", true)
     for i = 1, 25 do
         SetEntityCoords(PlayerPedId(),  coords)
         Wait(50)
@@ -1198,6 +1203,7 @@ AddEventHandler('loaf_housing:knockAccept', function(coords, house, storage, spa
             DoScreenFadeIn(1500)
             ESX.ShowNotification(Strings['Host_Left'])
 			UKuci = false
+			TriggerServerEvent("kuce:UKuci", false)
             return
         end
         DrawMarker(27, coords, vector3(0.0, 0.0, 0.0), vector3(0.0, 0.0, 0.0), vector3(1.0, 1.0, 1.0), 255, 0, 255, 150, false, false, 2, false, false, false)
@@ -1223,6 +1229,7 @@ AddEventHandler('loaf_housing:knockAccept', function(coords, house, storage, spa
                 DeleteObject(prop)
                 DoScreenFadeIn(1500)
 				UKuci = false
+				TriggerServerEvent("kuce:UKuci", false)
                 TriggerServerEvent('loaf_housing:leaveHouse', house)
                 return
             end

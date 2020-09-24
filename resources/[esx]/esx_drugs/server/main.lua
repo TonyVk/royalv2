@@ -2,6 +2,7 @@ ESX = nil
 local playersProcessingCannabis = {}
 local Droga = {}
 local Sadnice = {}
+local Kuce = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -10,11 +11,11 @@ AddEventHandler('droge:prodajih', function(itemName, amount)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local price
 	if itemName ~= "seed" then
-	price = Config.DrugDealerItems[itemName]
-	price = math.ceil(price * amount)
+		price = Config.DrugDealerItems[itemName]
+		price = math.ceil(price * amount)
 	else 
-	price = 45
-	price = math.ceil(price * amount)
+		price = 200
+		price = math.ceil(price * amount)
 	end
 	local xItem = xPlayer.getInventoryItem(itemName)
 	if not price then
@@ -26,25 +27,29 @@ AddEventHandler('droge:prodajih', function(itemName, amount)
 			TriggerClientEvent('esx:showNotification', source, "Nemate dovoljno novca!")
 			return
 		end
-		xPlayer.removeMoney(price)
-		xPlayer.addInventoryItem(itemName, amount)
+		if xItem.limit ~= -1 and (xItem.count + amount) > xItem.limit then
+			TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise sjemena u inventory!")
+		else
+			xPlayer.removeMoney(price)
+			xPlayer.addInventoryItem(itemName, amount)
+		end
 	else
-	if xItem.count < amount then
-		TriggerClientEvent('esx:showNotification', source, _U('dealer_notenough'))
-		return
-	end
+		if xItem.count < amount then
+			TriggerClientEvent('esx:showNotification', source, _U('dealer_notenough'))
+			return
+		end
 
-	if Config.GiveBlack then
-		xPlayer.addAccountMoney('black_money', price)
-	else
-		xPlayer.addMoney(price)
-		ESX.SavePlayer(xPlayer, function() 
-		end)
-	end
+		if Config.GiveBlack then
+			xPlayer.addAccountMoney('black_money', price)
+		else
+			xPlayer.addMoney(price)
+			ESX.SavePlayer(xPlayer, function() 
+			end)
+		end
 
-	xPlayer.removeInventoryItem(xItem.name, amount)
+		xPlayer.removeInventoryItem(xItem.name, amount)
 
-	TriggerClientEvent('esx:showNotification', source, _U('dealer_sold', amount, xItem.label, ESX.Math.GroupDigits(price)))
+		TriggerClientEvent('esx:showNotification', source, _U('dealer_sold', amount, xItem.label, ESX.Math.GroupDigits(price)))
 	end
 end)
 
@@ -56,6 +61,12 @@ AddEventHandler('playerDropped', function()
 			break
 		end
 	end
+end)
+
+RegisterNetEvent('kuce:UKuci')
+AddEventHandler('kuce:UKuci', function(br)
+	local src = source
+	Kuce[src] = br
 end)
 
 RegisterServerEvent('trava:ProvjeriSadnice')
@@ -142,7 +153,7 @@ AddEventHandler('esx_drugs:PreradiGa', function()
 			elseif xCannabis.count < 3 then
 				TriggerClientEvent('esx:showNotification', _source, _U('weed_processingenough'))
 			else
-				xPlayer.removeInventoryItem('cannabis', 3)
+				xPlayer.removeInventoryItem('cannabis', 2)
 				xPlayer.addInventoryItem('marijuana', 1)
 
 				TriggerClientEvent('esx:showNotification', _source, _U('weed_processed'))
@@ -161,11 +172,6 @@ function CancelProcessing(playerID)
 		playersProcessingCannabis[playerID] = nil
 	end
 end
-
-RegisterServerEvent('trava:Posadi')
-AddEventHandler('trava:Posadi', function()
-	PosadiTravu(source)
-end)
 
 RegisterServerEvent('trava:Izrasti')
 AddEventHandler('trava:Izrasti', function(nid, stanje)
@@ -203,54 +209,64 @@ function distanceFrom(x1,y1,x2,y2) return math.sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 
 
 function PosadiTravu(src)
 	local player = src
-	local ped = GetPlayerPed(player)
-	local playerCoords = GetEntityCoords(ped)
-	local broj = 0
-	local dist = false
-	for i=1, #Sadnice, 1 do
-		if Sadnice[i] ~= nil then
-			if Sadnice[i].ID == src then
-				broj = broj+1
-			end
-			local kord = GetEntityCoords(Sadnice[i].Objekt)
-			if distanceFrom(kord.x, kord.y, playerCoords.x, playerCoords.y) < 2.0 then
-				dist = true
+	local xPlayer = ESX.GetPlayerFromId(player)
+	if Kuce[player] == nil or Kuce[player] == false then
+		local ped = GetPlayerPed(player)
+		local playerCoords = GetEntityCoords(ped)
+		local broj = 0
+		local dist = false
+		for i=1, #Sadnice, 1 do
+			if Sadnice[i] ~= nil then
+				if Sadnice[i].ID == src then
+					broj = broj+1
+				end
+				local kord = GetEntityCoords(Sadnice[i].Objekt)
+				if distanceFrom(kord.x, kord.y, playerCoords.x, playerCoords.y) < 2.0 then
+					dist = true
+				end
 			end
 		end
-	end
-	local xPlayer = ESX.GetPlayerFromId(src)
-	local xSeed = xPlayer.getInventoryItem('seed')
-	if xSeed.count >= 1 then
-		if broj < 5 then
-			if dist == false then
-				xPlayer.removeInventoryItem('seed', 1)
-				local mara = "bkr_prop_weed_01_small_01a"
-				local Marih
-				Marih = CreateObjectNoOffset(GetHashKey(mara), playerCoords.x,  playerCoords.y,  playerCoords.z-1.0,true,false)
-				table.insert(Sadnice, {ID = src, Objekt = Marih, Stanje = 1})
-				Wait(100)
-				local netid = NetworkGetNetworkIdFromEntity(Marih)
-				TriggerClientEvent("trava:EoTiNetID", -1, netid)
-				TriggerClientEvent("trava:PratiRast", src, netid, 1)
-				local Temp = {}
-				for i=1, #Sadnice, 1 do
-					if Sadnice[i] ~= nil and Sadnice[i].ID == src then
-						local coord = GetEntityCoords(Sadnice[i].Objekt)
-						table.insert(Temp, {Stanje = Sadnice[i].Stanje, Koord = coord})
+		local xSeed = xPlayer.getInventoryItem('seed')
+		local xSaksija = xPlayer.getInventoryItem('saksija')
+		local xZemlja = xPlayer.getInventoryItem('zemlja')
+		if xSeed.count >= 1 and xSaksija.count >= 1 and xZemlja.count >= 1 then
+			if broj < 5 then
+				if dist == false then
+					xPlayer.removeInventoryItem('seed', 1)
+					xPlayer.removeInventoryItem('saksija', 1)
+					xPlayer.removeInventoryItem('zemlja', 1)
+					local mara = "bkr_prop_weed_01_small_01a"
+					local Marih
+					Marih = CreateObjectNoOffset(GetHashKey(mara), playerCoords.x,  playerCoords.y,  playerCoords.z-1.0,true,false)
+					while not DoesEntityExist(Marih) do
+						Wait(100)
 					end
+					table.insert(Sadnice, {ID = src, Objekt = Marih, Stanje = 1})
+					local netid = NetworkGetNetworkIdFromEntity(Marih)
+					TriggerClientEvent("trava:EoTiNetID", -1, netid)
+					TriggerClientEvent("trava:PratiRast", src, netid, 1)
+					local Temp = {}
+					for i=1, #Sadnice, 1 do
+						if Sadnice[i] ~= nil and Sadnice[i].ID == src then
+							local coord = GetEntityCoords(Sadnice[i].Objekt)
+							table.insert(Temp, {Stanje = Sadnice[i].Stanje, Koord = coord})
+						end
+					end
+					MySQL.Async.execute('UPDATE users SET sadnice = @sad WHERE identifier = @id', {
+						['@sad'] = json.encode(Temp),
+						['@id'] = xPlayer.identifier
+					})
+				else
+					xPlayer.showNotification("Preblizu ste drugoj sadnici!")
 				end
-				MySQL.Async.execute('UPDATE users SET sadnice = @sad WHERE identifier = @id', {
-					['@sad'] = json.encode(Temp),
-					['@id'] = xPlayer.identifier
-				})
 			else
-				xPlayer.showNotification("Preblizu ste drugoj sadnici!")
+				xPlayer.showNotification("Vec imate posadjeno 5 sadnica")
 			end
 		else
-			xPlayer.showNotification("Vec imate posadjeno 5 sadnica")
+			xPlayer.showNotification("Nemate dovoljno sjemena/saksija/zemlje!")
 		end
 	else
-		xPlayer.showNotification("Nemate dovoljno sjemena!")
+		xPlayer.showNotification("Ne mozete saditi u kuci!")
 	end
 end
 
@@ -265,8 +281,10 @@ function PosadiTravu2(src, co, stanje)
 	end
 	local Marih
 	Marih = CreateObjectNoOffset(GetHashKey(mara), co.x,  co.y,  co.z,true,false)
+	while not DoesEntityExist(Marih) do
+		Wait(100)
+	end
 	table.insert(Sadnice, {ID = src, Objekt = Marih, Stanje = stanje})
-	Wait(100)
 	local netid = NetworkGetNetworkIdFromEntity(Marih)
 	TriggerClientEvent("trava:EoTiNetID", -1, netid)
 	TriggerClientEvent("trava:PratiRast", src, netid, stanje)
@@ -290,12 +308,16 @@ function Izrati(nid, src, stanje)
 				Sadnice[i].Stanje = stanje
 				local Marih
 				Marih = CreateObjectNoOffset(GetHashKey(mara), coord.x,  coord.y,  coord.z,true,false)
+				while not DoesEntityExist(Marih) do
+					Wait(100)
+				end
 				Sadnice[i].Objekt = Marih
-				Wait(100)
 				local netid = NetworkGetNetworkIdFromEntity(Marih)
 				TriggerClientEvent("trava:PromjeniNetID", -1, nid, netid, stanje)
 				if stanje ~= 3 then
 					TriggerClientEvent("trava:PratiRast", src, netid, stanje)
+				else
+					xPlayer.showNotification("[Marihuana] Stabljika je spremna za branje!")
 				end
 				local Temp = {}
 				for i=1, #Sadnice, 1 do
@@ -338,4 +360,8 @@ ESX.RegisterUsableItem('marijuana', function(source)
 		Wait(10000)
 		Droga[source] = nil
 	end
+end)
+
+ESX.RegisterUsableItem('seed', function(source)
+	PosadiTravu(source)
 end)

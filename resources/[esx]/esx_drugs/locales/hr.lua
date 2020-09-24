@@ -11,6 +11,7 @@ Locales ['hr'] = {
 
   -- drug dealer
   ['dealer_prompt'] = 'pritisnite ~INPUT_CONTEXT~ da pricate sa dilerom~s~.',
+  ['dealer_prompt2'] = 'pritisnite ~INPUT_CONTEXT~ da prodate marihuanu~s~.',
   ['dealer_title'] = 'Diler droge',
   ['dealer_item'] = '$%s',
   ['dealer_notenough'] = 'nemate dovoljno za prodaju!',

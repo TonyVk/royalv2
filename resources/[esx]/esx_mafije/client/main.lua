@@ -2396,6 +2396,7 @@ Citizen.CreateThread(function()
 				if Koord[i] ~= nil and Koord[i].Mafija == PlayerData.job.name and Koord[i].Ime == "Izlaz" then
 					local x,y,z = table.unpack(Koord[i].Coord)
 					SetEntityCoords(PlayerPedId(), x, y, z, false, false, false, true)
+					TriggerServerEvent("kuce:UKuci", true)
 				end
 			end
         end
@@ -2405,6 +2406,7 @@ Citizen.CreateThread(function()
 				if Koord[i] ~= nil and Koord[i].Mafija == PlayerData.job.name and Koord[i].Ime == "Ulaz" then
 					local x,y,z = table.unpack(Koord[i].Coord)
 					SetEntityCoords(PlayerPedId(), x, y, z, false, false, false, true)
+					TriggerServerEvent("kuce:UKuci", false)
 				end
 			end
         end

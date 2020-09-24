@@ -12,8 +12,9 @@ Keys = {
 
 ESX = nil
 local menuOpen = false
+local menuOpen2 = false
 local wasOpen = false
-local spawnedWeeds = 0
+local wasOpen2 = false
 local weedPlants = {}
 local Travica = {}
 local isPickingUp, isProcessing = false, false
@@ -58,15 +59,23 @@ AddEventHandler("playerSpawned", function()
 end)
 
 Citizen.CreateThread(function()
+	local waitara = 500
 	while true do
-		Citizen.Wait(0)
+		Citizen.Wait(waitara)
+		local naso = 0
 		while ESX.PlayerData.job == nil do
 			Citizen.Wait(100)
 		end
 		local playerPed = PlayerPedId()
 		local coords = GetEntityCoords(playerPed)
-
+		if GetDistanceBetweenCoords(coords, Config.CircleZones.DrugDealer.coords, true) < 100.0 then
+			DrawMarker(0, Config.CircleZones.DrugDealer.coords.x, Config.CircleZones.DrugDealer.coords.y, Config.CircleZones.DrugDealer.coords.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 2.0, 1.0, 0, 0, 0, 100, false, true, 2, false, false, false, false)
+			naso = 1
+			waitara = 0
+		end
 		if GetDistanceBetweenCoords(coords, Config.CircleZones.DrugDealer.coords, true) < 0.5 then
+			naso = 1
+			waitara = 0
 			if not menuOpen then
 				ESX.ShowHelpNotification(_U('dealer_prompt'))
 
@@ -74,8 +83,6 @@ Citizen.CreateThread(function()
 					wasOpen = true
 					OpenDrugShop()
 				end
-			else
-				Citizen.Wait(500)
 			end
 		else
 			if wasOpen then
@@ -83,8 +90,48 @@ Citizen.CreateThread(function()
 				ESX.UI.Menu.CloseAll()
 				menuOpen = false
 			end
+		end
+		if naso == 0 then
+			waitara = 500
+		end
+	end
+end)
 
-			Citizen.Wait(500)
+Citizen.CreateThread(function()
+	local waitara = 500
+	while true do
+		Citizen.Wait(waitara)
+		local naso = 0
+		while ESX.PlayerData.job == nil do
+			Citizen.Wait(100)
+		end
+		local playerPed = PlayerPedId()
+		local coords = GetEntityCoords(playerPed)
+		if GetDistanceBetweenCoords(coords, Config.CircleZones.Prodaja.coords, true) < 100.0 then
+			naso = 1
+			waitara = 0
+			DrawMarker(0, Config.CircleZones.Prodaja.coords.x, Config.CircleZones.Prodaja.coords.y, Config.CircleZones.Prodaja.coords.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 2.0, 1.0, 0, 0, 0, 100, false, true, 2, false, false, false, false)
+		end
+		if GetDistanceBetweenCoords(coords, Config.CircleZones.Prodaja.coords, true) < 0.5 then
+			naso = 1
+			waitara = 0
+			if not menuOpen2 then
+				ESX.ShowHelpNotification(_U('dealer_prompt2'))
+
+				if IsControlJustReleased(0, Keys['E']) then
+					wasOpen2 = true
+					OpenSellShop()
+				end
+			end
+		else
+			if wasOpen2 then
+				wasOpen2 = false
+				ESX.UI.Menu.CloseAll()
+				menuOpen2 = false
+			end
+		end
+		if naso == 0 then
+			waitara = 500
 		end
 	end
 end)
@@ -93,6 +140,35 @@ function OpenDrugShop()
 	ESX.UI.Menu.CloseAll()
 	local elements = {}
 	menuOpen = true
+	table.insert(elements, {
+					label = ('%s - <span style="color:green;">%s</span>'):format("Sjeme", 200),
+					name = "seed",
+					price = 200,
+
+					-- menu properties
+					type = 'slider',
+					value = 1,
+					min = 1,
+					max = 5
+	})
+	
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'drug_shop', {
+		title    = _U('dealer_title'),
+		align    = 'top-left',
+		elements = elements
+	}, function(data, menu)
+		TriggerServerEvent('droge:prodajih', data.current.name, data.current.value)
+	end, function(data, menu)
+		menu.close()
+		menuOpen = false
+	end)
+end
+
+function OpenSellShop()
+	ESX.UI.Menu.CloseAll()
+	local elements = {}
+	menuOpen2 = true
+	local naso = 0
 
 	for k, v in pairs(ESX.GetPlayerData().inventory) do
 		local price = Config.DrugDealerItems[v.name]
@@ -109,35 +185,39 @@ function OpenDrugShop()
 				min = 1,
 				max = v.count
 			})
+			naso = 1
 		end
 	end
-	table.insert(elements, {
-					label = ('%s - <span style="color:green;">%s</span>'):format("Sjeme", 45),
-					name = "seed",
-					price = 45,
+	if naso == 0 then
+		table.insert(elements, {
+			label = "Nemate marihuane",
+			name = "Nemate marihuane",
+			price = 0,
 
-					-- menu properties
-					type = 'slider',
-					value = 1,
-					min = 1,
-					max = 10
-	})
-	
+			-- menu properties
+			type = 'slider',
+			value = 0,
+			min = 0,
+			max = 0
+		})
+	end
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'drug_shop', {
 		title    = _U('dealer_title'),
 		align    = 'top-left',
 		elements = elements
 	}, function(data, menu)
-		TriggerServerEvent('droge:prodajih', data.current.name, data.current.value)
+		if naso == 1 then
+			TriggerServerEvent('droge:prodajih', data.current.name, data.current.value)
+		end
 	end, function(data, menu)
 		menu.close()
-		menuOpen = false
+		menuOpen2 = false
 	end)
 end
 
 AddEventHandler('onResourceStop', function(resource)
 	if resource == GetCurrentResourceName() then
-		if menuOpen then
+		if menuOpen or menuOpen2 then
 			ESX.UI.Menu.CloseAll()
 		end
 	end
@@ -185,10 +265,6 @@ function OpenBuyLicenseMenu(licenseName)
 	end)
 end
 
-RegisterCommand("posadi", function(source, args, rawCommandString)
-	TriggerServerEvent("trava:Posadi")
-end, false)
-
 RegisterNetEvent("trava:EoTiNetID")
 AddEventHandler('trava:EoTiNetID', function(netid)
 	table.insert(Sadnice, {NetID = netid, Stanje = 1})
@@ -213,7 +289,7 @@ AddEventHandler('trava:PromjeniNetID', function(oldnet, newnet, stanje)
 					end
 				end
 				if stanje == 3 then
-					table.insert(weedPlants, ObjID)
+					table.insert(weedPlants, newnet)
 				end
 				break
 			end
@@ -225,7 +301,8 @@ RegisterNetEvent("trava:PratiRast")
 AddEventHandler('trava:PratiRast', function(netid, stanje)
 	local ObjID = NetworkGetEntityFromNetworkId(netid)
 	if stanje == 3 then
-		table.insert(weedPlants, ObjID)
+		table.insert(weedPlants, netid)
+		ESX.ShowNotification("[Marihuana] Stabljika je spremna za branje!")
 	else
 		Citizen.CreateThread(function()
 			local Idic = netid
@@ -249,15 +326,23 @@ AddEventHandler('esx_drugs:Animacija', function()
 end)
 
 Citizen.CreateThread(function()
+	local waitara = 500
 	while true do
-		Citizen.Wait(0)
+		Citizen.Wait(waitara)
+		local naso = 0
 		while ESX.PlayerData.job == nil do
 			Citizen.Wait(100)
 		end
 		local playerPed = PlayerPedId()
 		local coords = GetEntityCoords(playerPed)
-
+		if GetDistanceBetweenCoords(coords, Config.CircleZones.WeedProcessing.coords, true) < 100.0 then
+			naso = 1
+			waitara = 0
+			DrawMarker(0, Config.CircleZones.WeedProcessing.coords.x, Config.CircleZones.WeedProcessing.coords.y, Config.CircleZones.WeedProcessing.coords.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 2.0, 1.0, 0, 0, 0, 100, false, true, 2, false, false, false, false)
+		end
 		if GetDistanceBetweenCoords(coords, Config.CircleZones.WeedProcessing.coords, true) < 1 then
+			naso = 1
+			waitara = 0
 			if not isProcessing then
 				ESX.ShowHelpNotification(_U('weed_processprompt'))
 			end
@@ -277,8 +362,9 @@ Citizen.CreateThread(function()
 				end
 
 			end
-		else
-			Citizen.Wait(500)
+		end
+		if naso == 0 then
+			waitara = 500
 		end
 	end
 end)
@@ -317,16 +403,26 @@ Citizen.CreateThread(function()
 		local Travara = false
 
 		for i=1, #weedPlants, 1 do
-			if GetDistanceBetweenCoords(coords, GetEntityCoords(weedPlants[i]), false) < 1 then
-				nearbyObject, nearbyID = weedPlants[i], i
+			if NetworkDoesEntityExistWithNetworkId(weedPlants[i]) then
+				local ObjID = NetworkGetEntityFromNetworkId(weedPlants[i])
+				if DoesEntityExist(ObjID) then
+					if GetDistanceBetweenCoords(coords, GetEntityCoords(ObjID), false) < 1 then
+						nearbyObject, nearbyID = ObjID, i
+					end
+				end
 			end
 		end
 		
 		if ESX.PlayerData.job.name == "police" or ESX.PlayerData.job.name == "sipa" then
 			for i=1, #Travica, 1 do
-				if GetDistanceBetweenCoords(coords, GetEntityCoords(Travica[i].Objekt), false) < 1 then
-					nearbyObject, nearbyID = Travica[i].Objekt, i
-					Travara = true
+				if NetworkDoesEntityExistWithNetworkId(Travica[i].NetID) then
+					local ObjID = NetworkGetEntityFromNetworkId(Travica[i].NetID)
+					if DoesEntityExist(ObjID) then
+						if GetDistanceBetweenCoords(coords, GetEntityCoords(ObjID), false) < 1 then
+							nearbyObject, nearbyID = ObjID, i
+							Travara = true
+						end
+					end
 				end
 			end
 		end
@@ -344,16 +440,17 @@ Citizen.CreateThread(function()
 			if IsControlJustReleased(0, Keys['E']) and not isPickingUp then
 				isPickingUp = true
 				if ESX.PlayerData.job.name == "police" or ESX.PlayerData.job.name == "sipa" then
+					FreezeEntityPosition(playerPed, true)
 					TaskStartScenarioInPlace(playerPed, 'world_human_gardener_plant', 0, false)
 
 					Citizen.Wait(2000)
 					ClearPedTasks(playerPed)
 					Citizen.Wait(1500)
+					FreezeEntityPosition(playerPed, false)
 			
 					if Travara == false then
 						table.remove(weedPlants, nearbyID)
 					end
-					spawnedWeeds = spawnedWeeds - 1
 							
 					for i=1, #Travica, 1 do
 						if Travica[i] ~= nil then
@@ -377,16 +474,17 @@ Citizen.CreateThread(function()
 					ESX.TriggerServerCallback('esx_drugs:canPickUp', function(canPickUp)
 
 						if canPickUp then
+							FreezeEntityPosition(playerPed, true)
 							TaskStartScenarioInPlace(playerPed, 'world_human_gardener_plant', 0, false)
 
 							Citizen.Wait(2000)
 							ClearPedTasks(playerPed)
 							Citizen.Wait(1500)
+							FreezeEntityPosition(playerPed, false)
 			
 							--ESX.Game.DeleteObject(nearbyObject)
 			
 							table.remove(weedPlants, nearbyID)
-							spawnedWeeds = spawnedWeeds - 1
 			
 							TriggerServerEvent('esx_drugs:EoTiKanabisa')
 							
@@ -434,7 +532,6 @@ function SpawnWeedPlants()
 		ESX.Game.SpawnObject('prop_weed_02', weedCoords, function(obj)
 			PlaceObjectOnGroundProperly(obj)
 			FreezeEntityPosition(obj, true)
-			spawnedWeeds = spawnedWeeds + 1
 			travca = obj
 		end)
 		Wait(60000)
@@ -444,26 +541,6 @@ function SpawnWeedPlants()
 			FreezeEntityPosition(obj, true)
 			table.insert(weedPlants, obj)
 		end)
-end
-
-function ValidateWeedCoord(plantCoord)
-	if spawnedWeeds > 0 then
-		local validate = true
-
-		for k, v in pairs(weedPlants) do
-			if GetDistanceBetweenCoords(plantCoord, GetEntityCoords(v), true) < 5 then
-				validate = false
-			end
-		end
-
-		if GetDistanceBetweenCoords(plantCoord, Config.CircleZones.WeedField.coords, false) > 50 then
-			validate = false
-		end
-
-		return validate
-	else
-		return true
-	end
 end
 
 function GenerateWeedCoords()
@@ -485,10 +562,6 @@ function GenerateWeedCoords()
 
 		local coordZ = GetCoordZ(weedCoordX, weedCoordY)
 		local coord = vector3(weedCoordX, weedCoordY, coordZ)
-
-		if ValidateWeedCoord(coord) then
-			return coord
-		end
 	end
 end
 
