@@ -199,77 +199,6 @@ function OpenMechanicActionsMenu()
 	end)
 end
 
-function OpenMechanicHarvestMenu()
-	if Config.EnablePlayerManagement and ESX.PlayerData.job and ESX.PlayerData.job.grade_name ~= 'recrue' then
-		local elements = {
-			{label = _U('gas_can'), value = 'gaz_bottle'},
-			{label = _U('repair_tools'), value = 'fix_tool'},
-			{label = _U('body_work_tools'), value = 'caro_tool'}
-		}
-
-		ESX.UI.Menu.CloseAll()
-
-		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'mechanic_harvest', {
-			title    = _U('harvest'),
-			align    = 'top-left',
-			elements = elements
-		}, function(data, menu)
-			menu.close()
-
-			if data.current.value == 'gaz_bottle' then
-				TriggerServerEvent('esx_mechanicjob:startHarvest')
-			elseif data.current.value == 'fix_tool' then
-				TriggerServerEvent('esx_mechanicjob:startHarvest2')
-			elseif data.current.value == 'caro_tool' then
-				TriggerServerEvent('esx_mechanicjob:startHarvest3')
-			end
-		end, function(data, menu)
-			menu.close()
-			CurrentAction     = 'mechanic_harvest_menu'
-			CurrentActionMsg  = _U('harvest_menu')
-			CurrentActionData = {}
-		end)
-	else
-		ESX.ShowNotification(_U('not_experienced_enough'))
-	end
-end
-
-function OpenMechanicCraftMenu()
-	if Config.EnablePlayerManagement and ESX.PlayerData.job and ESX.PlayerData.job.grade_name ~= 'recrue' then
-		local elements = {
-			{label = _U('blowtorch'),  value = 'blow_pipe'},
-			{label = _U('repair_kit'), value = 'fix_kit'},
-			{label = _U('body_kit'),   value = 'caro_kit'}
-		}
-
-		ESX.UI.Menu.CloseAll()
-
-		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'mechanic_craft', {
-			title    = _U('craft'),
-			align    = 'top-left',
-			elements = elements
-		}, function(data, menu)
-			menu.close()
-
-			if data.current.value == 'blow_pipe' then
-				TriggerServerEvent('esx_mechanicjob:startCraft')
-			elseif data.current.value == 'fix_kit' then
-				TriggerServerEvent('esx_mechanicjob:startCraft2')
-			elseif data.current.value == 'caro_kit' then
-				TriggerServerEvent('esx_mechanicjob:startCraft3')
-			end
-		end, function(data, menu)
-			menu.close()
-
-			CurrentAction     = 'mechanic_craft_menu'
-			CurrentActionMsg  = _U('craft_menu')
-			CurrentActionData = {}
-		end)
-	else
-		ESX.ShowNotification(_U('not_experienced_enough'))
-	end
-end
-
 RegisterNetEvent('esx_meha:PucajCijenu')
 AddEventHandler('esx_meha:PucajCijenu', function(model, cijena)
 	if Cijena[model] ~= nil then
@@ -778,14 +707,6 @@ AddEventHandler('esx_mechanicjob:hasEnteredMarker', function(zone)
 		CurrentAction     = 'mechanic_actions_menu'
 		CurrentActionMsg  = _U('open_actions')
 		CurrentActionData = {}
-	elseif zone == 'Garage' then
-		CurrentAction     = 'mechanic_harvest_menu'
-		CurrentActionMsg  = _U('harvest_menu')
-		CurrentActionData = {}
-	elseif zone == 'Craft' then
-		CurrentAction     = 'mechanic_craft_menu'
-		CurrentActionMsg  = _U('craft_menu')
-		CurrentActionData = {}
 	elseif zone == 'VehicleDeleter' then
 		local playerPed = PlayerPedId()
 
@@ -802,14 +723,6 @@ end)
 AddEventHandler('esx_mechanicjob:hasExitedMarker', function(zone)
 	if zone =='VehicleDelivery' then
 		NPCTargetDeleterZone = false
-	elseif zone == 'Craft' then
-		TriggerServerEvent('esx_mechanicjob:stopCraft')
-		TriggerServerEvent('esx_mechanicjob:stopCraft2')
-		TriggerServerEvent('esx_mechanicjob:stopCraft3')
-	elseif zone == 'Garage' then
-		TriggerServerEvent('esx_mechanicjob:stopHarvest')
-		TriggerServerEvent('esx_mechanicjob:stopHarvest2')
-		TriggerServerEvent('esx_mechanicjob:stopHarvest3')
 	end
 
 	CurrentAction = nil
@@ -965,10 +878,6 @@ Citizen.CreateThread(function()
 
 					if CurrentAction == 'mechanic_actions_menu' then
 						OpenMechanicActionsMenu()
-					elseif CurrentAction == 'mechanic_harvest_menu' then
-						OpenMechanicHarvestMenu()
-					elseif CurrentAction == 'mechanic_craft_menu' then
-						OpenMechanicCraftMenu()
 					elseif CurrentAction == 'delete_vehicle' then
 
 						if Config.EnableSocietyOwnedVehicles then

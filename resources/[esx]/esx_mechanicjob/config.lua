@@ -34,13 +34,6 @@ Config.Zones = {
 		Type  = 1
 	},
 
-	Craft = {
-		Pos   = { x = 1006.410, y = -2319.360, z = 29.510 },
-		Size  = { x = 1.5, y = 1.5, z = 1.0 },
-		Color = { r = 204, g = 204, b = 0 },
-		Type  = 1
-	},
-
 	VehicleSpawnPoint = {
 		Pos   = { x = 1006.800, y = -2327.790, z = 29.510 },
 		Size  = { x = 1.5, y = 1.5, z = 1.0 },
