@@ -150,7 +150,7 @@ AddEventHandler('esx_drugs:PreradiGa', function()
 
 			if xMarijuana.limit ~= -1 and (xMarijuana.count + 1) >= xMarijuana.limit then
 				TriggerClientEvent('esx:showNotification', _source, _U('weed_processingfull'))
-			elseif xCannabis.count < 3 then
+			elseif xCannabis.count < 2 then
 				TriggerClientEvent('esx:showNotification', _source, _U('weed_processingenough'))
 			else
 				xPlayer.removeInventoryItem('cannabis', 2)

@@ -5,7 +5,7 @@ Locales ['hr'] = {
   ['weed_processprompt'] = 'pritisnite ~INPUT_CONTEXT~ da pokrenete ~g~preradu kanabisa~s~.',
   ['weed_processingstarted'] = 'prerada ~g~kanabisa~s~ u ~g~marihuanu~s~...',
   ['weed_processingfull'] = 'prerada ~r~prekinuta~s~ zbog punog inventoryja!',
-  ['weed_processingenough'] = 'morate imati ~b~3x~s~ ~g~kanabisa~s~ za preradu.',
+  ['weed_processingenough'] = 'morate imati ~b~2x~s~ ~g~kanabisa~s~ za preradu.',
   ['weed_processed'] = 'preradili ste ~b~3x~s~ ~g~kanabisa~s~ u ~b~1x~s~ ~g~marihuanu~s~',
   ['weed_processingtoofar'] = 'prerada je ~r~prekinuta~s~ zbog toga sto ste napustili podrucje.',
 
