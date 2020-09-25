@@ -50,8 +50,7 @@ RegisterNetEvent('trava:VratiSadnice')
 AddEventHandler('trava:VratiSadnice', function(nes)
 	for i=1, #nes, 1 do
 		table.insert(Sadnice, {NetID = nes[i].NetID, Stanje = nes[i].Stanje})
-		local ObjID = NetworkGetEntityFromNetworkId(nes[i].NetID)
-		table.insert(Travica, {NetID = nes[i].NetID, Objekt = ObjID})
+		table.insert(Travica, {NetID = nes[i].NetID})
 		if nes[i].Stanje == 3 then
 			table.insert(weedPlants, nes[i].NetID)
 		end
@@ -280,8 +279,7 @@ end
 RegisterNetEvent("trava:EoTiNetID")
 AddEventHandler('trava:EoTiNetID', function(netid)
 	table.insert(Sadnice, {NetID = netid, Stanje = 1})
-	local ObjID = NetworkGetEntityFromNetworkId(netid)
-	table.insert(Travica, {NetID = netid, Objekt = ObjID})
+	table.insert(Travica, {NetID = netid})
 end)
 
 RegisterNetEvent("trava:PromjeniNetID")
@@ -289,13 +287,11 @@ AddEventHandler('trava:PromjeniNetID', function(oldnet, newnet, stanje)
 	for i=1, #Sadnice, 1 do
 		if Sadnice[i] ~= nil then
 			if Sadnice[i].NetID == oldnet then
-				local ObjID = NetworkGetEntityFromNetworkId(newnet)
 				Sadnice[i].NetID = newnet
 				for i=1, #Travica, 1 do
 					if Travica[i] ~= nil then
 						if Travica[i].NetID == oldnet then
 							Travica[i].NetID = newnet
-							Travica[i].Objekt = ObjID
 							break
 						end
 					end
@@ -311,7 +307,6 @@ end)
 
 RegisterNetEvent("trava:PratiRast")
 AddEventHandler('trava:PratiRast', function(netid, stanje)
-	local ObjID = NetworkGetEntityFromNetworkId(netid)
 	if stanje == 3 then
 		table.insert(weedPlants, netid)
 		ESX.ShowNotification("[Marihuana] Stabljika je spremna za branje!")
