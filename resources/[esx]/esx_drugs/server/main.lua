@@ -191,8 +191,10 @@ AddEventHandler('trava:ObrisiSadnicu', function(nid)
 				local Temp = {}
 				for i=1, #Sadnice, 1 do
 					if Sadnice[i] ~= nil and Sadnice[i].ID == src then
-						local coord = GetEntityCoords(Sadnice[i].Objekt)
-						table.insert(Temp, {Stanje = Sadnice[i].Stanje, Koord = coord})
+						if DoesEntityExist(Sadnice[i].Objekt) then
+							local coord = GetEntityCoords(Sadnice[i].Objekt)
+							table.insert(Temp, {Stanje = Sadnice[i].Stanje, Koord = coord})
+						end
 					end
 				end
 				MySQL.Async.execute('UPDATE users SET sadnice = @sad WHERE identifier = @id', {
@@ -220,9 +222,11 @@ function PosadiTravu(src)
 				if Sadnice[i].ID == src then
 					broj = broj+1
 				end
-				local kord = GetEntityCoords(Sadnice[i].Objekt)
-				if distanceFrom(kord.x, kord.y, playerCoords.x, playerCoords.y) < 2.0 then
-					dist = true
+				if DoesEntityExist(Sadnice[i].Objekt) then
+					local kord = GetEntityCoords(Sadnice[i].Objekt)
+					if distanceFrom(kord.x, kord.y, playerCoords.x, playerCoords.y) < 2.0 then
+						dist = true
+					end
 				end
 			end
 		end
@@ -248,8 +252,10 @@ function PosadiTravu(src)
 					local Temp = {}
 					for i=1, #Sadnice, 1 do
 						if Sadnice[i] ~= nil and Sadnice[i].ID == src then
-							local coord = GetEntityCoords(Sadnice[i].Objekt)
-							table.insert(Temp, {Stanje = Sadnice[i].Stanje, Koord = coord})
+							if DoesEntityExist(Sadnice[i].Objekt) then
+								local coord = GetEntityCoords(Sadnice[i].Objekt)
+								table.insert(Temp, {Stanje = Sadnice[i].Stanje, Koord = coord})
+							end
 						end
 					end
 					MySQL.Async.execute('UPDATE users SET sadnice = @sad WHERE identifier = @id', {
@@ -303,34 +309,38 @@ function Izrati(nid, src, stanje)
 	for i=1, #Sadnice, 1 do
 		if Sadnice[i] ~= nil then
 			if Sadnice[i].ID == src and Sadnice[i].Objekt == ObjID then
-				coord = GetEntityCoords(Sadnice[i].Objekt)
-				DeleteEntity(Sadnice[i].Objekt)
-				Sadnice[i].Stanje = stanje
-				local Marih
-				Marih = CreateObjectNoOffset(GetHashKey(mara), coord.x,  coord.y,  coord.z,true,false)
-				while not DoesEntityExist(Marih) do
-					Wait(100)
-				end
-				Sadnice[i].Objekt = Marih
-				local netid = NetworkGetNetworkIdFromEntity(Marih)
-				TriggerClientEvent("trava:PromjeniNetID", -1, nid, netid, stanje)
-				if stanje ~= 3 then
-					TriggerClientEvent("trava:PratiRast", src, netid, stanje)
-				else
-					xPlayer.showNotification("[Marihuana] Stabljika je spremna za branje!")
-				end
-				local Temp = {}
-				for i=1, #Sadnice, 1 do
-					if Sadnice[i] ~= nil and Sadnice[i].ID == src then
-						local coord = GetEntityCoords(Sadnice[i].Objekt)
-						table.insert(Temp, {Stanje = Sadnice[i].Stanje, Koord = coord})
+				if DoesEntityExist(Sadnice[i].Objekt) then
+					coord = GetEntityCoords(Sadnice[i].Objekt)
+					DeleteEntity(Sadnice[i].Objekt)
+					Sadnice[i].Stanje = stanje
+					local Marih
+					Marih = CreateObjectNoOffset(GetHashKey(mara), coord.x,  coord.y,  coord.z,true,false)
+					while not DoesEntityExist(Marih) do
+						Wait(100)
 					end
+					Sadnice[i].Objekt = Marih
+					local netid = NetworkGetNetworkIdFromEntity(Marih)
+					TriggerClientEvent("trava:PromjeniNetID", -1, nid, netid, stanje)
+					if stanje ~= 3 then
+						TriggerClientEvent("trava:PratiRast", src, netid, stanje)
+					else
+						xPlayer.showNotification("[Marihuana] Stabljika je spremna za branje!")
+					end
+					local Temp = {}
+					for i=1, #Sadnice, 1 do
+						if Sadnice[i] ~= nil and Sadnice[i].ID == src then
+							if DoesEntityExist(Sadnice[i].Objekt) then
+								local coord = GetEntityCoords(Sadnice[i].Objekt)
+								table.insert(Temp, {Stanje = Sadnice[i].Stanje, Koord = coord})
+							end
+						end
+					end
+					MySQL.Async.execute('UPDATE users SET sadnice = @sad WHERE identifier = @id', {
+						['@sad'] = json.encode(Temp),
+						['@id'] = xPlayer.identifier
+					})
+					break
 				end
-				MySQL.Async.execute('UPDATE users SET sadnice = @sad WHERE identifier = @id', {
-					['@sad'] = json.encode(Temp),
-					['@id'] = xPlayer.identifier
-				})
-				break
 			end
 		end
 	end
