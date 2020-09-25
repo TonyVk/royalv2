@@ -46,6 +46,18 @@ AddEventHandler('esx:setJob', function(job)
 	ESX.PlayerData.job = job
 end)
 
+RegisterNetEvent('trava:VratiSadnice')
+AddEventHandler('trava:VratiSadnice', function(nes)
+	for i=1, #nes, 1 do
+		table.insert(Sadnice, {NetID = nes[i].NetID, Stanje = nes[i].Stanje})
+		local ObjID = NetworkGetEntityFromNetworkId(nes[i].NetID)
+		table.insert(Travica, {NetID = nes[i].NetID, Objekt = ObjID})
+		if nes[i].Stanje == 3 then
+			table.insert(weedPlants, nes[i].NetID)
+		end
+	end
+end)
+
 local connected = false
 
 AddEventHandler("playerSpawned", function()

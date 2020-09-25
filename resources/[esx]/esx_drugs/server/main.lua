@@ -56,9 +56,11 @@ end)
 AddEventHandler('playerDropped', function()
 	for i=1, #Sadnice, 1 do
 		if Sadnice[i] ~= nil and Sadnice[i].ID == source then
-			DeleteEntity(Sadnice[i].Objekt)
-			table.remove(Sadnice, i)
-			break
+			if DoesEntityExist(Sadnice[i].Objekt) then
+				DeleteEntity(Sadnice[i].Objekt)
+				table.remove(Sadnice, i)
+				break
+			end
 		end
 	end
 end)
@@ -87,6 +89,7 @@ AddEventHandler('trava:ProvjeriSadnice', function()
         end
       end
     )
+	TriggerClientEvent("trava:VratiSadnice", src, Sadnice)
 end)
 
 ESX.RegisterServerCallback('esx_drugs:buyLicense', function(source, cb, licenseName)
@@ -245,8 +248,8 @@ function PosadiTravu(src)
 					while not DoesEntityExist(Marih) do
 						Wait(100)
 					end
-					table.insert(Sadnice, {ID = src, Objekt = Marih, Stanje = 1})
 					local netid = NetworkGetNetworkIdFromEntity(Marih)
+					table.insert(Sadnice, {ID = src, Objekt = Marih, Stanje = 1, NetID = netid})
 					TriggerClientEvent("trava:EoTiNetID", -1, netid)
 					TriggerClientEvent("trava:PratiRast", src, netid, 1)
 					local Temp = {}
@@ -290,8 +293,8 @@ function PosadiTravu2(src, co, stanje)
 	while not DoesEntityExist(Marih) do
 		Wait(100)
 	end
-	table.insert(Sadnice, {ID = src, Objekt = Marih, Stanje = stanje})
 	local netid = NetworkGetNetworkIdFromEntity(Marih)
+	table.insert(Sadnice, {ID = src, Objekt = Marih, Stanje = stanje, NetID = netid})
 	TriggerClientEvent("trava:EoTiNetID", -1, netid)
 	TriggerClientEvent("trava:PratiRast", src, netid, stanje)
 end
@@ -320,6 +323,7 @@ function Izrati(nid, src, stanje)
 					end
 					Sadnice[i].Objekt = Marih
 					local netid = NetworkGetNetworkIdFromEntity(Marih)
+					Sadnice[i].NetID = netid
 					TriggerClientEvent("trava:PromjeniNetID", -1, nid, netid, stanje)
 					if stanje ~= 3 then
 						TriggerClientEvent("trava:PratiRast", src, netid, stanje)
