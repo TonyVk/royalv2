@@ -264,7 +264,7 @@ Citizen.CreateThread(function()
 			end
 		end
 		
-		if(GetDistanceBetweenCoords(coords, 1799.8345947266, 2489.1350097656, -119.02998352051, true) < 2.75 and isInPrison == false) then
+		if(GetDistanceBetweenCoords(coords, 1799.8345947266, 2489.1350097656, -119.02998352051, true) < 2.75 and isInPrison == false and RentVehicle ~= nil) then
 			isInPrison = true
 			ESX.ShowNotification("Nasi podaci pokazuju da ste trenutno u zatvoru.")
 			ESX.ShowNotification("Uzeli smo auto da vam se ne naplacuje vise.")
