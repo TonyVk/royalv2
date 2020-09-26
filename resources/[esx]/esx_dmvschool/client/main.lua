@@ -73,29 +73,31 @@ function StopTheoryTest(success)
 end
 
 function StartDriveTest(type)
-	ESX.Game.SpawnVehicle(Config.VehicleModels[type], Config.Zones.VehicleSpawnPoint.Pos, Config.Zones.VehicleSpawnPoint.Pos.h, function(vehicle)
-		CurrentTest       = 'drive'
-		CurrentTestType   = type
-		CurrentCheckPoint = 0
-		LastCheckPoint    = -1
-		CurrentZoneType   = 'residence'
-		DriveErrors       = 0
-		IsAboveSpeedLimit = false
-		CurrentVehicle    = vehicle
-		LastVehicleHealth = GetEntityHealth(vehicle)
+	if CurrentTest == nil then
+		ESX.Game.SpawnVehicle(Config.VehicleModels[type], Config.Zones.VehicleSpawnPoint.Pos, Config.Zones.VehicleSpawnPoint.Pos.h, function(vehicle)
+			CurrentTest       = 'drive'
+			CurrentTestType   = type
+			CurrentCheckPoint = 0
+			LastCheckPoint    = -1
+			CurrentZoneType   = 'residence'
+			DriveErrors       = 0
+			IsAboveSpeedLimit = false
+			CurrentVehicle    = vehicle
+			LastVehicleHealth = GetEntityHealth(vehicle)
 
-		local playerPed   = PlayerPedId()
-		TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
-	end)
+			local playerPed   = PlayerPedId()
+			TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
+		end)
 
-	TriggerServerEvent('polozi:tuljana', Config.Prices[type])
-	local model = RequestModel("a_f_m_business_02")
-	while not HasModelLoaded("a_f_m_business_02") do
-		Wait(1)
+		TriggerServerEvent('polozi:tuljana', Config.Prices[type])
+		local model = RequestModel("a_f_m_business_02")
+		while not HasModelLoaded("a_f_m_business_02") do
+			Wait(1)
+		end
+		Pedara = CreatePed(5, model, 236.61921691895, -1351.8876953125, 30.569887161255 , 260, false, true)
+		SetModelAsNoLongerNeeded(model)
+		FreezeEntityPosition(Pedara)
 	end
-	Pedara = CreatePed(5, model, 236.61921691895, -1351.8876953125, 30.569887161255 , 260, false, true)
-	SetModelAsNoLongerNeeded(model)
-	FreezeEntityPosition(Pedara)
 end
 
 function StopDriveTest(success)
