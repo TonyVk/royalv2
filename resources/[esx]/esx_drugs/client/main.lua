@@ -288,10 +288,10 @@ AddEventHandler('trava:PromjeniNetID', function(oldnet, newnet, stanje)
 		if Sadnice[i] ~= nil then
 			if Sadnice[i].NetID == oldnet then
 				Sadnice[i].NetID = newnet
-				for i=1, #Travica, 1 do
-					if Travica[i] ~= nil then
-						if Travica[i].NetID == oldnet then
-							Travica[i].NetID = newnet
+				for a=1, #Travica, 1 do
+					if Travica[a] ~= nil then
+						if Travica[a].NetID == oldnet then
+							Travica[a].NetID = newnet
 							break
 						end
 					end
@@ -330,6 +330,32 @@ AddEventHandler('esx_drugs:Animacija', function()
 	end
 	Wait(10000)
 	ClearPedTasks(PlayerPedId())
+end)
+
+RegisterNetEvent("trava:MakniSadnicu")
+AddEventHandler('trava:MakniSadnicu', function(nid)
+	for i=1, #Sadnice, 1 do
+		if Sadnice[i] ~= nil then
+			if Sadnice[i].NetID == nid then
+				table.remove(Sadnice, i)
+				break
+			end
+		end
+	end
+	for a=1, #Travica, 1 do
+		if Travica[a] ~= nil then
+			if Travica[a].NetID == nid then
+				table.remove(Travica, a)
+				break
+			end
+		end
+	end
+	for b=1, #weedPlants, 1 do
+		if weedPlants[b] == nid then
+			table.remove(weedPlants, b)
+			break
+		end
+	end
 end)
 
 Citizen.CreateThread(function()
@@ -455,23 +481,10 @@ Citizen.CreateThread(function()
 					Citizen.Wait(1500)
 					FreezeEntityPosition(playerPed, false)
 			
-					if Travara == false then
-						table.remove(weedPlants, nearbyID)
-					end
-							
-					for i=1, #Travica, 1 do
-						if Travica[i] ~= nil then
-							if Travica[i].NetID == netid then
-								table.remove(Travica, i)
-								break
-							end
-						end
-					end
 					for a=1, #Sadnice, 1 do
 						if Sadnice[a] ~= nil then
 							if Sadnice[a].NetID == netid then
 								TriggerServerEvent("trava:ObrisiSadnicu", netid)
-								table.remove(Sadnice, a)
 								break
 							end
 						end
@@ -491,23 +504,12 @@ Citizen.CreateThread(function()
 			
 							--ESX.Game.DeleteObject(nearbyObject)
 			
-							table.remove(weedPlants, nearbyID)
-			
 							TriggerServerEvent('esx_drugs:EoTiKanabisa')
-							
-							for i=1, #Travica, 1 do
-								if Travica[i] ~= nil then
-									if Travica[i].NetID == netid then
-										table.remove(Travica, i)
-										break
-									end
-								end
-							end
+
 							for a=1, #Sadnice, 1 do
 								if Sadnice[a] ~= nil then
 									if Sadnice[a].NetID == netid then
 										TriggerServerEvent("trava:ObrisiSadnicu", netid)
-										table.remove(Sadnice, a)
 										break
 									end
 								end
@@ -529,59 +531,3 @@ Citizen.CreateThread(function()
 	end
 
 end)
-
-function SpawnWeedPlants()
-		Citizen.Wait(0)
-		local weedCoords = GetEntityCoords(PlayerPedId())
-		TriggerServerEvent('esx_drugs:MakniSeed')
-		--local weedCoords = GenerateWeedCoords()
-		local travca
-		ESX.Game.SpawnObject('prop_weed_02', weedCoords, function(obj)
-			PlaceObjectOnGroundProperly(obj)
-			FreezeEntityPosition(obj, true)
-			travca = obj
-		end)
-		Wait(60000)
-		ESX.Game.DeleteObject(travca)
-		ESX.Game.SpawnObject('prop_weed_01', weedCoords, function(obj)
-			PlaceObjectOnGroundProperly(obj)
-			FreezeEntityPosition(obj, true)
-			table.insert(weedPlants, obj)
-		end)
-end
-
-function GenerateWeedCoords()
-	while true do
-		Citizen.Wait(1)
-
-		local weedCoordX, weedCoordY
-
-		math.randomseed(GetGameTimer())
-		local modX = math.random(-90, 90)
-
-		Citizen.Wait(100)
-
-		math.randomseed(GetGameTimer())
-		local modY = math.random(-90, 90)
-
-		weedCoordX = Config.CircleZones.WeedField.coords.x + modX
-		weedCoordY = Config.CircleZones.WeedField.coords.y + modY
-
-		local coordZ = GetCoordZ(weedCoordX, weedCoordY)
-		local coord = vector3(weedCoordX, weedCoordY, coordZ)
-	end
-end
-
-function GetCoordZ(x, y)
-	local groundCheckHeights = { 40.0, 41.0, 42.0, 43.0, 44.0, 45.0, 46.0, 47.0, 48.0, 49.0, 50.0 }
-
-	for i, height in ipairs(groundCheckHeights) do
-		local foundGround, z = GetGroundZFor_3dCoord(x, y, height)
-
-		if foundGround then
-			return z
-		end
-	end
-
-	return 43.0
-end

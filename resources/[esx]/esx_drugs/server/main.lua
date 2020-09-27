@@ -192,11 +192,11 @@ AddEventHandler('trava:ObrisiSadnicu', function(nid)
 				DeleteEntity(Sadnice[i].Objekt)
 				table.remove(Sadnice, i)
 				local Temp = {}
-				for i=1, #Sadnice, 1 do
-					if Sadnice[i] ~= nil and Sadnice[i].ID == src then
-						if DoesEntityExist(Sadnice[i].Objekt) then
-							local coord = GetEntityCoords(Sadnice[i].Objekt)
-							table.insert(Temp, {Stanje = Sadnice[i].Stanje, Koord = coord})
+				for a=1, #Sadnice, 1 do
+					if Sadnice[a] ~= nil and Sadnice[a].ID == src then
+						if DoesEntityExist(Sadnice[a].Objekt) then
+							local coord = GetEntityCoords(Sadnice[a].Objekt)
+							table.insert(Temp, {Stanje = Sadnice[a].Stanje, Koord = coord})
 						end
 					end
 				end
@@ -204,6 +204,7 @@ AddEventHandler('trava:ObrisiSadnicu', function(nid)
 					['@sad'] = json.encode(Temp),
 					['@id'] = xPlayer.identifier
 				})
+				TriggerClientEvent("trava:MakniSadnicu", -1, nid)
 				break
 			end
 		end

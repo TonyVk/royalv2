@@ -20,7 +20,9 @@ RegisterNetEvent("nogomet:pokreni")
 AddEventHandler("nogomet:pokreni", function(vr)
 	local loptee = "p_ld_soc_ball_01"
 	Lopta = CreateObjectNoOffset(GetHashKey(loptee), 771.25549316406, -233.44470214844, 65.214479064941,true,false)
-	Wait(300)
+	while not DoesEntityExist(Lopta) do
+		Wait(100)
+	end
 	local netid = NetworkGetNetworkIdFromEntity(Lopta)
 	TriggerClientEvent("nogomet:start", -1, vr, netid)
 	PratiKraj(vr)

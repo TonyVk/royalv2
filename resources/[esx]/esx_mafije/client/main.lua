@@ -2127,6 +2127,7 @@ AddEventHandler('mafije:oslobodiga', function()
       SetEnableHandcuffs(playerPed, false)
       SetPedCanPlayGestureAnims(playerPed,  true)
       FreezeEntityPosition(playerPed, false)
+	  TriggerEvent("NeKickaj", false)
     end
 end)
 
@@ -2150,7 +2151,7 @@ AddEventHandler('mafije:handcuff', function()
       SetEnableHandcuffs(playerPed, true)
       SetPedCanPlayGestureAnims(playerPed, false)
       FreezeEntityPosition(playerPed,  true)
-
+	  TriggerEvent("NeKickaj", true)
     else
 	  TriggerEvent("esx_grovejob:oslobodiga")
 	  TriggerEvent("esx_ballasjob:oslobodiga")
@@ -2161,7 +2162,7 @@ AddEventHandler('mafije:handcuff', function()
       SetEnableHandcuffs(playerPed, false)
       SetPedCanPlayGestureAnims(playerPed,  true)
       FreezeEntityPosition(playerPed, false)
-
+      TriggerEvent("NeKickaj", false)
     end
 
   end)
