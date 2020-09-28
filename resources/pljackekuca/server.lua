@@ -1,24 +1,17 @@
 ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-local zadnjiitem = 0
-
 local itemi = {
     [1] = { ime = 'lancic', label = "Lancic", kolicina = math.random(1,3)},
     [2]  = { ime = 'narukvica', label = "Narukvica", kolicina = math.random(1,4)},
     [3] = { ime = 'cocaine', label = "Vrecica kokaina", kolicina = 1},
     [4] = { ime = 'diamond', label = "Dijamant", kolicina = math.random(1,2)},
-    [5]  = { ime = 'marijuana', label = "Joint", kolicina = math.random(1,2)},
-    [6] = { ime = 'clip', label = "Sarzer", kolicina = 1}
+    [5] = { ime = 'clip', label = "Sarzer", kolicina = 1}
 }
 
 RegisterNetEvent('pkuca:DajItem')
 AddEventHandler('pkuca:DajItem', function()
-	local rand = math.random(1, 6)
-	while rand == zadnjiitem do
-		rand = math.random(1, 6)
-		Wait(0)
-	end
+	local rand = math.random(1, 5)
 	local src = source
 	local xPlayer = ESX.GetPlayerFromId(src)
 	local kolic = itemi[rand].kolicina

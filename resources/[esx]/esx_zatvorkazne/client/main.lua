@@ -91,17 +91,20 @@ AddEventHandler('esx_communityservice:inCommunityService', function(actions_rema
 	communityServiceFinished = false
 
 	while actionsRemaining > 0 and communityServiceFinished ~= true do
-		Citizen.Wait(20000)
+		Citizen.Wait(10000)
 		if actionsRemaining > 0 then
 			if IsPedInAnyVehicle(playerPed, false) then
 				ClearPedTasksImmediately(playerPed)
 			end
-
-			if GetDistanceBetweenCoords(GetEntityCoords(playerPed), Config.ServiceLocation.x, Config.ServiceLocation.y, Config.ServiceLocation.z) > 45 then
+			local kord = GetEntityCoords(playerPed)
+			if GetDistanceBetweenCoords(kord, Config.ServiceLocation.x, Config.ServiceLocation.y, Config.ServiceLocation.z, true) > 45 then
 				ESX.Game.Teleport(playerPed, Config.ServiceLocation)
-					TriggerEvent('chat:addMessage', { args = { _U('judge'), _U('escape_attempt') }, color = { 147, 196, 109 } })
-					TriggerServerEvent('esx_communityservice:extendService')
-					actionsRemaining = actionsRemaining + Config.ServiceExtensionOnEscape
+				TriggerEvent('chat:addMessage', { args = { _U('judge'), _U('escape_attempt') }, color = { 147, 196, 109 } })
+				TriggerServerEvent('esx_communityservice:extendService')
+				actionsRemaining = actionsRemaining + Config.ServiceExtensionOnEscape
+			end
+			if kord.z < (Config.ServiceLocation.z-3) then
+				ESX.Game.Teleport(playerPed, Config.ServiceLocation)
 			end
 		end
 	end

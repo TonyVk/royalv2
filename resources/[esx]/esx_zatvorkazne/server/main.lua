@@ -40,7 +40,6 @@ RegisterServerEvent('ciscenje:DodajObjekt')
 AddEventHandler('ciscenje:DodajObjekt', function(nid)
 	local src = source
 	table.insert(Metle, {ID = src, NetID = nid})
-	print(#Metle)
 end)
 
 RegisterServerEvent('ciscenje:MakniObjekt')
@@ -50,7 +49,6 @@ AddEventHandler('ciscenje:MakniObjekt', function(nid)
 		if Metle[i] ~= nil then
 			if Metle[i].ID == src and Metle[i].NetID == nid then
 				table.remove(Metle, i)
-				print(#Metle)
 				break
 			end
 		end
