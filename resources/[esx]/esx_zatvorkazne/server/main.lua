@@ -1,5 +1,7 @@
 ESX = nil
 
+local Metle = {}
+
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 
@@ -15,7 +17,6 @@ TriggerEvent('es:addGroupCommand', 'kazna', 'admin', function(source, args, user
 end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, { args = { _U('system_msn'), _U('insufficient_permissions') } })
 end, {help = _U('give_player_community'), params = {{name = "id", help = _U('target_id')}, {name = "actions", help = _U('action_count_suggested')}, {name = "reason", help = _U('action_razlog')}}})
-_U('system_msn')
 
 
 TriggerEvent('es:addGroupCommand', 'maknikaznu', 'admin', function(source, args, user)
@@ -35,8 +36,38 @@ end, function(source, args, user)
 end, {help = _U('unjail_people'), params = {{name = "id", help = _U('target_id')}}})
 
 
+RegisterServerEvent('ciscenje:DodajObjekt')
+AddEventHandler('ciscenje:DodajObjekt', function(nid)
+	local src = source
+	table.insert(Metle, {ID = src, NetID = nid})
+	print(#Metle)
+end)
 
+RegisterServerEvent('ciscenje:MakniObjekt')
+AddEventHandler('ciscenje:MakniObjekt', function(nid)
+	local src = source
+	for i=1, #Metle, 1 do
+		if Metle[i] ~= nil then
+			if Metle[i].ID == src and Metle[i].NetID == nid then
+				table.remove(Metle, i)
+				print(#Metle)
+				break
+			end
+		end
+	end
+end)
 
+AddEventHandler('playerDropped', function()
+	local src = source
+	for i=1, #Metle, 1 do
+		if Metle[i] ~= nil then
+			if Metle[i].ID == src then
+				local ObjID = NetworkGetEntityFromNetworkId(Metle[i].NetID)
+				DeleteEntity(ObjID)
+			end
+		end
+	end
+end)
 
 RegisterServerEvent('esx_communityservice:endCommunityServiceCommand')
 AddEventHandler('esx_communityservice:endCommunityServiceCommand', function(source)

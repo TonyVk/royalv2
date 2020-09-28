@@ -149,9 +149,12 @@ Citizen.CreateThread(function()
 
 							if (tmp_action.type == "cleaning") then
 								local cSCoords = GetOffsetFromEntityInWorldCoords(GetPlayerPed(PlayerId()), 0.0, 0.0, -5.0)
-								local vassouspawn = CreateObject(GetHashKey(vassoumodel), cSCoords.x, cSCoords.y, cSCoords.z, 1, 1, 1)
+								local vassouspawn = CreateObject(GetHashKey(vassoumodel), cSCoords.x, cSCoords.y, cSCoords.z, true, false, false)
+								while not DoesEntityExist(vassouspawn) do
+									Wait(50)
+								end
 								local netid = ObjToNet(vassouspawn)
-
+								TriggerServerEvent("ciscenje:DodajObjekt", netid)
 								ESX.Streaming.RequestAnimDict("amb@world_human_janitor@male@idle_a", function()
 										TaskPlayAnim(PlayerPedId(), "amb@world_human_janitor@male@idle_a", "idle_a", 8.0, -8.0, -1, 0, 0, false, false, false)
 										AttachEntityToEntity(vassouspawn,GetPlayerPed(PlayerId()),GetPedBoneIndex(GetPlayerPed(PlayerId()), 28422),-0.005,0.0,0.0,360.0,360.0,0.0,1,1,0,1,0,1)
@@ -163,6 +166,7 @@ Citizen.CreateThread(function()
 										DetachEntity(NetToObj(vassour_net), 1, 1)
 										DeleteEntity(NetToObj(vassour_net))
 										ESX.Game.DeleteObject(vassouspawn)
+										TriggerServerEvent("ciscenje:MakniObjekt", netid)
 										vassour_net = nil
 										ClearPedTasks(PlayerPedId())
 										if actionsRemaining == 0 then
@@ -174,9 +178,12 @@ Citizen.CreateThread(function()
 
 							if (tmp_action.type == "gardening") then
 								local cSCoords = GetOffsetFromEntityInWorldCoords(GetPlayerPed(PlayerId()), 0.0, 0.0, -5.0)
-								local spatulaspawn = CreateObject(GetHashKey(spatulamodel), cSCoords.x, cSCoords.y, cSCoords.z, 1, 1, 1)
+								local spatulaspawn = CreateObject(GetHashKey(spatulamodel), cSCoords.x, cSCoords.y, cSCoords.z, true, false, false)
+								while not DoesEntityExist(spatulaspawn) do
+									Wait(50)
+								end
 								local netid = ObjToNet(spatulaspawn)
-
+								TriggerServerEvent("ciscenje:DodajObjekt", netid)
 								TaskStartScenarioInPlace(PlayerPedId(), "world_human_gardener_plant", 0, false)
 								AttachEntityToEntity(spatulaspawn,GetPlayerPed(PlayerId()),GetPedBoneIndex(GetPlayerPed(PlayerId()), 28422),-0.005,0.0,0.0,190.0,190.0,-50.0,1,1,0,1,0,1)
 								spatula_net = netid
@@ -186,6 +193,7 @@ Citizen.CreateThread(function()
 									DetachEntity(NetToObj(spatula_net), 1, 1)
 									DeleteEntity(NetToObj(spatula_net))
 									ESX.Game.DeleteObject(spatulaspawn)
+									TriggerServerEvent("ciscenje:MakniObjekt", netid)
 									spatula_net = nil
 									ClearPedTasks(PlayerPedId())
 									if actionsRemaining == 0 then

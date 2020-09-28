@@ -54,8 +54,9 @@ AddEventHandler('droge:prodajih', function(itemName, amount)
 end)
 
 AddEventHandler('playerDropped', function()
+	local src = source
 	for i=1, #Sadnice, 1 do
-		if Sadnice[i] ~= nil and Sadnice[i].ID == source then
+		if Sadnice[i] ~= nil and Sadnice[i].ID == src then
 			if DoesEntityExist(Sadnice[i].Objekt) then
 				DeleteEntity(Sadnice[i].Objekt)
 				table.remove(Sadnice, i)

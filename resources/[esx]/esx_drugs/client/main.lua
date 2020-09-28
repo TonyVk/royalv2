@@ -432,13 +432,14 @@ Citizen.CreateThread(function()
 		end
 		local playerPed = PlayerPedId()
 		local coords = GetEntityCoords(playerPed)
-		local nearbyObject, nearbyID
+		local nearbyObject = nil
+		local nearbyID = nil
 		local Travara = false
 
 		for i=1, #weedPlants, 1 do
 			if NetworkDoesEntityExistWithNetworkId(weedPlants[i]) then
 				local ObjID = NetworkGetEntityFromNetworkId(weedPlants[i])
-				if DoesEntityExist(ObjID) then
+				if IsEntityAnObject(ObjID) and GetEntityModel(ObjID) == GetHashKey("bkr_prop_weed_lrg_01a") then
 					if GetDistanceBetweenCoords(coords, GetEntityCoords(ObjID), false) < 1 then
 						nearbyObject, nearbyID = ObjID, i
 					end
@@ -450,7 +451,7 @@ Citizen.CreateThread(function()
 			for i=1, #Travica, 1 do
 				if NetworkDoesEntityExistWithNetworkId(Travica[i].NetID) then
 					local ObjID = NetworkGetEntityFromNetworkId(Travica[i].NetID)
-					if DoesEntityExist(ObjID) then
+					if IsEntityAnObject(ObjID) and (GetEntityModel(ObjID) == GetHashKey("bkr_prop_weed_lrg_01a") or GetEntityModel(ObjID) == GetHashKey("bkr_prop_weed_med_01a") or GetEntityModel(ObjID) == GetHashKey("bkr_prop_weed_01_small_01a")) then
 						if GetDistanceBetweenCoords(coords, GetEntityCoords(ObjID), false) < 1 then
 							nearbyObject, nearbyID = ObjID, i
 							Travara = true
@@ -460,7 +461,7 @@ Citizen.CreateThread(function()
 			end
 		end
 
-		if nearbyObject and IsPedOnFoot(playerPed) then
+		if nearbyObject and IsPedOnFoot(playerPed) and nearbyObject ~= nil then
 			local netid = NetworkGetNetworkIdFromEntity(nearbyObject)
 			if not isPickingUp then
 				if ESX.PlayerData.job.name == "police" or ESX.PlayerData.job.name == "sipa" then
