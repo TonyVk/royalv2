@@ -239,7 +239,7 @@ function PosadiTravu(src)
 		local xSaksija = xPlayer.getInventoryItem('saksija')
 		local xZemlja = xPlayer.getInventoryItem('zemlja')
 		if xSeed.count >= 1 and xSaksija.count >= 1 and xZemlja.count >= 1 then
-			if broj < 5 then
+			if broj < 20 then
 				if dist == false then
 					xPlayer.removeInventoryItem('seed', 1)
 					xPlayer.removeInventoryItem('saksija', 1)
@@ -271,7 +271,7 @@ function PosadiTravu(src)
 					xPlayer.showNotification("Preblizu ste drugoj sadnici!")
 				end
 			else
-				xPlayer.showNotification("Vec imate posadjeno 5 sadnica")
+				xPlayer.showNotification("Vec imate posadjeno 20 sadnica")
 			end
 		else
 			xPlayer.showNotification("Nemate dovoljno sjemena/saksija/zemlje!")

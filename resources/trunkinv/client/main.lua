@@ -404,18 +404,19 @@ AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
 		local playerPed  = GetPlayerPed(-1)
 		local weaponList = ESX.GetWeaponList()
 
-		for i=1, #weaponList, 1 do
+		if PlayerData.job.name ~= "police" and PlayerData.job.name ~= "sipa" then
+			for i=1, #weaponList, 1 do
 
-		  local weaponHash = GetHashKey(weaponList[i].name)
-		  
+			  local weaponHash = GetHashKey(weaponList[i].name)
+			  
 
-		  if HasPedGotWeapon(playerPed,  weaponHash,  false) and weaponList[i].name ~= 'WEAPON_UNARMED' then
-			local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
-			table.insert(elem, {label = weaponList[i].label .. ' [' .. ammo .. ']',name = weaponList[i].label, type = 'item_weapon', value = weaponList[i].name, count = ammo})
-		  end
+			  if HasPedGotWeapon(playerPed,  weaponHash,  false) and weaponList[i].name ~= 'WEAPON_UNARMED' then
+				local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
+				table.insert(elem, {label = weaponList[i].label .. ' [' .. ammo .. ']',name = weaponList[i].label, type = 'item_weapon', value = weaponList[i].name, count = ammo})
+			  end
 
+			end
 		end
-		
 
 			ESX.UI.Menu.Open(
 			  'default', GetCurrentResourceName(), 'inventory_player',

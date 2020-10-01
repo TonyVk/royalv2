@@ -6,6 +6,8 @@ local Koord = {}
 local Vozila = {}
 local Oruzja = {}
 local Boje = {}
+local EnableESXIdentity = true
+local EnableLicenses = true
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -1001,7 +1003,7 @@ end)
 
 ESX.RegisterServerCallback('mafije:getOtherPlayerData', function(source, cb, target)
 
-  if Config.EnableESXIdentity then
+  if EnableESXIdentity then
 
     local xPlayer = ESX.GetPlayerFromId(target)
 
@@ -1039,7 +1041,7 @@ ESX.RegisterServerCallback('mafije:getOtherPlayerData', function(source, cb, tar
 
     end)
 
-    if Config.EnableLicenses then
+    if EnableLicenses then
 
       TriggerEvent('esx_license:getLicenses', source, function(licenses)
         data.licenses = licenses
@@ -1096,7 +1098,7 @@ end)
 
 ESX.RegisterServerCallback('mafije:getVehicleInfos', function(source, cb, plate)
 
-  if Config.EnableESXIdentity then
+  if EnableESXIdentity then
 
     MySQL.Async.fetchAll(
       'SELECT * FROM owned_vehicles',
