@@ -15,7 +15,7 @@ function UcitajKutije()
 	Kutije = {}
 	Pedovi = {}
 	MySQL.Async.fetchAll(
-      'SELECT * FROM brod',
+      'SELECT * FROM brod WHERE ID = 1',
       {},
       function(result)
 		if result[1] ~= nil then
@@ -36,20 +36,33 @@ RegisterNetEvent("brod:UpdatePedove")
 AddEventHandler('brod:UpdatePedove', function(ped)
 	Pedovi = ped
 	MySQL.Async.fetchScalar(
-      'SELECT Pedovi FROM brod',
+      'SELECT Pedovi FROM brod WHERE ID = 1',
       {},
       function(result)
 		if result ~= nil then
-			MySQL.Async.execute('UPDATE brod SET Pedovi = @ped', {
-				['@ped'] = json.encode(ped)
-			})
-		else
-			MySQL.Async.execute('INSERT INTO brod (Pedovi) VALUES (@ped)',{
+			MySQL.Async.execute('UPDATE brod SET Pedovi = @ped WHERE ID = 1', {
 				['@ped'] = json.encode(ped)
 			})
 		end
       end
     )
+end)
+
+RegisterNetEvent("brod:ObrisiPeda")
+AddEventHandler('brod:ObrisiPeda', function(netid)
+	local PedID = NetworkGetEntityFromNetworkId(netid)
+	DeleteEntity(PedID)
+end)
+
+RegisterNetEvent("brod:SpawnPeda")
+AddEventHandler('brod:SpawnPeda', function(ped, hash, x, y, z, h, br)
+	local src = source
+	local ped = CreatePed(ped, hash, x, y, z, h, true)
+	while not DoesEntityExist(ped) do
+		Wait(100)
+	end
+	local netid = NetworkGetNetworkIdFromEntity(ped)
+	TriggerClientEvent("brod:VratiPeda", src, netid, br)
 end)
 
 RegisterNetEvent("brod:Obavijest")
@@ -74,15 +87,11 @@ AddEventHandler('brod:PosaljiKutije', function(kut)
 	Kutije = kut
 	TriggerClientEvent("brod:VratiKutije", -1, kut)
 	MySQL.Async.fetchScalar(
-      'SELECT Kutije FROM brod',
+      'SELECT Kutije FROM brod WHERE ID = 1',
       {},
       function(result)
 		if result ~= nil then
-			MySQL.Async.execute('UPDATE brod SET Kutije = @kut', {
-				['@kut'] = json.encode(kut)
-			})
-		else
-			MySQL.Async.execute('INSERT INTO brod (Kutije) VALUES (@kut)',{
+			MySQL.Async.execute('UPDATE brod SET Kutije = @kut WHERE ID = 1', {
 				['@kut'] = json.encode(kut)
 			})
 		end

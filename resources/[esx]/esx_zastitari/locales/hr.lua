@@ -2,7 +2,7 @@ Locales['hr'] = {
   -- Cloakroom
   ['cloakroom'] = 'Ormar',
   ['citizen_wear'] = 'civlina odjeca',
-  ['police_wear'] = 'policijska odjeca',
+  ['police_wear'] = 'radna odjeca',
   ['gilet_wear'] = 'narancasti reflektirajuci prsluk',
   ['bullet_wear'] = 'pancirka',
   ['no_outfit'] = 'nema uniforme koja ti odgovara!',
