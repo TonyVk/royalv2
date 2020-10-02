@@ -60,7 +60,6 @@ AddEventHandler('playerDropped', function()
 			if DoesEntityExist(Sadnice[i].Objekt) then
 				DeleteEntity(Sadnice[i].Objekt)
 				table.remove(Sadnice, i)
-				break
 			end
 		end
 	end
@@ -179,7 +178,7 @@ end
 
 RegisterServerEvent('trava:Izrasti')
 AddEventHandler('trava:Izrasti', function(nid, stanje)
-	Izrati(nid, source, stanje)
+	Izrasti(nid, source, stanje)
 end)
 
 RegisterServerEvent('trava:ObrisiSadnicu')
@@ -301,7 +300,7 @@ function PosadiTravu2(src, co, stanje)
 	TriggerClientEvent("trava:PratiRast", src, netid, stanje)
 end
 
-function Izrati(nid, src, stanje) 
+function Izrasti(nid, src, stanje) 
 	local xPlayer = ESX.GetPlayerFromId(src)
 	local mara
 	if stanje == 2 then
@@ -333,11 +332,11 @@ function Izrati(nid, src, stanje)
 						xPlayer.showNotification("[Marihuana] Stabljika je spremna za branje!")
 					end
 					local Temp = {}
-					for i=1, #Sadnice, 1 do
-						if Sadnice[i] ~= nil and Sadnice[i].ID == src then
-							if DoesEntityExist(Sadnice[i].Objekt) then
-								local coord = GetEntityCoords(Sadnice[i].Objekt)
-								table.insert(Temp, {Stanje = Sadnice[i].Stanje, Koord = coord})
+					for a=1, #Sadnice, 1 do
+						if Sadnice[a] ~= nil and Sadnice[a].ID == src then
+							if DoesEntityExist(Sadnice[a].Objekt) then
+								local coord = GetEntityCoords(Sadnice[a].Objekt)
+								table.insert(Temp, {Stanje = stanje, Koord = coord})
 							end
 						end
 					end

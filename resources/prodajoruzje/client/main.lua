@@ -117,52 +117,6 @@ AddEventHandler('esx:deleteVehicle2', function()
     end 
 end)
 
-local cigla = nil
-local cigla2 = nil
-local cigla3 = nil
-local cigla4 = nil
-local prva = 0
-RegisterCommand("cigla2", function(source, args, rawCommandString)
-	if prva == 0 then
-		cigla = CreateObject(GetHashKey('prop_wallbrick_01'), 1373.352, -781.0687, 66.01108, true, true, true)
-		SetEntityRotation(cigla, -0.08805062, -0.0002665851, -9.770086, 2, true)
-		prva = 1
-	elseif prva == 1 then
-		local prosla = cigla
-		for i = 1, 15 do
-			local prvioffset = GetOffsetFromEntityInWorldCoords(prosla, -0.42, 0.0, -0.073) --lijevo
-			cigla2 = CreateObject(GetHashKey('prop_wallbrick_01'), prvioffset, true, true, true)
-			SetEntityRotation(cigla2, -0.08805062, -0.0002665851, -9.770086, 2, true)
-			prosla = cigla2
-			if i == 15 then
-				print(GetEntityCoords(cigla2))
-			end
-		end
-		prva = 2
-	elseif prva == 2 then
-		local zadnja = cigla
-		for i = 1, 5 do
-			local prvioffset = GetOffsetFromEntityInWorldCoords(zadnja, 0.0, 0.0, 0.07) --gore
-			cigla4 = CreateObject(GetHashKey('prop_wallbrick_01'), prvioffset, true, true, true)
-			SetEntityRotation(cigla4, -0.08805062, -0.0002665851, -9.770086, 2, true)
-			local prosla = cigla4
-			for i = 1, 14 do
-				local prvioffset = GetOffsetFromEntityInWorldCoords(prosla, -0.42, 0.0, -0.073) --lijevo
-				cigla3 = CreateObject(GetHashKey('prop_wallbrick_01'), prvioffset, true, true, true)
-				SetEntityRotation(cigla3, -0.08805062, -0.0002665851, -9.770086, 2, true)
-				prosla = cigla3
-			end
-			zadnja = cigla4
-		end
-		prva = 3
-	else
-		DeleteObject(cigla)
-		DeleteObject(cigla2)
-		DeleteObject(cigla3)
-		prva = 0
-	end
-end, false)
-
 RegisterCommand("obrisikontenjer", function(source, args, rawCommandString)
 	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		if br == 1 then
@@ -889,18 +843,20 @@ end)
 
 RegisterNetEvent("prodajoruzje:PosaljiRadio")
 AddEventHandler('prodajoruzje:PosaljiRadio', function(odg, ime, posao)
-	if ESX.PlayerData.job ~= nil then
-		if ESX.PlayerData.job.name == posao then
-			if ESX.PlayerData.job.name == "police" then
-				TriggerEvent('chat:addMessage', {
-							template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(0, 51, 204, 0.6); border-radius: 3px;"><i class="fas fa-info-circle"></i>[Policija] {0}:<br> {1}</div>',
-							args = { ime, odg }
-				})
-			else
-				TriggerEvent('chat:addMessage', {
-							template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(0, 51, 204, 0.6); border-radius: 3px;"><i class="fas fa-info-circle"></i>[Novinari] {0}:<br> {1}</div>',
-							args = { ime, odg }
-				})
+	if ESX ~= nil then
+		if ESX.PlayerData.job ~= nil then
+			if ESX.PlayerData.job.name == posao then
+				if ESX.PlayerData.job.name == "police" then
+					TriggerEvent('chat:addMessage', {
+								template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(0, 51, 204, 0.6); border-radius: 3px;"><i class="fas fa-info-circle"></i>[Policija] {0}:<br> {1}</div>',
+								args = { ime, odg }
+					})
+				else
+					TriggerEvent('chat:addMessage', {
+								template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(0, 51, 204, 0.6); border-radius: 3px;"><i class="fas fa-info-circle"></i>[Novinari] {0}:<br> {1}</div>',
+								args = { ime, odg }
+					})
+				end
 			end
 		end
 	end
