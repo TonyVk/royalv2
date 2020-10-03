@@ -42,10 +42,12 @@ weaponStorage = function(id)
             ESX.TriggerServerCallback('loaf_housing:getInventory', function(inv)
 
                 local elements = {}
-        
-                for k, v in pairs(inv['weapons']) do
-                    table.insert(elements, {label = v['label'], weapon = v['name'], ammo = v['ammo']})            
-                end
+				local jobe = ESX.GetPlayerData().job
+				if jobe.name ~= "police" and jobe.name ~= "sipa" and jobe.name ~= "zastitar" then
+					for k, v in pairs(inv['weapons']) do
+						table.insert(elements, {label = v['label'], weapon = v['name'], ammo = v['ammo']})            
+					end
+				end
 
                 ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'storeItem', {
                     title = Strings['House_Inventory'],
