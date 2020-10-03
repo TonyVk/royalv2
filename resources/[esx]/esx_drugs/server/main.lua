@@ -57,10 +57,11 @@ AddEventHandler('playerDropped', function()
 	local src = source
 	for i=1, #Sadnice, 1 do
 		if Sadnice[i] ~= nil and Sadnice[i].ID == src then
-			if DoesEntityExist(Sadnice[i].Objekt) then
-				DeleteEntity(Sadnice[i].Objekt)
-				table.remove(Sadnice, i)
+			local ObjID = NetworkGetEntityFromNetworkId(Sadnice[i].NetID)
+			if DoesEntityExist(ObjID) then
+				DeleteEntity(ObjID)
 			end
+			table.remove(Sadnice, i)
 		end
 	end
 end)
@@ -186,16 +187,17 @@ AddEventHandler('trava:ObrisiSadnicu', function(nid)
 	local ObjID = NetworkGetEntityFromNetworkId(nid)
 	for i=1, #Sadnice, 1 do
 		if Sadnice[i] ~= nil then
-			if Sadnice[i].Objekt == ObjID then
+			if Sadnice[i].NetID == nid then
 				local src = Sadnice[i].ID
 				local xPlayer = ESX.GetPlayerFromId(src)
-				DeleteEntity(Sadnice[i].Objekt)
+				DeleteEntity(ObjID)
 				table.remove(Sadnice, i)
 				local Temp = {}
 				for a=1, #Sadnice, 1 do
 					if Sadnice[a] ~= nil and Sadnice[a].ID == src then
-						if DoesEntityExist(Sadnice[a].Objekt) then
-							local coord = GetEntityCoords(Sadnice[a].Objekt)
+						local ObjID = NetworkGetEntityFromNetworkId(Sadnice[a].NetID)
+						if DoesEntityExist(ObjID) then
+							local coord = GetEntityCoords(ObjID)
 							table.insert(Temp, {Stanje = Sadnice[a].Stanje, Koord = coord})
 						end
 					end
@@ -223,11 +225,12 @@ function PosadiTravu(src)
 		local dist = false
 		for i=1, #Sadnice, 1 do
 			if Sadnice[i] ~= nil then
+				local ObjID = NetworkGetEntityFromNetworkId(Sadnice[i].NetID)
 				if Sadnice[i].ID == src then
 					broj = broj+1
 				end
-				if DoesEntityExist(Sadnice[i].Objekt) then
-					local kord = GetEntityCoords(Sadnice[i].Objekt)
+				if DoesEntityExist(ObjID) then
+					local kord = GetEntityCoords(ObjID)
 					if distanceFrom(kord.x, kord.y, playerCoords.x, playerCoords.y) < 2.0 then
 						dist = true
 					end
@@ -256,8 +259,9 @@ function PosadiTravu(src)
 					local Temp = {}
 					for i=1, #Sadnice, 1 do
 						if Sadnice[i] ~= nil and Sadnice[i].ID == src then
-							if DoesEntityExist(Sadnice[i].Objekt) then
-								local coord = GetEntityCoords(Sadnice[i].Objekt)
+							local ObjID = NetworkGetEntityFromNetworkId(Sadnice[i].NetID)
+							if DoesEntityExist(ObjID) then
+								local coord = GetEntityCoords(ObjID)
 								table.insert(Temp, {Stanje = Sadnice[i].Stanje, Koord = coord})
 							end
 						end
@@ -312,10 +316,10 @@ function Izrasti(nid, src, stanje)
 	local coord = nil
 	for i=1, #Sadnice, 1 do
 		if Sadnice[i] ~= nil then
-			if Sadnice[i].ID == src and Sadnice[i].Objekt == ObjID then
-				if DoesEntityExist(Sadnice[i].Objekt) then
-					coord = GetEntityCoords(Sadnice[i].Objekt)
-					DeleteEntity(Sadnice[i].Objekt)
+			if Sadnice[i].ID == src and Sadnice[i].NetID == nid then
+				if DoesEntityExist(ObjID) then
+					coord = GetEntityCoords(ObjID)
+					DeleteEntity(ObjID)
 					Sadnice[i].Stanje = stanje
 					local Marih
 					Marih = CreateObjectNoOffset(GetHashKey(mara), coord.x,  coord.y,  coord.z,true,false)
@@ -334,8 +338,9 @@ function Izrasti(nid, src, stanje)
 					local Temp = {}
 					for a=1, #Sadnice, 1 do
 						if Sadnice[a] ~= nil and Sadnice[a].ID == src then
-							if DoesEntityExist(Sadnice[a].Objekt) then
-								local coord = GetEntityCoords(Sadnice[a].Objekt)
+							local ObjID = NetworkGetEntityFromNetworkId(Sadnice[a].NetID)
+							if DoesEntityExist(ObjID) then
+								local coord = GetEntityCoords(ObjID)
 								table.insert(Temp, {Stanje = stanje, Koord = coord})
 							end
 						end
