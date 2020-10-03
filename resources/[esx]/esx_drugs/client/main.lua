@@ -307,6 +307,10 @@ end)
 
 RegisterNetEvent("trava:PratiRast")
 AddEventHandler('trava:PratiRast', function(netid, stanje)
+	if NetworkDoesEntityExistWithNetworkId(netid) then
+		local ObjID = NetworkGetEntityFromNetworkId(netid)
+		FreezeEntityPosition(ObjID, true)
+	end
 	if stanje == 3 then
 		table.insert(weedPlants, netid)
 		ESX.ShowNotification("[Marihuana] Stabljika je spremna za branje!")
@@ -314,7 +318,7 @@ AddEventHandler('trava:PratiRast', function(netid, stanje)
 		Citizen.CreateThread(function()
 			local Idic = netid
 			local stanjic = stanje
-			Wait(3600000)
+			Citizen.Wait(3600000)
 			TriggerServerEvent("trava:Izrasti", Idic, stanjic+1)
 		end)
 	end

@@ -53,19 +53,6 @@ AddEventHandler('droge:prodajih', function(itemName, amount)
 	end
 end)
 
-AddEventHandler('playerDropped', function()
-	local src = source
-	for i=1, #Sadnice, 1 do
-		if Sadnice[i] ~= nil and Sadnice[i].ID == src then
-			local ObjID = NetworkGetEntityFromNetworkId(Sadnice[i].NetID)
-			if DoesEntityExist(ObjID) then
-				DeleteEntity(ObjID)
-			end
-			table.remove(Sadnice, i)
-		end
-	end
-end)
-
 RegisterNetEvent('kuce:UKuci')
 AddEventHandler('kuce:UKuci', function(br)
 	local src = source
@@ -250,7 +237,7 @@ function PosadiTravu(src)
 					local Marih
 					Marih = CreateObjectNoOffset(GetHashKey(mara), playerCoords.x,  playerCoords.y,  playerCoords.z-1.0,true,false)
 					while not DoesEntityExist(Marih) do
-						Wait(100)
+						Wait(1)
 					end
 					local netid = NetworkGetNetworkIdFromEntity(Marih)
 					table.insert(Sadnice, {ID = src, Objekt = Marih, Stanje = 1, NetID = netid})
@@ -296,7 +283,7 @@ function PosadiTravu2(src, co, stanje)
 	local Marih
 	Marih = CreateObjectNoOffset(GetHashKey(mara), co.x,  co.y,  co.z,true,false)
 	while not DoesEntityExist(Marih) do
-		Wait(100)
+		Wait(1)
 	end
 	local netid = NetworkGetNetworkIdFromEntity(Marih)
 	table.insert(Sadnice, {ID = src, Objekt = Marih, Stanje = stanje, NetID = netid})
@@ -363,6 +350,15 @@ end)
 
 AddEventHandler('esx:playerDropped', function(playerID, reason)
 	CancelProcessing(playerID)
+	for i=1, #Sadnice, 1 do
+		if Sadnice[i] ~= nil and Sadnice[i].ID == playerID then
+			local ObjID = NetworkGetEntityFromNetworkId(Sadnice[i].NetID)
+			if DoesEntityExist(ObjID) then
+				DeleteEntity(ObjID)
+			end
+			table.remove(Sadnice, i)
+		end
+	end
 end)
 
 RegisterServerEvent('esx:onPlayerDeath')
