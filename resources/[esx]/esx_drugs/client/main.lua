@@ -318,7 +318,7 @@ AddEventHandler('trava:PratiRast', function(netid, stanje)
 		Citizen.CreateThread(function()
 			local Idic = netid
 			local stanjic = stanje
-			Citizen.Wait(3600000)
+			Citizen.Wait(10000)
 			TriggerServerEvent("trava:Izrasti", Idic, stanjic+1)
 		end)
 	end
@@ -360,6 +360,37 @@ AddEventHandler('trava:MakniSadnicu', function(nid)
 			break
 		end
 	end
+end)
+
+RegisterNetEvent("trava:SpawnSadnicu")
+AddEventHandler('trava:SpawnSadnicu', function(br, co)
+	if br == 1 then
+		local mara = "bkr_prop_weed_01_small_01a"
+	elseif br == 2 then
+		mara = "bkr_prop_weed_med_01a"
+	else
+		mara = "bkr_prop_weed_lrg_01a"
+	end
+	RequestModel(GetHashKey(mara))
+    while not HasModelLoaded(GetHashKey(mara)) do
+        Wait(100)
+    end
+	local playerCoords
+	if co == nil then
+		playerCoords = GetEntityCoords(PlayerPedId())
+	else
+		playerCoords = co
+	end
+	local Marih
+	Marih = CreateObject(GetHashKey(mara), playerCoords.x,  playerCoords.y,  playerCoords.z-1.0, true, true, false)
+	while not DoesEntityExist(Marih) do
+		Wait(1)
+	end
+	local netid = NetworkGetNetworkIdFromEntity(Marih)
+	table.insert(Sadnice, {NetID = netid, Stanje = br})
+	table.insert(Travica, {NetID = netid})
+	TriggerEvent("trava:PratiRast", netid, br)
+	TriggerServerEvent("trava:EoTiSadnica", netid, br)
 end)
 
 Citizen.CreateThread(function()

@@ -712,7 +712,6 @@ AddEventHandler('loaf_housing:spawnHouse', function(coords, furniture)
     local prop = Config.Houses[OwnedHouse.houseId]['prop']
     local house = EnterHouse(Config.Props[prop], coords)
     local placed_furniture = {}
-	local ofseti = {}
     for k, v in pairs(OwnedHouse['furniture']) do
         local model = GetHashKey(v['object'])
         while not HasModelLoaded(model) do RequestModel(model) Wait(0) end
@@ -721,7 +720,6 @@ AddEventHandler('loaf_housing:spawnHouse', function(coords, furniture)
         FreezeEntityPosition(object, true)
         SetEntityCoordsNoOffset(object, GetOffsetFromEntityInWorldCoords(house, vector3(v['offset'][1], v['offset'][2], v['offset'][3])))
         table.insert(placed_furniture, object)
-		table.insert(ofseti, GetOffsetFromEntityInWorldCoords(house, vector3(v['offset'][1], v['offset'][2], v['offset'][3])))
     end
 	TriggerServerEvent("kuce:UKuci", true)
     SetEntityHeading(house, 0.0)
@@ -1041,7 +1039,7 @@ AddEventHandler('loaf_housing:spawnHouse', function(coords, furniture)
                         },
                         function(data2, menu2)
                             if Knockings[data2.current.value] then
-                                TriggerServerEvent('loaf_housing:letIn', data2.current.value, storage, ofseti)
+                                TriggerServerEvent('loaf_housing:letIn', data2.current.value, storage)
                             end
                             menu2.close()
                         end, 
@@ -1132,19 +1130,17 @@ AddEventHandler('loaf_housing:leaveHouse2', function(house)
 end)
 
 RegisterNetEvent('loaf_housing:knockAccept')
-AddEventHandler('loaf_housing:knockAccept', function(coords, house, storage, spawnpos, furniture, host, ofseti)
+AddEventHandler('loaf_housing:knockAccept', function(coords, house, storage, spawnpos, furniture, host)
     local prop = Config.Houses[house]['prop']
     prop = EnterHouse(Config.Props[prop], spawnpos)
     local placed_furniture = {}
-	local i = 1
     for k, v in pairs(furniture) do
         local model = GetHashKey(v['object'])
         while not HasModelLoaded(model) do RequestModel(model) Wait(0) end
-        local object = CreateObject(model, ofseti[i], false, false, false)
+        local object = CreateObject(model, GetOffsetFromEntityInWorldCoords(prop, vector3(v['offset'][1], v['offset'][2], v['offset'][3])), false, false, false)
         SetEntityHeading(object, v['heading'])
         FreezeEntityPosition(object, true)
-		SetEntityCoordsNoOffset(object, ofseti[i])
-		i = i+1
+		SetEntityCoordsNoOffset(object, GetOffsetFromEntityInWorldCoords(prop, vector3(v['offset'][1], v['offset'][2], v['offset'][3])))
         table.insert(placed_furniture, object)
     end
     SetEntityHeading(prop, 0.0)

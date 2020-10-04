@@ -200,6 +200,27 @@ AddEventHandler('trava:ObrisiSadnicu', function(nid)
 	end
 end)
 
+RegisterNetEvent('trava:EoTiSadnica')
+AddEventHandler('trava:EoTiSadnica', function(nid, stanje)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local ObjID = NetworkGetEntityFromNetworkId(nid)
+	table.insert(Sadnice, {ID = source, Objekt = ObjID, Stanje = stanje, NetID = nid})
+	local Temp = {}
+	for i=1, #Sadnice, 1 do
+		if Sadnice[i] ~= nil and Sadnice[i].ID == src then
+			local ObjID = NetworkGetEntityFromNetworkId(Sadnice[i].NetID)
+			if DoesEntityExist(ObjID) then
+				local coord = GetEntityCoords(ObjID)
+				table.insert(Temp, {Stanje = Sadnice[i].Stanje, Koord = coord})
+			end
+		end
+	end
+	MySQL.Async.execute('UPDATE users SET sadnice = @sad WHERE identifier = @id', {
+		['@sad'] = json.encode(Temp),
+		['@id'] = xPlayer.identifier
+	})
+end)
+
 function distanceFrom(x1,y1,x2,y2) return math.sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2) end
 
 function PosadiTravu(src)
@@ -233,30 +254,7 @@ function PosadiTravu(src)
 					xPlayer.removeInventoryItem('seed', 1)
 					xPlayer.removeInventoryItem('saksija', 1)
 					xPlayer.removeInventoryItem('zemlja', 1)
-					local mara = "bkr_prop_weed_01_small_01a"
-					local Marih
-					Marih = CreateObjectNoOffset(GetHashKey(mara), playerCoords.x,  playerCoords.y,  playerCoords.z-1.0,true,false)
-					while not DoesEntityExist(Marih) do
-						Wait(1)
-					end
-					local netid = NetworkGetNetworkIdFromEntity(Marih)
-					table.insert(Sadnice, {ID = src, Objekt = Marih, Stanje = 1, NetID = netid})
-					TriggerClientEvent("trava:EoTiNetID", -1, netid)
-					TriggerClientEvent("trava:PratiRast", src, netid, 1)
-					local Temp = {}
-					for i=1, #Sadnice, 1 do
-						if Sadnice[i] ~= nil and Sadnice[i].ID == src then
-							local ObjID = NetworkGetEntityFromNetworkId(Sadnice[i].NetID)
-							if DoesEntityExist(ObjID) then
-								local coord = GetEntityCoords(ObjID)
-								table.insert(Temp, {Stanje = Sadnice[i].Stanje, Koord = coord})
-							end
-						end
-					end
-					MySQL.Async.execute('UPDATE users SET sadnice = @sad WHERE identifier = @id', {
-						['@sad'] = json.encode(Temp),
-						['@id'] = xPlayer.identifier
-					})
+					TriggerClientEvent("trava:SpawnSadnicu", player, 1)
 				else
 					xPlayer.showNotification("Preblizu ste drugoj sadnici!")
 				end
@@ -272,72 +270,22 @@ function PosadiTravu(src)
 end
 
 function PosadiTravu2(src, co, stanje)
-	local mara
-	if stanje == 1 then
-		mara = "bkr_prop_weed_01_small_01a"
-	elseif stanje == 2 then
-		mara = "bkr_prop_weed_med_01a"
-	else
-		mara = "bkr_prop_weed_lrg_01a"
-	end
-	local Marih
-	Marih = CreateObjectNoOffset(GetHashKey(mara), co.x,  co.y,  co.z,true,false)
-	while not DoesEntityExist(Marih) do
-		Wait(1)
-	end
-	local netid = NetworkGetNetworkIdFromEntity(Marih)
-	table.insert(Sadnice, {ID = src, Objekt = Marih, Stanje = stanje, NetID = netid})
-	TriggerClientEvent("trava:EoTiNetID", -1, netid)
-	TriggerClientEvent("trava:PratiRast", src, netid, stanje)
+	TriggerClientEvent("trava:SpawnSadnicu", src, stanje, co)
 end
 
 function Izrasti(nid, src, stanje) 
 	local xPlayer = ESX.GetPlayerFromId(src)
-	local mara
-	if stanje == 2 then
-		mara = "bkr_prop_weed_med_01a"
-	else
-		mara = "bkr_prop_weed_lrg_01a"
-	end
 	local ObjID = NetworkGetEntityFromNetworkId(nid)
 	local coord = nil
 	for i=1, #Sadnice, 1 do
 		if Sadnice[i] ~= nil then
 			if Sadnice[i].ID == src and Sadnice[i].NetID == nid then
 				if DoesEntityExist(ObjID) then
-					coord = GetEntityCoords(ObjID)
 					DeleteEntity(ObjID)
-					Sadnice[i].Stanje = stanje
-					local Marih
-					Marih = CreateObjectNoOffset(GetHashKey(mara), coord.x,  coord.y,  coord.z,true,false)
-					while not DoesEntityExist(Marih) do
-						Wait(100)
-					end
-					Sadnice[i].Objekt = Marih
-					local netid = NetworkGetNetworkIdFromEntity(Marih)
-					Sadnice[i].NetID = netid
-					TriggerClientEvent("trava:PromjeniNetID", -1, nid, netid, stanje)
-					if stanje ~= 3 then
-						TriggerClientEvent("trava:PratiRast", src, netid, stanje)
-					else
-						xPlayer.showNotification("[Marihuana] Stabljika je spremna za branje!")
-					end
-					local Temp = {}
-					for a=1, #Sadnice, 1 do
-						if Sadnice[a] ~= nil and Sadnice[a].ID == src then
-							local ObjID = NetworkGetEntityFromNetworkId(Sadnice[a].NetID)
-							if DoesEntityExist(ObjID) then
-								local coord = GetEntityCoords(ObjID)
-								table.insert(Temp, {Stanje = stanje, Koord = coord})
-							end
-						end
-					end
-					MySQL.Async.execute('UPDATE users SET sadnice = @sad WHERE identifier = @id', {
-						['@sad'] = json.encode(Temp),
-						['@id'] = xPlayer.identifier
-					})
-					break
 				end
+				table.remove(Sadnice, i)
+				coord = GetEntityCoords(ObjID)
+				TriggerClientEvent("trava:SpawnSadnicu", src, stanje, coord)
 			end
 		end
 	end

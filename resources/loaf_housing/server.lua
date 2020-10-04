@@ -147,7 +147,7 @@ AddEventHandler('loaf_housing:deleteInstance', function()
 end)
 
 RegisterServerEvent('loaf_housing:letIn')
-AddEventHandler('loaf_housing:letIn', function(plr, storage, ofs)
+AddEventHandler('loaf_housing:letIn', function(plr, storage)
     local src = source
     local xPlayer = ESX.GetPlayerFromId(plr)
     if instances[src] then
@@ -156,7 +156,7 @@ AddEventHandler('loaf_housing:letIn', function(plr, storage, ofs)
 
             local spawnpos = instances[src]['housecoords']
             local furniture = instances[src]['furniture']
-            TriggerClientEvent('loaf_housing:knockAccept', plr, instances[src]['coords'], instances[src]['id'], storage, spawnpos, furniture, src, ofs)
+            TriggerClientEvent('loaf_housing:knockAccept', plr, instances[src]['coords'], instances[src]['id'], storage, spawnpos, furniture, src)
 			MySQL.Async.execute("UPDATE users SET last_house=@house WHERE identifier=@identifier", {['@identifier'] = xPlayer.identifier, ['@house'] = instances[src]['id']})
         end
     end
