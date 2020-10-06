@@ -19,6 +19,7 @@ local weedPlants = {}
 local Travica = {}
 local isPickingUp, isProcessing = false, false
 local Sadnice = {}
+local Blipovi = {}
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -306,7 +307,7 @@ AddEventHandler('trava:PromjeniNetID', function(oldnet, newnet, stanje)
 end)
 
 RegisterNetEvent("trava:PratiRast")
-AddEventHandler('trava:PratiRast', function(netid, stanje)
+AddEventHandler('trava:PratiRast', function(netid, stanje, co)
 	if NetworkDoesEntityExistWithNetworkId(netid) then
 		local ObjID = NetworkGetEntityFromNetworkId(netid)
 		FreezeEntityPosition(ObjID, true)
@@ -314,6 +315,14 @@ AddEventHandler('trava:PratiRast', function(netid, stanje)
 	if stanje == 3 then
 		table.insert(weedPlants, netid)
 		ESX.ShowNotification("[Marihuana] Stabljika je spremna za branje!")
+		Blipovi[netid] = AddBlipForCoord(co.x,  co.y,  co.z)
+		SetBlipSprite (Blipovi[netid], 140)
+		SetBlipDisplay(Blipovi[netid], 2)
+		SetBlipColour (Blipovi[netid], 2)
+		SetBlipScale  (Blipovi[netid], 0.8)
+		BeginTextCommandSetBlipName("STRING")
+		AddTextComponentString("Izrasla stabljika")
+		EndTextCommandSetBlipName(Blipovi[netid])
 	else
 		Citizen.CreateThread(function()
 			local Idic = netid
@@ -364,8 +373,9 @@ end)
 
 RegisterNetEvent("trava:SpawnSadnicu")
 AddEventHandler('trava:SpawnSadnicu', function(br, co)
+	local mara
 	if br == 1 then
-		local mara = "bkr_prop_weed_01_small_01a"
+		mara = "bkr_prop_weed_01_small_01a"
 	elseif br == 2 then
 		mara = "bkr_prop_weed_med_01a"
 	else
@@ -382,15 +392,29 @@ AddEventHandler('trava:SpawnSadnicu', function(br, co)
 		playerCoords = co
 	end
 	local Marih
-	Marih = CreateObject(GetHashKey(mara), playerCoords.x,  playerCoords.y,  playerCoords.z-1.0, true, true, false)
+	if co == nil then
+		Marih = CreateObjectNoOffset(GetHashKey(mara), playerCoords.x,  playerCoords.y,  playerCoords.z-1.0, true, true, false)
+	else
+		Marih = CreateObjectNoOffset(GetHashKey(mara), playerCoords.x,  playerCoords.y,  playerCoords.z, true, true, false)
+	end
 	while not DoesEntityExist(Marih) do
 		Wait(1)
 	end
 	local netid = NetworkGetNetworkIdFromEntity(Marih)
+	NetworkSetNetworkIdDynamic(netid, false)
+    SetNetworkIdCanMigrate(netid, true)
+    SetNetworkIdExistsOnAllMachines(netid, true)
 	table.insert(Sadnice, {NetID = netid, Stanje = br})
 	table.insert(Travica, {NetID = netid})
-	TriggerEvent("trava:PratiRast", netid, br)
+	TriggerEvent("trava:PratiRast", netid, br, playerCoords)
 	TriggerServerEvent("trava:EoTiSadnica", netid, br)
+end)
+
+RegisterNetEvent("trava:MakniBlip")
+AddEventHandler('trava:MakniBlip', function(nid)
+	if DoesBlipExist(Blipovi[nid]) then
+		RemoveBlip(Blipovi[nid])
+	end
 end)
 
 Citizen.CreateThread(function()
@@ -539,6 +563,9 @@ Citizen.CreateThread(function()
 							FreezeEntityPosition(playerPed, false)
 			
 							--ESX.Game.DeleteObject(nearbyObject)
+							if DoesBlipExist(Blipovi[netid]) then
+								RemoveBlip(Blipovi[netid])
+							end
 			
 							TriggerServerEvent('esx_drugs:EoTiKanabisa')
 

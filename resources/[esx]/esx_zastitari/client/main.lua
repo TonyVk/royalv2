@@ -41,14 +41,6 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
 	PlayerLoaded = true
 end)
 
-function PokazDokument(title, subject, msg, icon, iconType, color)
-    SetNotificationTextEntry('STRING')
-    SetNotificationBackgroundColor(color)
-	AddTextComponentString(msg)
-	SetNotificationMessage(icon, icon, false, iconType, title, subject)
-	DrawNotification(false, false)
-end
-
 function setUniform(job, playerPed)
 	TriggerEvent('skinchanger:getSkin', function(skin)
 		if skin.sex == 0 then
@@ -141,21 +133,8 @@ function OpenCloakroomMenu()
 		{ label = _U('citizen_wear'), value = 'citizen_wear' }
 	}
 
-	if grade == 'recruit' then
-		table.insert(elements, {label = _U('police_wear'), value = 'recruit_wear'})
-	elseif grade == 'officer' then
-		table.insert(elements, {label = _U('police_wear'), value = 'officer_wear'})
-	elseif grade == 'sergeant' then
-		table.insert(elements, {label = _U('police_wear'), value = 'sergeant_wear'})
-	elseif grade == 'intendent' then
-		table.insert(elements, {label = _U('police_wear'), value = 'intendent_wear'})
-	elseif grade == 'lieutenant' then
-		table.insert(elements, {label = _U('police_wear'), value = 'lieutenant_wear'})
-	elseif grade == 'chef' then
-		table.insert(elements, {label = _U('police_wear'), value = 'chef_wear'})
-	elseif grade == 'boss' then
-		table.insert(elements, {label = _U('police_wear'), value = 'boss_wear'})
-	end
+	local val = grade.."_wear"
+	table.insert(elements, {label = _U('police_wear'), value = val})
 
 	if Config.EnableNonFreemodePeds then
 		table.insert(elements, {label = 'Sheriff wear', value = 'freemode_ped', maleModel = 's_m_y_sheriff_01', femaleModel = 's_f_y_sheriff_01'})
@@ -212,6 +191,8 @@ function OpenCloakroomMenu()
 					end
 				end, 'zastitar')
 			end
+		else
+			setUniform(data.current.value, PlayerPedId())
 		end
 
 		if Config.MaxInService ~= -1 and data.current.value ~= 'citizen_wear' then
@@ -253,20 +234,6 @@ function OpenCloakroomMenu()
 			if not serviceOk then
 				return
 			end
-		end
-
-		if
-			data.current.value == 'recruit_wear' or
-			data.current.value == 'officer_wear' or
-			data.current.value == 'sergeant_wear' or
-			data.current.value == 'intendent_wear' or
-			data.current.value == 'lieutenant_wear' or
-			data.current.value == 'chef_wear' or
-			data.current.value == 'boss_wear' or
-			data.current.value == 'bullet_wear' or
-			data.current.value == 'gilet_wear'
-		then
-			setUniform(data.current.value, PlayerPedId())
 		end
 
 		if data.current.value == 'freemode_ped' then

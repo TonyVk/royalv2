@@ -178,13 +178,14 @@ AddEventHandler('trava:ObrisiSadnicu', function(nid)
 				local src = Sadnice[i].ID
 				local xPlayer = ESX.GetPlayerFromId(src)
 				DeleteEntity(ObjID)
+				TriggerClientEvent("trava:MakniBlip", src, nid)
 				table.remove(Sadnice, i)
 				local Temp = {}
 				for a=1, #Sadnice, 1 do
 					if Sadnice[a] ~= nil and Sadnice[a].ID == src then
-						local ObjID = NetworkGetEntityFromNetworkId(Sadnice[a].NetID)
-						if DoesEntityExist(ObjID) then
-							local coord = GetEntityCoords(ObjID)
+						local ObjeID = NetworkGetEntityFromNetworkId(Sadnice[a].NetID)
+						if DoesEntityExist(ObjeID) then
+							local coord = GetEntityCoords(ObjeID)
 							table.insert(Temp, {Stanje = Sadnice[a].Stanje, Koord = coord})
 						end
 					end
@@ -202,15 +203,16 @@ end)
 
 RegisterNetEvent('trava:EoTiSadnica')
 AddEventHandler('trava:EoTiSadnica', function(nid, stanje)
-	local xPlayer = ESX.GetPlayerFromId(source)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
 	local ObjID = NetworkGetEntityFromNetworkId(nid)
-	table.insert(Sadnice, {ID = source, Objekt = ObjID, Stanje = stanje, NetID = nid})
+	table.insert(Sadnice, {ID = src, Objekt = ObjID, Stanje = stanje, NetID = nid})
 	local Temp = {}
 	for i=1, #Sadnice, 1 do
 		if Sadnice[i] ~= nil and Sadnice[i].ID == src then
-			local ObjID = NetworkGetEntityFromNetworkId(Sadnice[i].NetID)
-			if DoesEntityExist(ObjID) then
-				local coord = GetEntityCoords(ObjID)
+			local ObjeID = NetworkGetEntityFromNetworkId(Sadnice[i].NetID)
+			if DoesEntityExist(ObjeID) then
+				local coord = GetEntityCoords(ObjeID)
 				table.insert(Temp, {Stanje = Sadnice[i].Stanje, Koord = coord})
 			end
 		end
@@ -281,10 +283,10 @@ function Izrasti(nid, src, stanje)
 		if Sadnice[i] ~= nil then
 			if Sadnice[i].ID == src and Sadnice[i].NetID == nid then
 				if DoesEntityExist(ObjID) then
+					coord = GetEntityCoords(ObjID)
 					DeleteEntity(ObjID)
 				end
 				table.remove(Sadnice, i)
-				coord = GetEntityCoords(ObjID)
 				TriggerClientEvent("trava:SpawnSadnicu", src, stanje, coord)
 			end
 		end

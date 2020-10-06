@@ -113,24 +113,26 @@ Config.Uniforms = {
 	zastitar_wear = {  -- Pocetnici
 		EUP = false,
 		male = {
-			['tshirt_1'] = 31,  ['tshirt_2'] = 2,
-			['torso_1'] = 29,   ['torso_2'] = 0,
+			['tshirt_1'] = 87,  ['tshirt_2'] = 0,
+			['torso_1'] = 18,   ['torso_2'] = 1,
 			['decals_1'] = 0,   ['decals_2'] = 0,
-			['arms'] = 12,
-			['pants_1'] = 24,   ['pants_2'] = 0,
-			['shoes_1'] = 10,   ['shoes_2'] = 0,
-			['helmet_1'] = 7,  ['helmet_2'] = 2,
-			['glasses_1'] = 5,    ['glasses_2'] = 9
+			['arms'] = 19,
+			['pants_1'] = 59,   ['pants_2'] = 0,
+			['shoes_1'] = 53,   ['shoes_2'] = 0,
+			['chain_1'] = 1, 	['chain_2'] = 0,
+			['helmet_1'] = 44,  ['helmet_2'] = 4,
+			['glasses_1'] = 8,    ['glasses_2'] = 0
 		},
 		female = {
-			['tshirt_1'] = 31,  ['tshirt_2'] = 2,
-			['torso_1'] = 29,   ['torso_2'] = 0,
+			['tshirt_1'] = 87,  ['tshirt_2'] = 0,
+			['torso_1'] = 18,   ['torso_2'] = 1,
 			['decals_1'] = 0,   ['decals_2'] = 0,
-			['arms'] = 12,
-			['pants_1'] = 24,   ['pants_2'] = 0,
-			['shoes_1'] = 10,   ['shoes_2'] = 0,
-			['helmet_1'] = 7,  ['helmet_2'] = 2,
-			['glasses_1'] = 5,    ['glasses_2'] = 9
+			['arms'] = 19,
+			['pants_1'] = 59,   ['pants_2'] = 0,
+			['shoes_1'] = 53,   ['shoes_2'] = 0,
+			['chain_1'] = 1, 	['chain_2'] = 0,
+			['helmet_1'] = 44,  ['helmet_2'] = 4,
+			['glasses_1'] = 8,    ['glasses_2'] = 0
 		}
 	},
 	EUPzastitar_wear = {  -- Pocetnici
@@ -180,24 +182,26 @@ Config.Uniforms = {
 	sekretar_wear = {  -- Saobracajci
 		EUP = false,
 		male = {
-			['tshirt_1'] = 31,  ['tshirt_2'] = 2,
-			['torso_1'] = 29,   ['torso_2'] = 0,
+			['tshirt_1'] = 87,  ['tshirt_2'] = 0,
+			['torso_1'] = 18,   ['torso_2'] = 1,
 			['decals_1'] = 0,   ['decals_2'] = 0,
-			['arms'] = 12,
-			['pants_1'] = 24,   ['pants_2'] = 0,
-			['shoes_1'] = 10,   ['shoes_2'] = 0,
-			['helmet_1'] = 7,  ['helmet_2'] = 2,
-			['glasses_1'] = 5,    ['glasses_2'] = 9
+			['arms'] = 19,
+			['pants_1'] = 59,   ['pants_2'] = 0,
+			['shoes_1'] = 53,   ['shoes_2'] = 0,
+			['chain_1'] = 1, 	['chain_2'] = 0,
+			['helmet_1'] = 44,  ['helmet_2'] = 4,
+			['glasses_1'] = 8,    ['glasses_2'] = 0
 		},
 		female = {
-			['tshirt_1'] = 31,  ['tshirt_2'] = 2,
-			['torso_1'] = 29,   ['torso_2'] = 0,
+			['tshirt_1'] = 87,  ['tshirt_2'] = 0,
+			['torso_1'] = 18,   ['torso_2'] = 1,
 			['decals_1'] = 0,   ['decals_2'] = 0,
-			['arms'] = 12,
-			['pants_1'] = 24,   ['pants_2'] = 0,
-			['shoes_1'] = 10,   ['shoes_2'] = 0,
-			['helmet_1'] = 7,  ['helmet_2'] = 2,
-			['glasses_1'] = 5,    ['glasses_2'] = 9
+			['arms'] = 19,
+			['pants_1'] = 59,   ['pants_2'] = 0,
+			['shoes_1'] = 53,   ['shoes_2'] = 0,
+			['chain_1'] = 1, 	['chain_2'] = 0,
+			['helmet_1'] = 44,  ['helmet_2'] = 4,
+			['glasses_1'] = 8,    ['glasses_2'] = 0
 		}
 	},
 	EUPsekretar_wear = {  -- Saobracajci
@@ -247,24 +251,26 @@ Config.Uniforms = {
 	komandant_wear = {  -- Od policajca do visi narednik
 		EUP = false,
 		male = {
-			['tshirt_1'] = 31,  ['tshirt_2'] = 2,
-			['torso_1'] = 29,   ['torso_2'] = 0,
+			['tshirt_1'] = 87,  ['tshirt_2'] = 0,
+			['torso_1'] = 18,   ['torso_2'] = 1,
 			['decals_1'] = 0,   ['decals_2'] = 0,
-			['arms'] = 12,
-			['pants_1'] = 24,   ['pants_2'] = 0,
-			['shoes_1'] = 10,   ['shoes_2'] = 0,
-			['helmet_1'] = 7,  ['helmet_2'] = 2,
-			['glasses_1'] = 5,    ['glasses_2'] = 9
+			['arms'] = 19,
+			['pants_1'] = 59,   ['pants_2'] = 0,
+			['shoes_1'] = 53,   ['shoes_2'] = 0,
+			['chain_1'] = 1, 	['chain_2'] = 0,
+			['helmet_1'] = 44,  ['helmet_2'] = 4,
+			['glasses_1'] = 8,    ['glasses_2'] = 0
 		},
 		female = {
-			['tshirt_1'] = 31,  ['tshirt_2'] = 2,
-			['torso_1'] = 29,   ['torso_2'] = 0,
+			['tshirt_1'] = 87,  ['tshirt_2'] = 0,
+			['torso_1'] = 18,   ['torso_2'] = 1,
 			['decals_1'] = 0,   ['decals_2'] = 0,
-			['arms'] = 12,
-			['pants_1'] = 24,   ['pants_2'] = 0,
-			['shoes_1'] = 10,   ['shoes_2'] = 0,
-			['helmet_1'] = 7,  ['helmet_2'] = 2,
-			['glasses_1'] = 5,    ['glasses_2'] = 9
+			['arms'] = 19,
+			['pants_1'] = 59,   ['pants_2'] = 0,
+			['shoes_1'] = 53,   ['shoes_2'] = 0,
+			['chain_1'] = 1, 	['chain_2'] = 0,
+			['helmet_1'] = 44,  ['helmet_2'] = 4,
+			['glasses_1'] = 8,    ['glasses_2'] = 0
 		}
 	},
 	EUPkomandant_wear = {  -- Od policajca do visi narednik
@@ -314,24 +320,26 @@ Config.Uniforms = {
 	boss_wear = {
 		EUP = false,
 		male = {
-			['tshirt_1'] = 31,  ['tshirt_2'] = 2,
-			['torso_1'] = 29,   ['torso_2'] = 0,
+			['tshirt_1'] = 54,  ['tshirt_2'] = 0,
+			['torso_1'] = 118,   ['torso_2'] = 8,
 			['decals_1'] = 0,   ['decals_2'] = 0,
-			['arms'] = 12,
-			['pants_1'] = 24,   ['pants_2'] = 0,
-			['shoes_1'] = 10,   ['shoes_2'] = 0,
-			['helmet_1'] = 7,  ['helmet_2'] = 2,
-			['glasses_1'] = 5,    ['glasses_2'] = 9
+			['arms'] = 20,
+			['pants_1'] = 32,   ['pants_2'] = 1,
+			['shoes_1'] = 13,   ['shoes_2'] = 0,
+			['chain_1'] = 8, 	['chain_2'] = 0,
+			['helmet_1'] = -1,  ['helmet_2'] = 0,
+			['glasses_1'] = 8,    ['glasses_2'] = 0
 		},
 		female = {
-			['tshirt_1'] = 31,  ['tshirt_2'] = 2,
-			['torso_1'] = 29,   ['torso_2'] = 0,
+			['tshirt_1'] = 54,  ['tshirt_2'] = 0,
+			['torso_1'] = 118,   ['torso_2'] = 8,
 			['decals_1'] = 0,   ['decals_2'] = 0,
-			['arms'] = 12,
-			['pants_1'] = 24,   ['pants_2'] = 0,
-			['shoes_1'] = 10,   ['shoes_2'] = 0,
-			['helmet_1'] = 7,  ['helmet_2'] = 2,
-			['glasses_1'] = 5,    ['glasses_2'] = 9
+			['arms'] = 20,
+			['pants_1'] = 32,   ['pants_2'] = 1,
+			['shoes_1'] = 13,   ['shoes_2'] = 0,
+			['chain_1'] = 8, 	['chain_2'] = 0,
+			['helmet_1'] = -1,  ['helmet_2'] = 0,
+			['glasses_1'] = 8,    ['glasses_2'] = 0
 		}
 	},
 	EUPboss_wear = {
