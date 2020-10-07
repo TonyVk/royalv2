@@ -681,3 +681,43 @@ data_file 'HANDLING_FILE' 'data/q820/handling.meta'
 data_file 'VEHICLE_METADATA_FILE' 'data/q820/vehicles.meta'
 data_file 'CARCOLS_FILE' 'data/q820/carcols.meta'
 data_file 'VEHICLE_VARIATION_FILE' 'data/q820/carvariations.meta'
+
+data_file 'HANDLING_FILE' 'data/caymangt4/handling.meta'
+data_file 'VEHICLE_METADATA_FILE' 'data/caymangt4/vehicles.meta'
+data_file 'CARCOLS_FILE' 'data/caymangt4/carcols.meta'
+data_file 'VEHICLE_VARIATION_FILE' 'data/caymangt4/carvariations.meta'
+
+data_file 'HANDLING_FILE' 'data/Citroen Xantia/handling.meta'
+data_file 'VEHICLE_METADATA_FILE' 'data/Citroen Xantia/vehicles.meta'
+data_file 'CARCOLS_FILE' 'data/Citroen Xantia/carcols.meta'
+data_file 'VEHICLE_VARIATION_FILE' 'data/Citroen Xantia/carvariations.meta'
+
+data_file 'HANDLING_FILE' 'data/familiacc/handling.meta'
+data_file 'VEHICLE_METADATA_FILE' 'data/familiacc/vehicles.meta'
+data_file 'CARCOLS_FILE' 'data/familiacc/carcols.meta'
+data_file 'VEHICLE_VARIATION_FILE' 'data/familiacc/carvariations.meta'
+
+data_file 'HANDLING_FILE' 'data/ghibli/handling.meta'
+data_file 'VEHICLE_METADATA_FILE' 'data/ghibli/vehicles.meta'
+data_file 'CARCOLS_FILE' 'data/ghibli/carcols.meta'
+data_file 'VEHICLE_VARIATION_FILE' 'data/ghibli/carvariations.meta'
+
+data_file 'HANDLING_FILE' 'data/Peugeot206FN/handling.meta'
+data_file 'VEHICLE_METADATA_FILE' 'data/Peugeot206FN/vehicles.meta'
+data_file 'CARCOLS_FILE' 'data/Peugeot206FN/carcols.meta'
+data_file 'VEHICLE_VARIATION_FILE' 'data/Peugeot206FN/carvariations.meta'
+
+data_file 'HANDLING_FILE' 'data/Peugeot405slx/handling.meta'
+data_file 'VEHICLE_METADATA_FILE' 'data/Peugeot405slx/vehicles.meta'
+data_file 'CARCOLS_FILE' 'data/Peugeot405slx/carcols.meta'
+data_file 'VEHICLE_VARIATION_FILE' 'data/Peugeot405slx/carvariations.meta'
+
+data_file 'HANDLING_FILE' 'data/testarossa/handling.meta'
+data_file 'VEHICLE_METADATA_FILE' 'data/testarossa/vehicles.meta'
+data_file 'CARCOLS_FILE' 'data/testarossa/carcols.meta'
+data_file 'VEHICLE_VARIATION_FILE' 'data/testarossa/carvariations.meta'
+
+data_file 'HANDLING_FILE' 'data/urus/handling.meta'
+data_file 'VEHICLE_METADATA_FILE' 'data/urus/vehicles.meta'
+data_file 'CARCOLS_FILE' 'data/urus/carcols.meta'
+data_file 'VEHICLE_VARIATION_FILE' 'data/urus/carvariations.meta'

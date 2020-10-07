@@ -287,7 +287,7 @@ AddEventHandler('trava:PratiRast', function(netid, stanje, co)
 		Citizen.CreateThread(function()
 			local Idic = netid
 			local stanjic = stanje
-			Citizen.Wait(10000)
+			Citizen.Wait(3600000)
 			TriggerServerEvent("trava:Izrasti", Idic, stanjic+1)
 		end)
 	end
@@ -353,22 +353,37 @@ AddEventHandler('trava:SpawnSadnicu', function(br, co)
 	end
 	local Marih
 	if co == nil then
-		Marih = CreateObjectNoOffset(GetHashKey(mara), playerCoords.x,  playerCoords.y,  playerCoords.z-1.0, true, true, false)
+		Marih = CreateObjectNoOffset(GetHashKey(mara), playerCoords.x,  playerCoords.y,  playerCoords.z-1.0, true, false, false)
 	else
-		Marih = CreateObjectNoOffset(GetHashKey(mara), playerCoords.x,  playerCoords.y,  playerCoords.z, true, true, false)
+		Marih = CreateObjectNoOffset(GetHashKey(mara), playerCoords.x,  playerCoords.y,  playerCoords.z, true, false, false)
 	end
 	while not DoesEntityExist(Marih) do
 		Wait(1)
 	end
+	SetEntityAsMissionEntity(Marih)
+	NetworkRegisterEntityAsNetworked(Marih)
 	Wait(200)
 	local netid = NetworkGetNetworkIdFromEntity(Marih)
-	NetworkSetNetworkIdDynamic(netid, false)
-    SetNetworkIdCanMigrate(netid, true)
-    SetNetworkIdExistsOnAllMachines(netid, true)
-	table.insert(Sadnice, {NetID = netid, Stanje = br})
-	table.insert(Travica, {NetID = netid})
-	TriggerEvent("trava:PratiRast", netid, br, playerCoords)
-	TriggerServerEvent("trava:EoTiSadnica", netid, br)
+	local attempts = 0 --Prevent looping forever by counting attempts
+	while not NetworkDoesNetworkIdExist(netid) and attempts < 10 do
+		Wait(50)
+		netid = NetworkGetNetworkIdFromEntity(Marih)
+		NetworkRegisterEntityAsNetworked(Marih)
+		SetEntityAsMissionEntity(Marih)
+		NetworkSetNetworkIdDynamic(netid, false)
+		SetNetworkIdCanMigrate(netid,true)
+		SetNetworkIdExistsOnAllMachines(netid,true)
+		NetworkRequestControlOfEntity(Marih)
+		attempts = attempts + 1
+	end
+	if attempts >= 10 then
+		Citizen.Trace("Failed to register entity on net")
+	else
+		table.insert(Sadnice, {NetID = netid, Stanje = br})
+		table.insert(Travica, {NetID = netid})
+		TriggerEvent("trava:PratiRast", netid, br, playerCoords)
+		TriggerServerEvent("trava:EoTiSadnica", netid, br)
+	end
 	SetModelAsNoLongerNeeded(GetHashKey(mara))
 end)
 
@@ -483,6 +498,11 @@ Citizen.CreateThread(function()
 		end
 
 		if nearbyObject and IsPedOnFoot(playerPed) and nearbyObject ~= nil then
+			NetworkRequestControlOfEntity(nearbyObject)
+			while not NetworkHasControlOfEntity(nearbyObject) do 
+				Citizen.Wait(0)
+				NetworkRequestControlOfEntity(nearbyObject)
+			end
 			local netid = NetworkGetNetworkIdFromEntity(nearbyObject)
 			if not isPickingUp then
 				if ESX.PlayerData.job.name == "police" or ESX.PlayerData.job.name == "sipa" then
