@@ -369,6 +369,7 @@ AddEventHandler('trava:SpawnSadnicu', function(br, co)
 	table.insert(Travica, {NetID = netid})
 	TriggerEvent("trava:PratiRast", netid, br, playerCoords)
 	TriggerServerEvent("trava:EoTiSadnica", netid, br)
+	SetModelAsNoLongerNeeded(GetHashKey(mara))
 end)
 
 RegisterNetEvent("trava:MakniBlip")
