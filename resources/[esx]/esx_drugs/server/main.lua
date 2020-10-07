@@ -72,12 +72,12 @@ AddEventHandler('trava:ProvjeriSadnice', function()
 				local sadnice = json.decode(result[i].sadnice)
 				for a=1, #sadnice do
 					PosadiTravu2(src, sadnice[a].Koord, sadnice[a].Stanje)
+					Wait(100)
 				end
 			end
         end
       end
     )
-	TriggerClientEvent("trava:VratiSadnice", src, Sadnice)
 end)
 
 ESX.RegisterServerCallback('esx_drugs:buyLicense', function(source, cb, licenseName)
@@ -300,7 +300,7 @@ end)
 
 AddEventHandler('esx:playerDropped', function(playerID, reason)
 	CancelProcessing(playerID)
-	for i=1, #Sadnice, 1 do
+	for i=#Sadnice,1,-1 do
 		if Sadnice[i] ~= nil and Sadnice[i].ID == playerID then
 			local ObjID = NetworkGetEntityFromNetworkId(Sadnice[i].NetID)
 			if DoesEntityExist(ObjID) then

@@ -14,7 +14,7 @@ local FirstSpawn, PlayerLoaded = true, false
 local NemojUmrijet = false
 local NemojOdbrojavat = 0
 local poslao = 0
-local Glava = false
+local Glava = true
 
 IsDead = false
 ESX = nil
@@ -131,6 +131,8 @@ AddEventHandler('playerSpawned', function()
 					end
 				end)
 			end
+			Wait(5000)
+			Glava = false
 		end
 end)
 

@@ -47,17 +47,6 @@ AddEventHandler('esx:setJob', function(job)
 	ESX.PlayerData.job = job
 end)
 
-RegisterNetEvent('trava:VratiSadnice')
-AddEventHandler('trava:VratiSadnice', function(nes)
-	for i=1, #nes, 1 do
-		table.insert(Sadnice, {NetID = nes[i].NetID, Stanje = nes[i].Stanje})
-		table.insert(Travica, {NetID = nes[i].NetID})
-		if nes[i].Stanje == 3 then
-			table.insert(weedPlants, nes[i].NetID)
-		end
-	end
-end)
-
 local connected = false
 
 AddEventHandler("playerSpawned", function()
@@ -277,35 +266,6 @@ function OpenBuyLicenseMenu(licenseName)
 	end)
 end
 
-RegisterNetEvent("trava:EoTiNetID")
-AddEventHandler('trava:EoTiNetID', function(netid)
-	table.insert(Sadnice, {NetID = netid, Stanje = 1})
-	table.insert(Travica, {NetID = netid})
-end)
-
-RegisterNetEvent("trava:PromjeniNetID")
-AddEventHandler('trava:PromjeniNetID', function(oldnet, newnet, stanje)
-	for i=1, #Sadnice, 1 do
-		if Sadnice[i] ~= nil then
-			if Sadnice[i].NetID == oldnet then
-				Sadnice[i].NetID = newnet
-				for a=1, #Travica, 1 do
-					if Travica[a] ~= nil then
-						if Travica[a].NetID == oldnet then
-							Travica[a].NetID = newnet
-							break
-						end
-					end
-				end
-				if stanje == 3 then
-					table.insert(weedPlants, newnet)
-				end
-				break
-			end
-		end
-	end
-end)
-
 RegisterNetEvent("trava:PratiRast")
 AddEventHandler('trava:PratiRast', function(netid, stanje, co)
 	if NetworkDoesEntityExistWithNetworkId(netid) then
@@ -400,6 +360,7 @@ AddEventHandler('trava:SpawnSadnicu', function(br, co)
 	while not DoesEntityExist(Marih) do
 		Wait(1)
 	end
+	Wait(200)
 	local netid = NetworkGetNetworkIdFromEntity(Marih)
 	NetworkSetNetworkIdDynamic(netid, false)
     SetNetworkIdCanMigrate(netid, true)
