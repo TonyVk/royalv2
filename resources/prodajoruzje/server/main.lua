@@ -70,6 +70,21 @@ function getIdentity(source)
 	end
 end
 
+RegisterCommand("ispisip", function(source, args, rawCommandString)
+		local elements = {}
+		MySQL.Async.fetchAll('SELECT identifier FROM priority', {}, function(result)
+			MySQL.Async.fetchAll('SELECT identifier, name FROM users', {}, function(result2)
+				for i=1, #result, 1 do
+					for j=1, #result2, 1 do
+						if result[i].identifier == result2[j].identifier then
+							print("identifier:"..result2[j].identifier.." | Ime:"..result2[j].name)
+						end
+					end
+				end
+			end)
+		end)
+end, false)
+
 RegisterCommand("svilideri", function(source, args, rawCommandString)
 		local elements = {}
 		MySQL.Async.fetchAll('SELECT name, job, job_grade FROM users', {}, function(result)
