@@ -336,6 +336,16 @@ AddEventHandler('esx_drugs:Animacija', function()
 	ClearPedTasks(PlayerPedId())
 end)
 
+RegisterNetEvent("trava:NemosBrati")
+AddEventHandler('trava:NemosBrati', function(nid)
+	for b=1, #weedPlants, 1 do
+		if weedPlants[b] == nid then
+			table.remove(weedPlants, b)
+			break
+		end
+	end
+end)
+
 RegisterNetEvent("trava:MakniSadnicu")
 AddEventHandler('trava:MakniSadnicu', function(nid)
 	for i=1, #Sadnice, 1 do
@@ -499,6 +509,7 @@ Citizen.CreateThread(function()
 					ESX.TriggerServerCallback('esx_drugs:canPickUp', function(canPickUp)
 
 						if canPickUp then
+							TriggerServerEvent("trava:MakniBranje", netid)
 							FreezeEntityPosition(playerPed, true)
 							TaskStartScenarioInPlace(playerPed, 'world_human_gardener_plant', 0, false)
 

@@ -170,6 +170,11 @@ AddEventHandler('trava:Izrasti', function(nid, stanje)
 	Izrasti(nid, source, stanje)
 end)
 
+RegisterServerEvent('trava:MakniBranje')
+AddEventHandler('trava:MakniBranje', function(nid)
+	TriggerClientEvent("trava:NemosBrati", -1, nid)
+end)
+
 RegisterServerEvent('trava:ObrisiSadnicu')
 AddEventHandler('trava:ObrisiSadnicu', function(nid)
 	local ObjID = NetworkGetEntityFromNetworkId(nid)
