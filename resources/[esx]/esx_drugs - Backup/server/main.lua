@@ -59,11 +59,6 @@ AddEventHandler('kuce:UKuci', function(br)
 	Kuce[src] = br
 end)
 
-RegisterCommand("youtube", function(source, args, rawCommandString)
-	local ObjID = NetworkGetEntityFromNetworkId(Sadnice[1].NetID)
-	DeleteEntity(ObjID)
-end, false)
-
 RegisterServerEvent('trava:ProvjeriSadnice')
 AddEventHandler('trava:ProvjeriSadnice', function()
 	local src = source
@@ -83,6 +78,7 @@ AddEventHandler('trava:ProvjeriSadnice', function()
         end
       end
     )
+	TriggerClientEvent("trava:VratiSadnice", src, Sadnice)
 end)
 
 ESX.RegisterServerCallback('esx_drugs:buyLicense', function(source, cb, licenseName)
@@ -210,40 +206,6 @@ AddEventHandler('trava:ObrisiSadnicu', function(nid)
 	end
 end)
 
-RegisterServerEvent('trava:PonovoKreiraj')
-AddEventHandler('trava:PonovoKreiraj', function(nid, co)
-	for i=1, #Sadnice, 1 do
-		if Sadnice[i] ~= nil then
-			if Sadnice[i].NetID == nid then
-				local ObjID = NetworkGetEntityFromNetworkId(nid)
-				if DoesEntityExist(ObjID) then
-					DeleteEntity(ObjID)
-				end
-				local stanje = Sadnice[i].Stanje
-				local mara
-				if stanje == 1 then
-					mara = "bkr_prop_weed_01_small_01a"
-				elseif stanje == 2 then
-					mara = "bkr_prop_weed_med_01a"
-				else
-					mara = "bkr_prop_weed_lrg_01a"
-				end
-				local Marih
-				Marih = CreateObjectNoOffset(GetHashKey(mara), co.x,  co.y,  co.z,true,false)
-				while not DoesEntityExist(Marih) do
-					Wait(100)
-				end
-				local src = Sadnice[i].ID
-				table.remove(Sadnice, i)
-				local netid = NetworkGetNetworkIdFromEntity(Marih)
-				TriggerClientEvent("trava:NoviNetID", -1, nid, netid, stanje)
-				table.insert(Sadnice, {ID = src, Objekt = Marih, Stanje = stanje, NetID = netid})
-				break
-			end
-		end
-	end
-end)
-
 function distanceFrom(x1,y1,x2,y2) return math.sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2) end
 
 function PosadiTravu(src)
@@ -284,10 +246,8 @@ function PosadiTravu(src)
 						Wait(100)
 					end
 					local netid = NetworkGetNetworkIdFromEntity(Marih)
-					local xe,ye,ze = table.unpack(playerCoords)
-					local korde = vector3(xe,ye,ze-1.0)
 					table.insert(Sadnice, {ID = src, Objekt = Marih, Stanje = 1, NetID = netid})
-					TriggerClientEvent("trava:EoTiNetID", -1, netid, korde, 1)
+					TriggerClientEvent("trava:EoTiNetID", -1, netid)
 					TriggerClientEvent("trava:PratiRast", src, netid, 1)
 					local Temp = {}
 					for i=1, #Sadnice, 1 do
@@ -333,7 +293,7 @@ function PosadiTravu2(src, co, stanje)
 	end
 	local netid = NetworkGetNetworkIdFromEntity(Marih)
 	table.insert(Sadnice, {ID = src, Objekt = Marih, Stanje = stanje, NetID = netid})
-	TriggerClientEvent("trava:EoTiNetID", -1, netid, co, stanje)
+	TriggerClientEvent("trava:EoTiNetID", -1, netid)
 	TriggerClientEvent("trava:PratiRast", src, netid, stanje)
 end
 

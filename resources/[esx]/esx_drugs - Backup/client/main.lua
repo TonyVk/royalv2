@@ -46,6 +46,17 @@ AddEventHandler('esx:setJob', function(job)
 	ESX.PlayerData.job = job
 end)
 
+RegisterNetEvent('trava:VratiSadnice')
+AddEventHandler('trava:VratiSadnice', function(nes)
+	for i=1, #nes, 1 do
+		table.insert(Sadnice, {NetID = nes[i].NetID, Stanje = nes[i].Stanje})
+		table.insert(Travica, {NetID = nes[i].NetID})
+		if nes[i].Stanje == 3 then
+			table.insert(weedPlants, nes[i].NetID)
+		end
+	end
+end)
+
 local connected = false
 
 AddEventHandler("playerSpawned", function()
@@ -266,8 +277,8 @@ function OpenBuyLicenseMenu(licenseName)
 end
 
 RegisterNetEvent("trava:EoTiNetID")
-AddEventHandler('trava:EoTiNetID', function(netid,co, stanje)
-	table.insert(Sadnice, {NetID = netid, Stanje = stanje, Koord = co})
+AddEventHandler('trava:EoTiNetID', function(netid)
+	table.insert(Sadnice, {NetID = netid, Stanje = 1})
 	table.insert(Travica, {NetID = netid})
 end)
 
@@ -294,35 +305,6 @@ AddEventHandler('trava:PromjeniNetID', function(oldnet, newnet, stanje)
 	end
 end)
 
-RegisterNetEvent("trava:NoviNetID")
-AddEventHandler('trava:NoviNetID', function(oldnet, newnet, stanje)
-	for i=1, #Sadnice, 1 do
-		if Sadnice[i] ~= nil then
-			if Sadnice[i].NetID == oldnet then
-				Sadnice[i].NetID = newnet
-				for a=1, #Travica, 1 do
-					if Travica[a] ~= nil then
-						if Travica[a].NetID == oldnet then
-							Travica[a].NetID = newnet
-							break
-						end
-					end
-				end
-				if stanje == 3 then
-					for g=1, #weedPlants, 1 do
-						if weedPlants[g] == oldnet then
-							table.remove(weedPlants, g)
-							break
-						end
-					end
-					table.insert(weedPlants, newnet)
-				end
-				break
-			end
-		end
-	end
-end)
-
 RegisterNetEvent("trava:PratiRast")
 AddEventHandler('trava:PratiRast', function(netid, stanje)
 	if NetworkDoesEntityExistWithNetworkId(netid) then
@@ -334,17 +316,10 @@ AddEventHandler('trava:PratiRast', function(netid, stanje)
 		ESX.ShowNotification("[Marihuana] Stabljika je spremna za branje!")
 	else
 		Citizen.CreateThread(function()
-			local Idic = nil
-			for i=1, #Sadnice, 1 do
-				if Sadnice[i] ~= nil then
-					if Sadnice[i].NetID == netid then
-						Idic = i
-					end
-				end
-			end
+			local Idic = netid
 			local stanjic = stanje
-			Citizen.Wait(20000)
-			TriggerServerEvent("trava:Izrasti", Sadnice[Idic].NetID, stanjic+1)
+			Citizen.Wait(3600000)
+			TriggerServerEvent("trava:Izrasti", Idic, stanjic+1)
 		end)
 	end
 end)
@@ -462,26 +437,6 @@ function ProcessWeed()
 
 	isProcessing = false
 end
-
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(5000)
-		while ESX.PlayerData.job == nil do
-			Citizen.Wait(100)
-		end
-		local coords = GetEntityCoords(PlayerPedId())
-		for i=1, #Sadnice, 1 do
-			if Sadnice[i] ~= nil then
-				if GetDistanceBetweenCoords(coords, Sadnice[i].Koord) <= 100 then
-					if not NetworkDoesEntityExistWithNetworkId(Sadnice[i].NetID) then
-						TriggerServerEvent("trava:PonovoKreiraj", Sadnice[i].NetID, Sadnice[i].Koord)
-					end
-				end
-			end
-			Wait(100)
-		end
-	end
-end)
 
 Citizen.CreateThread(function()
 	while true do
