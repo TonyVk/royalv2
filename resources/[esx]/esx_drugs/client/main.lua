@@ -338,7 +338,7 @@ AddEventHandler('trava:PratiRast', function(netid, stanje)
 		Citizen.CreateThread(function()
 			local Idic = netid
 			local stanjic = stanje
-			Citizen.Wait(20000)
+			Citizen.Wait(3600000)
 			for i=1, #Sadnice, 1 do
 				if Sadnice[i] ~= nil and Sadnice[i].OldID ~= nil then
 					if Sadnice[i].OldID == Idic then
