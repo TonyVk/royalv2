@@ -60,7 +60,7 @@ AddEventHandler('kuce:UKuci', function(br)
 end)
 
 RegisterCommand("youtube", function(source, args, rawCommandString)
-	local ObjID = NetworkGetEntityFromNetworkId(Sadnice[1].NetID)
+	local ObjID = NetworkGetEntityFromNetworkId(Sadnice[2].NetID)
 	DeleteEntity(ObjID)
 end, false)
 
@@ -318,6 +318,7 @@ function PosadiTravu(src)
 end
 
 function PosadiTravu2(src, co, stanje)
+	local korda = vector3(co.x, co.y, co.z)
 	local mara
 	if stanje == 1 then
 		mara = "bkr_prop_weed_01_small_01a"
@@ -333,7 +334,7 @@ function PosadiTravu2(src, co, stanje)
 	end
 	local netid = NetworkGetNetworkIdFromEntity(Marih)
 	table.insert(Sadnice, {ID = src, Objekt = Marih, Stanje = stanje, NetID = netid})
-	TriggerClientEvent("trava:EoTiNetID", -1, netid, co, stanje)
+	TriggerClientEvent("trava:EoTiNetID", -1, netid, korda, stanje)
 	TriggerClientEvent("trava:PratiRast", src, netid, stanje)
 end
 
