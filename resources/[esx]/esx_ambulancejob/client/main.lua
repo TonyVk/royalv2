@@ -238,7 +238,7 @@ end)
 function StartDistressSignal()
 	Citizen.CreateThread(function()
 		local timer = Config.BleedoutTimer
-		local vrime = 0
+		UpaliF7()
 		while timer > 0 and IsDead do
 			Citizen.Wait(2)
 			timer = timer - 30
@@ -253,26 +253,31 @@ function StartDistressSignal()
 			BeginTextCommandDisplayText('STRING')
 			AddTextComponentSubstringPlayerName(_U('distress_send'))
 			EndTextCommandDisplayText(0.175, 0.805)
-			if vrime > 0 then
-				vrime = vrime-1
-			end
-			
-			if IsControlPressed(0, Keys['F7']) and vrime == 0 then
-				vrime = 2000
-				ClearPedTasksImmediately(PlayerPedId())
-			end
-
 			if IsControlPressed(0, Keys['G']) then
 				SendDistressSignal()
-
 				Citizen.CreateThread(function()
 					Citizen.Wait(1000 * 60 * 5)
 					if IsDead and NemojOdbrojavat == 0 then
 						StartDistressSignal()
 					end
 				end)
-
 				break
+			end
+		end
+	end)
+end
+
+function UpaliF7()
+	Citizen.CreateThread(function()
+		local vrime = 0
+		while IsDead do
+			Citizen.Wait(2)
+			if vrime > 0 then
+				vrime = vrime-1
+			end
+			if IsControlPressed(0, Keys['F7']) and vrime == 0 then
+				vrime = 2000
+				ClearPedTasksImmediately(PlayerPedId())
 			end
 		end
 	end)

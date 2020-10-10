@@ -70,12 +70,12 @@ Locales['hr'] = {
   -- Phone
   ['alert_ambulance'] = 'pozovite hitnu',
   -- Death
-  ['respawn_available_in'] = 'respawn dostupan za ~b~%s minuta %s sekundi~s~',
+  ['respawn_available_in'] = 'respawn dostupan za ~b~%s minuta %s sekundi~s~\n Ako vas bolnicar ne vidi pritisnite [~b~F7~s~]',
   ['respawn_bleedout_in'] = 'iskrvarit cete za ~b~%s minuta %s sekundi~s~\n',
   ['respawn_bleedout_prompt'] = 'drzite [~b~E~s~] da se respawnate',
   ['respawn_bleedout_fine'] = 'drzite [~b~E~s~] da se respawnate za ~g~$%s~s~',
   ['respawn_bleedout_fine_msg'] = 'platili ste ~r~$%s~s~ za respawn.',
-  ['distress_send'] = 'pritisnite [~b~G~s~] da posaljete poziv u pomoc.\n Ako vas bolnicar ne vidi pritisnite [~b~F7~s~].',
+  ['distress_send'] = 'pritisnite [~b~G~s~] da posaljete poziv u pomoc.',
   ['distress_sent'] = 'poziv u pomoc je poslan dostupnim jedinicama!',
   ['distress_message'] = 'potrebna je lijecnicka pomoc: nesvjestan gradanin!',
   ['combatlog_message'] = 'Respawnani ste bez stvari u inventoryju zbog toga sto ste napustili server mrtvi.',

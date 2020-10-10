@@ -619,8 +619,8 @@ function OpenVehicleSpawnerMenu(type, station, part, partNum)
 end
 
 function StoreNearbyVehicle(playerCoords)
-	if ESX.Math.Trim(GetVehicleNumberPlateText(GetVehiclePedIsIn(PlayerPedId(), false))) == Tablice then
-	ESX.Game.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId(), false))
+	if ESX.Math.Trim(GetVehicleNumberPlateText(BVozilo)) == Tablice then
+	ESX.Game.DeleteVehicle(BVozilo)
 	else
 	ESX.ShowNotification("Niste u vozilu sa kojim ste otisli na posao!")
 	end
@@ -2246,6 +2246,20 @@ Citizen.CreateThread(function()
 						isInMarker, currentStation, currentPart, currentPartNum = true, k, 'Vehicles', i
 					end
 				end
+				
+				for i=1, #v.Helicopters, 1 do
+					local distance =  GetDistanceBetweenCoords(coords, v.Helicopters[i].Spawner, true)
+
+					if distance < Config.DrawDistance then
+						DrawMarker(34, v.Helicopters[i].Spawner, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
+						letSleep = false
+					end
+
+					if distance < Config.MarkerSize.x then
+						isInMarker, currentStation, currentPart, currentPartNum = true, k, 'Helicopters', i
+					end
+				end
+
 
 				if Config.EnablePlayerManagement and PlayerData.job.grade_name == 'boss' then
 					for i=1, #v.BossActions, 1 do

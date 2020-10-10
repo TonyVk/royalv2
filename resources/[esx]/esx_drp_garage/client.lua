@@ -20,6 +20,7 @@ local CurrentActionData         = {}
 local GarazaV 					= nil
 local Vblip 					= nil
 local PlayerData                = {}
+local Blipara = nil
 
 local this_Garage = {}
 
@@ -31,6 +32,9 @@ Citizen.CreateThread(function()
 	while ESX == nil do
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(0)
+	end
+	while PlayerData.job == nil do
+		Citizen.Wait(1)
 	end
 	refreshBlips()
 	ProvjeriPosao()
@@ -50,13 +54,16 @@ end)
 
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
-  PlayerData.job = job
+	PlayerData.job = job
+	refreshBlips()
 end)
 
 function refreshBlips()
 	local zones = {}
 	local blipInfo = {}	
-
+	if DoesBlipExist(Blipara) then
+		RemoveBlip(Blipara)
+	end
 	for zoneKey,zoneValues in pairs(Config.Garages)do
 		if zoneValues.PrikaziBlip == 1 then
 			local blip = AddBlipForCoord(zoneValues.Pos.x, zoneValues.Pos.y, zoneValues.Pos.z)
@@ -70,15 +77,17 @@ function refreshBlips()
 			EndTextCommandSetBlipName(blip)
 			
 			if zoneValues.MunicipalPoundPoint ~= nil then
-				local blip = AddBlipForCoord(zoneValues.MunicipalPoundPoint.Pos.x, zoneValues.MunicipalPoundPoint.Pos.y, zoneValues.MunicipalPoundPoint.Pos.z)
-				SetBlipSprite (blip, Config.BlipPound.Sprite)
-				SetBlipDisplay(blip, 4)
-				SetBlipScale  (blip, 1.2)
-				SetBlipColour (blip, Config.BlipPound.Color)
-				SetBlipAsShortRange(blip, true)
-				BeginTextCommandSetBlipName("STRING")
-				AddTextComponentString(_U('impound_yard'))
-				EndTextCommandSetBlipName(blip)
+				if PlayerData.job.name == "zemunski" then
+					Blipara = AddBlipForCoord(zoneValues.MunicipalPoundPoint.Pos.x, zoneValues.MunicipalPoundPoint.Pos.y, zoneValues.MunicipalPoundPoint.Pos.z)
+					SetBlipSprite (Blipara, Config.BlipPound.Sprite)
+					SetBlipDisplay(Blipara, 4)
+					SetBlipScale  (Blipara, 1.2)
+					SetBlipColour (Blipara, Config.BlipPound.Color)
+					SetBlipAsShortRange(Blipara, true)
+					BeginTextCommandSetBlipName("STRING")
+					AddTextComponentString(_U('impound_yard'))
+					EndTextCommandSetBlipName(Blipara)
+				end
 			end
 		end
 	end

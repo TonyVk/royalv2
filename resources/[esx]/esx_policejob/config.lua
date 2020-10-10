@@ -256,17 +256,11 @@ Config.AuthorizedHelicopters = {
 
 	sergeant = {},
 
-	intendent = {
-		{ model = 'polmav', label = 'Police Maverick', livery = 0, price = 0 }
-	},
+	intendent = {},
 
-	lieutenant = {
-		{ model = 'polmav', label = 'Police Maverick', livery = 0, price = 0 }
-	},
+	lieutenant = {},
 
-	chef = {
-		{ model = 'polmav', label = 'Police Maverick', livery = 0, price = 0 }
-	},
+	chef = {},
 
 	boss = {
 		{ model = 'polmav', label = 'Police Maverick', livery = 0, price = 0 }
