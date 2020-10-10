@@ -267,7 +267,7 @@ end
 
 RegisterNetEvent("trava:EoTiNetID")
 AddEventHandler('trava:EoTiNetID', function(netid,co, stanje)
-	table.insert(Sadnice, {NetID = netid, Stanje = stanje, Koord = co, OldID = nil})
+	table.insert(Sadnice, {NetID = netid, Stanje = stanje, Koord = co})
 	table.insert(Travica, {NetID = netid})
 end)
 
@@ -277,7 +277,6 @@ AddEventHandler('trava:PromjeniNetID', function(oldnet, newnet, stanje)
 		if Sadnice[i] ~= nil then
 			if Sadnice[i].NetID == oldnet then
 				Sadnice[i].NetID = newnet
-				Sadnice[i].OldID = oldnet
 				for a=1, #Travica, 1 do
 					if Travica[a] ~= nil then
 						if Travica[a].NetID == oldnet then
@@ -301,7 +300,6 @@ AddEventHandler('trava:NoviNetID', function(oldnet, newnet, stanje)
 		if Sadnice[i] ~= nil then
 			if Sadnice[i].NetID == oldnet then
 				Sadnice[i].NetID = newnet
-				Sadnice[i].OldID = oldnet
 				for a=1, #Travica, 1 do
 					if Travica[a] ~= nil then
 						if Travica[a].NetID == oldnet then
@@ -338,15 +336,7 @@ AddEventHandler('trava:PratiRast', function(netid, stanje)
 		Citizen.CreateThread(function()
 			local Idic = netid
 			local stanjic = stanje
-			Citizen.Wait(3600000)
-			for i=1, #Sadnice, 1 do
-				if Sadnice[i] ~= nil and Sadnice[i].OldID ~= nil then
-					if Sadnice[i].OldID == Idic then
-						Idic = Sadnice[i].NetID
-						Sadnice[i].OldID = nil
-					end
-				end
-			end
+			Citizen.Wait(20000)
 			TriggerServerEvent("trava:Izrasti", Idic, stanjic+1)
 		end)
 	end

@@ -932,15 +932,7 @@ Config.Menus = {
 		modRearBumper = _U('rearbumper'),
 		modFrontBumper = _U('frontbumper'),
 		modExhaust = _U('exhaust'),
-		modRoof = _U('roof'),
-		modFelge = _U('felge')
-	},
-	
-	modFelge = {
-		label = _U('felge'),
-		parent = 'bodyparts',
-		modType = 0,
-		price = 4.00
+		modRoof = _U('roof')
 	},
 	
 	modSpoilers = {

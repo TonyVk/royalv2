@@ -16,6 +16,7 @@ local Blip
 local Objekti = {}
 local Blipara				  = {}
 local Radis = false
+local Odradio = 1
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -140,6 +141,7 @@ function PokreniPosao()
 		Spawno = true
 		Posao = 1
 		ESX.ShowNotification("Ocistite cestu!")
+		SetBlipRoute(Blipara[1],  true)
 end
 
 function IsATruck()
@@ -221,44 +223,53 @@ Citizen.CreateThread(function()
 		if Spawno == true and Broj > 0 then
 			local tablica = GetVehicleNumberPlateText(GetVehiclePedIsIn(GetPlayerPed(-1), false))
 			if tablica == plaquevehicule then
-				local NewBin, NewBinDistance = ESX.Game.GetClosestObject("prop_snow_bush_02_a")
-				for i=1, #Config.Objekti, 1 do
-					if Objekti[i] == NewBin then
-						if NewBinDistance <= 10 then
-							ESX.Game.DeleteObject(Objekti[i])
-							if DoesBlipExist(Blipara[i]) then
-								RemoveBlip(Blipara[i])
-							end
-							Broj = Broj-1
-							TriggerServerEvent("esx_ralica:platiTuljanu")
-							if Broj == 0 then
-								--local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
-								--ESX.Game.DeleteVehicle(vehicle)
-								for k,v in pairs(Config.Zones) do
-									if k == "VehicleDeletePoint" then
-										--SetNewWaypoint(v.Pos.x, v.Pos.y)
-										if DoesBlipExist(Blip) then
-											RemoveBlip(Blip)
-										end
-										Blip = AddBlipForCoord(v.Pos.x, v.Pos.y, v.Pos.z)
-										SetBlipSprite(Blip, 1)
-										SetBlipColour (Blip, 5)
-										SetBlipAlpha(Blip, 255)
-										SetBlipRoute(Blip,  true) -- waypoint to blip
-									end
+				local kord = GetEntityCoords(PlayerPedId())
+				if GetDistanceBetweenCoords(kord, Config.Objekti[Odradio].x, Config.Objekti[Odradio].y, Config.Objekti[Odradio].z, true) <= 10 then
+					ESX.Game.DeleteObject(Objekti[Odradio])
+					if DoesBlipExist(Blipara[Odradio]) then
+						RemoveBlip(Blipara[Odradio])
+					end
+					Broj = Broj-1
+					TriggerServerEvent("esx_ralica:platiTuljanu")
+					if Broj == 0 then
+						--local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
+						--ESX.Game.DeleteVehicle(vehicle)
+						for k,v in pairs(Config.Zones) do
+							if k == "VehicleDeletePoint" then
+								--SetNewWaypoint(v.Pos.x, v.Pos.y)
+								if DoesBlipExist(Blip) then
+									RemoveBlip(Blip)
 								end
-								
-								Spawno = false
-								Radis = false
-								Broj = 0
-								ESX.ShowNotification("Uspjesno zavrsen posao, vratite kamion do firme!")
+								Blip = AddBlipForCoord(v.Pos.x, v.Pos.y, v.Pos.z)
+								SetBlipSprite(Blip, 1)
+								SetBlipColour (Blip, 5)
+								SetBlipAlpha(Blip, 255)
+								SetBlipRoute(Blip,  true) -- waypoint to blip
 							end
 						end
+						Spawno = false
+						Radis = false
+						Broj = 0
+						ESX.ShowNotification("Uspjesno zavrsen posao, vratite kamion do firme!")
+					else
+						Odradio = Odradio+1
+						SetBlipRoute(Blipara[Odradio],  true)
 					end
 				end
 			end
 		end
+    end
+end)
+
+-- DISPLAY MISSION MARKERS AND MARKERS
+Citizen.CreateThread(function()
+	local waitara = 500
+	while true do
+		Citizen.Wait(waitara)
+		local naso = 0
 		if CurrentAction ~= nil then
+			waitara = 0
+			naso = 1
 			SetTextComponentFormat('STRING')
 			AddTextComponentString(CurrentActionMsg)
 			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
@@ -273,13 +284,6 @@ Citizen.CreateThread(function()
                 CurrentAction = nil
             end
 		end
-    end
-end)
-
--- DISPLAY MISSION MARKERS AND MARKERS
-Citizen.CreateThread(function()
-	while true do
-		Wait(0)
 
 		local coords = GetEntityCoords(GetPlayerPed(-1))
 		
@@ -291,6 +295,8 @@ Citizen.CreateThread(function()
 
 			for k,v in pairs(Config.Zones) do
 				if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
+					waitara = 0
+					naso = 1
 					isInMarker  = true
 					currentZone = k
 				end
@@ -298,6 +304,8 @@ Citizen.CreateThread(function()
 			
 			for k,v in pairs(Config.Cloakroom) do
 				if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
+					waitara = 0
+					naso = 1
 					isInMarker  = true
 					currentZone = k
 				end
@@ -319,6 +327,8 @@ Citizen.CreateThread(function()
 		for k,v in pairs(Config.Zones) do
 
 			if isInService and (IsJobRalica() and v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+				waitara = 0
+				naso = 1
 				DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 			end
 
@@ -327,11 +337,15 @@ Citizen.CreateThread(function()
 		for k,v in pairs(Config.Cloakroom) do
 
 			if(IsJobRalica() and v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+				waitara = 0
+				naso = 1
 				DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 			end
 
 		end
-		
+		if naso == 0 then
+			waitara = 500
+		end
 	end
 end)
 

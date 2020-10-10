@@ -3,6 +3,7 @@ local playersProcessingCannabis = {}
 local Droga = {}
 local Sadnice = {}
 local Kuce = {}
+local StariID = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -236,6 +237,7 @@ AddEventHandler('trava:PonovoKreiraj', function(nid, co)
 				local src = Sadnice[i].ID
 				table.remove(Sadnice, i)
 				local netid = NetworkGetNetworkIdFromEntity(Marih)
+				table.insert(StariID, {ID = src, OldID = nid, NetID = netid})
 				TriggerClientEvent("trava:NoviNetID", -1, nid, netid, stanje)
 				table.insert(Sadnice, {ID = src, Objekt = Marih, Stanje = stanje, NetID = netid})
 				break
@@ -340,17 +342,27 @@ end
 
 function Izrasti(nid, src, stanje) 
 	local xPlayer = ESX.GetPlayerFromId(src)
+	local novinet = nid
 	local mara
 	if stanje == 2 then
 		mara = "bkr_prop_weed_med_01a"
 	else
 		mara = "bkr_prop_weed_lrg_01a"
 	end
-	local ObjID = NetworkGetEntityFromNetworkId(nid)
+	for g=1, #StariID, 1 do
+		if StariID[g] ~= nil then
+			if StariID[g].ID == src and StariID[g].OldID == nid then
+				novinet = StariID[g].NetID
+				table.remove(StariID, g)
+				break
+			end
+		end
+	end
+	local ObjID = NetworkGetEntityFromNetworkId(novinet)
 	local coord = nil
 	for i=1, #Sadnice, 1 do
 		if Sadnice[i] ~= nil then
-			if Sadnice[i].ID == src and Sadnice[i].NetID == nid then
+			if Sadnice[i].ID == src and Sadnice[i].NetID == novinet then
 				if DoesEntityExist(ObjID) then
 					coord = GetEntityCoords(ObjID)
 					DeleteEntity(ObjID)
@@ -363,7 +375,7 @@ function Izrasti(nid, src, stanje)
 					Sadnice[i].Objekt = Marih
 					local netid = NetworkGetNetworkIdFromEntity(Marih)
 					Sadnice[i].NetID = netid
-					TriggerClientEvent("trava:PromjeniNetID", -1, nid, netid, stanje)
+					TriggerClientEvent("trava:PromjeniNetID", -1, novinet, netid, stanje)
 					if stanje ~= 3 then
 						TriggerClientEvent("trava:PratiRast", src, netid, stanje)
 					else
