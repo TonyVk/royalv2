@@ -77,30 +77,70 @@ end
 function SpawnBlipove()
 	for i=1, #Koord, 1 do
 		if Koord[i] ~= nil and Koord[i].Ime == "Lider" then
-			local x,y,z = table.unpack(Koord[i].Coord)
-			if x ~= 0 and x ~= nil then
-				Blipovi[Koord[i].Mafija] = AddBlipForCoord(x,y,z)
+			if Koord[i].Mafija == PlayerData.job.name then
+				local x,y,z = table.unpack(Koord[i].Coord)
+				if x ~= 0 and x ~= nil then
+					Blipovi[Koord[i].Mafija] = AddBlipForCoord(x,y,z)
 
-				SetBlipSprite (Blipovi[Koord[i].Mafija], 378)
-				SetBlipDisplay(Blipovi[Koord[i].Mafija], 4)
-				SetBlipScale  (Blipovi[Koord[i].Mafija], 1.2)
-				for a=1, #Boje, 1 do
-					if Boje[a] ~= nil and Boje[a].Mafija == Koord[i].Mafija and Boje[a].Ime == "Blip" then
-						SetBlipColour(Blipovi[Koord[i].Mafija], tonumber(Boje[a].Boja))
-						break
+					SetBlipSprite (Blipovi[Koord[i].Mafija], 378)
+					SetBlipDisplay(Blipovi[Koord[i].Mafija], 4)
+					SetBlipScale  (Blipovi[Koord[i].Mafija], 1.2)
+					for a=1, #Boje, 1 do
+						if Boje[a] ~= nil and Boje[a].Mafija == Koord[i].Mafija and Boje[a].Ime == "Blip" then
+							SetBlipColour(Blipovi[Koord[i].Mafija], tonumber(Boje[a].Boja))
+							break
+						end
 					end
-				end
-				SetBlipAsShortRange(Blipovi[Koord[i].Mafija], true)
+					SetBlipAsShortRange(Blipovi[Koord[i].Mafija], true)
 
-				BeginTextCommandSetBlipName("STRING")
-				for j=1, #Mafije, 1 do
-					if Mafije[j] ~= nil and Mafije[j].Ime == Koord[i].Mafija then
-						AddTextComponentString(firstToUpper(Mafije[j].Label))
-						break
+					BeginTextCommandSetBlipName("STRING")
+					for j=1, #Mafije, 1 do
+						if Mafije[j] ~= nil and Mafije[j].Ime == Koord[i].Mafija then
+							AddTextComponentString(firstToUpper(Mafije[j].Label))
+							break
+						end
 					end
+					--AddTextComponentString(firstToUpper(Koord[i].Mafija))
+					EndTextCommandSetBlipName(Blipovi[Koord[i].Mafija])
 				end
-				--AddTextComponentString(firstToUpper(Koord[i].Mafija))
-				EndTextCommandSetBlipName(Blipovi[Koord[i].Mafija])
+			end
+		end
+	end
+end
+
+function SpawnBlip()
+	for i=1, #Koord, 1 do
+		if Koord[i] ~= nil and Koord[i].Ime == "Lider" then
+			if DoesBlipExist(Blipovi[Koord[i].Mafija]) then
+				RemoveBlip(Blipovi[Koord[i].Mafija])
+			end
+			if Koord[i].Mafija == PlayerData.job.name then
+				local x,y,z = table.unpack(Koord[i].Coord)
+				if x ~= 0 and x ~= nil then
+					Blipovi[Koord[i].Mafija] = AddBlipForCoord(x,y,z)
+
+					SetBlipSprite (Blipovi[Koord[i].Mafija], 378)
+					SetBlipDisplay(Blipovi[Koord[i].Mafija], 4)
+					SetBlipScale  (Blipovi[Koord[i].Mafija], 1.2)
+					for a=1, #Boje, 1 do
+						if Boje[a] ~= nil and Boje[a].Mafija == Koord[i].Mafija and Boje[a].Ime == "Blip" then
+							SetBlipColour(Blipovi[Koord[i].Mafija], tonumber(Boje[a].Boja))
+							break
+						end
+					end
+					SetBlipAsShortRange(Blipovi[Koord[i].Mafija], true)
+
+					BeginTextCommandSetBlipName("STRING")
+					for j=1, #Mafije, 1 do
+						if Mafije[j] ~= nil and Mafije[j].Ime == Koord[i].Mafija then
+							AddTextComponentString(firstToUpper(Mafije[j].Label))
+							break
+						end
+					end
+					--AddTextComponentString(firstToUpper(Koord[i].Mafija))
+					EndTextCommandSetBlipName(Blipovi[Koord[i].Mafija])
+				end
+				break
 			end
 		end
 	end
@@ -1999,12 +2039,13 @@ end
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
-  PlayerData = xPlayer
+	PlayerData = xPlayer
 end)
 
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
-  PlayerData.job = job
+	PlayerData.job = job
+	SpawnBlip()
 end)
 
 AddEventHandler('mafije:hasEnteredMarker', function(station, part, partNum)
@@ -2249,17 +2290,19 @@ RegisterNetEvent('mafije:UpdateBoje')
 AddEventHandler('mafije:UpdateBoje', function(br, maf, boj)
 	Boje = boj
 	if Config.Blipovi == true then
-		if br == 2 then
-			for i=1, #Boje, 1 do
-				if Boje[i] ~= nil and Boje[i].Mafija == maf and Boje[i].Ime == "Blip" then
-					SetBlipColour (Blipovi[maf], tonumber(Boje[i].Boja))
-					break
+		if maf == PlayerData.job.name then
+			if br == 2 then
+				for i=1, #Boje, 1 do
+					if Boje[i] ~= nil and Boje[i].Mafija == maf and Boje[i].Ime == "Blip" then
+						SetBlipColour (Blipovi[maf], tonumber(Boje[i].Boja))
+						break
+					end
 				end
 			end
-		end
-		if br == 3 then
-			RemoveBlip(Blipovi[maf])
-			Blipovi[maf] = nil
+			if br == 3 then
+				RemoveBlip(Blipovi[maf])
+				Blipovi[maf] = nil
+			end
 		end
 	end
 end)
@@ -2272,33 +2315,35 @@ end)
 RegisterNetEvent('mafije:KreirajBlip')
 AddEventHandler('mafije:KreirajBlip', function(co, maf)
 	if Config.Blipovi == true then
-		local x,y,z = table.unpack(co)
-		if Blipovi[maf] ~= nil then
-			RemoveBlip(Blipovi[maf])
-			Blipovi[maf] = nil
-		end
-		if x ~= 0 and x ~= nil then
-			Blipovi[maf] = AddBlipForCoord(x,y,z)
-
-			SetBlipSprite (Blipovi[maf], 378)
-			SetBlipDisplay(Blipovi[maf], 4)
-			SetBlipScale  (Blipovi[maf], 1.2)
-			for i=1, #Boje, 1 do
-				if Boje[i] ~= nil and Boje[i].Mafija == maf and Boje[i].Ime == "Blip" then
-					SetBlipColour (Blipovi[maf], tonumber(Boje[i].Boja))
-					break
-				end
+		if maf == PlayerData.job.name then
+			local x,y,z = table.unpack(co)
+			if Blipovi[maf] ~= nil then
+				RemoveBlip(Blipovi[maf])
+				Blipovi[maf] = nil
 			end
-			SetBlipAsShortRange(Blipovi[maf], true)
+			if x ~= 0 and x ~= nil then
+				Blipovi[maf] = AddBlipForCoord(x,y,z)
 
-			BeginTextCommandSetBlipName("STRING")
-			for j=1, #Mafije, 1 do
-				if Mafije[j] ~= nil and Mafije[j].Ime == maf then
-					AddTextComponentString(firstToUpper(Mafije[j].Label))
-					break
+				SetBlipSprite (Blipovi[maf], 378)
+				SetBlipDisplay(Blipovi[maf], 4)
+				SetBlipScale  (Blipovi[maf], 1.2)
+				for i=1, #Boje, 1 do
+					if Boje[i] ~= nil and Boje[i].Mafija == maf and Boje[i].Ime == "Blip" then
+						SetBlipColour (Blipovi[maf], tonumber(Boje[i].Boja))
+						break
+					end
 				end
+				SetBlipAsShortRange(Blipovi[maf], true)
+
+				BeginTextCommandSetBlipName("STRING")
+				for j=1, #Mafije, 1 do
+					if Mafije[j] ~= nil and Mafije[j].Ime == maf then
+						AddTextComponentString(firstToUpper(Mafije[j].Label))
+						break
+					end
+				end
+				EndTextCommandSetBlipName(Blipovi[maf])
 			end
-			EndTextCommandSetBlipName(Blipovi[maf])
 		end
 	end
 end)

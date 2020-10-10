@@ -203,6 +203,7 @@ function ZavrsiPosao()
 	end
 	Spawno = false
 	Radis = false
+	Odradio = 1
 end
 
 AddEventHandler('esx_ralica:hasExitedMarker', function(zone)
@@ -250,6 +251,7 @@ Citizen.CreateThread(function()
 						Spawno = false
 						Radis = false
 						Broj = 0
+						Odradio = 1
 						ESX.ShowNotification("Uspjesno zavrsen posao, vratite kamion do firme!")
 					else
 						Odradio = Odradio+1
