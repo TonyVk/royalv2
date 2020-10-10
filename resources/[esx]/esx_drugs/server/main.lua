@@ -60,11 +60,6 @@ AddEventHandler('kuce:UKuci', function(br)
 	Kuce[src] = br
 end)
 
-RegisterCommand("youtube", function(source, args, rawCommandString)
-	local ObjID = NetworkGetEntityFromNetworkId(Sadnice[2].NetID)
-	DeleteEntity(ObjID)
-end, false)
-
 RegisterServerEvent('trava:ProvjeriSadnice')
 AddEventHandler('trava:ProvjeriSadnice', function()
 	local src = source
