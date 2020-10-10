@@ -7,7 +7,7 @@
 ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-local Global = 1
+local Global = 0
 local CekajZaOglas = 0
 local Mute = {}
 
@@ -70,13 +70,14 @@ end
   
   
 	RegisterNetEvent("PromjeniGlobal")
-	AddEventHandler('PromjeniGlobal', function(br)
-		if br == 1 then
-			TriggerClientEvent('chat:addMessage', -1, { args = { 'SYSTEM ', "Chat(T) je globalan (svi vide sta pisete)" } })
-		else
+	AddEventHandler('PromjeniGlobal', function()
+		if Global == 1 then
 			TriggerClientEvent('chat:addMessage', -1, { args = { 'SYSTEM ', "Chat(T) je lokalan (osobe blizu vas vide sta pisete)" } })
+			Global = 0
+		else
+			TriggerClientEvent('chat:addMessage', -1, { args = { 'SYSTEM ', "Chat(T) je globalan (svi vide sta pisete)" } })
+			Global = 1
 		end
-		Global = br
 	end)
   
   -- TriggerEvent('es:addCommand', 'me', function(source, args, user)

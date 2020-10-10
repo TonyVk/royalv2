@@ -18,7 +18,6 @@ local Metci 					= 0
 local CijenaDroge 				= 0
 local Kolicina 					= 0
 local Prodavac2 				= nil
-local GL 						= 1
 
 ESX                             = nil
 
@@ -657,13 +656,7 @@ end
 RegisterCommand('rpchat', function(source, args, rawCommand)
 	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		if br == 1 then
-			if GL == 0 then
-				TriggerServerEvent("PromjeniGlobal", 1)
-				GL = 1
-			else
-				TriggerServerEvent("PromjeniGlobal", 0)
-				GL = 0
-			end
+			TriggerServerEvent("PromjeniGlobal")
 		end
 	end)
 end, false)
