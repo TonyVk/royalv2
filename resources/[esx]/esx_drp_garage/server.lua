@@ -143,7 +143,7 @@ ESX.RegisterServerCallback('eden_garage:getOutVehicles',function(source, cb)
 		for _,v in pairs(data) do
 			local vehicle = json.decode(v.vehicle)
 			GetRPName(v.owner, function(Firstname, Lastname)
-				table.insert(vehicules, {vehicle = vehicle, vlasnik = Firstname.." "..Lastname})
+				table.insert(vehicules, {vehicle = vehicle, vlasnik = Firstname.." "..Lastname, tablica = vehicle.plate})
 			end)
 		end
 		SetTimeout(500, function()

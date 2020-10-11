@@ -548,7 +548,7 @@ function ReturnVehicleMenu()
 
 			labelvehicle = vehicleName _U('impound_list', GetLabelText(vehicleName))
 		
-			table.insert(elements, {label =labelvehicle.."-"..v.vlasnik, value = v.vehicle})
+			table.insert(elements, {label =labelvehicle.."-"..v.vlasnik.."("..v.tablica..")", value = v.vehicle})
 			
 			end
 
