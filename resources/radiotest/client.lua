@@ -1,5 +1,5 @@
-local radioname = "RADIO_05_TALK_01" -- radio to replace with your own | pastebin.com/Kj9t38KF <-- full list of radio names
-local volume = GetProfileSetting(306) / 10
+local radioname = "RADIO_22_DLC_BATTLE_MIX1_RADIO" -- radio to replace with your own | pastebin.com/Kj9t38KF <-- full list of radio names
+local volume = GetProfileSetting(306) / 100
 local previousVolume = volume
 
 Citizen.CreateThread(function()
@@ -15,7 +15,7 @@ Citizen.CreateThread(function()
             SendNuiMessage(json.encode({type="enable",state=false}))
             SetAudioFlag("FrontendRadioDisabled", false)
         end
-		local volume = GetProfileSetting(306)/10
+		local volume = GetProfileSetting(306)/100
 		if previousVolume ~= volume then
 			SendNuiMessage(json.encode({type="volume",volume=volume}))
 			previousVolume = volume

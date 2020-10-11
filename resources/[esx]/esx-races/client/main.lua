@@ -561,9 +561,8 @@ function SpawnajGa(race)
 			end
 		end
 	end
-
-    TriggerEvent("advancedFuel:setEssence", 100, GetVehicleNumberPlateText(RaceVehicle), GetDisplayNameFromVehicleModel(GetEntityModel(RaceVehicle)))
 	
+	exports["LegacyFuel"]:SetFuel(RaceVehicle, 100)
 
     TaskWarpPedIntoVehicle(PlayerPedId(), RaceVehicle, -1)
 	SetVehicleDoorsLocked(RaceVehicle, 4)

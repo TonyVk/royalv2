@@ -332,18 +332,6 @@ function doTrains()
 				Config.inTrain = true
 			end
 		end
-		
-		-- KP8 to delete train infront
-		if(IsControlPressed(0,111) and(GetGameTimer() - Config.EnterExitDelay) > Config.EnterExitDelayMax) then
-			Config.EnterExitDelay = 0
-			if Vlak ~= nil then
-				DeleteMissionTrain(Vlak)
-				Config.inTrain = false -- F while train doesn't have driver
-				Config.inTrainAsPas = false -- F while train has driver
-				Config.TrainVeh = 0
-				Config.Speed = 0
-			end
-		end
 	end
 end
 
