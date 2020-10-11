@@ -65,6 +65,17 @@ AddEventHandler('eden_garage:deletevehicle_sv', function(vehicle)
 	TriggerClientEvent('eden_garage:deletevehicle_cl', -1, vehicle)
 end)
 
+RegisterNetEvent('garaza:SpawnVozilo')
+AddEventHandler('garaza:SpawnVozilo', function(vehicle, co, he, tip)
+	local _source = source
+	local veh = CreateVehicle(vehicle.model, co, true, true)
+	while not DoesEntityExist(veh) do
+		Wait(1)
+	end
+	local netid = NetworkGetNetworkIdFromEntity(veh)
+	TriggerClientEvent("garaza:VratiVozilo", _source, netid, vehicle, he, tip)
+end)
+
 AddEventHandler('garaza:SpremiModel', function(id, mod)
 	VoziloModel[id] = mod
 end)

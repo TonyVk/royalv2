@@ -21,6 +21,7 @@ local GarazaV 					= nil
 local Vblip 					= nil
 local PlayerData                = {}
 local Blipara = nil
+local Blip = nil
 
 local this_Garage = {}
 
@@ -33,11 +34,8 @@ Citizen.CreateThread(function()
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(0)
 	end
-	while PlayerData.job == nil do
-		Citizen.Wait(1)
-	end
-	refreshBlips()
 	ProvjeriPosao()
+	refreshBlips()
 end)
 
 function ProvjeriPosao()
@@ -59,6 +57,9 @@ AddEventHandler('esx:setJob', function(job)
 end)
 
 function refreshBlips()
+	while PlayerData.job == nil do
+		Citizen.Wait(1)
+	end
 	local zones = {}
 	local blipInfo = {}	
 	if DoesBlipExist(Blipara) then
@@ -66,15 +67,17 @@ function refreshBlips()
 	end
 	for zoneKey,zoneValues in pairs(Config.Garages)do
 		if zoneValues.PrikaziBlip == 1 then
-			local blip = AddBlipForCoord(zoneValues.Pos.x, zoneValues.Pos.y, zoneValues.Pos.z)
-			SetBlipSprite (blip, Config.BlipInfos.Sprite)
-			SetBlipDisplay(blip, 4)
-			SetBlipScale  (blip, 1.2)
-			SetBlipColour (blip, Config.BlipInfos.Color)
-			SetBlipAsShortRange(blip, true)
-			BeginTextCommandSetBlipName("STRING")
-			AddTextComponentString(zoneValues.Ime)
-			EndTextCommandSetBlipName(blip)
+			if Blip == nil then
+				Blip = AddBlipForCoord(zoneValues.Pos.x, zoneValues.Pos.y, zoneValues.Pos.z)
+				SetBlipSprite (Blip, Config.BlipInfos.Sprite)
+				SetBlipDisplay(Blip, 4)
+				SetBlipScale  (Blip, 1.2)
+				SetBlipColour (Blip, Config.BlipInfos.Color)
+				SetBlipAsShortRange(Blip, true)
+				BeginTextCommandSetBlipName("STRING")
+				AddTextComponentString(zoneValues.Ime)
+				EndTextCommandSetBlipName(Blip)
+			end
 			
 			if zoneValues.MunicipalPoundPoint ~= nil then
 				if PlayerData.job.name == "zemunski" then
@@ -443,13 +446,16 @@ function SpawnVehicle(vehicle)
 			Vblip = nil
 		end
 	end
-	WaitForVehicleToLoad(vehicle.model)
-	ESX.Game.SpawnVehicle(vehicle.model,{
-		x=this_Garage.SpawnPoint.Pos.x ,
-		y=this_Garage.SpawnPoint.Pos.y,
-		z=this_Garage.SpawnPoint.Pos.z + 1											
-		},this_Garage.SpawnPoint.Heading, function(callback_vehicle)
+	local korde = vector3(this_Garage.SpawnPoint.Pos.x, this_Garage.SpawnPoint.Pos.y, this_Garage.SpawnPoint.Pos.z)
+	TriggerServerEvent("garaza:SpawnVozilo", vehicle, korde, this_Garage.SpawnPoint.Heading, 1)
+end
+
+RegisterNetEvent('garaza:VratiVozilo')
+AddEventHandler('garaza:VratiVozilo', function(nid, vehicle, he, tip)
+	if tip == 1 then
+		local callback_vehicle = NetworkGetEntityFromNetworkId(nid)
 		ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
+		SetEntityHeading(callback_vehicle, he)
 		SetVehRadioStation(callback_vehicle, "OFF")
 		GarazaV = callback_vehicle
 		TaskWarpPedIntoVehicle(GetPlayerPed(-1), callback_vehicle, -1)
@@ -457,23 +463,28 @@ function SpawnVehicle(vehicle)
 		local pla = vehicle.plate:gsub("^%s*(.-)%s*$", "%1")
 		TriggerServerEvent("garaza:SpremiModel", pla, vehicle.model)
 		TriggerServerEvent("ls:mainCheck", plate, callback_vehicle, true)
-	end)
-	while GarazaV == nil do
-		Wait(1)
+		TriggerServerEvent('eden_garage:modifystate', vehicle, 0)
+		Vblip = AddBlipForEntity(GarazaV)
+		SetBlipSprite (Vblip, 225)
+		SetBlipDisplay(Vblip, 4)
+		SetBlipScale  (Vblip, 1.0)
+		SetBlipColour (Vblip, 30)
+		SetBlipAsShortRange(Vblip, true)
+		BeginTextCommandSetBlipName("STRING")
+		AddTextComponentString("Vase vozilo")
+		EndTextCommandSetBlipName(Vblip)
+		TriggerEvent("esx_property:ProsljediVozilo", GarazaV, Vblip)
+	elseif tip == 2 then
+		local callback_vehicle = NetworkGetEntityFromNetworkId(nid)
+		ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
+		SetEntityHeading(callback_vehicle, he)
+		SetVehRadioStation(callback_vehicle, "OFF")
+		local plate = GetVehicleNumberPlateText(callback_vehicle)
+		TriggerServerEvent("ls:mainCheck", plate, callback_vehicle, true)
+		TriggerEvent("esx_property:ProsljediVozilo", GarazaV, Vblip)
+		TriggerServerEvent('eden_garage:modifystate2', vehicle, 0)
 	end
-	SetModelAsNoLongerNeeded(vehicle.model)
-	TriggerServerEvent('eden_garage:modifystate', vehicle, 0)
-	Vblip = AddBlipForEntity(GarazaV)
-	SetBlipSprite (Vblip, 225)
-	SetBlipDisplay(Vblip, 4)
-	SetBlipScale  (Vblip, 1.0)
-	SetBlipColour (Vblip, 30)
-	SetBlipAsShortRange(Vblip, true)
-	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentString("Vase vozilo")
-	EndTextCommandSetBlipName(Vblip)
-	TriggerEvent("esx_property:ProsljediVozilo", GarazaV, Vblip)
-end
+end)
 
 RegisterNetEvent('esx_property:ProsljediVozilo')
 AddEventHandler('esx_property:ProsljediVozilo', function(voz, bl)
@@ -488,23 +499,8 @@ end)
 
 --Function for spawning vehicle
 function SpawnPoundedVehicle(vehicle)
-	WaitForVehicleToLoad(vehicle.model)
-	
-	ESX.Game.SpawnVehicle(vehicle.model,{
-		x=this_Garage.SpawnMunicipalPoundPoint.Pos.x ,
-		y=this_Garage.SpawnMunicipalPoundPoint.Pos.y,
-		z=this_Garage.SpawnMunicipalPoundPoint.Pos.z + 1											
-		},321.71, function(callback_vehicle)
-		ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
-		SetVehRadioStation(callback_vehicle, "OFF")
-		local plate = GetVehicleNumberPlateText(callback_vehicle)
-		TriggerServerEvent("ls:mainCheck", plate, callback_vehicle, true)
-	end)
-	SetModelAsNoLongerNeeded(vehicle.model)
-
-	TriggerEvent("esx_property:ProsljediVozilo", GarazaV, Vblip)
-	
-	TriggerServerEvent('eden_garage:modifystate2', vehicle, 0)
+	local korde = vector3(this_Garage.SpawnMunicipalPoundPoint.Pos.x, this_Garage.SpawnMunicipalPoundPoint.Pos.y, this_Garage.SpawnMunicipalPoundPoint.Pos.z+1)
+	TriggerServerEvent("garaza:SpawnVozilo", vehicle, korde, 226.78, 2)
 end
 
 -- Marker actions

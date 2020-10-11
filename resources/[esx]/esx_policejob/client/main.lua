@@ -15,6 +15,7 @@ local PlayerLoaded = false
 local BrojObjekata = 0
 local toggle_rappel = 154 -- INPUT_DUCK (X)
 local polmav_hash = GetHashKey("polmav")
+local UpaljenaSirena = false
 ESX = nil
 
 Citizen.CreateThread(function()
@@ -2424,6 +2425,27 @@ Citizen.CreateThread(function()
 					OpenPoliceActionsMenu()
 				else
 					ESX.ShowNotification(_U('service_not'))
+				end
+			end
+			
+			if IsPedInAnyVehicle(PlayerPedId(), false) then
+				if IsControlJustReleased(0, 86) then
+					if UpaljenaSirena then
+						SetVehicleSiren(GetVehiclePedIsIn(PlayerPedId(), false), true)
+						SetVehicleHasMutedSirens(GetVehiclePedIsIn(PlayerPedId(), false), false)
+						UpaljenaSirena = false
+					end
+				end
+				if IsControlJustReleased(0, 137) then
+					if not UpaljenaSirena then
+						SetVehicleSiren(GetVehiclePedIsIn(PlayerPedId(), false), true)
+						SetVehicleHasMutedSirens(GetVehiclePedIsIn(PlayerPedId(), false), true)
+						UpaljenaSirena = true
+					else
+						SetVehicleSiren(GetVehiclePedIsIn(PlayerPedId(), false), false)
+						SetVehicleHasMutedSirens(GetVehiclePedIsIn(PlayerPedId(), false), false)
+						UpaljenaSirena = false
+					end
 				end
 			end
 
