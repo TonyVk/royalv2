@@ -4,6 +4,9 @@ local PlayerData              = nil
 local isInService = false
 local hasAlreadyEnteredMarker = false
 local lastZone                = nil
+local Radis = false
+local Odradio = 1
+local Blipara = {}
 
 local CurrentAction           = nil
 local CurrentActionMsg        = ''
@@ -61,10 +64,48 @@ function MenuCloakRoom()
 	)
 end
 
+function MenuVehicleSpawner()
+	local elements = {}
+
+	table.insert(elements, {label = "Vlak", value = "vlak"})
+
+	ESX.UI.Menu.CloseAll()
+
+	ESX.UI.Menu.Open(
+		'default', GetCurrentResourceName(), 'vehiclespawner',
+		{
+			title    = _U('vehiclespawner'),
+			elements = elements
+		},
+		function(data, menu)
+			if data.current.value == "vlak" then
+				createTrain(Config.TrainLocations[2].trainID, Config.TrainLocations[2].trainX, Config.TrainLocations[2].trainY, Config.TrainLocations[2].trainZ)
+				PokreniPosao()
+				Radis = true
+			end
+
+			menu.close()
+		end,
+		function(data, menu)
+			menu.close()
+		end
+	)
+end
+
+function PokreniPosao()
+	Blipara[Odradio] = AddBlipForCoord(Config.Stanice[Odradio].x,  Config.Stanice[Odradio].y,  Config.Stanice[Odradio].z)
+	SetBlipSprite (Blipara[Odradio], 1)
+	SetBlipDisplay(Blipara[Odradio], 8)
+	SetBlipColour (Blipara[Odradio], 2)
+	SetBlipScale  (Blipara[Odradio], 1.0)
+	SetBlipAsShortRange(Blipara[Odradio], true)
+	ESX.ShowNotification("Vozite do prve stanice!")
+end
+
 function IsJobVlak()
 	if PlayerData ~= nil then
 		local kosac = false
-		if PlayerData.job.name ~= nil and PlayerData.job.name == 'ralica' then
+		if PlayerData.job.name ~= nil and PlayerData.job.name == 'vlak' then
 			kosac = true
 		end
 		return kosac
@@ -74,6 +115,11 @@ end
 AddEventHandler('esx_vlak:hasEnteredMarker', function(zone)
 	if zone == 'CloakRoom' then
 		MenuCloakRoom()
+	end
+	
+	if zone == 'stanica' then
+		CurrentAction     = 'stanica'
+        CurrentActionMsg  = "Pritisnite E da zapocnete istovar tereta!"
 	end
 
 	if zone == 'VehicleSpawner' then
@@ -101,13 +147,38 @@ Citizen.CreateThread(function()
 			SetTextComponentFormat('STRING')
 			AddTextComponentString(CurrentActionMsg)
 			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
-			if DoesBlipExist(Blip) then
-				RemoveBlip(Blip)
-			end
 			if IsControlJustReleased(0, 38) and IsJobVlak() then
-
-                if CurrentAction == 'Obrisi' then
-					ZavrsiPosao()
+                if CurrentAction == 'stanica' then
+					Config.Speed = 0
+					SetTrainSpeed(Config.TrainVeh, 0)
+					ESX.ShowNotification("Pricekajte istovar tereta!")
+					RemoveBlip(Blipara[Odradio])
+					Odradio = Odradio+1
+					local timer = GetGameTimer()
+					while GetGameTimer() - timer < 10000 do
+						Wait(0)
+						DisableAllControlActions(0)
+					end
+					TriggerServerEvent("esx_vlak:platiTuljanu")
+					if Config.Stanice[Odradio] ~= nil then
+						Blipara[Odradio] = AddBlipForCoord(Config.Stanice[Odradio].x,  Config.Stanice[Odradio].y,  Config.Stanice[Odradio].z)
+						SetBlipSprite (Blipara[Odradio], 1)
+						SetBlipDisplay(Blipara[Odradio], 8)
+						SetBlipColour (Blipara[Odradio], 2)
+						SetBlipScale  (Blipara[Odradio], 1.0)
+						SetBlipAsShortRange(Blipara[Odradio], true)
+						ESX.ShowNotification("Mozete nastaviti!")
+					else
+						Odradio = 1
+						Radis = false
+						DeleteMissionTrain(Vlak)
+						Config.inTrain = false -- F while train doesn't have driver
+						Config.inTrainAsPas = false -- F while train has driver
+						Config.TrainVeh = 0
+						Config.Speed = 0
+						ESX.ShowNotification("Zavrsili ste sa poslom!")
+						SetEntityCoords(PlayerPedId(), 684.48742675781, -716.92510986328, 25.025840759277)
+					end
                 end
                 CurrentAction = nil
             end
@@ -139,6 +210,13 @@ Citizen.CreateThread(function()
 				end
 			end
 			
+			if(GetDistanceBetweenCoords(coords, Config.Stanice[Odradio].x,  Config.Stanice[Odradio].y,  Config.Stanice[Odradio].z, true) < 3.0) then
+				waitara = 0
+				naso = 1
+				isInMarker  = true
+				currentZone = "stanica"
+			end
+			
 			if isInMarker and not hasAlreadyEnteredMarker then
 				hasAlreadyEnteredMarker = true
 				lastZone                = currentZone
@@ -150,6 +228,12 @@ Citizen.CreateThread(function()
 				TriggerEvent('esx_vlak:hasExitedMarker', lastZone)
 			end
 
+		end
+		
+		if isInService and Radis and IsJobVlak() and Config.Stanice[Odradio] ~= nil and GetDistanceBetweenCoords(coords, Config.Stanice[Odradio].x,  Config.Stanice[Odradio].y,  Config.Stanice[Odradio].z, true) < Config.DrawDistance then
+			waitara = 0
+			naso = 1
+			DrawMarker(1, Config.Stanice[Odradio].x,  Config.Stanice[Odradio].y,  Config.Stanice[Odradio].z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
 		end
 		
 		for k,v in pairs(Config.Zones) do

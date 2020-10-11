@@ -130,7 +130,7 @@ Citizen.CreateThread(function()
 			local player = GetPlayerPed(-1)
 			local vehicle = GetVehiclePedIsIn(player, false)
 			local vehicleIsOn = GetIsVehicleEngineRunning(vehicle)
-			if vehicleIsOn then
+			if vehicleIsOn or GetVehicleClass(vehicle) == 21 then
 				local position = GetEntityCoords(player)
 				local vehicleClass = GetVehicleClass(vehicle)
 

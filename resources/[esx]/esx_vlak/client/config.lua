@@ -32,21 +32,15 @@ Config.Cloakroom = {
 
 Config.Zones = {
 	VehicleSpawner = {
-				Pos   = {x = 684.48742675781, y = -716.92510986328, z = 26.025840759277},
+				Pos   = {x = 684.48742675781, y = -716.92510986328, z = 25.025840759277},
 				Size  = {x = 3.0, y = 3.0, z = 1.0},
 				Color = {r = 204, g = 204, b = 0},
 				Type  = 1
-	},
-
-	VehicleSpawnPoint = {
-				Pos   = {x = -151.92576599121, y = -2517.5556640625, z = 5.0544710159302},
-				Size  = {x = 3.0, y = 3.0, z = 1.0},
-				Type  = -1
 	}
 }
 
 --Debug, enable train spawning.
-Config.Debug = true
+Config.Debug = false
 
 -- Marker/Blip Locations/Spawn locations
 Config.TrainLocations = {
@@ -58,6 +52,15 @@ Config.TrainLocations = {
 Config.TrainSpeeds = {
 	[1030400667] = { ["MaxSpeed"] = 36, ["Accel"] = 0.05, ["Dccel"] = 0.1, ["Pass"] = false }, -- F Trains
 	[868868440] = { ["MaxSpeed"] = 91, ["Accel"] = 0.1, ["Dccel"] = 0.1, ["Pass"] = true }, -- T Trains
+}
+
+Config.Stanice = {
+	{x = 2639.1247558594, y = 2978.5637207031, z = 41.181541442871}, --nekastanica
+	{x = -447.89758300781, y = 5357.607421875, z = 82.614448547363}, --nekastanica2
+	{x = -35.799076080322, y = 6231.6958007813, z = 32.269569396973}, --nekastanica3
+	{x = 2570.9812011719, y = 2873.3776855469, z = 39.615345001221}, --nekastanica4
+	{x = 2610.9306640625, y = 1619.1342773438, z = 28.812614440918}, --nekastanica5
+	{x = 669.27301025391, y = -825.544921875, z = 23.984537124634} --vlakkraj
 }
 
 -- Utils
