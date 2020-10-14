@@ -150,7 +150,15 @@ Citizen.CreateThread(function()
 					for k,v in pairs(Config.Zones) do
 						if k == "BitCoin" then
 							if(GetDistanceBetweenCoords(coords, v.x, v.y, v.z, true) < 2) then
-								TriggerServerEvent('esx_bitcoin:startHarvestKoda')
+								local torba = 0
+								TriggerEvent('skinchanger:getSkin', function(skin)
+									torba = skin['bags_1']
+								end)
+								if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+									TriggerServerEvent('esx_bitcoin:startHarvestKoda', true)
+								else
+									TriggerServerEvent('esx_bitcoin:startHarvestKoda', false)
+								end
 							else
 								TriggerEvent('esx_bitcoin:hasExitedMarker', lastZone)
 							end

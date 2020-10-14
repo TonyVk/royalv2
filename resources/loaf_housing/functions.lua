@@ -167,7 +167,15 @@ itemStorage = function(id)
                             ESX.ShowNotification(Strings['Invalid_Amount'])
                         else
                             if amount >= 0 then
-                                TriggerServerEvent('loaf_housing:withdrawItem', 'item', data2.current.value, tonumber(data3.value), id)
+								local torba = 0
+								TriggerEvent('skinchanger:getSkin', function(skin)
+									torba = skin['bags_1']
+								end)
+								if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+									TriggerServerEvent('loaf_housing:withdrawItem', 'item', data2.current.value, tonumber(data3.value), id, true)
+								else
+									TriggerServerEvent('loaf_housing:withdrawItem', 'item', data2.current.value, tonumber(data3.value), id, false)
+								end
                                 menu3.close()
                                 menu2.close()
                             else

@@ -5,6 +5,7 @@ Citizen.CreateThread(function()
 	local GUI         = {}
 	GUI.Time          = 0
 	local MenuType    = 'dialog'
+	local vrijeme = GetGameTimer()
 	local OpenedMenus = {}
 
 	while ESX == nil do
@@ -63,26 +64,27 @@ Citizen.CreateThread(function()
 		local post = true
 
 		if menu.submit ~= nil then
+			if GetGameTimer()-vrijeme > 1000 then
+				vrijeme = GetGameTimer()
+				-- Is the submitted data a number?
+				if tonumber(data.value) ~= nil then
+					-- Round float values
+					data.value = ESX.Math.Round(tonumber(data.value))
 
-			-- Is the submitted data a number?
-			if tonumber(data.value) ~= nil then
-
-				-- Round float values
-				data.value = ESX.Math.Round(tonumber(data.value))
-
-				-- Check for negative value
-				if tonumber(data.value) < 0 then
-					post = false
+					-- Check for negative value
+					if tonumber(data.value) < 0 then
+						post = false
+					end
 				end
-			end
 
-			data.value = ESX.Math.Trim(data.value)
+				data.value = ESX.Math.Trim(data.value)
 
-			-- Don't post if the value is negative or if it's 0
-			if post then
-				menu.submit(data, menu)
-			else
-				ESX.ShowNotification('Krivi unos!')
+				-- Don't post if the value is negative or if it's 0
+				if post then
+					menu.submit(data, menu)
+				else
+					ESX.ShowNotification('Krivi unos!')
+				end
 			end
 		end
 

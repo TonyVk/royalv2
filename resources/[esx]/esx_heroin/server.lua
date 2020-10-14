@@ -7,23 +7,33 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 
 RegisterServerEvent("Heroin:get")
-AddEventHandler("Heroin:get", function()
+AddEventHandler("Heroin:get", function(torba)
     local _source = source	
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	
-		
-				if xPlayer.getInventoryItem('gljive').count < 30 then
-					local randa = math.random(1,3)
-					if xPlayer.getInventoryItem('gljive').count+randa > 30 then
-						xPlayer.addInventoryItem("gljive", 1)
-					else
-						xPlayer.addInventoryItem("gljive", randa)
-					end
-				else
-					TriggerClientEvent('esx:showNotification', source, '~r~Ne mozete nositi vise gljiva')
-				end
-
-			
+	if torba then
+		if xPlayer.getInventoryItem('gljive').count < 30*2 then
+			local randa = math.random(1,3)
+			if xPlayer.getInventoryItem('gljive').count+randa > 30 then
+				xPlayer.addInventoryItem("gljive", 1)
+			else
+				xPlayer.addInventoryItem("gljive", randa)
+			end
+		else
+			TriggerClientEvent('esx:showNotification', source, '~r~Ne mozete nositi vise gljiva')
+		end
+	else
+		if xPlayer.getInventoryItem('gljive').count < 30 then
+			local randa = math.random(1,3)
+			if xPlayer.getInventoryItem('gljive').count+randa > 30 then
+				xPlayer.addInventoryItem("gljive", 1)
+			else
+				xPlayer.addInventoryItem("gljive", randa)
+			end
+		else
+			TriggerClientEvent('esx:showNotification', source, '~r~Ne mozete nositi vise gljiva')
+		end
+	end	
 end)
 
 ESX.RegisterUsableItem('heroin', function(source)

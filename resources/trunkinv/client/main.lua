@@ -592,10 +592,22 @@ AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
 				for i=1, #PlayerData.inventory, 1 do
 			
 					if PlayerData.inventory[i].name == data.current.value then
-						if tonumber(PlayerData.inventory[i].limit) < tonumber(PlayerData.inventory[i].count) + quantity and PlayerData.inventory[i].limit ~= -1 then
-							max = true
+						local torba = 0
+						TriggerEvent('skinchanger:getSkin', function(skin)
+							torba = skin['bags_1']
+						end)
+						if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+							if tonumber(PlayerData.inventory[i].limit)*2 < tonumber(PlayerData.inventory[i].count) + quantity and PlayerData.inventory[i].limit ~= -1 then
+								max = true
+							else
+								max = false
+							end
 						else
-							max = false
+							if tonumber(PlayerData.inventory[i].limit) < tonumber(PlayerData.inventory[i].count) + quantity and PlayerData.inventory[i].limit ~= -1 then
+								max = true
+							else
+								max = false
+							end
 						end
 					end
 				end

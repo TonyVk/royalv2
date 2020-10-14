@@ -353,7 +353,7 @@ ESX.RegisterServerCallback('loaf_housing:getHouseInv', function(source, cb, owne
 end)
 
 RegisterServerEvent('loaf_housing:withdrawItem')
-AddEventHandler('loaf_housing:withdrawItem', function(type, item, amount, owner)
+AddEventHandler('loaf_housing:withdrawItem', function(type, item, amount, owner, torba)
 	local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
 
@@ -365,12 +365,22 @@ AddEventHandler('loaf_housing:withdrawItem', function(type, item, amount, owner)
                 TriggerEvent('esx_addoninventory:getInventory', 'housing', identifier, function(inventory)
                     if inventory.getItem(item)['count'] >= amount then
 						local xItem = xPlayer.getInventoryItem(item)
-						if xItem.limit ~= -1 and (xItem.count + amount) > xItem.limit then
-							TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise u inventory!")
+						if torba then
+							if xItem.limit ~= -1 and (xItem.count + amount) > xItem.limit*2 then
+								TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise u inventory!")
+							else
+								TriggerClientEvent('esx:showNotification', src, (Strings['You_Withdrew']):format(amount, inventory.getItem(item)['label']))
+								xPlayer.addInventoryItem(item, amount)
+								inventory.removeItem(item, amount)
+							end
 						else
-							TriggerClientEvent('esx:showNotification', src, (Strings['You_Withdrew']):format(amount, inventory.getItem(item)['label']))
-							xPlayer.addInventoryItem(item, amount)
-							inventory.removeItem(item, amount)
+							if xItem.limit ~= -1 and (xItem.count + amount) > xItem.limit then
+								TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise u inventory!")
+							else
+								TriggerClientEvent('esx:showNotification', src, (Strings['You_Withdrew']):format(amount, inventory.getItem(item)['label']))
+								xPlayer.addInventoryItem(item, amount)
+								inventory.removeItem(item, amount)
+							end
 						end
                     else
                         TriggerClientEvent('esx:showNotification', src, Strings['Not_Enough_House'])

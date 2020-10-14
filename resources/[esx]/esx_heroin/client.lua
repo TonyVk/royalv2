@@ -253,7 +253,15 @@ Citizen.CreateThread(function()
 									Citizen.Wait(2000)
 									ClearPedTasks(PlayerPedId())
 									ClearPedTasksImmediately(PlayerPedId())
-									TriggerServerEvent('Heroin:get')
+									local torba = 0
+									TriggerEvent('skinchanger:getSkin', function(skin)
+										torba = skin['bags_1']
+									end)
+									if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+										TriggerServerEvent('Heroin:get', true)
+									else
+										TriggerServerEvent('Heroin:get', false)
+									end
 								end
 							
 							end

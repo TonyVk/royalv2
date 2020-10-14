@@ -82,7 +82,7 @@ AddEventHandler('esx_zemunski:OutVehicle', function(target)
 end)
 
 RegisterServerEvent('esx_zemunski:getStockItem')
-AddEventHandler('esx_zemunski:getStockItem', function(itemName, count)
+AddEventHandler('esx_zemunski:getStockItem', function(itemName, count, torba)
 
   local xPlayer = ESX.GetPlayerFromId(source)
   local sourceItem = xPlayer.getInventoryItem(itemName)
@@ -92,12 +92,22 @@ AddEventHandler('esx_zemunski:getStockItem', function(itemName, count)
     local item = inventory.getItem(itemName)
 
     if item.count >= count then
-		if sourceItem.limit ~= -1 and (sourceItem.count + count) <= sourceItem.limit then
-			inventory.removeItem(itemName, count)
-			xPlayer.addInventoryItem(itemName, count)
-			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_withdrawn') .. count .. ' ' .. item.label)
+		if torba then
+			if sourceItem.limit ~= -1 and (sourceItem.count + count) <= sourceItem.limit*2 then
+				inventory.removeItem(itemName, count)
+				xPlayer.addInventoryItem(itemName, count)
+				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_withdrawn') .. count .. ' ' .. item.label)
+			else
+				TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise u inventory!")
+			end
 		else
-			TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise u inventory!")
+			if sourceItem.limit ~= -1 and (sourceItem.count + count) <= sourceItem.limit then
+				inventory.removeItem(itemName, count)
+				xPlayer.addInventoryItem(itemName, count)
+				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_withdrawn') .. count .. ' ' .. item.label)
+			else
+				TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise u inventory!")
+			end
 		end
 	else
       TriggerClientEvent('esx:showNotification', xPlayer.source, _U('quantity_invalid'))

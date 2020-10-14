@@ -128,7 +128,7 @@ AddEventHandler('esx_shops:OduzmiFirmi', function(firma, amount)
 end)
 
 RegisterServerEvent('ducan:piku')
-AddEventHandler('ducan:piku', function(itemName, amount, zone, id)
+AddEventHandler('ducan:piku', function(itemName, amount, zone, id, torba)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	local sourceItem = xPlayer.getInventoryItem(itemName)
@@ -158,13 +158,24 @@ AddEventHandler('ducan:piku', function(itemName, amount, zone, id)
 	-- can the player afford this item?
 	if xPlayer.getMoney() >= price then
 		-- can the player carry the said amount of x item?
-		if sourceItem.limit ~= -1 and (sourceItem.count + amount) > sourceItem.limit then
-			TriggerClientEvent('esx:showNotification', _source, _U('player_cannot_hold'))
+		if torba then
+			if sourceItem.limit ~= -1 and (sourceItem.count + amount) > sourceItem.limit*2 then
+				TriggerClientEvent('esx:showNotification', _source, _U('player_cannot_hold'))
+			else
+				xPlayer.removeMoney(price)
+				DajFirmi(zone..id, price/2)
+				xPlayer.addInventoryItem(itemName, amount)
+				TriggerClientEvent('esx:showNotification', _source, _U('bought', amount, itemLabel, ESX.Math.GroupDigits(price)))
+			end
 		else
-			xPlayer.removeMoney(price)
-			DajFirmi(zone..id, price/2)
-			xPlayer.addInventoryItem(itemName, amount)
-			TriggerClientEvent('esx:showNotification', _source, _U('bought', amount, itemLabel, ESX.Math.GroupDigits(price)))
+			if sourceItem.limit ~= -1 and (sourceItem.count + amount) > sourceItem.limit then
+				TriggerClientEvent('esx:showNotification', _source, _U('player_cannot_hold'))
+			else
+				xPlayer.removeMoney(price)
+				DajFirmi(zone..id, price/2)
+				xPlayer.addInventoryItem(itemName, amount)
+				TriggerClientEvent('esx:showNotification', _source, _U('bought', amount, itemLabel, ESX.Math.GroupDigits(price)))
+			end
 		end
 	else
 		local missingMoney = price - xPlayer.getMoney()

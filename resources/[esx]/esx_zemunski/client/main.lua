@@ -1279,8 +1279,6 @@ function OpenGetStocksMenu()
 
   ESX.TriggerServerCallback('esx_zemunski:getStockItems', function(items)
 
-    print(json.encode(items))
-
     local elements = {}
 
     for i=1, #items, 1 do
@@ -1311,8 +1309,15 @@ function OpenGetStocksMenu()
             else
               menu2.close()
               menu.close()
-
-              TriggerServerEvent('esx_zemunski:getStockItem', itemName, count)
+			  local torba = 0
+			  TriggerEvent('skinchanger:getSkin', function(skin)
+				torba = skin['bags_1']
+			  end)
+			  if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+				TriggerServerEvent('mafije:getStockItem', itemName, count, PlayerData.job.name, true)
+			  else
+				TriggerServerEvent('esx_zemunski:getStockItem', itemName, count, false)
+			  end
 			  OpenGetStocksMenu()
             end
 

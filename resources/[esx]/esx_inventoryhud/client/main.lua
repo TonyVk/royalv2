@@ -368,9 +368,28 @@ function loadPlayerInventory()
                     if inventory[key].count <= 0 then
                         inventory[key] = nil
                     else
-                        inventory[key].type = "item_standard"
-						if value.name ~= "ljudi" then
-							table.insert(items, inventory[key])
+						local torba = 0
+						TriggerEvent('skinchanger:getSkin', function(skin)
+							torba = skin['bags_1']
+						end)
+						if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+							if string.find(inventory[key].name, "weapon_") == nil then
+								inventory[key].type = "item_standard"
+								inventory[key].limit = inventory[key].limit*2
+								if value.name ~= "ljudi" then
+									table.insert(items, inventory[key])
+								end
+							else
+								inventory[key].type = "item_standard"
+								if value.name ~= "ljudi" then
+									table.insert(items, inventory[key])
+								end
+							end
+						else
+							inventory[key].type = "item_standard"
+							if value.name ~= "ljudi" then
+								table.insert(items, inventory[key])
+							end
 						end
                     end
                 end

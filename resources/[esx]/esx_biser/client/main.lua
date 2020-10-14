@@ -151,7 +151,15 @@ Citizen.CreateThread(function()
 					for k,v in pairs(Config.Zones) do
 						if k == "BiserSkupljanje" then
 							if(GetDistanceBetweenCoords(coords, v.x, v.y, v.z, true) < Config.ZoneSize.x / 2) then
-								TriggerServerEvent('esx_biser:startHarvestKoda')
+								local torba = 0
+								TriggerEvent('skinchanger:getSkin', function(skin)
+									torba = skin['bags_1']
+								end)
+								if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+									TriggerServerEvent('esx_biser:startHarvestKoda', true)
+								else
+									TriggerServerEvent('esx_biser:startHarvestKoda', false)
+								end
 							else
 								TriggerEvent('esx_biser:hasExitedMarker', lastZone)
 							end
@@ -159,7 +167,15 @@ Citizen.CreateThread(function()
 						end
 					end
 				elseif CurrentAction == 'Prerada' then
-					TriggerServerEvent('esx_biser:startTransformKoda')
+					local torba = 0
+					TriggerEvent('skinchanger:getSkin', function(skin)
+						torba = skin['bags_1']
+					end)
+					if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+						TriggerServerEvent('esx_biser:startTransformKoda', true)
+					else
+						TriggerServerEvent('esx_biser:startTransformKoda', false)
+					end
 				elseif CurrentAction == 'Biser' then
 					for k,v in pairs(Config.Zones) do
 						if k == "Biser" then

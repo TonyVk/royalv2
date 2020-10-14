@@ -26,7 +26,7 @@ end
 CountCops()
 
 --kodeina
-local function HarvestKoda(source)
+local function HarvestKoda(source, torba)
 	if not TrajeTimer2[source] then
 		TrajeTimer2[source] = true
 		SetTimeout(Config.TimeToFarm, function()
@@ -35,11 +35,20 @@ local function HarvestKoda(source)
 				local xPlayer = ESX.GetPlayerFromId(source)
 				local koda = xPlayer.getInventoryItem('petarda')
 
-				if koda.limit ~= -1 and koda.count >= koda.limit then
-					TriggerClientEvent('esx:showNotification', source, _U('mochila_full'))
+				if torba then
+					if koda.limit ~= -1 and koda.count >= koda.limit*2 then
+						TriggerClientEvent('esx:showNotification', source, _U('mochila_full'))
+					else
+						xPlayer.addInventoryItem('petarda', 1)
+						HarvestKoda(source)
+					end
 				else
-					xPlayer.addInventoryItem('petarda', 1)
-					HarvestKoda(source)
+					if koda.limit ~= -1 and koda.count >= koda.limit then
+						TriggerClientEvent('esx:showNotification', source, _U('mochila_full'))
+					else
+						xPlayer.addInventoryItem('petarda', 1)
+						HarvestKoda(source)
+					end
 				end
 			end
 		end)
@@ -47,14 +56,14 @@ local function HarvestKoda(source)
 end
 
 RegisterServerEvent('esx_bitcoin:startHarvestKoda')
-AddEventHandler('esx_bitcoin:startHarvestKoda', function()
+AddEventHandler('esx_bitcoin:startHarvestKoda', function(torba)
 	local _source = source
 
 	if not PlayersHarvestingKoda[_source] then
 		PlayersHarvestingKoda[_source] = true
 
 		TriggerClientEvent('esx:showNotification', _source, _U('pegar_frutos'))
-		HarvestKoda(_source)
+		HarvestKoda(_source, torba)
 	else
 		print(('esx_bitcoin: %s attempted to exploit the marker!'):format(GetPlayerIdentifiers(_source)[1]))
 	end

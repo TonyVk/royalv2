@@ -8,7 +8,7 @@ local StariID = {}
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 RegisterServerEvent('droge:prodajih')
-AddEventHandler('droge:prodajih', function(itemName, amount)
+AddEventHandler('droge:prodajih', function(itemName, amount, torba)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local price
 	if itemName ~= "seed" then
@@ -28,11 +28,20 @@ AddEventHandler('droge:prodajih', function(itemName, amount)
 			TriggerClientEvent('esx:showNotification', source, "Nemate dovoljno novca!")
 			return
 		end
-		if xItem.limit ~= -1 and (xItem.count + amount) > xItem.limit then
-			TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise sjemena u inventory!")
+		if torba then
+			if xItem.limit ~= -1 and (xItem.count + amount) > xItem.limit*2 then
+				TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise sjemena u inventory!")
+			else
+				xPlayer.removeMoney(price)
+				xPlayer.addInventoryItem(itemName, amount)
+			end
 		else
-			xPlayer.removeMoney(price)
-			xPlayer.addInventoryItem(itemName, amount)
+			if xItem.limit ~= -1 and (xItem.count + amount) > xItem.limit then
+				TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise sjemena u inventory!")
+			else
+				xPlayer.removeMoney(price)
+				xPlayer.addInventoryItem(itemName, amount)
+			end
 		end
 	else
 		if xItem.count < amount then

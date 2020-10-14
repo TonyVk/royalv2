@@ -182,7 +182,15 @@ function OpenShopMenu(zone)
 				}
 			}, function(data2, menu2)
 				if data2.current.value == 'yes' then
-					TriggerServerEvent('ducan:piku', data.current.item, data.current.value, zone, CurrentID)
+					local torba = 0
+					TriggerEvent('skinchanger:getSkin', function(skin)
+						torba = skin['bags_1']
+					end)
+					if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+						TriggerServerEvent('ducan:piku', data.current.item, data.current.value, zone, CurrentID, true)
+					else
+						TriggerServerEvent('ducan:piku', data.current.item, data.current.value, zone, CurrentID, false)
+					end
 				end
 
 				menu2.close()

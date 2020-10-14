@@ -933,7 +933,7 @@ AddEventHandler('mafije:OutVehicle', function(target)
 end)
 
 RegisterServerEvent('mafije:getStockItem')
-AddEventHandler('mafije:getStockItem', function(itemName, count, maf)
+AddEventHandler('mafije:getStockItem', function(itemName, count, maf, torba)
   local soc = "society_"..maf
   local xPlayer = ESX.GetPlayerFromId(source)
   local sourceItem = xPlayer.getInventoryItem(itemName)
@@ -943,15 +943,25 @@ AddEventHandler('mafije:getStockItem', function(itemName, count, maf)
     local item = inventory.getItem(itemName)
 
     if item.count >= count then
-	  if sourceItem.limit ~= -1 and (sourceItem.count + count) <= sourceItem.limit then
-		inventory.removeItem(itemName, count)
-		xPlayer.addInventoryItem(itemName, count)
-		TriggerClientEvent('esx:showNotification', xPlayer.source, "Uzeli ste x" .. count .. ' ' .. item.label)
-	  else
-		TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise u inventory!")
-	  end
+		if torba then
+			if sourceItem.limit ~= -1 and (sourceItem.count + count) <= sourceItem.limit*2 then
+				inventory.removeItem(itemName, count)
+				xPlayer.addInventoryItem(itemName, count)
+				TriggerClientEvent('esx:showNotification', xPlayer.source, "Uzeli ste x" .. count .. ' ' .. item.label)
+			else
+				TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise u inventory!")
+			end
+		else
+			if sourceItem.limit ~= -1 and (sourceItem.count + count) <= sourceItem.limit then
+				inventory.removeItem(itemName, count)
+				xPlayer.addInventoryItem(itemName, count)
+				TriggerClientEvent('esx:showNotification', xPlayer.source, "Uzeli ste x" .. count .. ' ' .. item.label)
+			else
+				TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise u inventory!")
+			end
+		end
     else
-      TriggerClientEvent('esx:showNotification', xPlayer.source, "Krivi iznos")
+		TriggerClientEvent('esx:showNotification', xPlayer.source, "Krivi iznos")
     end
 
   end)
