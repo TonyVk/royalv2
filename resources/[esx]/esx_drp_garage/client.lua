@@ -65,19 +65,20 @@ function refreshBlips()
 	if DoesBlipExist(Blipara) then
 		RemoveBlip(Blipara)
 	end
+	if DoesBlipExist(Blip) then
+		RemoveBlip(Blip)
+	end
 	for zoneKey,zoneValues in pairs(Config.Garages)do
 		if zoneValues.PrikaziBlip == 1 then
-			if Blip == nil then
-				Blip = AddBlipForCoord(zoneValues.Pos.x, zoneValues.Pos.y, zoneValues.Pos.z)
-				SetBlipSprite (Blip, Config.BlipInfos.Sprite)
-				SetBlipDisplay(Blip, 4)
-				SetBlipScale  (Blip, 1.2)
-				SetBlipColour (Blip, Config.BlipInfos.Color)
-				SetBlipAsShortRange(Blip, true)
-				BeginTextCommandSetBlipName("STRING")
-				AddTextComponentString(zoneValues.Ime)
-				EndTextCommandSetBlipName(Blip)
-			end
+			Blip = AddBlipForCoord(zoneValues.Pos.x, zoneValues.Pos.y, zoneValues.Pos.z)
+			SetBlipSprite (Blip, Config.BlipInfos.Sprite)
+			SetBlipDisplay(Blip, 4)
+			SetBlipScale  (Blip, 1.2)
+			SetBlipColour (Blip, Config.BlipInfos.Color)
+			SetBlipAsShortRange(Blip, true)
+			BeginTextCommandSetBlipName("STRING")
+			AddTextComponentString(zoneValues.Ime)
+			EndTextCommandSetBlipName(Blip)
 			
 			if zoneValues.MunicipalPoundPoint ~= nil then
 				if PlayerData.job.name == "zemunski" then

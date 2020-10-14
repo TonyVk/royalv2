@@ -4,7 +4,7 @@ game 'gta5'
 files {
     'edit.html',
     'keks.css',
-	'video.mp4'
+	'video.webm'
 }
 
 loadscreen 'edit.html'

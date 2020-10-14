@@ -77,6 +77,11 @@ AddEventHandler('policija:SpawnoObjekt', function()
 	TriggerClientEvent("policija:EoObjekti", -1, BrojObjekata)
 end)
 
+RegisterNetEvent('policija:UpaliSirenu')
+AddEventHandler('policija:UpaliSirenu', function(nid, sir, mut)
+	TriggerClientEvent("policija:VratiSirenu", -1, nid, sir, mut)
+end)
+
 RegisterNetEvent('policija:MakniObjekt')
 AddEventHandler('policija:MakniObjekt', function()
 	BrojObjekata = BrojObjekata-1

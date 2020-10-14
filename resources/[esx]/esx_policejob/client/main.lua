@@ -2431,19 +2431,19 @@ Citizen.CreateThread(function()
 			if IsPedInAnyVehicle(PlayerPedId(), false) then
 				if IsControlJustReleased(0, 86) then
 					if UpaljenaSirena then
-						SetVehicleSiren(GetVehiclePedIsIn(PlayerPedId(), false), true)
-						SetVehicleHasMutedSirens(GetVehiclePedIsIn(PlayerPedId(), false), false)
+						local nid = NetworkGetNetworkIdFromEntity(GetVehiclePedIsIn(PlayerPedId(), false))
+						TriggerServerEvent("policija:UpaliSirenu", nid, true, false)
 						UpaljenaSirena = false
 					end
 				end
 				if IsControlJustReleased(0, 137) then
 					if not UpaljenaSirena then
-						SetVehicleSiren(GetVehiclePedIsIn(PlayerPedId(), false), true)
-						SetVehicleHasMutedSirens(GetVehiclePedIsIn(PlayerPedId(), false), true)
+						local nid = NetworkGetNetworkIdFromEntity(GetVehiclePedIsIn(PlayerPedId(), false))
+						TriggerServerEvent("policija:UpaliSirenu", nid, true, true)
 						UpaljenaSirena = true
 					else
-						SetVehicleSiren(GetVehiclePedIsIn(PlayerPedId(), false), false)
-						SetVehicleHasMutedSirens(GetVehiclePedIsIn(PlayerPedId(), false), false)
+						local nid = NetworkGetNetworkIdFromEntity(GetVehiclePedIsIn(PlayerPedId(), false))
+						TriggerServerEvent("policija:UpaliSirenu", nid, false, false)
 						UpaljenaSirena = false
 					end
 				end
@@ -2457,6 +2457,15 @@ Citizen.CreateThread(function()
 				currentTask.busy = false
 			end
 		end
+	end
+end)
+
+RegisterNetEvent('policija:VratiSirenu')
+AddEventHandler('policija:VratiSirenu', function(nid, sir, mut)
+	if NetworkDoesEntityExistWithNetworkId(nid) then
+		local entity = NetworkGetEntityFromNetworkId(nid)
+		SetVehicleSiren(entity, sir)
+		SetVehicleHasMutedSirens(entity, mut)
 	end
 end)
 
