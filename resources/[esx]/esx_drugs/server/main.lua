@@ -180,16 +180,18 @@ AddEventHandler('trava:Izrasti', function(nid, stanje)
 end)
 
 RegisterServerEvent('trava:MakniBranje')
-AddEventHandler('trava:MakniBranje', function(nid)
-	TriggerClientEvent("trava:NemosBrati", -1, nid)
+AddEventHandler('trava:MakniBranje', function(nid, co)
+	TriggerClientEvent("trava:NemosBrati", -1, nid, co)
 end)
 
 RegisterServerEvent('trava:ObrisiSadnicu')
-AddEventHandler('trava:ObrisiSadnicu', function(nid)
+AddEventHandler('trava:ObrisiSadnicu', function(nid, co)
 	local ObjID = NetworkGetEntityFromNetworkId(nid)
 	for i=1, #Sadnice, 1 do
 		if Sadnice[i] ~= nil then
-			if Sadnice[i].NetID == nid then
+			local x,y,z = table.unpack(Sadnice[i].Koord)
+			local x2,y2,z2 = table.unpack(co)
+			if Sadnice[i].NetID == nid and round(x, 3) == round(x2, 3) and round(y, 3) == round(y2, 3)and round(z, 3) == round(z2, 3) then
 				local src = Sadnice[i].ID
 				local xPlayer = ESX.GetPlayerFromId(src)
 				DeleteEntity(ObjID)
@@ -208,7 +210,7 @@ AddEventHandler('trava:ObrisiSadnicu', function(nid)
 					['@sad'] = json.encode(Temp),
 					['@id'] = xPlayer.identifier
 				})
-				TriggerClientEvent("trava:MakniSadnicu", -1, nid)
+				TriggerClientEvent("trava:MakniSadnicu", -1, nid, co)
 				break
 			end
 		end
@@ -219,7 +221,9 @@ RegisterServerEvent('trava:PonovoKreiraj')
 AddEventHandler('trava:PonovoKreiraj', function(nid, co)
 	for i=1, #Sadnice, 1 do
 		if Sadnice[i] ~= nil then
-			if Sadnice[i].NetID == nid then
+			local x,y,z = table.unpack(Sadnice[i].Koord)
+			local x2,y2,z2 = table.unpack(co)
+			if Sadnice[i].NetID == nid and round(x, 3) == round(x2, 3) and round(y, 3) == round(y2, 3)and round(z, 3) == round(z2, 3) then
 				local ObjID = NetworkGetEntityFromNetworkId(nid)
 				if DoesEntityExist(ObjID) then
 					DeleteEntity(ObjID)
@@ -242,13 +246,17 @@ AddEventHandler('trava:PonovoKreiraj', function(nid, co)
 				table.remove(Sadnice, i)
 				local netid = NetworkGetNetworkIdFromEntity(Marih)
 				table.insert(StariID, {ID = src, OldID = nid, NetID = netid})
-				TriggerClientEvent("trava:NoviNetID", -1, nid, netid, stanje)
-				table.insert(Sadnice, {ID = src, Objekt = Marih, Stanje = stanje, NetID = netid})
+				TriggerClientEvent("trava:NoviNetID", -1, nid, netid, stanje, src)
+				table.insert(Sadnice, {ID = src, Objekt = Marih, Stanje = stanje, NetID = netid, Koord = co})
 				break
 			end
 		end
 	end
 end)
+
+function round(num, numDecimalPlaces)
+  return tonumber(string.format("%." .. (numDecimalPlaces or 0) .. "f", num))
+end
 
 function distanceFrom(x1,y1,x2,y2) return math.sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2) end
 
@@ -292,9 +300,9 @@ function PosadiTravu(src)
 					local netid = NetworkGetNetworkIdFromEntity(Marih)
 					local xe,ye,ze = table.unpack(playerCoords)
 					local korde = vector3(xe,ye,ze-1.0)
-					table.insert(Sadnice, {ID = src, Objekt = Marih, Stanje = 1, NetID = netid})
-					TriggerClientEvent("trava:EoTiNetID", -1, netid, korde, 1)
-					TriggerClientEvent("trava:PratiRast", src, netid, 1)
+					table.insert(Sadnice, {ID = src, Objekt = Marih, Stanje = 1, NetID = netid, Koord = korde})
+					TriggerClientEvent("trava:EoTiNetID", -1, netid, korde, 1, src)
+					TriggerClientEvent("trava:PratiRast", src, netid, 1, korde)
 					local Temp = {}
 					for i=1, #Sadnice, 1 do
 						if Sadnice[i] ~= nil and Sadnice[i].ID == src then
@@ -339,9 +347,9 @@ function PosadiTravu2(src, co, stanje)
 		Wait(100)
 	end
 	local netid = NetworkGetNetworkIdFromEntity(Marih)
-	table.insert(Sadnice, {ID = src, Objekt = Marih, Stanje = stanje, NetID = netid})
-	TriggerClientEvent("trava:EoTiNetID", -1, netid, korda, stanje)
-	TriggerClientEvent("trava:PratiRast", src, netid, stanje)
+	table.insert(Sadnice, {ID = src, Objekt = Marih, Stanje = stanje, NetID = netid, Koord = korda})
+	TriggerClientEvent("trava:EoTiNetID", -1, netid, korda, stanje, src)
+	TriggerClientEvent("trava:PratiRast", src, netid, stanje, korda)
 end
 
 function Izrasti(nid, src, stanje) 
@@ -379,9 +387,9 @@ function Izrasti(nid, src, stanje)
 					Sadnice[i].Objekt = Marih
 					local netid = NetworkGetNetworkIdFromEntity(Marih)
 					Sadnice[i].NetID = netid
-					TriggerClientEvent("trava:PromjeniNetID", -1, novinet, netid, stanje)
+					TriggerClientEvent("trava:PromjeniNetID", -1, novinet, netid, stanje, src)
 					if stanje ~= 3 then
-						TriggerClientEvent("trava:PratiRast", src, netid, stanje)
+						TriggerClientEvent("trava:PratiRast", src, netid, stanje, coord)
 					else
 						xPlayer.showNotification("[Marihuana] Stabljika je spremna za branje!")
 					end
