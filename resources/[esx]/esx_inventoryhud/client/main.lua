@@ -274,8 +274,15 @@ RegisterNUICallback(
             if data.item.type == "item_weapon" then
                 count = GetAmmoInPedWeapon(PlayerPedId(), GetHashKey(data.item.name))
             end
-
-            TriggerServerEvent("esx:DajItemTuljanu", data.player, data.item.type, data.item.name, count)
+			local torba = 0
+			TriggerEvent('skinchanger:getSkin', function(skin)
+				torba = skin['bags_1']
+			end)
+			if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+				TriggerServerEvent("esx:DajItemTuljanu", data.player, data.item.type, data.item.name, count, true)
+			else
+				TriggerServerEvent("esx:DajItemTuljanu", data.player, data.item.type, data.item.name, count, false)
+			end
 			if data.item.type == "item_money" then
 				TriggerServerEvent("DiscordBot:Inventory", GetPlayerName(PlayerId()).." je dao igracu "..GetPlayerName(GetPlayerFromServerId(data.player)).." $"..count)
 			end

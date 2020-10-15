@@ -34,20 +34,19 @@ local function HarvestKoda(source, torba)
 			if PlayersHarvestingKoda[source] then
 				local xPlayer = ESX.GetPlayerFromId(source)
 				local koda = xPlayer.getInventoryItem('petarda')
-
 				if torba then
 					if koda.limit ~= -1 and koda.count >= koda.limit*2 then
 						TriggerClientEvent('esx:showNotification', source, _U('mochila_full'))
 					else
 						xPlayer.addInventoryItem('petarda', 1)
-						HarvestKoda(source)
+						HarvestKoda(source, torba)
 					end
 				else
 					if koda.limit ~= -1 and koda.count >= koda.limit then
 						TriggerClientEvent('esx:showNotification', source, _U('mochila_full'))
 					else
 						xPlayer.addInventoryItem('petarda', 1)
-						HarvestKoda(source)
+						HarvestKoda(source, torba)
 					end
 				end
 			end

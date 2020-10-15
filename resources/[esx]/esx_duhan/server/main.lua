@@ -40,14 +40,14 @@ local function HarvestKoda(source, torba)
 						TriggerClientEvent('esx:showNotification', source, _U('mochila_full'))
 					else
 						xPlayer.addInventoryItem('duhan', 1)
-						HarvestKoda(source)
+						HarvestKoda(source, torba)
 					end
 				else
 					if koda.limit ~= -1 and koda.count >= koda.limit then
 						TriggerClientEvent('esx:showNotification', source, _U('mochila_full'))
 					else
 						xPlayer.addInventoryItem('duhan', 1)
-						HarvestKoda(source)
+						HarvestKoda(source, torba)
 					end
 				end
 			end

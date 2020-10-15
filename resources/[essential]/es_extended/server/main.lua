@@ -268,7 +268,7 @@ AddEventHandler('esx:updateLastPosition', function(position)
 end)
 
 RegisterServerEvent('esx:DajItemTuljanu')
-AddEventHandler('esx:DajItemTuljanu', function(target, type, itemName, itemCount)
+AddEventHandler('esx:DajItemTuljanu', function(target, type, itemName, itemCount, torba)
 	local _source = source
 
 	local sourceXPlayer = ESX.GetPlayerFromId(_source)
@@ -280,17 +280,27 @@ AddEventHandler('esx:DajItemTuljanu', function(target, type, itemName, itemCount
 		local targetItem = targetXPlayer.getInventoryItem(itemName)
 
 		if itemCount > 0 and sourceItem.count >= itemCount then
-
-			if targetItem.limit ~= -1 and (targetItem.count + itemCount) > targetItem.limit then
-				TriggerClientEvent('esx:showNotification', _source, _U('ex_inv_lim', targetXPlayer.name))
+			if torba then
+				if targetItem.limit ~= -1 and (targetItem.count + itemCount) > targetItem.limit*2 then
+					TriggerClientEvent('esx:showNotification', _source, _U('ex_inv_lim', targetXPlayer.name))
+				else
+					sourceXPlayer.removeInventoryItem(itemName, itemCount)
+					targetXPlayer.addInventoryItem   (itemName, itemCount)
+					
+					TriggerClientEvent('esx:showNotification', _source, _U('gave_item', itemCount, ESX.Items[itemName].label, targetXPlayer.name))
+					TriggerClientEvent('esx:showNotification', target,  _U('received_item', itemCount, ESX.Items[itemName].label, sourceXPlayer.name))
+				end
 			else
-				sourceXPlayer.removeInventoryItem(itemName, itemCount)
-				targetXPlayer.addInventoryItem   (itemName, itemCount)
-				
-				TriggerClientEvent('esx:showNotification', _source, _U('gave_item', itemCount, ESX.Items[itemName].label, targetXPlayer.name))
-				TriggerClientEvent('esx:showNotification', target,  _U('received_item', itemCount, ESX.Items[itemName].label, sourceXPlayer.name))
+				if targetItem.limit ~= -1 and (targetItem.count + itemCount) > targetItem.limit then
+					TriggerClientEvent('esx:showNotification', _source, _U('ex_inv_lim', targetXPlayer.name))
+				else
+					sourceXPlayer.removeInventoryItem(itemName, itemCount)
+					targetXPlayer.addInventoryItem   (itemName, itemCount)
+					
+					TriggerClientEvent('esx:showNotification', _source, _U('gave_item', itemCount, ESX.Items[itemName].label, targetXPlayer.name))
+					TriggerClientEvent('esx:showNotification', target,  _U('received_item', itemCount, ESX.Items[itemName].label, sourceXPlayer.name))
+				end
 			end
-
 		else
 			TriggerClientEvent('esx:showNotification', _source, _U('imp_invalid_quantity'))
 		end

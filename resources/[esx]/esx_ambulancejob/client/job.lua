@@ -988,7 +988,15 @@ function OpenPharmacyMenu()
 			{label = _U('pharmacy_take', _U('bandage')), value = 'bandage'}
 		}
 	}, function(data, menu)
-		TriggerServerEvent('esx_ambulancejob:giveItem', data.current.value)
+		local torba = 0
+		TriggerEvent('skinchanger:getSkin', function(skin)
+			torba = skin['bags_1']
+		end)
+		if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+			TriggerServerEvent('esx_ambulancejob:giveItem', data.current.value, true)
+		else
+			TriggerServerEvent('esx_ambulancejob:giveItem', data.current.value, false)
+		end
 	end, function(data, menu)
 		menu.close()
 	end)

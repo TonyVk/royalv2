@@ -226,7 +226,7 @@ AddEventHandler('esx_ambulancejob:removeItem', function(item)
 end)
 
 RegisterServerEvent('esx_ambulancejob:giveItem')
-AddEventHandler('esx_ambulancejob:giveItem', function(itemName)
+AddEventHandler('esx_ambulancejob:giveItem', function(itemName, torba)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	if xPlayer.job.name ~= 'ambulance' then
@@ -239,15 +239,26 @@ AddEventHandler('esx_ambulancejob:giveItem', function(itemName)
 
 	local xItem = xPlayer.getInventoryItem(itemName)
 	local count = 1
+	if torba then
+		if xItem.limit ~= -1 then
+			count = xItem.limit*2 - xItem.count
+		end
 
-	if xItem.limit ~= -1 then
-		count = xItem.limit - xItem.count
-	end
-
-	if xItem.count < xItem.limit then
-		xPlayer.addInventoryItem(itemName, count)
+		if xItem.count < xItem.limit*2 then
+			xPlayer.addInventoryItem(itemName, count)
+		else
+			TriggerClientEvent('esx:showNotification', source, _U('max_item'))
+		end
 	else
-		TriggerClientEvent('esx:showNotification', source, _U('max_item'))
+		if xItem.limit ~= -1 then
+			count = xItem.limit - xItem.count
+		end
+
+		if xItem.count < xItem.limit then
+			xPlayer.addInventoryItem(itemName, count)
+		else
+			TriggerClientEvent('esx:showNotification', source, _U('max_item'))
+		end
 	end
 end)
 

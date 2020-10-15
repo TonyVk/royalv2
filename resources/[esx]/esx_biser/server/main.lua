@@ -40,14 +40,14 @@ local function HarvestKoda(source, torba)
 						TriggerClientEvent('esx:showNotification', source, _U('mochila_full'))
 					else
 						xPlayer.addInventoryItem('skoljka', 1)
-						HarvestKoda(source)
+						HarvestKoda(source, torba)
 					end
 				else
 					if koda.limit ~= -1 and koda.count >= koda.limit then
 						TriggerClientEvent('esx:showNotification', source, _U('mochila_full'))
 					else
 						xPlayer.addInventoryItem('skoljka', 1)
-						HarvestKoda(source)
+						HarvestKoda(source, torba)
 					end
 				end
 			end
@@ -93,7 +93,7 @@ local function TransformKoda(source, torba)
 					xPlayer.removeInventoryItem('skoljka', 1)
 					xPlayer.addInventoryItem('biser', 2)
 
-					TransformKoda(source)
+					TransformKoda(source, torba)
 				end
 			else
 				if pooch.limit ~= -1 and pooch.count >= pooch.limit then
@@ -104,7 +104,7 @@ local function TransformKoda(source, torba)
 					xPlayer.removeInventoryItem('skoljka', 1)
 					xPlayer.addInventoryItem('biser', 2)
 
-					TransformKoda(source)
+					TransformKoda(source, torba)
 				end
 			end
 		end
@@ -162,7 +162,7 @@ AddEventHandler('esx_biser:startSellKoda', function()
 		PlayersSellingKoda[_source] = true
 
 		TriggerClientEvent('esx:showNotification', _source, _U('venda_do_sacos'))
-		SellKoda(_source, torba)
+		SellKoda(_source)
 	else
 		print(('esx_biser: %s attempted to exploit the marker!'):format(GetPlayerIdentifiers(_source)[1]))
 	end
