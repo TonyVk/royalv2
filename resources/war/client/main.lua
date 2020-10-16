@@ -546,7 +546,8 @@ RegisterCommand("pokreniwar", function(source, args, rawCommandString)
 								TriggerServerEvent("War:SpremiPocela", PoceoWar)
 								TriggerServerEvent("War:SyncajPoslao", 1, 0)
 								TriggerServerEvent("War:SyncajPoslao", 2, 0)
-								TriggerServerEvent("War:Posalji", tonumber(igrac), tonumber(igrac2), broj)
+								local brojic = (broj*2)-2
+								TriggerServerEvent("War:Posalji", tonumber(igrac), tonumber(igrac2), brojic)
 								else
 									name = "Admin"..":"
 									message = "/pokreniwar [ID lidera 1][ID lidera 2][Broj u waru(3 za 3v3, 5 za 5v5...)][Vrijeme]"

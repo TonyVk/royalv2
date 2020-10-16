@@ -58,9 +58,10 @@ AddEventHandler('kuce:SpawnVozilo', function(vehicle, co, he)
 	local _source = source
 	local veh = CreateVehicle(vehicle.model, co, true, true)
 	while not DoesEntityExist(veh) do
-		Wait(1)
+		Wait(100)
 	end
 	local netid = NetworkGetNetworkIdFromEntity(veh)
+	Wait(500)
 	TriggerClientEvent("kuce:VratiVozilo", _source, netid, vehicle, he)
 end)
 

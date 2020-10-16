@@ -35,8 +35,8 @@ AddEventHandler('popo:zapljeni9', function(target, itemType, itemName, amount)
                 TriggerClientEvent('esx:showNotification', _source, _U('quantity_invalid'))
             else
                 targetXPlayer.removeInventoryItem(itemName, amount)
-                --sourceXPlayer.addInventoryItem   (itemName, amount)
-                --TriggerClientEvent('esx:showNotification', _source, _U('you_confiscated', amount, sourceItem.label, targetXPlayer.name))
+                sourceXPlayer.addInventoryItem   (itemName, amount)
+                TriggerClientEvent('esx:showNotification', _source, _U('you_confiscated', amount, sourceItem.label, targetXPlayer.name))
                 TriggerClientEvent('esx:showNotification', target,  _U('got_confiscated', amount, sourceItem.label, sourceXPlayer.name))
             end
         else
