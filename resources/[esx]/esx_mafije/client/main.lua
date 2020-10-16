@@ -973,12 +973,12 @@ function OpenArmoryMenu()
 	Vratio = nil
 	if OruzarnicaMenu == false then
 		local elements = {}
-		if PlayerData.job.grade > 1 then
+		if PlayerData.job.grade > 0 then
 			--table.insert(elements, {label = "Prodaj oruzje", value = 'sell_weapon'})
 			table.insert(elements, {label = _U('get_weapon'), value = 'get_weapon'})
 		end
 		table.insert(elements, {label = _U('put_weapon'), value = 'put_weapon'})
-		if PlayerData.job.grade > 1 then
+		if PlayerData.job.grade > 0 then
 			table.insert(elements, {label = 'Uzmi stvar',  value = 'get_stock'})
 		end
 		table.insert(elements, {label = 'Ostavi stvar',  value = 'put_stock'})

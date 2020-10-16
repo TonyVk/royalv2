@@ -33,9 +33,9 @@ Citizen.CreateThread(function()
 	end
 end)
 
-RegisterNetEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function(xPlayer)
-	Wait(2000)
+RegisterNetEvent('markeri:OdradioSpawn')
+AddEventHandler('markeri:OdradioSpawn', function()
+	Wait(3000)
 	TriggerServerEvent('esx_communityservice:checkIfSentenced')
 end)
 
@@ -72,8 +72,6 @@ end
 
 RegisterNetEvent('esx_communityservice:inCommunityService')
 AddEventHandler('esx_communityservice:inCommunityService', function(actions_remaining)
-	local playerPed = PlayerPedId()
-
 	if isSentenced then
 		return
 	end
@@ -86,13 +84,14 @@ AddEventHandler('esx_communityservice:inCommunityService', function(actions_rema
 
 
 	ApplyPrisonerSkin()
-	ESX.Game.Teleport(playerPed, Config.ServiceLocation)
+	ESX.Game.Teleport(PlayerPedId(), Config.ServiceLocation)
 	isSentenced = true
 	communityServiceFinished = false
 
 	while actionsRemaining > 0 and communityServiceFinished ~= true do
 		Citizen.Wait(10000)
 		if actionsRemaining > 0 then
+			local playerPed = PlayerPedId()
 			if IsPedInAnyVehicle(playerPed, false) then
 				ClearPedTasksImmediately(playerPed)
 			end
@@ -102,9 +101,6 @@ AddEventHandler('esx_communityservice:inCommunityService', function(actions_rema
 				TriggerEvent('chat:addMessage', { args = { _U('judge'), _U('escape_attempt') }, color = { 147, 196, 109 } })
 				TriggerServerEvent('esx_communityservice:extendService')
 				actionsRemaining = actionsRemaining + Config.ServiceExtensionOnEscape
-			end
-			if kord.z < (Config.ServiceLocation.z-3) then
-				ESX.Game.Teleport(playerPed, Config.ServiceLocation)
 			end
 		end
 	end

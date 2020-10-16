@@ -7,23 +7,23 @@ Config.Locale       				= 'en' -- Traduções disponives en / br
 Config.ServiceExtensionOnEscape		= 0
 
 -- # Don't change this unless you know what you are doing.
-Config.ServiceLocation 				= {x =  129.17, y = -746.87, z = 258.00}
+Config.ServiceLocation 				= {x =  893.95, y = -286.81, z = 65.1}
 
 -- # Don't change this unless you know what you are doing.
-Config.ReleaseLocation				= {x = 98.33, y = -743.55, z = 44.9}
+Config.ReleaseLocation				= {x = 914.78, y = -316.19, z = 66.2}
 
 
 -- # Don't change this unless you know what you are doing.
 Config.ServiceLocations = {
-	{ type = "cleaning", coords = vector3(150.0, -751.0, 257.59) },
-	{ type = "cleaning", coords = vector3(142.0, -756.0, 257.59) },
-	{ type = "cleaning", coords = vector3(136.0, -749.5, 257.59) },
-	{ type = "cleaning", coords = vector3(125.6, -748.0, 257.59) },
-	{ type = "cleaning", coords = vector3(124.0, -740.0, 257.59) },
-	{ type = "cleaning", coords = vector3(116.0, -740.0, 257.59) },
-	{ type = "cleaning", coords = vector3(127.0, -755.0, 257.59) },
-	{ type = "gardening", coords = vector3(130.4, -751.25, 258.59) },
-	{ type = "gardening", coords = vector3(147.8, -750.27, 258.59) },
+	{ type = "gardening", coords = vector3(888.42, -272.0, 66.59) },
+	{ type = "gardening", coords = vector3(867.02, -277.0, 65.59) },
+	{ type = "gardening", coords = vector3(876.52, -291.6, 65.59) },
+	{ type = "gardening", coords = vector3(885.62, -279.9, 65.59) },
+	{ type = "cleaning", coords = vector3(910.66, -296.97, 65.59) },
+	{ type = "cleaning", coords = vector3(907.46, -286.67, 65.59) },
+	{ type = "cleaning", coords = vector3(866.26, -285.67, 65.59) },
+	{ type = "cleaning", coords = vector3(880.16, -288.17, 65.59) },
+	{ type = "cleaning", coords = vector3(872.56, -282.67, 65.59) },
 }
 
 

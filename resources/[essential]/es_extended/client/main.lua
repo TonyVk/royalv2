@@ -85,6 +85,7 @@ AddEventHandler('playerSpawned', function()
 	end
 
 	TriggerEvent('esx:restoreLoadout') -- restore loadout
+	TriggerEvent('markeri:OdradioSpawn')
 
 	isLoadoutLoaded = true
 	isPlayerSpawned = true
