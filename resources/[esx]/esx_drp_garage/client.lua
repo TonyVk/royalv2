@@ -454,6 +454,7 @@ AddEventHandler('garaza:VratiVozilo', function(nid, vehicle, he, tip)
 		local callback_vehicle = NetworkGetEntityFromNetworkId(nid)
 		while not DoesEntityExist(callback_vehicle) do
 			Wait(1)
+			callback_vehicle = NetworkGetEntityFromNetworkId(nid)
 		end
 		ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
 		SetEntityHeading(callback_vehicle, he)

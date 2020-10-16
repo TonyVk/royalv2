@@ -42,7 +42,7 @@ function OpenGarageMenu(co,he)
 	ESX.TriggerServerCallback('eden_garage:getVehicles', function(vehicles)
 
  	for _,v in pairs(vehicles) do
-
+		if v.brod == 0 then
         	local hashVehicule = v.vehicle.model
         	local vehicleName = GetDisplayNameFromVehicleModel(hashVehicule)
         	local labelvehicle
@@ -54,7 +54,7 @@ function OpenGarageMenu(co,he)
 				labelvehicle = vehicleName..' <font color="red">Izvan garaze</font>'
         	end    
         	table.insert(elements, {label =labelvehicle , value = v})
-        
+        end
    	 end
 
 		ESX.UI.Menu.Open(
@@ -134,6 +134,7 @@ AddEventHandler('kuce:VratiVozilo', function(nid, vehicle, he)
 	local callback_vehicle = NetworkGetEntityFromNetworkId(nid)
 	while not DoesEntityExist(callback_vehicle) do
 		Wait(1)
+		callback_vehicle = NetworkGetEntityFromNetworkId(nid)
 	end
 	ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
 	SetEntityHeading(callback_vehicle, he)

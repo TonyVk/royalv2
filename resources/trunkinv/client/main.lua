@@ -97,10 +97,15 @@ RegisterCommand("hauba", function(source, args, raw)
         end
     else
         if closecar ~= nil and GetPedInVehicleSeat(closecar, -1) ~= GetPlayerPed(-1) and distanceToVeh <= 4.0 then
+			local locked = GetVehicleDoorsLockedForPlayer(closecar, PlayerId())
             if GetVehicleDoorAngleRatio(closecar, door) > 0 then
                 SetVehicleDoorShut(closecar, door, false)
-            else	
-                SetVehicleDoorOpen(closecar, door, false, false)
+            else
+				if not locked then
+					SetVehicleDoorOpen(closecar, door, false, false)
+				else
+					ShowInfo("Vozilo je zakljucano.")
+				end
             end
         else
             ShowInfo("Previse ste udaljeni od vozila.")
@@ -140,13 +145,49 @@ RegisterCommand("vrata", function(source, args, raw)
             end
         else
             if closecar ~= nil and GetPedInVehicleSeat(closecar, -1) ~= GetPlayerPed(-1) and distanceToVeh <= 4.0 then
+				local locked = GetVehicleDoorsLockedForPlayer(closecar, PlayerId())
                 if GetVehicleDoorAngleRatio(closecar, door) > 0 then
                     SetVehicleDoorShut(closecar, door, false)
-                else	
-                    SetVehicleDoorOpen(closecar, door, false, false)
+                else
+					if not locked then
+						SetVehicleDoorOpen(closecar, door, false, false)
+					else
+						ShowInfo("Vozilo je zakljucano.")
+					end
                 end
             else
                 ShowInfo("Previse ste udaljeni od vozila.")
+            end
+        end
+    end
+end)
+
+RegisterCommand("prozor", function(source, args, raw)
+    local ped = GetPlayerPed(-1)
+    local veh = GetVehiclePedIsUsing(ped)
+    
+    if args[1] == "1" then -- Front Left Door
+        door = 0
+    elseif args[1] == "2" then -- Front Right Door
+        door = 1
+    elseif args[1] == "3" then -- Back Left Door
+        door = 2
+    elseif args[1] == "4" then -- Back Right Door
+        door = 3
+    else
+        door = nil
+        ShowInfo("Koristite: ~n~~b~/prozor [broj]")
+        ShowInfo("~y~Moguci prozori:")
+        ShowInfo("1(Prednji lijevi), 2(Prednji desni)")
+        ShowInfo("3(Straznji lijevi), 4(Straznji desni)")
+    end
+
+    if door ~= nil then
+        if IsPedInAnyVehicle(ped, false) then
+            if IsVehicleWindowIntact(veh, door) then
+				RollDownWindow(veh, door)
+            else	
+                RollUpWindow(veh, door)
             end
         end
     end
