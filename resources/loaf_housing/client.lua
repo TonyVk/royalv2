@@ -118,32 +118,32 @@ function OpenGarageMenu(co,he)
 end
 
 function SpawnVehicle(vehicle, co, he)
-	if GarazaV ~= nil and DoesEntityExist(GarazaV) then
-		local prop = ESX.Game.GetVehicleProperties(GarazaV)
-		local pla = prop.plate:gsub("^%s*(.-)%s*$", "%1")
-		ESX.Game.DeleteVehicle(GarazaV)
+	if GarazaV ~= nil then
+		TriggerServerEvent("garaza:ObrisiVozilo", GarazaV)
 		GarazaV = nil
-		TriggerServerEvent("garaza:SpremiModel", pla, nil)
 		if Vblip ~= nil then
 			RemoveBlip(Vblip)
 			Vblip = nil
 		end
 	end
-	
-	ESX.Game.SpawnVehicle(vehicle.model, co, he, function(callback_vehicle)
-		ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
-		SetVehRadioStation(callback_vehicle, "OFF")
-		GarazaV = callback_vehicle
-		TaskWarpPedIntoVehicle(GetPlayerPed(-1), callback_vehicle, -1)
-		local plate = GetVehicleNumberPlateText(callback_vehicle)
-		local pla = vehicle.plate:gsub("^%s*(.-)%s*$", "%1")
-		TriggerServerEvent("garaza:SpremiModel", pla, vehicle.model)
-		TriggerServerEvent("ls:mainCheck", plate, callback_vehicle, true)
-	end)
-	SetModelAsNoLongerNeeded(vehicle.model)
+	TriggerServerEvent("kuce:SpawnVozilo", vehicle, co, he)
+end
+
+RegisterNetEvent('kuce:VratiVozilo')
+AddEventHandler('kuce:VratiVozilo', function(nid, vehicle, he)
+	local callback_vehicle = NetworkGetEntityFromNetworkId(nid)
+	ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
+	SetEntityHeading(callback_vehicle, he)
+	SetVehRadioStation(callback_vehicle, "OFF")
+	GarazaV = nid
+	TaskWarpPedIntoVehicle(GetPlayerPed(-1), callback_vehicle, -1)
+	local plate = GetVehicleNumberPlateText(callback_vehicle)
+	local pla = vehicle.plate:gsub("^%s*(.-)%s*$", "%1")
+	TriggerServerEvent("garaza:SpremiModel", pla, vehicle.model)
+	TriggerServerEvent("ls:mainCheck", plate, callback_vehicle, true)
 	ESX.ShowNotification("Uzeli ste vozilo iz garaze")
 	TriggerServerEvent('eden_garage:modifystate', vehicle, 0)
-	Vblip = AddBlipForEntity(GarazaV)
+	Vblip = AddBlipForEntity(callback_vehicle)
 	SetBlipSprite (Vblip, 225)
 	SetBlipDisplay(Vblip, 4)
 	SetBlipScale  (Vblip, 1.0)
@@ -153,7 +153,7 @@ function SpawnVehicle(vehicle, co, he)
 	AddTextComponentString("Vase vozilo")
 	EndTextCommandSetBlipName(Vblip)
 	TriggerEvent("esx_property:ProsljediVozilo", GarazaV, Vblip)
-end
+end)
 
 RegisterCommand("zavrsikosenje", function(source, args, rawCommandString)
 	if Kosim == true then

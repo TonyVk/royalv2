@@ -76,6 +76,14 @@ AddEventHandler('garaza:SpawnVozilo', function(vehicle, co, he, tip)
 	TriggerClientEvent("garaza:VratiVozilo", _source, netid, vehicle, he, tip)
 end)
 
+RegisterNetEvent('garaza:ObrisiVozilo')
+AddEventHandler('garaza:ObrisiVozilo', function(nid)
+	local vozilo = NetworkGetEntityFromNetworkId(nid)
+	if DoesEntityExist(vozilo) then
+		DeleteEntity(vozilo)
+	end
+end)
+
 AddEventHandler('garaza:SpremiModel', function(id, mod)
 	VoziloModel[id] = mod
 end)

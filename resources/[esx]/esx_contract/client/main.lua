@@ -36,12 +36,8 @@ end)
 
 RegisterNetEvent('contract:ZamjenaVozila')
 AddEventHandler('contract:ZamjenaVozila', function(plate)
-	local pla = plate:gsub("^%s*(.-)%s*$", "%1")
-	TriggerServerEvent("garaza:SpremiModel", pla, nil)
-	if GarazaV ~= nil and DoesEntityExist(GarazaV) then
-		local prop = ESX.Game.GetVehicleProperties(GarazaV)
-		local pla = prop.plate:gsub("^%s*(.-)%s*$", "%1")
-		TriggerServerEvent("garaza:SpremiModel", pla, nil)
+	if GarazaV ~= nil then
+		TriggerServerEvent("garaza:ObrisiVozilo", GarazaV)
 		GarazaV = nil
 		if Vblip ~= nil then
 			RemoveBlip(Vblip)

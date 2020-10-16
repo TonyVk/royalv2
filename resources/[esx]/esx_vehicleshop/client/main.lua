@@ -291,6 +291,35 @@ RegisterNUICallback(
     end
 )
 
+RegisterNetEvent('salon:VratiVozilo')
+AddEventHandler('salon:VratiVozilo', function(nid, vehicle, he, plate)
+	local callback_vehicle = NetworkGetEntityFromNetworkId(nid)
+	local playerPed = PlayerPedId()
+	SetEntityHeading(callback_vehicle, he)
+	TaskWarpPedIntoVehicle(playerPed, callback_vehicle, -1)
+	ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
+	SetVehicleNumberPlateText(callback_vehicle, plate)
+	SetVehicleDirtLevel(callback_vehicle, 0)
+	FreezeEntityPosition(playerPed, false)
+	SetEntityVisible(playerPed, true)
+	
+	GarazaV = nid
+	local propse = ESX.Game.GetVehicleProperties(callback_vehicle)
+	local pla = propse.plate:gsub("^%s*(.-)%s*$", "%1")
+	TriggerServerEvent("garaza:SpremiModel", pla, propse.model)
+	
+	Vblip = AddBlipForEntity(callback_vehicle)
+	SetBlipSprite (Vblip, 225)
+	SetBlipDisplay(Vblip, 4)
+	SetBlipScale  (Vblip, 1.0)
+	SetBlipColour (Vblip, 30)
+	SetBlipAsShortRange(Vblip, true)
+	BeginTextCommandSetBlipName("STRING")
+	AddTextComponentString("Vase vozilo")
+	EndTextCommandSetBlipName(Vblip)
+	TriggerEvent("esx_property:ProsljediVozilo", GarazaV, Vblip)
+end)
+
 RegisterNUICallback(
     "kupi",
     function()
@@ -471,46 +500,16 @@ RegisterNUICallback(
 												local propi = ESX.Game.GetVehicleProperties(currentDisplayVehicle)
 												DeleteDisplayVehicleInsideShop()
 												
-												if GarazaV ~= nil and DoesEntityExist(GarazaV) then
-													local prop = ESX.Game.GetVehicleProperties(GarazaV)
-													local pla = prop.plate:gsub("^%s*(.-)%s*$", "%1")
-													ESX.Game.DeleteVehicle(GarazaV)
+												if GarazaV ~= nil then
+													TriggerServerEvent("garaza:ObrisiVozilo", GarazaV)
 													GarazaV = nil
-													TriggerServerEvent("garaza:SpremiModel", pla, nil)
 													if Vblip ~= nil then
 														RemoveBlip(Vblip)
 														Vblip = nil
 													end
 												end
 												
-
-												ESX.Game.SpawnVehicle(vehicleData.model, Config.Zones.ShopOutside.Pos, Config.Zones.ShopOutside.Heading, function(vehicle)
-													TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
-													ESX.Game.SetVehicleProperties(vehicle, propi)
-													SetVehicleNumberPlateText(vehicle, generatedPlate)
-													SetVehicleDirtLevel(vehicle, 0)
-													FreezeEntityPosition(playerPed, false)
-													SetEntityVisible(playerPed, true)
-												end)
-												Wait(200)
-												SetModelAsNoLongerNeeded(GetHashKey(vehicleData.model))
-												local vehe = GetVehiclePedIsIn(PlayerPedId())
-												GarazaV = vehe
-												local propse = ESX.Game.GetVehicleProperties(GarazaV)
-												local pla = propse.plate:gsub("^%s*(.-)%s*$", "%1")
-												TriggerServerEvent("garaza:SpremiModel", pla, propse.model)
-												
-												Vblip = AddBlipForEntity(GarazaV)
-												SetBlipSprite (Vblip, 225)
-												SetBlipDisplay(Vblip, 4)
-												SetBlipScale  (Vblip, 1.0)
-												SetBlipColour (Vblip, 30)
-												SetBlipAsShortRange(Vblip, true)
-												BeginTextCommandSetBlipName("STRING")
-												AddTextComponentString("Vase vozilo")
-												EndTextCommandSetBlipName(Vblip)
-													
-												TriggerEvent("esx_property:ProsljediVozilo", GarazaV, Vblip)
+												TriggerServerEvent("salon:SpawnVozilo", propi, Config.Zones.ShopOutside.Pos, Config.Zones.ShopOutside.Heading, generatedPlate)
 											else
 												ESX.ShowNotification(_U('not_enough_money'))
 											end
@@ -567,12 +566,9 @@ RegisterNUICallback(
 												
 												DeleteDisplayVehicleInsideShop()
 												
-												if GarazaV ~= nil and DoesEntityExist(GarazaV) then
-													local prop = ESX.Game.GetVehicleProperties(GarazaV)
-													local pla = prop.plate:gsub("^%s*(.-)%s*$", "%1")
-													ESX.Game.DeleteVehicle(GarazaV)
+												if GarazaV ~= nil then
+													TriggerServerEvent("garaza:ObrisiVozilo", GarazaV)
 													GarazaV = nil
-													TriggerServerEvent("garaza:SpremiModel", pla, nil)
 													if Vblip ~= nil then
 														RemoveBlip(Vblip)
 														Vblip = nil
@@ -580,33 +576,7 @@ RegisterNUICallback(
 												end
 												
 
-												ESX.Game.SpawnVehicle(vehicleData.model, Config.Zones.ShopOutside.Pos, Config.Zones.ShopOutside.Heading, function(vehicle)
-													TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
-													ESX.Game.SetVehicleProperties(vehicle, propi)
-													SetVehicleNumberPlateText(vehicle, generatedPlate)
-													SetVehicleDirtLevel(vehicle, 0)
-													FreezeEntityPosition(playerPed, false)
-													SetEntityVisible(playerPed, true)
-												end)
-												Wait(200)
-												SetModelAsNoLongerNeeded(GetHashKey(vehicleData.model))
-												local vehe = GetVehiclePedIsIn(PlayerPedId())
-												GarazaV = vehe
-												local propse = ESX.Game.GetVehicleProperties(GarazaV)
-												local pla = propse.plate:gsub("^%s*(.-)%s*$", "%1")
-												TriggerServerEvent("garaza:SpremiModel", pla, propse.model)
-												
-												Vblip = AddBlipForEntity(GarazaV)
-												SetBlipSprite (Vblip, 225)
-												SetBlipDisplay(Vblip, 4)
-												SetBlipScale  (Vblip, 1.0)
-												SetBlipColour (Vblip, 30)
-												SetBlipAsShortRange(Vblip, true)
-												BeginTextCommandSetBlipName("STRING")
-												AddTextComponentString("Vase vozilo")
-												EndTextCommandSetBlipName(Vblip)
-													
-												TriggerEvent("esx_property:ProsljediVozilo", GarazaV, Vblip)
+												TriggerServerEvent("salon:SpawnVozilo", propi, Config.Zones.ShopOutside.Pos, Config.Zones.ShopOutside.Heading, generatedPlate)
 											else
 												ESX.ShowNotification(_U('not_enough_money'))
 											end
@@ -664,46 +634,16 @@ RegisterNUICallback(
 												
 										DeleteDisplayVehicleInsideShop()
 												
-										if GarazaV ~= nil and DoesEntityExist(GarazaV) then
-											local prop = ESX.Game.GetVehicleProperties(GarazaV)
-											local pla = prop.plate:gsub("^%s*(.-)%s*$", "%1")
-											ESX.Game.DeleteVehicle(GarazaV)
+										if GarazaV ~= nil then
+											TriggerServerEvent("garaza:ObrisiVozilo", GarazaV)
 											GarazaV = nil
-											TriggerServerEvent("garaza:SpremiModel", pla, nil)
 											if Vblip ~= nil then
 												RemoveBlip(Vblip)
 												Vblip = nil
 											end
 										end
-												
-
-										ESX.Game.SpawnVehicle(vehicleData.model, Config.Zones.ShopOutside2.Pos, Config.Zones.ShopOutside2.Heading, function(vehicle)
-											TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
-											ESX.Game.SetVehicleProperties(vehicle, propi)
-											SetVehicleNumberPlateText(vehicle, generatedPlate)
-											SetVehicleDirtLevel(vehicle, 0)
-											FreezeEntityPosition(playerPed, false)
-											SetEntityVisible(playerPed, true)
-										end)
-										Wait(200)
-										SetModelAsNoLongerNeeded(GetHashKey(vehicleData.model))
-										local vehe = GetVehiclePedIsIn(PlayerPedId())
-										GarazaV = vehe
-										local propse = ESX.Game.GetVehicleProperties(GarazaV)
-										local pla = propse.plate:gsub("^%s*(.-)%s*$", "%1")
-										TriggerServerEvent("garaza:SpremiModel", pla, propse.model)
-												
-										Vblip = AddBlipForEntity(GarazaV)
-										SetBlipSprite (Vblip, 225)
-										SetBlipDisplay(Vblip, 4)
-										SetBlipScale  (Vblip, 1.0)
-										SetBlipColour (Vblip, 30)
-										SetBlipAsShortRange(Vblip, true)
-										BeginTextCommandSetBlipName("STRING")
-										AddTextComponentString("Vase vozilo")
-										EndTextCommandSetBlipName(Vblip)
-													
-										TriggerEvent("esx_property:ProsljediVozilo", GarazaV, Vblip)
+										
+										TriggerServerEvent("salon:SpawnVozilo", propi, Config.Zones.ShopOutside2.Pos, Config.Zones.ShopOutside2.Heading, generatedPlate)
 									else
 										ESX.ShowNotification(_U('not_enough_money'))
 									end
@@ -2047,13 +1987,9 @@ Citizen.CreateThread(function()
 						if CurrentActionData.kategorija ~= "donatorski" then
 							ESX.TriggerServerCallback('esx_vehicleshop:resellVehicle', function(vehicleSold)
 								if vehicleSold then
-									if GarazaV ~= nil and DoesEntityExist(GarazaV) then
-										local prop = ESX.Game.GetVehicleProperties(GarazaV)
-										local pla = prop.plate:gsub("^%s*(.-)%s*$", "%1")
-										ESX.Game.DeleteVehicle(GarazaV)
-										TriggerServerEvent("garaza:SpremiModel", pla, nil)
+									if GarazaV ~= nil then
+										TriggerServerEvent("garaza:ObrisiVozilo", GarazaV)
 										GarazaV = nil
-										TriggerEvent("esx_property:ProsljediVozilo", nil, nil)
 										if Vblip ~= nil then
 											RemoveBlip(Vblip)
 											Vblip = nil

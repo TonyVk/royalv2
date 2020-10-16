@@ -55,6 +55,17 @@ function DeriBrojac(brj)
     end)
 end
 
+RegisterNetEvent('salon:SpawnVozilo')
+AddEventHandler('salon:SpawnVozilo', function(vehicle, co, he, plate)
+	local _source = source
+	local veh = CreateVehicle(vehicle.model, co, true, true)
+	while not DoesEntityExist(veh) do
+		Wait(1)
+	end
+	local netid = NetworkGetNetworkIdFromEntity(veh)
+	TriggerClientEvent("salon:VratiVozilo", _source, netid, vehicle, he, plate)
+end)
+
 RegisterServerEvent('salon:PlatiStetu')
 AddEventHandler('salon:PlatiStetu', function (cifra)
 	local _source = source

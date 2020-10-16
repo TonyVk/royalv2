@@ -436,12 +436,9 @@ end
 
 --Function for spawning vehicle
 function SpawnVehicle(vehicle)
-	if GarazaV ~= nil and DoesEntityExist(GarazaV) then
-		local prop = ESX.Game.GetVehicleProperties(GarazaV)
-		local pla = prop.plate:gsub("^%s*(.-)%s*$", "%1")
-		ESX.Game.DeleteVehicle(GarazaV)
+	if GarazaV ~= nil then
+		TriggerServerEvent("garaza:ObrisiVozilo", GarazaV)
 		GarazaV = nil
-		TriggerServerEvent("garaza:SpremiModel", pla, nil)
 		if Vblip ~= nil then
 			RemoveBlip(Vblip)
 			Vblip = nil
@@ -458,14 +455,14 @@ AddEventHandler('garaza:VratiVozilo', function(nid, vehicle, he, tip)
 		ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
 		SetEntityHeading(callback_vehicle, he)
 		SetVehRadioStation(callback_vehicle, "OFF")
-		GarazaV = callback_vehicle
+		GarazaV = nid
 		TaskWarpPedIntoVehicle(GetPlayerPed(-1), callback_vehicle, -1)
 		local plate = GetVehicleNumberPlateText(callback_vehicle)
 		local pla = vehicle.plate:gsub("^%s*(.-)%s*$", "%1")
 		TriggerServerEvent("garaza:SpremiModel", pla, vehicle.model)
 		TriggerServerEvent("ls:mainCheck", plate, callback_vehicle, true)
 		TriggerServerEvent('eden_garage:modifystate', vehicle, 0)
-		Vblip = AddBlipForEntity(GarazaV)
+		Vblip = AddBlipForEntity(callback_vehicle)
 		SetBlipSprite (Vblip, 225)
 		SetBlipDisplay(Vblip, 4)
 		SetBlipScale  (Vblip, 1.0)
@@ -474,7 +471,7 @@ AddEventHandler('garaza:VratiVozilo', function(nid, vehicle, he, tip)
 		BeginTextCommandSetBlipName("STRING")
 		AddTextComponentString("Vase vozilo")
 		EndTextCommandSetBlipName(Vblip)
-		TriggerEvent("esx_property:ProsljediVozilo", GarazaV, Vblip)
+		TriggerEvent("esx_property:ProsljediVozilo", nid, Vblip)
 	elseif tip == 2 then
 		local callback_vehicle = NetworkGetEntityFromNetworkId(nid)
 		ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
@@ -482,7 +479,6 @@ AddEventHandler('garaza:VratiVozilo', function(nid, vehicle, he, tip)
 		SetVehRadioStation(callback_vehicle, "OFF")
 		local plate = GetVehicleNumberPlateText(callback_vehicle)
 		TriggerServerEvent("ls:mainCheck", plate, callback_vehicle, true)
-		TriggerEvent("esx_property:ProsljediVozilo", GarazaV, Vblip)
 		TriggerServerEvent('eden_garage:modifystate2', vehicle, 0)
 	end
 end)
