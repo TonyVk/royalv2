@@ -361,15 +361,6 @@ function Izrasti(nid, src, stanje)
 	else
 		mara = "bkr_prop_weed_lrg_01a"
 	end
-	for g=1, #StariID, 1 do
-		if StariID[g] ~= nil then
-			if StariID[g].ID == src and StariID[g].OldID == nid then
-				novinet = StariID[g].NetID
-				table.remove(StariID, g)
-				break
-			end
-		end
-	end
 	local ObjID = NetworkGetEntityFromNetworkId(novinet)
 	local coord = nil
 	for i=1, #Sadnice, 1 do

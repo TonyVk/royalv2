@@ -294,6 +294,9 @@ RegisterNUICallback(
 RegisterNetEvent('salon:VratiVozilo')
 AddEventHandler('salon:VratiVozilo', function(nid, vehicle, he, plate)
 	local callback_vehicle = NetworkGetEntityFromNetworkId(nid)
+	while not DoesEntityExist(callback_vehicle) do
+		Wait(1)
+	end
 	local playerPed = PlayerPedId()
 	SetEntityHeading(callback_vehicle, he)
 	TaskWarpPedIntoVehicle(playerPed, callback_vehicle, -1)

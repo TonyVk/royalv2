@@ -865,7 +865,7 @@ AddEventHandler('mafije:SpremiCoord', function(ime, coord, br, head)
 end)
 
 RegisterServerEvent('mafije:zapljeni6')
-AddEventHandler('mafije:zapljeni6', function(target, itemType, itemName, amount)
+AddEventHandler('mafije:zapljeni6', function(target, itemType, itemName, amount, torba)
 
   local sourceXPlayer = ESX.GetPlayerFromId(source)
   local targetXPlayer = ESX.GetPlayerFromId(target)
@@ -874,25 +874,38 @@ AddEventHandler('mafije:zapljeni6', function(target, itemType, itemName, amount)
 
     local label = sourceXPlayer.getInventoryItem(itemName).label
 	local xItem = sourceXPlayer.getInventoryItem(itemName)
-	 
-	if xItem.limit ~= -1 and (xItem.count + amount) > xItem.limit then
-		TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Ne stane vam vise "..label.." u inventory!")
-	else
-		if targetXPlayer ~= nil then
-			targetXPlayer.removeInventoryItem(itemName, amount)
-			sourceXPlayer.addInventoryItem(itemName, amount)
+	
+	if torba then
+		if xItem.limit ~= -1 and (xItem.count + amount) > xItem.limit*2 then
+			TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Ne stane vam vise "..label.." u inventory!")
+		else
+			if targetXPlayer ~= nil then
+				targetXPlayer.removeInventoryItem(itemName, amount)
+				sourceXPlayer.addInventoryItem(itemName, amount)
 
-			TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x" .. amount .. ' ' .. label .."~s~ od ~b~" .. targetXPlayer.name)
-			TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x" .. amount .. ' ' .. label )
+				TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x" .. amount .. ' ' .. label .."~s~ od ~b~" .. targetXPlayer.name)
+				TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x" .. amount .. ' ' .. label )
+			end
+		end
+	else
+		if xItem.limit ~= -1 and (xItem.count + amount) > xItem.limit then
+			TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Ne stane vam vise "..label.." u inventory!")
+		else
+			if targetXPlayer ~= nil then
+				targetXPlayer.removeInventoryItem(itemName, amount)
+				sourceXPlayer.addInventoryItem(itemName, amount)
+
+				TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x" .. amount .. ' ' .. label .."~s~ od ~b~" .. targetXPlayer.name)
+				TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x" .. amount .. ' ' .. label )
+			end
 		end
 	end
-	
   end
 
   if itemType == 'item_account' then
 
-    targetXPlayer.removeAccountMoney(itemName, amount)
-    sourceXPlayer.addAccountMoney(itemName, amount)
+    targetXPlayer.removeMoney(amount)
+    sourceXPlayer.addMoney(amount)
 
     TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~$" .. amount .. "~s~ od ~b~" .. targetXPlayer.name)
     TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~$" .. amount)
@@ -1034,7 +1047,7 @@ ESX.RegisterServerCallback('mafije:getOtherPlayerData', function(source, cb, tar
       name        = GetPlayerName(target),
       job         = xPlayer.job,
       inventory   = xPlayer.inventory,
-      accounts    = xPlayer.accounts,
+      novac       = xPlayer.getMoney(),
       weapons     = xPlayer.loadout,
       firstname   = firstname,
       lastname    = lastname,

@@ -452,6 +452,9 @@ RegisterNetEvent('garaza:VratiVozilo')
 AddEventHandler('garaza:VratiVozilo', function(nid, vehicle, he, tip)
 	if tip == 1 then
 		local callback_vehicle = NetworkGetEntityFromNetworkId(nid)
+		while not DoesEntityExist(callback_vehicle) do
+			Wait(1)
+		end
 		ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
 		SetEntityHeading(callback_vehicle, he)
 		SetVehRadioStation(callback_vehicle, "OFF")
@@ -474,6 +477,9 @@ AddEventHandler('garaza:VratiVozilo', function(nid, vehicle, he, tip)
 		TriggerEvent("esx_property:ProsljediVozilo", nid, Vblip)
 	elseif tip == 2 then
 		local callback_vehicle = NetworkGetEntityFromNetworkId(nid)
+		while not DoesEntityExist(callback_vehicle) do
+			Wait(1)
+		end
 		ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
 		SetEntityHeading(callback_vehicle, he)
 		SetVehRadioStation(callback_vehicle, "OFF")

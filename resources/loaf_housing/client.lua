@@ -132,6 +132,9 @@ end
 RegisterNetEvent('kuce:VratiVozilo')
 AddEventHandler('kuce:VratiVozilo', function(nid, vehicle, he)
 	local callback_vehicle = NetworkGetEntityFromNetworkId(nid)
+	while not DoesEntityExist(callback_vehicle) do
+		Wait(1)
+	end
 	ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
 	SetEntityHeading(callback_vehicle, he)
 	SetVehRadioStation(callback_vehicle, "OFF")

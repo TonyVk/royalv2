@@ -80,11 +80,11 @@ Locales['hr'] = {
   ['name'] = 'Ime : ',
   ['bac'] = 'bAC : ',
   -- Body Search Menu
-  ['confiscate_dirty'] = 'confiscate dirty money: $',
-  ['guns_label'] = '--- Guns ---',
-  ['confiscate'] = 'confiscate ',
+  ['confiscate_dirty'] = 'oduzmite novac: $',
+  ['guns_label'] = '--- Oruzja ---',
+  ['confiscate'] = 'oduzmite ',
   ['inventory_label'] = '--- Inventory ---',
-  ['confiscate_inv'] = 'confiscate x',
+  ['confiscate_inv'] = 'oduzmite x',
 
   ['traffic_offense'] = 'traffic Offense',
   ['minor_offense'] = 'minor Offense',

@@ -840,13 +840,7 @@ function OpenBodySearchMenu(player)
 
     local elements = {}
 
-    local blackMoney = 0
-
-    for i=1, #data.accounts, 1 do
-      if data.accounts[i].name == 'black_money' then
-        blackMoney = data.accounts[i].money
-      end
-    end
+    local blackMoney = data.novac
 
     table.insert(elements, {
       label          = _U('confiscate_dirty') .. blackMoney,
@@ -855,7 +849,7 @@ function OpenBodySearchMenu(player)
       amount         = blackMoney
     })
 
-    table.insert(elements, {label = '--- Armes ---', value = nil})
+    table.insert(elements, {label = '--- Oruzja ---', value = nil})
 
     for i=1, #data.weapons, 1 do
       table.insert(elements, {
@@ -867,15 +861,36 @@ function OpenBodySearchMenu(player)
     end
 
     table.insert(elements, {label = _U('inventory_label'), value = nil})
-
+	local torba = 0
+	TriggerEvent('skinchanger:getSkin', function(skin)
+		torba = skin['bags_1']
+	end)
     for i=1, #data.inventory, 1 do
       if data.inventory[i].count > 0 then
-        table.insert(elements, {
-          label          = _U('confiscate_inv') .. data.inventory[i].count .. ' ' .. data.inventory[i].label,
-          value          = data.inventory[i].name,
-          itemType       = 'item_standard',
-          amount         = data.inventory[i].count,
-        })
+        if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+			table.insert(elements, {
+			  label          = _U('confiscate_inv') .. data.inventory[i].count .. ' ' .. data.inventory[i].label,
+			  value          = data.inventory[i].name,
+			  itemType       = 'item_standard',
+			  amount         = data.inventory[i].count,
+			})
+		else
+			if data.inventory[i].count > data.inventory[i].limit then
+				table.insert(elements, {
+				  label          = _U('confiscate_inv') .. data.inventory[i].limit .. ' ' .. data.inventory[i].label,
+				  value          = data.inventory[i].name,
+				  itemType       = 'item_standard',
+				  amount         = data.inventory[i].limit,
+				})
+			else
+				table.insert(elements, {
+				  label          = _U('confiscate_inv') .. data.inventory[i].count .. ' ' .. data.inventory[i].label,
+				  value          = data.inventory[i].name,
+				  itemType       = 'item_standard',
+				  amount         = data.inventory[i].count,
+				})
+			end
+		end
       end
     end
 
@@ -894,10 +909,16 @@ function OpenBodySearchMenu(player)
         local amount   = data.current.amount
 
         if data.current.value ~= nil then
-
-          TriggerServerEvent('zemunski:zapljeni6', GetPlayerServerId(player), itemType, itemName, amount)
-
-          OpenBodySearchMenu(player)
+			local torba = 0
+			TriggerEvent('skinchanger:getSkin', function(skin)
+				torba = skin['bags_1']
+			end)
+			if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+				TriggerServerEvent('zemunski:zapljeni6', GetPlayerServerId(player), itemType, itemName, amount, true)
+			else
+				TriggerServerEvent('zemunski:zapljeni6', GetPlayerServerId(player), itemType, itemName, amount, false)
+			end
+			OpenBodySearchMenu(player)
 
         end
 

@@ -21,7 +21,7 @@ AddEventHandler('esx_zemunski:ResetirajOruzje', function()
 end)
 
 RegisterServerEvent('zemunski:zapljeni6')
-AddEventHandler('zemunski:zapljeni6', function(target, itemType, itemName, amount)
+AddEventHandler('zemunski:zapljeni6', function(target, itemType, itemName, amount, torba)
 
   local sourceXPlayer = ESX.GetPlayerFromId(source)
   local targetXPlayer = ESX.GetPlayerFromId(target)
@@ -29,22 +29,43 @@ AddEventHandler('zemunski:zapljeni6', function(target, itemType, itemName, amoun
   if itemType == 'item_standard' then
 
     local label = sourceXPlayer.getInventoryItem(itemName).label
+	local xItem = sourceXPlayer.getInventoryItem(itemName)
+	
+	if torba then
+		if xItem.limit ~= -1 and (xItem.count + amount) > xItem.limit*2 then
+			TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Ne stane vam vise "..label.." u inventory!")
+		else
+			if targetXPlayer ~= nil then
+				targetXPlayer.removeInventoryItem(itemName, amount)
+				sourceXPlayer.addInventoryItem(itemName, amount)
 
-    targetXPlayer.removeInventoryItem(itemName, amount)
-    sourceXPlayer.addInventoryItem(itemName, amount)
+				TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x" .. amount .. ' ' .. label .."~s~ od ~b~" .. targetXPlayer.name)
+				TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x" .. amount .. ' ' .. label )
+			end
+		end
+	else
+		if xItem.limit ~= -1 and (xItem.count + amount) > xItem.limit then
+			TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Ne stane vam vise "..label.." u inventory!")
+		else
+			if targetXPlayer ~= nil then
+				targetXPlayer.removeInventoryItem(itemName, amount)
+				sourceXPlayer.addInventoryItem(itemName, amount)
 
-    TriggerClientEvent('esx:showNotification', sourceXPlayer.source, _U('you_have_confinv') .. amount .. ' ' .. label .. _U('from') .. targetXPlayer.name)
-    TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. _U('confinv') .. amount .. ' ' .. label )
+				TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x" .. amount .. ' ' .. label .."~s~ od ~b~" .. targetXPlayer.name)
+				TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x" .. amount .. ' ' .. label )
+			end
+		end
+	end
 
   end
 
   if itemType == 'item_account' then
 
-    targetXPlayer.removeAccountMoney(itemName, amount)
-    sourceXPlayer.addAccountMoney(itemName, amount)
+    targetXPlayer.removeMoney(amount)
+    sourceXPlayer.addMoney(amount)
 
-    TriggerClientEvent('esx:showNotification', sourceXPlayer.source, _U('you_have_confdm') .. amount .. _U('from') .. targetXPlayer.name)
-    TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. _U('confdm') .. amount)
+    TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~$" .. amount .. "~s~ od ~b~" .. targetXPlayer.name)
+    TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~$" .. amount)
 
   end
 
@@ -53,8 +74,8 @@ AddEventHandler('zemunski:zapljeni6', function(target, itemType, itemName, amoun
     targetXPlayer.removeWeapon(itemName)
     sourceXPlayer.addWeapon(itemName, amount)
 
-    TriggerClientEvent('esx:showNotification', sourceXPlayer.source, _U('you_have_confweapon') .. ESX.GetWeaponLabel(itemName) .. _U('from') .. targetXPlayer.name)
-    TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. _U('confweapon') .. ESX.GetWeaponLabel(itemName))
+    TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x1" .. ESX.GetWeaponLabel(itemName) .. "~s~ od ~b~" .. targetXPlayer.name)
+    TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x1 " .. ESX.GetWeaponLabel(itemName))
 
   end
 
@@ -188,7 +209,7 @@ ESX.RegisterServerCallback('esx_zemunski:getOtherPlayerData', function(source, c
       name        = GetPlayerName(target),
       job         = xPlayer.job,
       inventory   = xPlayer.inventory,
-      accounts    = xPlayer.accounts,
+      novac       = xPlayer.getMoney(),
       weapons     = xPlayer.loadout,
       firstname   = firstname,
       lastname    = lastname,

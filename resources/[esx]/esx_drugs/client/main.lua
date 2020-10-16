@@ -346,7 +346,7 @@ AddEventHandler('trava:PratiRast', function(netid, stanje, co)
 		Citizen.CreateThread(function()
 			local Idic = netid
 			local stanjic = stanje
-			Citizen.Wait(3600000)
+			Citizen.Wait(10000) --3600000
 			TriggerServerEvent("trava:Izrasti", Idic, stanjic+1)
 		end)
 	end
@@ -477,26 +477,6 @@ end
 function round(num, numDecimalPlaces)
   return tonumber(string.format("%." .. (numDecimalPlaces or 0) .. "f", num))
 end
-
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(5000)
-		while ESX.PlayerData.job == nil do
-			Citizen.Wait(100)
-		end
-		local coords = GetEntityCoords(PlayerPedId())
-		for i=1, #Sadnice, 1 do
-			if Sadnice[i] ~= nil then
-				if GetDistanceBetweenCoords(coords, Sadnice[i].Koord) <= 100 then
-					if not NetworkDoesEntityExistWithNetworkId(Sadnice[i].NetID) then
-						TriggerServerEvent("trava:PonovoKreiraj", Sadnice[i].NetID, Sadnice[i].Koord)
-					end
-				end
-			end
-			Wait(100)
-		end
-	end
-end)
 
 RegisterCommand("ispisisadnice", function(source, args, rawCommandString)
 	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
