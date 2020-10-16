@@ -346,7 +346,7 @@ AddEventHandler('trava:PratiRast', function(netid, stanje, co)
 		Citizen.CreateThread(function()
 			local Idic = netid
 			local stanjic = stanje
-			Citizen.Wait(10000)
+			Citizen.Wait(3600000)
 			TriggerServerEvent("trava:Izrasti", Idic, stanjic+1)
 		end)
 	end

@@ -59,6 +59,19 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
 	end
 end)
 
+RegisterNetEvent('esx:JelImasTorbu')
+AddEventHandler('esx:JelImasTorbu', function(src, type, itemName, itemCount)
+	local torba = 0
+	TriggerEvent('skinchanger:getSkin', function(skin)
+		torba = skin['bags_1']
+	end)
+	if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+		TriggerServerEvent("esx:DajTajItem", src, type, itemName, itemCount, true)
+	else
+		TriggerServerEvent("esx:DajTajItem", src, type, itemName, itemCount, false)
+	end
+end)
+
 AddEventHandler('playerSpawned', function()
 	while not ESX.PlayerLoaded do
 		Citizen.Wait(1)

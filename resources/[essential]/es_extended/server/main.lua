@@ -268,9 +268,98 @@ AddEventHandler('esx:updateLastPosition', function(position)
 end)
 
 RegisterServerEvent('esx:DajItemTuljanu')
-AddEventHandler('esx:DajItemTuljanu', function(target, type, itemName, itemCount, torba)
+AddEventHandler('esx:DajItemTuljanu', function(target, type, itemName, itemCount)
 	local _source = source
+	
+	TriggerClientEvent("esx:JelImasTorbu", target, _source, type, itemName, itemCount)
+	
+	--[[local sourceXPlayer = ESX.GetPlayerFromId(_source)
+	local targetXPlayer = ESX.GetPlayerFromId(target)
 
+	if type == 'item_standard' then
+
+		local sourceItem = sourceXPlayer.getInventoryItem(itemName)
+		local targetItem = targetXPlayer.getInventoryItem(itemName)
+
+		if itemCount > 0 and sourceItem.count >= itemCount then
+			if torba then
+				if targetItem.limit ~= -1 and (targetItem.count + itemCount) > targetItem.limit*2 then
+					TriggerClientEvent('esx:showNotification', _source, _U('ex_inv_lim', targetXPlayer.name))
+				else
+					sourceXPlayer.removeInventoryItem(itemName, itemCount)
+					targetXPlayer.addInventoryItem   (itemName, itemCount)
+					
+					TriggerClientEvent('esx:showNotification', _source, _U('gave_item', itemCount, ESX.Items[itemName].label, targetXPlayer.name))
+					TriggerClientEvent('esx:showNotification', target,  _U('received_item', itemCount, ESX.Items[itemName].label, sourceXPlayer.name))
+				end
+			else
+				if targetItem.limit ~= -1 and (targetItem.count + itemCount) > targetItem.limit then
+					TriggerClientEvent('esx:showNotification', _source, _U('ex_inv_lim', targetXPlayer.name))
+				else
+					sourceXPlayer.removeInventoryItem(itemName, itemCount)
+					targetXPlayer.addInventoryItem   (itemName, itemCount)
+					
+					TriggerClientEvent('esx:showNotification', _source, _U('gave_item', itemCount, ESX.Items[itemName].label, targetXPlayer.name))
+					TriggerClientEvent('esx:showNotification', target,  _U('received_item', itemCount, ESX.Items[itemName].label, sourceXPlayer.name))
+				end
+			end
+		else
+			TriggerClientEvent('esx:showNotification', _source, _U('imp_invalid_quantity'))
+		end
+
+	elseif type == 'item_money' then
+		itemCount = ESX.Math.Round(itemCount)
+		if itemCount > 0 and sourceXPlayer.getMoney() >= itemCount then
+			sourceXPlayer.removeMoney(itemCount)
+			targetXPlayer.addMoney   (itemCount)
+			ESX.SavePlayer(sourceXPlayer, function() 
+			end)
+			ESX.SavePlayer(targetXPlayer, function() 
+			end)
+
+			TriggerClientEvent('esx:showNotification', _source, _U('gave_money', ESX.Math.GroupDigits(itemCount), targetXPlayer.name))
+			TriggerClientEvent('esx:showNotification', target,  _U('received_money', ESX.Math.GroupDigits(itemCount), sourceXPlayer.name))
+		else
+			TriggerClientEvent('esx:showNotification', _source, _U('imp_invalid_amount'))
+		end
+
+	elseif type == 'item_account' then
+		itemCount = ESX.Math.Round(itemCount)
+		if itemCount > 0 and sourceXPlayer.getAccount(itemName).money >= itemCount then
+			sourceXPlayer.removeAccountMoney(itemName, itemCount)
+			targetXPlayer.addAccountMoney   (itemName, itemCount)
+
+			TriggerClientEvent('esx:showNotification', _source, _U('gave_account_money', ESX.Math.GroupDigits(itemCount), Config.AccountLabels[itemName], targetXPlayer.name))
+			TriggerClientEvent('esx:showNotification', target,  _U('received_account_money', ESX.Math.GroupDigits(itemCount), Config.AccountLabels[itemName], sourceXPlayer.name))
+		else
+			TriggerClientEvent('esx:showNotification', _source, _U('imp_invalid_amount'))
+		end
+
+	elseif type == 'item_weapon' then
+		local weaponLabel = ESX.GetWeaponLabel(itemName)
+		if not targetXPlayer.hasWeapon(itemName) then
+			sourceXPlayer.removeWeapon(itemName)
+			targetXPlayer.addWeapon(itemName, itemCount)
+
+			if itemCount > 0 then
+				TriggerClientEvent('esx:showNotification', _source, _U('gave_weapon_ammo', weaponLabel, itemCount, targetXPlayer.name))
+				TriggerClientEvent('esx:showNotification', target,  _U('received_weapon_ammo', weaponLabel, itemCount, sourceXPlayer.name))
+			else
+				TriggerClientEvent('esx:showNotification', _source, _U('gave_weapon', weaponLabel, targetXPlayer.name))
+				TriggerClientEvent('esx:showNotification', target,  _U('received_weapon', weaponLabel, sourceXPlayer.name))
+			end
+		else
+			TriggerClientEvent('esx:showNotification', _source, _U('gave_weapon_hasalready', targetXPlayer.name, weaponLabel))
+			TriggerClientEvent('esx:showNotification', target, _U('received_weapon_hasalready', sourceXPlayer.name, weaponLabel))
+		end
+	end]]
+end)
+
+RegisterServerEvent('esx:DajTajItem')
+AddEventHandler('esx:DajTajItem', function(src, type, itemName, itemCount, torba)
+	local _source = src
+	local target = source
+	
 	local sourceXPlayer = ESX.GetPlayerFromId(_source)
 	local targetXPlayer = ESX.GetPlayerFromId(target)
 
