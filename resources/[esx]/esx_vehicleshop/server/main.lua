@@ -58,13 +58,13 @@ end
 RegisterNetEvent('salon:SpawnVozilo')
 AddEventHandler('salon:SpawnVozilo', function(vehicle, co, he, plate)
 	local _source = source
-	local veh = CreateVehicle(vehicle.model, co, true, true)
+	local veh = CreateVehicle(vehicle.model, co, he, true, false)
 	while not DoesEntityExist(veh) do
 		Wait(100)
 	end
 	local netid = NetworkGetNetworkIdFromEntity(veh)
 	Wait(500)
-	TriggerClientEvent("salon:VratiVozilo", _source, netid, vehicle, he, plate)
+	TriggerClientEvent("salon:VratiVozilo", _source, netid, vehicle, plate)
 end)
 
 RegisterServerEvent('salon:PlatiStetu')
@@ -262,7 +262,7 @@ ESX.RegisterServerCallback('autosalon:sealion', function(source, cb, model, plat
 	
 	vd.plate = plate
 	vd.model = GetHashKey(model)
-
+	print(mjenjac)
 	if mjenjac == 1 then
 		if modelPrice and xPlayer.getMoney() >= (modelPrice+5000) then
 			xPlayer.removeMoney(modelPrice+5000)
@@ -290,7 +290,6 @@ ESX.RegisterServerCallback('autosalon:sealion', function(source, cb, model, plat
 			}, function(rowsChanged)
 				TriggerClientEvent('esx:showNotification', _source, _U('vehicle_belongs', plate))
 				TriggerEvent("DiscordBot:Vozila", GetPlayerName(_source).." je kupio "..modelName.."(rucni)["..plate.."] u salonu za $"..modelPrice)
-				TriggerClientEvent("EoTiIzSalona", _source, 2)
 				TriggerClientEvent('esx:showNotification', _source, "Brzine mjenjate sa lijevim shiftom i ctrlom!")
 				cb(true)
 			end)

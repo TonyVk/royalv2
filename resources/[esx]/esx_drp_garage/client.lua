@@ -341,6 +341,7 @@ AddEventHandler('eden_garage:deletevehicle_cl', function(plate)
 			end
 			if this_Garage.Brod ~= nil then
 				SetEntityCoords(PlayerPedId(), this_Garage.Vracanje)
+				this_Garage.Brod = nil
 			end
 		end
 	end
@@ -449,7 +450,7 @@ function SpawnVehicle(vehicle)
 end
 
 RegisterNetEvent('garaza:VratiVozilo')
-AddEventHandler('garaza:VratiVozilo', function(nid, vehicle, he, tip)
+AddEventHandler('garaza:VratiVozilo', function(nid, vehicle, tip)
 	if tip == 1 then
 		local callback_vehicle = NetworkGetEntityFromNetworkId(nid)
 		while not DoesEntityExist(callback_vehicle) do
@@ -457,7 +458,7 @@ AddEventHandler('garaza:VratiVozilo', function(nid, vehicle, he, tip)
 			callback_vehicle = NetworkGetEntityFromNetworkId(nid)
 		end
 		ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
-		SetEntityHeading(callback_vehicle, he)
+		--SetEntityHeading(callback_vehicle, he)
 		SetVehRadioStation(callback_vehicle, "OFF")
 		GarazaV = nid
 		TaskWarpPedIntoVehicle(GetPlayerPed(-1), callback_vehicle, -1)
@@ -482,7 +483,7 @@ AddEventHandler('garaza:VratiVozilo', function(nid, vehicle, he, tip)
 			Wait(1)
 		end
 		ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
-		SetEntityHeading(callback_vehicle, he)
+		--SetEntityHeading(callback_vehicle, he)
 		SetVehRadioStation(callback_vehicle, "OFF")
 		local plate = GetVehicleNumberPlateText(callback_vehicle)
 		TriggerServerEvent("ls:mainCheck", plate, callback_vehicle, true)

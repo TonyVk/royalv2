@@ -130,14 +130,14 @@ function SpawnVehicle(vehicle, co, he)
 end
 
 RegisterNetEvent('kuce:VratiVozilo')
-AddEventHandler('kuce:VratiVozilo', function(nid, vehicle, he)
+AddEventHandler('kuce:VratiVozilo', function(nid, vehicle)
 	local callback_vehicle = NetworkGetEntityFromNetworkId(nid)
 	while not DoesEntityExist(callback_vehicle) do
 		Wait(1)
 		callback_vehicle = NetworkGetEntityFromNetworkId(nid)
 	end
 	ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
-	SetEntityHeading(callback_vehicle, he)
+	--SetEntityHeading(callback_vehicle, he)
 	SetVehRadioStation(callback_vehicle, "OFF")
 	GarazaV = nid
 	TaskWarpPedIntoVehicle(GetPlayerPed(-1), callback_vehicle, -1)

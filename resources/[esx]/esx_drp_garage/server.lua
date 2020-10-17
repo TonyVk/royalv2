@@ -68,13 +68,13 @@ end)
 RegisterNetEvent('garaza:SpawnVozilo')
 AddEventHandler('garaza:SpawnVozilo', function(vehicle, co, he, tip)
 	local _source = source
-	local veh = CreateVehicle(vehicle.model, co, true, true)
+	local veh = CreateVehicle(vehicle.model, co, he, true, false)
 	while not DoesEntityExist(veh) do
 		Wait(100)
 	end
 	local netid = NetworkGetNetworkIdFromEntity(veh)
 	Wait(500)
-	TriggerClientEvent("garaza:VratiVozilo", _source, netid, vehicle, he, tip)
+	TriggerClientEvent("garaza:VratiVozilo", _source, netid, vehicle, tip)
 end)
 
 RegisterNetEvent('garaza:ObrisiVozilo')

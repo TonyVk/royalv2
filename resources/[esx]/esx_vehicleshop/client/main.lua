@@ -292,14 +292,14 @@ RegisterNUICallback(
 )
 
 RegisterNetEvent('salon:VratiVozilo')
-AddEventHandler('salon:VratiVozilo', function(nid, vehicle, he, plate)
+AddEventHandler('salon:VratiVozilo', function(nid, vehicle, plate)
 	local callback_vehicle = NetworkGetEntityFromNetworkId(nid)
 	while not DoesEntityExist(callback_vehicle) do
 		Wait(1)
 		callback_vehicle = NetworkGetEntityFromNetworkId(nid)
 	end
 	local playerPed = PlayerPedId()
-	SetEntityHeading(callback_vehicle, he)
+	--SetEntityHeading(callback_vehicle, he)
 	TaskWarpPedIntoVehicle(playerPed, callback_vehicle, -1)
 	ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
 	Wait(100)
@@ -307,6 +307,7 @@ AddEventHandler('salon:VratiVozilo', function(nid, vehicle, he, plate)
 	SetVehicleDirtLevel(callback_vehicle, 0)
 	FreezeEntityPosition(playerPed, false)
 	SetEntityVisible(playerPed, true)
+	TriggerEvent("EoTiIzSalona", 2)
 	
 	GarazaV = nid
 	local propse = ESX.Game.GetVehicleProperties(callback_vehicle)
