@@ -292,7 +292,7 @@ RegisterNUICallback(
 )
 
 RegisterNetEvent('salon:VratiVozilo')
-AddEventHandler('salon:VratiVozilo', function(nid, vehicle, plate)
+AddEventHandler('salon:VratiVozilo', function(nid, vehicle, plate, mj)
 	local callback_vehicle = NetworkGetEntityFromNetworkId(nid)
 	while not DoesEntityExist(callback_vehicle) do
 		Wait(1)
@@ -307,7 +307,7 @@ AddEventHandler('salon:VratiVozilo', function(nid, vehicle, plate)
 	SetVehicleDirtLevel(callback_vehicle, 0)
 	FreezeEntityPosition(playerPed, false)
 	SetEntityVisible(playerPed, true)
-	TriggerEvent("EoTiIzSalona", 2)
+	TriggerEvent("EoTiIzSalona", mj)
 	
 	GarazaV = nid
 	local propse = ESX.Game.GetVehicleProperties(callback_vehicle)
@@ -515,7 +515,7 @@ RegisterNUICallback(
 													end
 												end
 												
-												TriggerServerEvent("salon:SpawnVozilo", propi, Config.Zones.ShopOutside.Pos, Config.Zones.ShopOutside.Heading, generatedPlate)
+												TriggerServerEvent("salon:SpawnVozilo", propi, Config.Zones.ShopOutside.Pos, Config.Zones.ShopOutside.Heading, generatedPlate, mjenjac)
 											else
 												ESX.ShowNotification(_U('not_enough_money'))
 											end
@@ -582,7 +582,7 @@ RegisterNUICallback(
 												end
 												
 
-												TriggerServerEvent("salon:SpawnVozilo", propi, Config.Zones.ShopOutside.Pos, Config.Zones.ShopOutside.Heading, generatedPlate)
+												TriggerServerEvent("salon:SpawnVozilo", propi, Config.Zones.ShopOutside.Pos, Config.Zones.ShopOutside.Heading, generatedPlate, mjenjac)
 											else
 												ESX.ShowNotification(_U('not_enough_money'))
 											end
@@ -649,7 +649,7 @@ RegisterNUICallback(
 											end
 										end
 										
-										TriggerServerEvent("salon:SpawnVozilo", propi, Config.Zones.ShopOutside2.Pos, Config.Zones.ShopOutside2.Heading, generatedPlate)
+										TriggerServerEvent("salon:SpawnVozilo", propi, Config.Zones.ShopOutside2.Pos, Config.Zones.ShopOutside2.Heading, generatedPlate, 3)
 									else
 										ESX.ShowNotification(_U('not_enough_money'))
 									end

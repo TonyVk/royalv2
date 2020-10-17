@@ -160,6 +160,7 @@ Citizen.CreateThread(function()
 						DisableAllControlActions(0)
 					end
 					TriggerServerEvent("esx_vlak:platiTuljanu")
+					TriggerServerEvent("biznis:DodajTuru", PlayerData.job.name)
 					if Config.Stanice[Odradio] ~= nil then
 						Blipara[Odradio] = AddBlipForCoord(Config.Stanice[Odradio].x,  Config.Stanice[Odradio].y,  Config.Stanice[Odradio].z)
 						SetBlipSprite (Blipara[Odradio], 1)

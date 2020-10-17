@@ -277,6 +277,7 @@ Citizen.CreateThread(function()
 					else
 						Draw3DText( x, y, z  -1.600, "Vlasnik: "..Biznisi[i].VlasnikIme, 4, 0.1, 0.1)
 					end
+					Draw3DText( x, y, z  -1.800, "Tjedna zarada: $"..Biznisi[i].Tjedan, 4, 0.1, 0.1)
 				end
 				if GetDistanceBetweenCoords(coords, x, y, z, true) < 1.5 then
 					isInMarker     = true

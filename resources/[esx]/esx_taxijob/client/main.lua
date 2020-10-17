@@ -71,6 +71,15 @@ function ClearCurrentMission()
 	if DoesBlipExist(DestinationBlip) then
 		RemoveBlip(DestinationBlip)
 	end
+	
+	SetPedAsNoLongerNeeded(CurrentCustomer)
+	local scope = function(customer)
+		ESX.SetTimeout(60000, function()
+			DeletePed(customer)
+		end)
+	end
+
+	scope(CurrentCustomer)
 
 	CurrentCustomer           = nil
 	CurrentCustomerBlip       = nil
@@ -303,7 +312,9 @@ function OpenMobileTaxiActionsMenu()
 		title    = 'Taxi',
 		align    = 'top-left',
 		elements = {
-			{label = _U('billing'),   value = 'billing'}
+			{label = _U('billing'),   value = 'billing'},
+			{label = "NPC posao",   value = 'npc'},
+			{label = "Zaustavi NPC posao",   value = 'npcstop'}
 	}}, function(data, menu)
 		if data.current.value == 'billing' then
 
@@ -329,9 +340,144 @@ function OpenMobileTaxiActionsMenu()
 			end, function(data, menu)
 				menu.close()
 			end)
+		elseif data.current.value == 'npc' then
+			if not OnJob then
+				if IsInAuthorizedVehicle() then
+					PokreniNPC()
+				else
+					ESX.ShowNotification(_U('only_taxi'))
+				end
+			else
+				ESX.ShowNotification("Vec imate pokrenut posao!")
+			end
+		elseif data.current.value == 'npcstop' then
+			if OnJob then
+				StopTaxiJob()
+			else
+				ESX.ShowNotification("Nemate pokrenut NPC posao!")
+			end
 		end
 	end, function(data, menu)
 		menu.close()
+	end)
+end
+
+function PokreniNPC()
+	OnJob = true
+	local playerCoords = GetEntityCoords(PlayerPedId())
+	local modelic = Config.Modeli[GetRandomIntInRange(1, #Config.Modeli)]
+	targetCoords = Config.JobLocations[GetRandomIntInRange(1, #Config.JobLocations)]
+	local distance = #(playerCoords - targetCoords)
+	while distance < Config.MinimumDistance do
+		Citizen.Wait(5)
+
+		targetCoords = Config.JobLocations[GetRandomIntInRange(1, #Config.JobLocations)]
+		distance = #(playerCoords - targetCoords)
+	end
+	local model = RequestModel(GetHashKey(modelic))
+	while not HasModelLoaded(GetHashKey(modelic)) do
+		Wait(1)
+	end
+	CurrentCustomer = CreatePed(5, model, targetCoords, 260, false, true)
+	SetModelAsNoLongerNeeded(model)
+	CurrentCustomerBlip = AddBlipForEntity(CurrentCustomer)
+	SetBlipAsFriendly(CurrentCustomerBlip, true)
+	SetBlipColour(CurrentCustomerBlip, 2)
+	SetBlipCategory(CurrentCustomerBlip, 3)
+	SetBlipRoute(CurrentCustomerBlip, true)
+	SetEntityAsMissionEntity(CurrentCustomer, true, false)
+	ClearPedTasksImmediately(CurrentCustomer)
+	SetBlockingOfNonTemporaryEvents(CurrentCustomer, true)
+	local standTime = GetRandomIntInRange(60000, 180000)
+	TaskStandStill(CurrentCustomer, standTime)
+	Posao = 1
+	ESX.ShowNotification("Idite do checkpointa kako bih ste pokupili musteriju!")
+	Citizen.CreateThread(function()
+		while Posao == 1 do
+			local korda = GetEntityCoords(PlayerPedId())
+			if GetDistanceBetweenCoords(korda, targetCoords, true) <= 8.0 then
+				local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
+				if IsPedFatallyInjured(CurrentCustomer) then
+					ESX.ShowNotification(_U('client_unconcious'))
+
+					if DoesBlipExist(CurrentCustomerBlip) then
+						RemoveBlip(CurrentCustomerBlip)
+					end
+
+					if DoesBlipExist(DestinationBlip) then
+						RemoveBlip(DestinationBlip)
+					end
+
+					SetEntityAsMissionEntity(CurrentCustomer, false, true)
+					
+					DeleteEntity(CurrentCustomer)
+					
+					Posao = 0
+
+					CurrentCustomer, CurrentCustomerBlip, DestinationBlip, CustomerIsEnteringVehicle, CustomerEnteredVehicle, targetCoords = nil, nil, nil, false, false, nil
+				end
+				if not CustomerIsEnteringVehicle then
+					local maxSeats, freeSeat = GetVehicleMaxNumberOfPassengers(vehicle)
+
+					for i=maxSeats - 1, 0, -1 do
+						if IsVehicleSeatFree(vehicle, i) then
+							freeSeat = i
+							break
+						end
+					end
+
+					if freeSeat then
+						RemoveBlip(CurrentCustomerBlip)
+						CurrentCustomerBlip = nil
+						TaskEnterVehicle(CurrentCustomer, vehicle, -1, freeSeat, 2.0, 0)
+						CustomerIsEnteringVehicle = true
+					end
+				end
+				if IsPedSittingInVehicle(CurrentCustomer, vehicle) then
+					if not CustomerEnteredVehicle then
+						local playerCoords = GetEntityCoords(PlayerPedId())
+						targetCoords = Config.JobLocations[GetRandomIntInRange(1, #Config.JobLocations)]
+						local distance = #(playerCoords - targetCoords)
+						while distance < Config.MinimumDistance do
+							Citizen.Wait(5)
+
+							targetCoords = Config.JobLocations[GetRandomIntInRange(1, #Config.JobLocations)]
+							distance = #(playerCoords - targetCoords)
+						end
+						DestinationBlip = AddBlipForCoord(targetCoords.x, targetCoords.y, targetCoords.z)
+						BeginTextCommandSetBlipName('STRING')
+						AddTextComponentSubstringPlayerName('Destinacija')
+						EndTextCommandSetBlipName(DestinationBlip)
+						SetBlipRoute(DestinationBlip, true)
+						CustomerEnteredVehicle = true
+					end
+					if GetDistanceBetweenCoords(korda, targetCoords, true) <= 10.0 then
+						TaskLeaveVehicle(CurrentCustomer, vehicle, 0)
+						
+						TaskGoStraightToCoord(CurrentCustomer, targetCoords.x, targetCoords.y, targetCoords.z, 1.0, -1, 0.0, 0.0)
+						SetEntityAsMissionEntity(CurrentCustomer, false, true)
+						TriggerServerEvent('esx_tuljotaxi:uspijeh;')
+						OnJob = false
+						RemoveBlip(DestinationBlip)
+						SetPedAsNoLongerNeeded(CurrentCustomer)
+						local scope = function(customer)
+							ESX.SetTimeout(60000, function()
+								DeletePed(customer)
+							end)
+						end
+
+						scope(CurrentCustomer)
+
+						CurrentCustomer, CurrentCustomerBlip, DestinationBlip, CustomerIsEnteringVehicle, CustomerEnteredVehicle, targetCoords = nil, nil, nil, false, false, nil
+						Posao = 0
+					end
+				end
+			end
+			if CustomerEnteredVehicle and GetDistanceBetweenCoords(korda, targetCoords.x, targetCoords.y, targetCoords.z, true) < 100.0 then
+				DrawMarker(1, targetCoords.x, targetCoords.y, targetCoords.z-1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
+			end
+			Citizen.Wait(1)
+		end
 	end)
 end
 

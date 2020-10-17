@@ -2,8 +2,8 @@ Config                            = {}
 
 Config.DrawDistance               = 100.0
 
-Config.NPCJobEarnings             = {min = 1500, max = 2500}
-Config.MinimumDistance            = 3000 -- Minimum NPC job destination distance from the pickup in GTA units, a higher number prevents nearby destionations.
+Config.NPCJobEarnings             = {min = 200, max = 1000}
+Config.MinimumDistance            = 300 -- Minimum NPC job destination distance from the pickup in GTA units, a higher number prevents nearby destionations.
 
 Config.MaxInService               = -1
 Config.EnablePlayerManagement     = true
@@ -116,6 +116,19 @@ Config.Uniforms = {
 			['ears_1'] = -1,     ['ears_2'] = 0
 		}
 	}
+}
+
+Config.Modeli = {
+	"a_f_m_business_02", --ped1
+	"a_f_m_downtown_01", --ped2
+	"a_f_m_eastsa_01", --ped3
+	"a_f_m_fatwhite_01", --ped4
+	"a_f_m_skidrow_01", --ped5
+	"a_f_m_tourist_01", --ped6
+	"a_f_o_indian_01", --ped7
+	"a_f_y_business_01", --ped8
+	"a_f_y_business_03", --ped9
+	"a_f_y_business_04" --ped10
 }
 
 Config.JobLocations = {

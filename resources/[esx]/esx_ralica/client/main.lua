@@ -232,6 +232,7 @@ Citizen.CreateThread(function()
 					end
 					Broj = Broj-1
 					TriggerServerEvent("esx_ralica:platiTuljanu")
+					TriggerServerEvent("biznis:DodajTuru", PlayerData.job.name)
 					if Broj == 0 then
 						--local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
 						--ESX.Game.DeleteVehicle(vehicle)

@@ -18,11 +18,11 @@ function UcitajBiznise()
         for i=1, #result, 1 do
 			local data2 = json.decode(result[i].Koord)
 			if result[i].Vlasnik == nil then
-				table.insert(Biznisi, {Ime = result[i].Ime, Label = result[i].Label, Posao = result[i].Posao, Kupljen = false, Sef = result[i].Sef, VlasnikIme = "Nema", Coord = data2})
+				table.insert(Biznisi, {Ime = result[i].Ime, Label = result[i].Label, Posao = result[i].Posao, Kupljen = false, Sef = result[i].Sef, VlasnikIme = "Nema", Coord = data2, Tjedan = result[i].Tjedan})
 			else
 				GetRPName(result[i].Vlasnik, function(Firstname, Lastname)
 					local im = Firstname.." "..Lastname
-					table.insert(Biznisi, {Ime = result[i].Ime, Label = result[i].Label, Posao = result[i].Posao, Kupljen = true, Sef = result[i].Sef, VlasnikIme = im, Coord = data2})
+					table.insert(Biznisi, {Ime = result[i].Ime, Label = result[i].Label, Posao = result[i].Posao, Kupljen = true, Sef = result[i].Sef, VlasnikIme = im, Coord = data2, Tjedan = result[i].Tjedan})
 				end)
 			end
 			local data3 = json.decode(result[i].Sati)
@@ -81,7 +81,7 @@ AddEventHandler('biznis:NapraviBiznis', function(ime,label)
 		['@ime'] = ime,
 		['@lab'] = label
 	})
-	table.insert(Biznisi, {Ime = ime, Label = label, Posao = "Nema", Kupljen = false, Sef = 0, VlasnikIme = "Nema"})
+	table.insert(Biznisi, {Ime = ime, Label = label, Posao = "Nema", Kupljen = false, Sef = 0, VlasnikIme = "Nema", Tjedan = 0})
 	TriggerClientEvent("biznis:UpdateBiznise", -1, Biznisi)
 end)
 
@@ -222,11 +222,11 @@ RegisterNetEvent('biznis:DajStanje')
 AddEventHandler('biznis:DajStanje', function(ime)
 	local src = source
 	MySQL.Async.fetchAll(
-      'SELECT Sef FROM biznisi WHERE Ime = @im',
+      'SELECT Sef, Tjedan FROM biznisi WHERE Ime = @im',
       { ['@im'] = ime },
       function(result)
         for i=1, #result, 1 do
-			TriggerClientEvent('esx:showNotification', src, "Stanje na racunu firme je $"..result[i].Sef)
+			TriggerClientEvent('esx:showNotification', src, "Stanje na racunu firme je $"..result[i].Sef.."\nOvaj tjedan ste zaradili $"..result[i].Tjedan)
         end
       end
     )
@@ -257,10 +257,13 @@ AddEventHandler('biznis:StaviUSef', function(posao, cifra)
 	for i=1, #Biznisi, 1 do
 		if Biznisi[i] ~= nil and Biznisi[i].Posao == posao then
 			Biznisi[i].Sef = Biznisi[i].Sef+cifra
-			MySQL.Async.execute('UPDATE biznisi SET Sef = @se WHERE Posao = @im', {
+			Biznisi[i].Tjedan = Biznisi[i].Tjedan+cifra
+			MySQL.Async.execute('UPDATE biznisi SET Sef = @se, Tjedan = @tj WHERE Posao = @im', {
 				['@se'] = Biznisi[i].Sef,
+				['@tj'] = Biznisi[i].Tjedan,
 				['@im'] = posao
 			})
+			TriggerClientEvent("biznis:UpdateBiznise", -1, Biznisi)
 			break
 		end
 	end
@@ -268,10 +271,17 @@ end)
 
 function BrisiZaposlenike(d, h, m)
 	if d == 1 then
-		MySQL.Async.execute('UPDATE biznisi SET Sati = @st', {
-			['@st'] = "{}"
+		MySQL.Async.execute('UPDATE biznisi SET Sati = @st, Tjedan = @tj', {
+			['@st'] = "{}",
+			['@tj'] = 0
 		}, function()
 			UcitajSate()
+			for i=1, #Biznisi, 1 do
+				if Biznisi[i] ~= nil then
+					Biznisi[i].Tjedan = 0
+				end
+			end
+			TriggerClientEvent("biznis:UpdateBiznise", -1, Biznisi)
 		end)
 	end
 end

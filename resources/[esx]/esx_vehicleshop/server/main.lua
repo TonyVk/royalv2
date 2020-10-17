@@ -56,7 +56,7 @@ function DeriBrojac(brj)
 end
 
 RegisterNetEvent('salon:SpawnVozilo')
-AddEventHandler('salon:SpawnVozilo', function(vehicle, co, he, plate)
+AddEventHandler('salon:SpawnVozilo', function(vehicle, co, he, plate, mj)
 	local _source = source
 	local veh = CreateVehicle(vehicle.model, co, he, true, false)
 	while not DoesEntityExist(veh) do
@@ -64,7 +64,7 @@ AddEventHandler('salon:SpawnVozilo', function(vehicle, co, he, plate)
 	end
 	local netid = NetworkGetNetworkIdFromEntity(veh)
 	Wait(500)
-	TriggerClientEvent("salon:VratiVozilo", _source, netid, vehicle, plate)
+	TriggerClientEvent("salon:VratiVozilo", _source, netid, vehicle, plate, mj)
 end)
 
 RegisterServerEvent('salon:PlatiStetu')
@@ -262,7 +262,6 @@ ESX.RegisterServerCallback('autosalon:sealion', function(source, cb, model, plat
 	
 	vd.plate = plate
 	vd.model = GetHashKey(model)
-	print(mjenjac)
 	if mjenjac == 1 then
 		if modelPrice and xPlayer.getMoney() >= (modelPrice+5000) then
 			xPlayer.removeMoney(modelPrice+5000)

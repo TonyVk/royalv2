@@ -7,5 +7,6 @@ AddEventHandler('esx_vlak:platiTuljanu', function()
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	if xPlayer.job.name == 'vlak' then
 		xPlayer.addMoney(1100)
+		TriggerEvent("biznis:StaviUSef", "vlak", math.ceil(1100*0.30))
     end
 end)

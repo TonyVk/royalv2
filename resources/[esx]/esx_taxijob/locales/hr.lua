@@ -10,7 +10,7 @@ Locales['hr'] = {
   ['store_veh'] = 'pritisnite ~INPUT_CONTEXT~ da spremite vozilo',
   ['spawn_veh'] = 'spawn vozilo',
   ['spawnpoint_blocked'] = 'neko vozilo smeta na spawn lokaciji!',
-  ['only_taxi'] = 'mozete parkirati samo taxi vozila.',
+  ['only_taxi'] = 'morate biti u taxi vozilu.',
 
   ['taking_service'] = 'Sluzba: Taxi/Uber',
   ['full_service'] = 'Puna usluga: ',

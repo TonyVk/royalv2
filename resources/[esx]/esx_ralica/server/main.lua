@@ -7,5 +7,6 @@ AddEventHandler('esx_ralica:platiTuljanu', function()
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	if xPlayer.job.name == 'ralica' then
 		xPlayer.addMoney(65)
+		TriggerEvent("biznis:StaviUSef", "ralica", math.ceil(65*0.30))
     end
 end)

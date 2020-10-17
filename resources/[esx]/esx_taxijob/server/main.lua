@@ -21,14 +21,13 @@ AddEventHandler('esx_tuljotaxi:uspijeh;', function()
 	math.randomseed(os.time())
 
 	local total = math.random(Config.NPCJobEarnings.min, Config.NPCJobEarnings.max)
-	local societyAccount
-
-	if xPlayer.job.grade >= 3 then
-		total = total * 2
-	end
-
-	xPlayer.addMoney(total)
-	TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_earned', total))
+	local societyAccount = nil
+	TriggerEvent('esx_addonaccount:getSharedAccount', 'society_taxi', function(account)
+		societyAccount = account
+	end)
+	xPlayer.addMoney(math.ceil(total/2))
+	societyAccount.addMoney(math.ceil(total/2))
+	TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_earned', total/2))
 end)
 
 RegisterServerEvent('esx_taxijob:getStockItem')
