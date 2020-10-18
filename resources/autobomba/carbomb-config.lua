@@ -10,7 +10,7 @@ Config.ProgressBarType = 1 -- 0 (Disable) | 1 (ProgressBars) | 2 (MythicProgress
 
 Config.UsingMythicNotifications = false -- false (Default ESX Notifications) | true (Mythic Notifications Enabled)
 
-Config.TimeTakenToArm = 4 -- in seconds 
+Config.TimeTakenToArm = 15 -- in seconds 
 
 Config.TimeUntilDetonation = 10 -- in seconds
 

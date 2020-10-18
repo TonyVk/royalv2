@@ -1,11 +1,93 @@
 ESX                             = nil
 local timer = 0
 local ped = GetPlayerPed(-1)
+local HasAlreadyEnteredMarker   = false
+local LastZone                  = nil
+local CurrentAction             = nil
+local CurrentActionMsg          = ''
+local CurrentActionData         = {}
 
 Citizen.CreateThread(function()
 	while ESX == nil do
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(0)
+	end
+end)
+
+AddEventHandler('bomba:hasEnteredMarker', function(zone)
+	if zone == 'bomba' then
+		CurrentAction     = "bomba"
+		CurrentActionMsg  = "Pritisnite E da kupite auto bombu za $200000"
+		CurrentActionData = {}
+	end
+end)
+
+AddEventHandler('bomba:hasExitedMarker', function(zone)
+	CurrentAction = nil
+end)
+
+-- marker
+Citizen.CreateThread(function()
+	local waitara = 500
+	while true do
+		Citizen.Wait(waitara)
+		local nasosta = 0
+		local coords = GetEntityCoords(GetPlayerPed(-1))
+
+		if GetDistanceBetweenCoords(coords, -484.06744384766, 198.82972717286, 83.157684326172, true) < 100.0 then
+			waitara = 0
+			nasosta = 1
+			DrawMarker(0, -484.06744384766, 198.82972717286, 83.157684326172, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 2.0, 1.0, 0, 0, 0, 100, false, true, 2, false, false, false, false)
+		end
+		
+		local isInMarker  = false
+		local currentZone = nil
+
+		if(GetDistanceBetweenCoords(coords, -484.06744384766, 198.82972717286, 83.157684326172, true) < 2) then
+			isInMarker  = true
+			currentZone = "bomba"
+		end
+
+		if isInMarker and not hasAlreadyEnteredMarker then
+			hasAlreadyEnteredMarker = true
+			lastZone				= currentZone
+			TriggerEvent('bomba:hasEnteredMarker', currentZone)
+		end
+
+		if not isInMarker and hasAlreadyEnteredMarker then
+			hasAlreadyEnteredMarker = false
+			TriggerEvent('bomba:hasExitedMarker', lastZone)
+		end
+		
+		if CurrentAction ~= nil then
+			waitara = 0
+			nasosta = 1
+			ESX.ShowHelpNotification(CurrentActionMsg)
+
+			if IsControlJustReleased(0, 38) and IsPedOnFoot(PlayerPedId()) then
+				local coords = GetEntityCoords(PlayerPedId())
+				if CurrentAction == 'bomba' then
+					if(GetDistanceBetweenCoords(coords, -484.06744384766, 198.82972717286, 83.157684326172, true) < 2) then
+						local torba = 0
+						TriggerEvent('skinchanger:getSkin', function(skin)
+							torba = skin['bags_1']
+						end)
+						if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+							TriggerServerEvent('bomba:KupiBombu', true)
+						else
+							TriggerServerEvent('bomba:KupiBombu', false)
+						end
+					else
+						TriggerEvent('bomba:hasExitedMarker', lastZone)
+					end
+				end
+				CurrentAction = nil
+			end
+		end
+		
+		if nasosta == 0 then
+			waitara = 500
+		end
 	end
 end)
 
@@ -35,8 +117,8 @@ AddEventHandler('RNG_CarBomb:CheckIfRequirementsAreMet', function()
             Citizen.Wait(Config.TimeTakenToArm * 1000)
             ClearPedTasksImmediately(ped)
 			FreezeEntityPosition(ped, false)
+			TriggerServerEvent('RNG_CarBomb:RemoveBombFromInv')
 			TriggerServerEvent("bomba:SpremiVozilo", GetVehicleNumberPlateText(veh))
-            TriggerServerEvent('RNG_CarBomb:RemoveBombFromInv')
             if Config.DetonationType == 0 then
                 if Config.UsingMythicNotifications then
                     TriggerEvent('mythic_notify:client:SendAlert', { type = 'error', text = _U('vanilla', Config.TimeUntilDetonation), length = 5500})
@@ -97,10 +179,6 @@ AddEventHandler('baseevents:enteredVehicle', function(currentVehicle, currentSea
 		end
 	end, GetVehicleNumberPlateText(currentVehicle))
 end)
-
-RegisterCommand("bomba", function(source, args, rawCommandString)
-	TriggerEvent("RNG_CarBomb:CheckIfRequirementsAreMet")
-end, false)
 
 function RunTimer(veh)
     timer = Config.TimeUntilDetonation
