@@ -317,7 +317,6 @@ function GetAction(data)
 					price = 5000*1.30
 					if globalplate ~= nil or globalplate ~= "" or globalplate ~= " " then
 						ESX.TriggerServerCallback('mjenjac:ProvjeriVozilo',function(mj)
-							print(mj)
 							if mj == 1 then
 								_label = 'Automatski mjenjac - <span style="color:cornflowerblue;">'.. _U('installed') ..'</span>'
 							else

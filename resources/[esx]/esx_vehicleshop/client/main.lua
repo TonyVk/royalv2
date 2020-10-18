@@ -292,38 +292,78 @@ RegisterNUICallback(
 )
 
 RegisterNetEvent('salon:VratiVozilo')
-AddEventHandler('salon:VratiVozilo', function(nid, vehicle, plate, mj)
-	local callback_vehicle = NetworkGetEntityFromNetworkId(nid)
-	while not DoesEntityExist(callback_vehicle) do
+AddEventHandler('salon:VratiVozilo', function(nid, vehicle, plate, mj, co)
+	local attempt = 0
+	while not NetworkDoesEntityExistWithNetworkId(nid) and attempt < 100 do
 		Wait(1)
-		callback_vehicle = NetworkGetEntityFromNetworkId(nid)
+		attempt = attempt+1
 	end
-	local playerPed = PlayerPedId()
-	--SetEntityHeading(callback_vehicle, he)
-	TaskWarpPedIntoVehicle(playerPed, callback_vehicle, -1)
-	ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
-	Wait(100)
-	SetVehicleNumberPlateText(callback_vehicle, plate)
-	SetVehicleDirtLevel(callback_vehicle, 0)
-	FreezeEntityPosition(playerPed, false)
-	SetEntityVisible(playerPed, true)
-	TriggerEvent("EoTiIzSalona", mj)
-	
-	GarazaV = nid
-	local propse = ESX.Game.GetVehicleProperties(callback_vehicle)
-	local pla = propse.plate:gsub("^%s*(.-)%s*$", "%1")
-	TriggerServerEvent("garaza:SpremiModel", pla, propse.model)
-	
-	Vblip = AddBlipForEntity(callback_vehicle)
-	SetBlipSprite (Vblip, 225)
-	SetBlipDisplay(Vblip, 4)
-	SetBlipScale  (Vblip, 1.0)
-	SetBlipColour (Vblip, 30)
-	SetBlipAsShortRange(Vblip, true)
-	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentString("Vase vozilo")
-	EndTextCommandSetBlipName(Vblip)
-	TriggerEvent("esx_property:ProsljediVozilo", GarazaV, Vblip)
+	if attempt < 100 then
+		local callback_vehicle = NetworkGetEntityFromNetworkId(nid)
+		while not DoesEntityExist(callback_vehicle) do
+			Wait(1)
+			callback_vehicle = NetworkGetEntityFromNetworkId(nid)
+		end
+		local playerPed = PlayerPedId()
+		--SetEntityHeading(callback_vehicle, he)
+		TaskWarpPedIntoVehicle(playerPed, callback_vehicle, -1)
+		ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
+		Wait(100)
+		SetVehicleNumberPlateText(callback_vehicle, plate)
+		SetVehicleDirtLevel(callback_vehicle, 0)
+		FreezeEntityPosition(playerPed, false)
+		SetEntityVisible(playerPed, true)
+		TriggerEvent("EoTiIzSalona", mj)
+		
+		GarazaV = nid
+		local propse = ESX.Game.GetVehicleProperties(callback_vehicle)
+		local pla = propse.plate:gsub("^%s*(.-)%s*$", "%1")
+		TriggerServerEvent("garaza:SpremiModel", pla, propse.model)
+		
+		Vblip = AddBlipForEntity(callback_vehicle)
+		SetBlipSprite (Vblip, 225)
+		SetBlipDisplay(Vblip, 4)
+		SetBlipScale  (Vblip, 1.0)
+		SetBlipColour (Vblip, 30)
+		SetBlipAsShortRange(Vblip, true)
+		BeginTextCommandSetBlipName("STRING")
+		AddTextComponentString("Vase vozilo")
+		EndTextCommandSetBlipName(Vblip)
+		TriggerEvent("esx_property:ProsljediVozilo", GarazaV, Vblip)
+	else
+		print("Greska prilikom kreiranja vozila. NetID: "..nid)
+		local ped = GetPlayerPed(-1)
+		SetEntityCoords(ped, co)
+		local coords = GetEntityCoords(ped)
+		local veh = GetClosestVehicle(coords.x, coords.y, coords.z, 3.000, 0, 70)
+		local callback_vehicle = veh
+		local playerPed = ped
+		--SetEntityHeading(callback_vehicle, he)
+		TaskWarpPedIntoVehicle(playerPed, callback_vehicle, -1)
+		ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
+		Wait(100)
+		SetVehicleNumberPlateText(callback_vehicle, plate)
+		SetVehicleDirtLevel(callback_vehicle, 0)
+		FreezeEntityPosition(playerPed, false)
+		SetEntityVisible(playerPed, true)
+		TriggerEvent("EoTiIzSalona", mj)
+		
+		GarazaV = nid
+		local propse = ESX.Game.GetVehicleProperties(callback_vehicle)
+		local pla = propse.plate:gsub("^%s*(.-)%s*$", "%1")
+		TriggerServerEvent("garaza:SpremiModel", pla, propse.model)
+		
+		Vblip = AddBlipForEntity(callback_vehicle)
+		SetBlipSprite (Vblip, 225)
+		SetBlipDisplay(Vblip, 4)
+		SetBlipScale  (Vblip, 1.0)
+		SetBlipColour (Vblip, 30)
+		SetBlipAsShortRange(Vblip, true)
+		BeginTextCommandSetBlipName("STRING")
+		AddTextComponentString("Vase vozilo")
+		EndTextCommandSetBlipName(Vblip)
+		TriggerEvent("esx_property:ProsljediVozilo", GarazaV, Vblip)
+	end
 end)
 
 RegisterNUICallback(

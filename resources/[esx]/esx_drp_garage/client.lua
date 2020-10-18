@@ -452,42 +452,96 @@ end
 RegisterNetEvent('garaza:VratiVozilo')
 AddEventHandler('garaza:VratiVozilo', function(nid, vehicle, tip)
 	if tip == 1 then
-		local callback_vehicle = NetworkGetEntityFromNetworkId(nid)
-		while not DoesEntityExist(callback_vehicle) do
+		local attempt = 0
+		while not NetworkDoesEntityExistWithNetworkId(nid) and attempt < 100 do
 			Wait(1)
-			callback_vehicle = NetworkGetEntityFromNetworkId(nid)
+			attempt = attempt+1
 		end
-		ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
-		--SetEntityHeading(callback_vehicle, he)
-		SetVehRadioStation(callback_vehicle, "OFF")
-		GarazaV = nid
-		TaskWarpPedIntoVehicle(GetPlayerPed(-1), callback_vehicle, -1)
-		local plate = GetVehicleNumberPlateText(callback_vehicle)
-		local pla = vehicle.plate:gsub("^%s*(.-)%s*$", "%1")
-		TriggerServerEvent("garaza:SpremiModel", pla, vehicle.model)
-		TriggerServerEvent("ls:mainCheck", plate, callback_vehicle, true)
-		TriggerServerEvent('eden_garage:modifystate', vehicle, 0)
-		Vblip = AddBlipForEntity(callback_vehicle)
-		SetBlipSprite (Vblip, 225)
-		SetBlipDisplay(Vblip, 4)
-		SetBlipScale  (Vblip, 1.0)
-		SetBlipColour (Vblip, 30)
-		SetBlipAsShortRange(Vblip, true)
-		BeginTextCommandSetBlipName("STRING")
-		AddTextComponentString("Vase vozilo")
-		EndTextCommandSetBlipName(Vblip)
-		TriggerEvent("esx_property:ProsljediVozilo", nid, Vblip)
+		if attempt < 100 then
+			local callback_vehicle = NetworkGetEntityFromNetworkId(nid)
+			while not DoesEntityExist(callback_vehicle) do
+				Wait(1)
+				callback_vehicle = NetworkGetEntityFromNetworkId(nid)
+			end
+			ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
+			--SetEntityHeading(callback_vehicle, he)
+			SetVehRadioStation(callback_vehicle, "OFF")
+			GarazaV = nid
+			TaskWarpPedIntoVehicle(GetPlayerPed(-1), callback_vehicle, -1)
+			local plate = GetVehicleNumberPlateText(callback_vehicle)
+			local pla = vehicle.plate:gsub("^%s*(.-)%s*$", "%1")
+			TriggerServerEvent("garaza:SpremiModel", pla, vehicle.model)
+			TriggerServerEvent("ls:mainCheck", plate, callback_vehicle, true)
+			TriggerServerEvent('eden_garage:modifystate', vehicle, 0)
+			Vblip = AddBlipForEntity(callback_vehicle)
+			SetBlipSprite (Vblip, 225)
+			SetBlipDisplay(Vblip, 4)
+			SetBlipScale  (Vblip, 1.0)
+			SetBlipColour (Vblip, 30)
+			SetBlipAsShortRange(Vblip, true)
+			BeginTextCommandSetBlipName("STRING")
+			AddTextComponentString("Vase vozilo")
+			EndTextCommandSetBlipName(Vblip)
+			TriggerEvent("esx_property:ProsljediVozilo", nid, Vblip)
+		else
+			print("Greska prilikom kreiranja vozila. NetID: "..nid)
+			local ped = GetPlayerPed(-1)
+			local coords = GetEntityCoords(ped)
+			local veh = GetClosestVehicle(coords.x, coords.y, coords.z, 3.000, 0, 70)
+			local callback_vehicle = veh
+			if GetEntityModel(veh) == vehicle.model then
+				ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
+				--SetEntityHeading(callback_vehicle, he)
+				SetVehRadioStation(callback_vehicle, "OFF")
+				GarazaV = nid
+				TaskWarpPedIntoVehicle(GetPlayerPed(-1), callback_vehicle, -1)
+				local plate = GetVehicleNumberPlateText(callback_vehicle)
+				local pla = vehicle.plate:gsub("^%s*(.-)%s*$", "%1")
+				TriggerServerEvent("garaza:SpremiModel", pla, vehicle.model)
+				TriggerServerEvent("ls:mainCheck", plate, callback_vehicle, true)
+				TriggerServerEvent('eden_garage:modifystate', vehicle, 0)
+				Vblip = AddBlipForEntity(callback_vehicle)
+				SetBlipSprite (Vblip, 225)
+				SetBlipDisplay(Vblip, 4)
+				SetBlipScale  (Vblip, 1.0)
+				SetBlipColour (Vblip, 30)
+				SetBlipAsShortRange(Vblip, true)
+				BeginTextCommandSetBlipName("STRING")
+				AddTextComponentString("Vase vozilo")
+				EndTextCommandSetBlipName(Vblip)
+				TriggerEvent("esx_property:ProsljediVozilo", nid, Vblip)
+			end
+		end
 	elseif tip == 2 then
-		local callback_vehicle = NetworkGetEntityFromNetworkId(nid)
-		while not DoesEntityExist(callback_vehicle) do
+		local attempt = 0
+		while not NetworkDoesEntityExistWithNetworkId(nid) and attempt < 100 do
 			Wait(1)
+			attempt = attempt+1
 		end
-		ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
-		--SetEntityHeading(callback_vehicle, he)
-		SetVehRadioStation(callback_vehicle, "OFF")
-		local plate = GetVehicleNumberPlateText(callback_vehicle)
-		TriggerServerEvent("ls:mainCheck", plate, callback_vehicle, true)
-		TriggerServerEvent('eden_garage:modifystate2', vehicle, 0)
+		if attempt < 100 then
+			local callback_vehicle = NetworkGetEntityFromNetworkId(nid)
+			while not DoesEntityExist(callback_vehicle) do
+				Wait(1)
+			end
+			ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
+			--SetEntityHeading(callback_vehicle, he)
+			SetVehRadioStation(callback_vehicle, "OFF")
+			local plate = GetVehicleNumberPlateText(callback_vehicle)
+			TriggerServerEvent("ls:mainCheck", plate, callback_vehicle, true)
+			TriggerServerEvent('eden_garage:modifystate2', vehicle, 0)
+		else
+			print("Greska prilikom kreiranja vozila. NetID: "..nid)
+			local ped = GetPlayerPed(-1)
+			local coords = GetEntityCoords(ped)
+			local veh = GetClosestVehicle(coords.x, coords.y, coords.z, 3.000, 0, 70)
+			local callback_vehicle = veh
+			ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
+			--SetEntityHeading(callback_vehicle, he)
+			SetVehRadioStation(callback_vehicle, "OFF")
+			local plate = GetVehicleNumberPlateText(callback_vehicle)
+			TriggerServerEvent("ls:mainCheck", plate, callback_vehicle, true)
+			TriggerServerEvent('eden_garage:modifystate2', vehicle, 0)
+		end
 	end
 end)
 

@@ -64,7 +64,7 @@ AddEventHandler('salon:SpawnVozilo', function(vehicle, co, he, plate, mj)
 	end
 	local netid = NetworkGetNetworkIdFromEntity(veh)
 	Wait(500)
-	TriggerClientEvent("salon:VratiVozilo", _source, netid, vehicle, plate, mj)
+	TriggerClientEvent("salon:VratiVozilo", _source, netid, vehicle, plate, mj, co)
 end)
 
 RegisterServerEvent('salon:PlatiStetu')

@@ -62,7 +62,7 @@ AddEventHandler('kuce:SpawnVozilo', function(vehicle, co, he)
 	end
 	local netid = NetworkGetNetworkIdFromEntity(veh)
 	Wait(500)
-	TriggerClientEvent("kuce:VratiVozilo", _source, netid, vehicle)
+	TriggerClientEvent("kuce:VratiVozilo", _source, netid, vehicle, co)
 end)
 
 ESX.RegisterServerCallback('esx_property:getPlayerOutfit', function(source, cb, num)

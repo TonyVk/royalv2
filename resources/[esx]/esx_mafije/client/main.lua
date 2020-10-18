@@ -160,7 +160,11 @@ function SetVehicleMaxMods(vehicle)
     modTurbo        = true,
 	windowTint      = 1,
   }
-
+  if GetEntityModel(vehicle) == GetHashKey("R50") then
+	props['modFrontBumper'] = 0
+	props['modRearBumper'] = 0
+	props['modSideSkirt'] = 0
+  end
   ESX.Game.SetVehicleProperties(vehicle, props)
 
 end
