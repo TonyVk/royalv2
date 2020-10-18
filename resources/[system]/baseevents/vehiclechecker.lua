@@ -31,6 +31,7 @@ Citizen.CreateThread(function()
 				local name = GetDisplayNameFromVehicleModel()
 				local netId = VehToNet(currentVehicle)
 				TriggerServerEvent('baseevents:enteredVehicle', currentVehicle, currentSeat, GetDisplayNameFromVehicleModel(GetEntityModel(currentVehicle)), netId)
+				TriggerEvent('baseevents:enteredVehicle', currentVehicle, currentSeat, GetDisplayNameFromVehicleModel(GetEntityModel(currentVehicle)), netId)
 			end
 		elseif isInVehicle then
 			if not IsPedInAnyVehicle(ped, false) or IsPlayerDead(PlayerId()) then

@@ -4,6 +4,7 @@ local IsBusy = false
 local spawnedVehicles, isInShopMenu = {}, false
 local Tablice
 local BVozilo = nil
+local UpaljenaSirena = false
 
 function OpenAmbulanceActionsMenu()
 	local elements = {
@@ -417,6 +418,26 @@ Citizen.CreateThread(function()
 		elseif ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'ambulance' and not IsDead then
 			if IsControlJustReleased(0, Keys['F6']) then
 				OpenMobileAmbulanceActionsMenu()
+			end
+			if IsPedInAnyVehicle(PlayerPedId(), false) then
+				if IsControlJustReleased(0, 86) then
+					if UpaljenaSirena then
+						local nid = NetworkGetNetworkIdFromEntity(GetVehiclePedIsIn(PlayerPedId(), false))
+						TriggerServerEvent("policija:UpaliSirenu", nid, true, false)
+						UpaljenaSirena = false
+					end
+				end
+				if IsControlJustReleased(0, 137) then
+					if not UpaljenaSirena then
+						local nid = NetworkGetNetworkIdFromEntity(GetVehiclePedIsIn(PlayerPedId(), false))
+						TriggerServerEvent("policija:UpaliSirenu", nid, true, true)
+						UpaljenaSirena = true
+					else
+						local nid = NetworkGetNetworkIdFromEntity(GetVehiclePedIsIn(PlayerPedId(), false))
+						TriggerServerEvent("policija:UpaliSirenu", nid, false, false)
+						UpaljenaSirena = false
+					end
+				end
 			end
 		else
 			Citizen.Wait(500)

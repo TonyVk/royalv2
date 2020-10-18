@@ -74,7 +74,7 @@ function ClearCurrentMission()
 	
 	SetPedAsNoLongerNeeded(CurrentCustomer)
 	local scope = function(customer)
-		ESX.SetTimeout(60000, function()
+		ESX.SetTimeout(3000, function()
 			DeletePed(customer)
 		end)
 	end
@@ -395,7 +395,7 @@ function PokreniNPC()
 	Citizen.CreateThread(function()
 		while Posao == 1 do
 			local korda = GetEntityCoords(PlayerPedId())
-			if GetDistanceBetweenCoords(korda, targetCoords, true) <= 8.0 then
+			if targetCoords ~= nil and GetDistanceBetweenCoords(korda, targetCoords, true) <= 8.0 then
 				local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
 				if IsPedFatallyInjured(CurrentCustomer) then
 					ESX.ShowNotification(_U('client_unconcious'))
@@ -410,9 +410,12 @@ function PokreniNPC()
 
 					SetEntityAsMissionEntity(CurrentCustomer, false, true)
 					
+					SetPedAsNoLongerNeeded(CurrentCustomer)
+					
 					DeleteEntity(CurrentCustomer)
 					
 					Posao = 0
+					PokreniNPC()
 
 					CurrentCustomer, CurrentCustomerBlip, DestinationBlip, CustomerIsEnteringVehicle, CustomerEnteredVehicle, targetCoords = nil, nil, nil, false, false, nil
 				end
@@ -461,7 +464,7 @@ function PokreniNPC()
 						RemoveBlip(DestinationBlip)
 						SetPedAsNoLongerNeeded(CurrentCustomer)
 						local scope = function(customer)
-							ESX.SetTimeout(60000, function()
+							ESX.SetTimeout(3000, function()
 								DeletePed(customer)
 							end)
 						end
@@ -470,6 +473,7 @@ function PokreniNPC()
 
 						CurrentCustomer, CurrentCustomerBlip, DestinationBlip, CustomerIsEnteringVehicle, CustomerEnteredVehicle, targetCoords = nil, nil, nil, false, false, nil
 						Posao = 0
+						PokreniNPC()
 					end
 				end
 			end

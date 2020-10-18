@@ -14,6 +14,6 @@ Config.TimeToSell    = 0.5 * 10000
 Config.Locale = 'en'
 
 Config.Zones = {
-	BitCoin =	{x = -2186.5588378906, y = 4250.033203125, z = 48.94006729126,	name = _U('apanha_de_frutos'),		sprite = 0,	color = 0},
-	VendaDeBitcon =		{x = 1539.0771484375, y = 3595.3017578125, z = 38.766536712646,	name = _U('venda_dos_sacos'),		sprite = 500,	color = 27}
+	BitCoin =	{x = -2187.8972167969, y = 4251.015625, z = 48.939910888672, name = _U('apanha_de_frutos'),		sprite = 0,	color = 0},
+	VendaDeBitcon =		{x = 1539.8273925781, y = 3593.8627929688, z = 38.766490936279,	name = _U('venda_dos_sacos'),		sprite = 500,	color = 27}
 }
