@@ -270,7 +270,7 @@ AddEventHandler('biznis:StaviUSef', function(posao, cifra)
 end)
 
 function BrisiZaposlenike(d, h, m)
-	if d == 1 then
+	if d == 2 then
 		MySQL.Async.execute('UPDATE biznisi SET Sati = @st, Tjedan = @tj', {
 			['@st'] = "{}",
 			['@tj'] = 0

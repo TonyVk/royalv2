@@ -7,23 +7,33 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 
 RegisterServerEvent("KCoke:get")
-AddEventHandler("KCoke:get", function()
+AddEventHandler("KCoke:get", function(torba)
     local _source = source	
 	local xPlayer = ESX.GetPlayerFromId(_source)
-	
-		
-				if xPlayer.getInventoryItem('coke').count < 20 then
-					local randa = math.random(1,2)
-					if xPlayer.getInventoryItem('coke').count+randa > 20 then
-						xPlayer.addInventoryItem("coke", 1)
-					else
-						xPlayer.addInventoryItem("coke", randa)
-					end
-				else
-					TriggerClientEvent('esx:showNotification', source, '~r~Ne mozete imati vise listova koke')
-				end
-
-			
+	local list = xPlayer.getInventoryItem('coke')
+	if torba then
+		if list.count < list.limit*2 then
+			local randa = math.random(1,2)
+			if list.count+randa > list.limit*2 then
+				xPlayer.addInventoryItem("coke", 1)
+			else
+				xPlayer.addInventoryItem("coke", randa)
+			end
+		else
+			TriggerClientEvent('esx:showNotification', source, '~r~Ne mozete imati vise listova koke')
+		end
+	else
+		if list.count < list.limit then
+			local randa = math.random(1,2)
+			if list.count+randa > list.limit then
+				xPlayer.addInventoryItem("coke", 1)
+			else
+				xPlayer.addInventoryItem("coke", randa)
+			end
+		else
+			TriggerClientEvent('esx:showNotification', source, '~r~Ne mozete imati vise listova koke')
+		end
+	end	
 end)
 
 ESX.RegisterUsableItem('cocaine', function(source)

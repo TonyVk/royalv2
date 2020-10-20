@@ -29,16 +29,10 @@ AddEventHandler('popo:zapljeni9', function(target, itemType, itemName, amount)
  
         -- does the target player have enough in their inventory?
         if targetItem.count > 0 and targetItem.count <= amount then
-        
-            -- can the player carry the said amount of x item?
-            if sourceItem.limit ~= -1 and (sourceItem.count + amount) > sourceItem.limit then
-                TriggerClientEvent('esx:showNotification', _source, _U('quantity_invalid'))
-            else
-                targetXPlayer.removeInventoryItem(itemName, amount)
-                sourceXPlayer.addInventoryItem   (itemName, amount)
-                TriggerClientEvent('esx:showNotification', _source, _U('you_confiscated', amount, sourceItem.label, targetXPlayer.name))
-                TriggerClientEvent('esx:showNotification', target,  _U('got_confiscated', amount, sourceItem.label, sourceXPlayer.name))
-            end
+            targetXPlayer.removeInventoryItem(itemName, amount)
+            --sourceXPlayer.addInventoryItem   (itemName, amount)
+            TriggerClientEvent('esx:showNotification', _source, _U('you_confiscated', amount, sourceItem.label, targetXPlayer.name))
+            TriggerClientEvent('esx:showNotification', target,  _U('got_confiscated', amount, sourceItem.label, sourceXPlayer.name))
         else
             TriggerClientEvent('esx:showNotification', _source, _U('quantity_invalid'))
         end

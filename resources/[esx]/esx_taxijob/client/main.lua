@@ -378,7 +378,7 @@ function PokreniNPC()
 	while not HasModelLoaded(GetHashKey(modelic)) do
 		Wait(1)
 	end
-	CurrentCustomer = CreatePed(5, model, targetCoords, 260, false, true)
+	CurrentCustomer = CreatePed(5, model, targetCoords, 260, true, true)
 	SetModelAsNoLongerNeeded(model)
 	CurrentCustomerBlip = AddBlipForEntity(CurrentCustomer)
 	SetBlipAsFriendly(CurrentCustomerBlip, true)
