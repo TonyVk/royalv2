@@ -1,4 +1,4 @@
-CurrentWeather = 'XMAS'
+CurrentWeather = 'EXTRASUNNY'
 local lastWeather = CurrentWeather
 local sekunde = 0
 local minute = 0

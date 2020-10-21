@@ -3,6 +3,7 @@ local CurrentAction, CurrentActionMsg, CurrentActionData = nil, '', {}
 local CurrentlyTowedVehicle, Blips, NPCOnJob, NPCTargetTowable, NPCTargetTowableZone = nil, {}, false, nil, nil
 local NPCHasSpawnedTowable, NPCLastCancel, NPCHasBeenNextToTowable, NPCTargetDeleterZone = false, GetGameTimer() - 5 * 60000, false, false
 local isDead, isBusy = false, false
+local PostavioEUP = false
 
 local Cijena = {}
 
@@ -67,6 +68,82 @@ function StopNPCJob(cancel)
 	else
 		--TriggerServerEvent('esx_mechanicjob:onNPCJobCompleted')
 	end
+end
+
+function setUniform(job, playerPed)
+	TriggerEvent('skinchanger:getSkin', function(skin)
+		if skin.sex == 0 then
+			if Config.Uniforms[job].EUP == false or Config.Uniforms[job].EUP == nil then
+				if Config.Uniforms[job].male and PostavioEUP == false then
+					TriggerEvent('skinchanger:loadClothes', skin, Config.Uniforms[job].male)
+				end
+			else
+				local jobic = "EUP"..job
+				local outfit = Config.Uniforms[jobic].male
+				local ped = playerPed
+
+				RequestModel(outfit.ped)
+
+				while not HasModelLoaded(outfit.ped) do
+					Wait(0)
+				end
+
+				if GetEntityModel(ped) ~= GetHashKey(outfit.ped) then
+					SetPlayerModel(PlayerId(), outfit.ped)
+				end
+				SetModelAsNoLongerNeeded(outfit.ped)
+				ped = PlayerPedId()
+
+				for _, comp in ipairs(outfit.components) do
+				   SetPedComponentVariation(ped, comp[1], comp[2] - 1, comp[3] - 1, 0)
+				end
+
+				for _, comp in ipairs(outfit.props) do
+					if comp[2] == 0 then
+						ClearPedProp(ped, comp[1])
+					else
+						SetPedPropIndex(ped, comp[1], comp[2] - 1, comp[3] - 1, true)
+					end
+				end
+				PostavioEUP = true
+			end
+		else
+			if Config.Uniforms[job].EUP == false or Config.Uniforms[job].EUP == nil then
+				if Config.Uniforms[job].female  and PostavioEUP == false then
+					TriggerEvent('skinchanger:loadClothes', skin, Config.Uniforms[job].female)
+				end
+			else
+				local jobic = "EUP"..job
+				local outfit = Config.Uniforms[jobic].female
+				local ped = playerPed
+
+				RequestModel(outfit.ped)
+
+				while not HasModelLoaded(outfit.ped) do
+					Wait(0)
+				end
+
+				if GetEntityModel(ped) ~= GetHashKey(outfit.ped) then
+					SetPlayerModel(PlayerId(), outfit.ped)
+				end
+				SetModelAsNoLongerNeeded(outfit.ped)
+				ped = PlayerPedId()
+
+				for _, comp in ipairs(outfit.components) do
+				   SetPedComponentVariation(ped, comp[1], comp[2] - 1, comp[3] - 1, 0)
+				end
+
+				for _, comp in ipairs(outfit.props) do
+					if comp[2] == 0 then
+						ClearPedProp(ped, comp[1])
+					else
+						SetPedPropIndex(ped, comp[1], comp[2] - 1, comp[3] - 1, true)
+					end
+				end
+				PostavioEUP = true
+			end
+		end
+	end)
 end
 
 function OpenMechanicActionsMenu()
@@ -169,18 +246,15 @@ function OpenMechanicActionsMenu()
 			end
 		elseif data.current.value == 'cloakroom' then
 			menu.close()
-			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
-				if skin.sex == 0 then
-					TriggerEvent('skinchanger:loadClothes', skin, jobSkin.skin_male)
-				else
-					TriggerEvent('skinchanger:loadClothes', skin, jobSkin.skin_female)
-				end
-			end)
+			local grade = ESX.PlayerData.job.grade_name
+			local val = grade.."_wear"
+			setUniform(val, PlayerPedId())
 		elseif data.current.value == 'cloakroom2' then
 			menu.close()
-			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
 				TriggerEvent('skinchanger:loadSkin', skin)
 			end)
+			PostavioEUP = false
 		elseif data.current.value == 'put_stock' then
 			OpenPutStocksMenu()
 		elseif data.current.value == 'get_stock' then

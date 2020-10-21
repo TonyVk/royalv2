@@ -79,7 +79,7 @@ RegisterCommand("unjail", function(src, args)
 				TriggerClientEvent("esx:showNotification", src, "Igrac nije online!")
 			end
 		else
-			TriggerClientEvent('chat:addMessage', -1, { args = { "SYSTEM",  "/unjail [ID igraca]"}, color = { 249, 166, 0 } })
+			TriggerClientEvent('chat:addMessage', id, { args = { "SYSTEM",  "/unjail [ID igraca]"}, color = { 249, 166, 0 } })
 		end
 	else
 		TriggerClientEvent("esx:showNotification", src, "Niste policajac!")

@@ -109,6 +109,11 @@ local recoils = {
 	[125959754] = 0.5, -- COMPACT LAUNCHER
 	[3173288789] = 0.1, -- MINI SMG		
 }
+local Slusa = false
+local volume = GetProfileSetting(306) / 100
+local previousVolume = volume
+local ZadnjiPritisak = 0
+local Upozorio = false
 
 
 Citizen.CreateThread(function()
@@ -1357,6 +1362,46 @@ Citizen.CreateThread(function()
 	end
 end)
 
+--radio u klubu
+Citizen.CreateThread(function()
+	while true do
+		Citizen.Wait(5000)
+		local kord = GetEntityCoords(PlayerPedId())
+		if GetDistanceBetweenCoords(-1382.0578613281, -614.68621826172, 31.497901916504,  kord.x,  kord.y,  kord.z,  true) <= 16.5 then
+			if Slusa == false then
+				SendNUIMessage({
+					pusti = true
+				})
+				SendNUIMessage({
+					zvukic = true,
+					vol = volume
+				})
+				Slusa = true
+				Citizen.CreateThread(function()
+					while Slusa do
+						Citizen.Wait(1000)
+						volume = GetProfileSetting(306)/10
+						if previousVolume ~= volume then
+							SendNUIMessage({
+								zvukic = true,
+								vol = volume
+							})
+							previousVolume = volume
+						end
+					end
+				end)
+			end
+		else
+			if Slusa == true then
+				SendNUIMessage({
+					zaustavi = true
+				})
+				Slusa = false
+			end
+		end
+	end
+end)
+
 -- recoil script by bluethefurry / Blumlaut https://forum.fivem.net/t/betterrecoil-better-3rd-person-recoil-for-fivem/82894
 -- I just added some missing weapons because of the doomsday update adding some MK2.
 -- I can't manage to make negative hashes works, if someone make it works, please let me know =)
@@ -1381,27 +1426,35 @@ kickWarning = true
 Citizen.CreateThread(function()
 	while true do
 		Wait(1000)
-
 		playerPed = GetPlayerPed(-1)
 		if playerPed then
 			currentPos = GetEntityCoords(playerPed, true)
-
-			if currentPos == prevPos and NeKickaj == false then
+			ZadnjiPritisak = GetTimeSinceLastInput(0)
+			if NeKickaj == false then
 				if perm == 0 then
 					if not isDead then
-						if time > 0 then
-							if kickWarning and time == math.ceil(secondsUntilKick / 4) then
-								TriggerEvent("chatMessage", "WARNING", {255, 0, 0}, "^1Biti cete kickani za " .. time .. " sekundi zbog toga sto ste AFK!")
-							end
-
-							time = time - 1
-						else
+						if kickWarning and (ZadnjiPritisak > math.ceil(300000) and ZadnjiPritisak < math.ceil(301000)) then
+							TriggerEvent("chatMessage", "WARNING", {255, 0, 0}, "^1Biti cete kickani za 5 minuta zbog toga sto ste AFK!")
+							Upozorio = true
+						end
+						if ZadnjiPritisak >= 600000 then
 							TriggerServerEvent("kickForBeingAnAFKDouchebag")
+						end
+						if currentPos == prevPos then
+							if time > 0 then
+								if kickWarning and time == math.ceil(secondsUntilKick / 4) then
+									TriggerEvent("chatMessage", "WARNING", {255, 0, 0}, "^1Biti cete kickani za " .. time .. " sekundi zbog toga sto ste AFK!")
+								end
+
+								time = time - 1
+							else
+								TriggerServerEvent("kickForBeingAnAFKDouchebag")
+							end
+						else
+							time = secondsUntilKick
 						end
 					end
 				end
-			else
-				time = secondsUntilKick
 			end
 
 			prevPos = currentPos
