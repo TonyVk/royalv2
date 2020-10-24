@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Dat54>
+	<Version value="7126027" />
+	<NameTable>
+		<Item>RESIDENT\VEHICLES</Item>
+		<Item>0</Item>
+		<Item>EXOTIC_SND\GTR17</Item>
+		<Item>EXOTIC_SND\GTR17_NPC</Item>
+	</NameTable>
+	<Items>
+		<!-- 2017 Nissan GT-R -->
+		<Item type="GranularSound">
+			<Name>gtr17_engine_accel</Name>
+			<Header>
+				<Flags value="0x00008001" />
+				<Flags2 value="0x9555AAAA" />
+				<Category>hash_F7C35252</Category>
+			</Header>
+			<WaveSlotIndex value="0" />
+			<Wave1>
+				<ContainerName>exotic_snd/gtr17</ContainerName>
+				<FileName>engine_accel</FileName>
+			</Wave1>
+			<Wave2>
+				<ContainerName>exotic_snd/gtr17</ContainerName>
+				<FileName>exhaust_accel</FileName>
+			</Wave2>
+			<Wave3>
+				<ContainerName>exotic_snd/gtr17</ContainerName>
+				<FileName>engine_decel</FileName>
+			</Wave3>
+			<Wave4>
+				<ContainerName>exotic_snd/gtr17</ContainerName>
+				<FileName>exhaust_decel</FileName>
+			</Wave4>
+			<Wave5>
+				<ContainerName>exotic_snd/gtr17</ContainerName>
+				<FileName>engine_idle</FileName>
+			</Wave5>
+			<Wave6>
+				<ContainerName>exotic_snd/gtr17</ContainerName>
+				<FileName>exhaust_idle</FileName>
+			</Wave6>
+			<DataItem1>
+				<UnkFlags0 value="0" />
+				<UnkFlags1 value="0" />
+				<UnkByte0 value="0" />
+				<UnkByte1 value="0" />
+				<UnkFloat value="0.5" />
+			</DataItem1>
+			<DataItem2>
+				<UnkFlags0 value="1" />
+				<UnkFlags1 value="0" />
+				<UnkByte0 value="0" />
+				<UnkByte1 value="0" />
+				<UnkFloat value="0.5" />
+			</DataItem2>
+			<DataItem3>
+				<UnkFlags0 value="0" />
+				<UnkFlags1 value="0" />
+				<UnkByte0 value="0" />
+				<UnkByte1 value="0" />
+				<UnkFloat value="1" />
+			</DataItem3>
+			<DataItem4>
+				<UnkFlags0 value="1" />
+				<UnkFlags1 value="0" />
+				<UnkByte0 value="0" />
+				<UnkByte1 value="0" />
+				<UnkFloat value="1" />
+			</DataItem4>
+			<DataItem5>
+				<UnkFlags0 value="0" />
+				<UnkFlags1 value="1" />
+				<UnkByte0 value="0" />
+				<UnkByte1 value="0" />
+				<UnkFloat value="1" />
+			</DataItem5>
+			<DataItem6>
+				<UnkFlags0 value="1" />
+				<UnkFlags1 value="1" />
+				<UnkByte0 value="0" />
+				<UnkByte1 value="0" />
+				<UnkFloat value="1" />
+			</DataItem6>
+			<UnkFloat0 value="0.01" />
+			<UnkFloat1 value="0.05" />
+			<UnkShort0 value="50" />
+			<UnkShort1 value="50" />
+			<UnkShort2 value="50" />
+			<UnkShort3 value="50" />
+			<UnkShort4 value="50" />
+			<UnkShort5 value="-50" />
+			<TrackName />
+			<UnkVecData>
+			13.71, 51.78
+			14.07, 14.07
+		   </UnkVecData>
+		</Item>
+		<Item type="GranularSound">
+			<Name>gtr17_engine_accel_npc</Name>
+			<Header>
+				<Flags value="0x00008011" />
+				<Flags2 value="0x9555AAAA" />
+				<Unk04 value="100" />
+				<Category>hash_F7C35252</Category>
+			</Header>
+			<WaveSlotIndex value="0" />
+			<Wave1>
+				<ContainerName>exotic_snd/gtr17_npc</ContainerName>
+				<FileName>engine_accel</FileName>
+			</Wave1>
+			<Wave2>
+				<ContainerName>exotic_snd/gtr17_npc</ContainerName>
+				<FileName>exhaust_accel</FileName>
+			</Wave2>
+			<Wave3>
+				<ContainerName>0</ContainerName>
+				<FileName />
+			</Wave3>
+			<Wave4>
+				<ContainerName>0</ContainerName>
+				<FileName />
+			</Wave4>
+			<Wave5>
+				<ContainerName>exotic_snd/gtr17_npc</ContainerName>
+				<FileName>engine_idle</FileName>
+			</Wave5>
+			<Wave6>
+				<ContainerName>exotic_snd/gtr17_npc</ContainerName>
+				<FileName>exhaust_idle</FileName>
+			</Wave6>
+			<DataItem1>
+				<UnkFlags0 value="0" />
+				<UnkFlags1 value="0" />
+				<UnkByte0 value="0" />
+				<UnkByte1 value="0" />
+				<UnkFloat value="0.5" />
+			</DataItem1>
+			<DataItem2>
+				<UnkFlags0 value="1" />
+				<UnkFlags1 value="0" />
+				<UnkByte0 value="0" />
+				<UnkByte1 value="0" />
+				<UnkFloat value="0.5" />
+			</DataItem2>
+			<DataItem3>
+				<UnkFlags0 value="0" />
+				<UnkFlags1 value="0" />
+				<UnkByte0 value="0" />
+				<UnkByte1 value="0" />
+				<UnkFloat value="1" />
+			</DataItem3>
+			<DataItem4>
+				<UnkFlags0 value="1" />
+				<UnkFlags1 value="0" />
+				<UnkByte0 value="0" />
+				<UnkByte1 value="0" />
+				<UnkFloat value="1" />
+			</DataItem4>
+			<DataItem5>
+				<UnkFlags0 value="0" />
+				<UnkFlags1 value="1" />
+				<UnkByte0 value="0" />
+				<UnkByte1 value="0" />
+				<UnkFloat value="1" />
+			</DataItem5>
+			<DataItem6>
+				<UnkFlags0 value="1" />
+				<UnkFlags1 value="1" />
+				<UnkByte0 value="0" />
+				<UnkByte1 value="0" />
+				<UnkFloat value="1" />
+			</DataItem6>
+			<UnkFloat0 value="0.01" />
+			<UnkFloat1 value="0.15" />
+			<UnkShort0 value="900" />
+			<UnkShort1 value="900" />
+			<UnkShort2 value="9" />
+			<UnkShort3 value="9" />
+			<UnkShort4 value="0" />
+			<UnkShort5 value="50" />
+			<TrackName>gtr17_engine_accel</TrackName>
+			<UnkVecData>
+			21.76, 69
+			16.23, 16.23
+		   </UnkVecData>
+		</Item>
+		<Item type="SimpleSound">
+			<Name>gtr17_start_up_master</Name>
+			<Header>
+				<Flags value="0x00009000" />
+				<Unk10 value="100" />
+				<Category>hash_A7A1137D</Category>
+			</Header>
+			<ContainerName>exotic_snd/gtr17</ContainerName>
+			<FileName>gt_start</FileName>
+			<WaveSlotNum value="0" />
+		</Item>
+		<Item type="SimpleSound">
+			<Name>gtr17_shut_down</Name>
+			<Header>
+				<Flags value="0x00008000" />
+				<Category>hash_A7A1137D</Category>
+			</Header>
+			<ContainerName>exotic_snd/gtr17</ContainerName>
+			<FileName>shutdown</FileName>
+			<WaveSlotNum value="0" />
+		</Item>
+	</Items>
+</Dat54>

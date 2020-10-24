@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Dat151>
+	<Version value="7126027" />
+	<Items>
+		<!-- 2017 Nissan GT-R -->
+		<Item type="Vehicle" ntOffset="362424">
+			<Name>gtr17</Name>
+			<Unk00 value="0x90004A69" />
+			<Engine>gtr17_engine</Engine>
+			<EngineGranular>gtr17_granular_engine</EngineGranular>
+			<Horns>hash_F7725613</Horns>
+			<DoorOpen>hash_1DB68316</DoorOpen>
+			<DoorClose>hash_62B9A0F7</DoorClose>
+			<TrunkOpen>hash_F84DF9F0</TrunkOpen>
+			<TrunkClose>hash_9FB423F8</TrunkClose>
+			<Unk08>null_sound</Unk08>
+			<Unk09 value="0.5" />
+			<SuspensionUp>hash_E53F236A</SuspensionUp>
+			<SuspensionDown>hash_BD190A63</SuspensionDown>
+			<Unk12 value="0.4" />
+			<Unk13 value="1" />
+			<Unk14>hash_00C2FB47</Unk14>
+			<Unk15 value="0" />
+			<Unk16 value="0" />
+			<Unk17 value="0" />
+			<ScannerParams>hash_E748A8C1</ScannerParams>
+			<JumpLandIntact>hash_A5EB71C0</JumpLandIntact>
+			<JumpLandLoose>hash_1AF1FCAC</JumpLandLoose>
+			<Unk21 value="31" />
+			<Unk22 value="36" />
+			<RadioFlags value="0x0E010000" />
+			<IndicatorOn>null_sound</IndicatorOn>
+			<IndicatorOff>null_sound</IndicatorOff>
+			<Handbrake>hash_57E280AF</Handbrake>
+			<Unk27 value="0x00010000" />
+			<Unk28>hash_674E1F4D</Unk28>
+			<Unk29 value="0x55FC0070" />
+			<Unk30>hash_795E90E6</Unk30>
+			<Unk31>hash_795E90E6</Unk31>
+			<Unk32>hash_2FF627AC</Unk32>
+			<StartupSequence>hash_B807DF3E</StartupSequence>
+			<Unk34>null_sound</Unk34>
+			<Unk35>hash_F52E6D86</Unk35>
+			<Unk36>hash_F52E6D86</Unk36>
+			<Unk37 value="6" />
+			<Unk38 value="3" />
+			<Unk39 />
+			<Unk40 value="0" />
+			<Sirens />
+			<Unk42 value="0" />
+			<Unk43 value="0" />
+			<Unk44 value="0" />
+			<Unk45>hash_0C3F6AD5</Unk45>
+			<Unk46>hash_359E05CB</Unk46>
+			<Unk47 />
+			<TurretSounds />
+			<Unk49 value="8" />
+			<Unk50 />
+			<Unk51 />
+			<Unk52 value="0" />
+			<ElectricEngine />
+			<Unk54 value="0" />
+			<ReverseWarning>null_sound</ReverseWarning>
+			<Unk56 value="3" />
+			<VehicleMaster>null_sound</VehicleMaster>
+			<ShutdownBeep>null_sound</ShutdownBeep>
+			<Unk59 value="1" />
+			<Unk60 value="0" />
+			<Unk61 value="1" />
+			<Unk62 value="0" />
+			<Unk63>null_sound</Unk63>
+			<Unk64 value="0" />
+			<Unk65 value="0" />
+			<Unk66 value="0" />
+			<Unk67 />
+			<Unk68>null_sound</Unk68>
+			<Unk69 />
+			<Unk70 value="0" />
+			<Unk71>null_sound</Unk71>
+			<Unk72>null_sound</Unk72>
+		</Item>
+		<Item type="VehicleEngine" ntOffset="362431">
+			<Name>gtr17_engine</Name>
+			<Unk00 value="-900" />
+			<Unk01 value="0" />
+			<Unk02 value="600" />
+			<Unk03 value="1600" />
+			<EngineLow>hash_00D0A5BA</EngineLow>
+			<EngineHigh>hash_1D19CCAE</EngineHigh>
+			<ExhaustLow>hash_0E4C254B</ExhaustLow>
+			<ExhaustHigh>hash_330B3159</ExhaustHigh>
+			<RevsOff>hash_F2671EE2</RevsOff>
+			<Unk09 value="-1200" />
+			<Unk10 value="1400" />
+			<EngineIdleLoop>hash_4685572C</EngineIdleLoop>
+			<ExhaustIdleLoop>hash_5ABCA177</ExhaustIdleLoop>
+			<Unk13 value="-800" />
+			<Unk14 value="2000" />
+			<AirIntake />
+			<Unk16 value="-800" />
+			<Unk17 value="0" />
+			<Turbo>hash_F4BC47C5</Turbo>
+			<Unk19 value="-600" />
+			<Unk20 value="600" />
+			<DumpValve>null_sound</DumpValve>
+			<Unk22 value="100" />
+			<Unk23 value="100" />
+			<Transmission>hash_699D9F91</Transmission>
+			<Unk25 value="0" />
+			<Unk26 value="2400" />
+			<Unk27 value="1200" />
+			<Ignition>hash_26DE38C2</Ignition>
+			<ShutDown>gtr17_shut_down</ShutDown>
+			<Unk30>null_sound</Unk30>
+			<ExhaustPops />
+			<Unk32>hash_46A99015</Unk32>
+			<Unk33 value="-300" />
+			<FansVolume value="-1000" />
+			<StartupMaster>gtr17_start_up_master</StartupMaster>
+			<Unk36 />
+			<Unk37 />
+			<Unk38 />
+			<Unk39 />
+			<Unk40>hash_490413A6</Unk40>
+			<Unk41>hash_58337F32</Unk41>
+			<Unk42 value="700" />
+			<Unk43>hash_AB78E2E9</Unk43>
+			<Unk44>hash_79AC0C09</Unk44>
+			<Unk45 value="0" />
+			<Unk46 value="0" />
+			<Unk47 value="0" />
+			<Unk48 value="0" />
+			<Unk49 value="0" />
+			<Unk50 value="0" />
+			<DumpValveUpgraded>hash_6E002307</DumpValveUpgraded>
+			<Unk52 value="700" />
+			<TransmissionUpgraded>null_sound</TransmissionUpgraded>
+			<TurboUpgraded>hash_D7E28E12</TurboUpgraded>
+			<AirIntakeUpgraded>hash_1305FDEC</AirIntakeUpgraded>
+			<ExhaustPopsUpgraded>hash_0C2B85F2</ExhaustPopsUpgraded>
+		</Item>
+		<Item type="VehicleEngineGranular" ntOffset="362445">
+			<Name>gtr17_granular_engine</Name>
+			<Unk00 value="0xAAAAA955" />
+			<MasterVolume value="0" />
+			<EngineAccel>gtr17_engine_accel</EngineAccel>
+			<ExhaustAccel>hash_23C749D7</ExhaustAccel>
+			<Unk04 value="0" />
+			<Unk05 value="0" />
+			<Unk06 value="0" />
+			<Unk07 value="0" />
+			<Unk08 value="0" />
+			<Unk09 value="0" />
+			<Unk10 value="0" />
+			<Unk11 value="0" />
+			<Unk12 value="0" />
+			<Unk13 value="300" />
+			<Unk14 value="900" />
+			<Unk15 value="0" />
+			<Unk16 value="-200" />
+			<Unk17 value="400" />
+			<Unk18 value="100" />
+			<Unk19 value="0" />
+			<Unk20 value="200" />
+			<Unk21 value="30" />
+			<Unk22 value="0.2" />
+			<Unk23 value="0.2" />
+			<Unk24 value="0.2" />
+			<Unk25 value="0.15" />
+			<Unk26 value="0.2" />
+			<Unk27 value="0" />
+			<Unk28 value="0.2" />
+			<Unk29 value="-400" />
+			<Unk30 value="-400" />
+			<EngineSubmix>hash_E8FD79AA</EngineSubmix>
+			<EngineSubmixPreset>hash_4F8B45E6</EngineSubmixPreset>
+			<ExhaustSubmix>hash_8725741C</ExhaustSubmix>
+			<ExhaustSubmixPreset>hash_D6626DE2</ExhaustSubmixPreset>
+			<EngineAccelNPC>gtr17_engine_accel_npc</EngineAccelNPC>
+			<ExhaustAccelNPC>hash_23C749D7</ExhaustAccelNPC>
+			<Unk37>hash_68A35E88</Unk37>
+			<Unk38 value="0" />
+			<Unk39 value="0" />
+			<Unk40>hash_490413A6</Unk40>
+			<Unk41>hash_58337F32</Unk41>
+			<Unk42 value="600" />
+			<Unk43 value="5" />
+			<Unk44 value="2" />
+			<IdleSub>hash_FDD6A78A</IdleSub>
+			<Unk46 value="0" />
+			<Unk47 value="0" />
+			<Unk48 value="0" />
+			<Unk49 value="0" />
+			<Unk50 value="0" />
+			<Unk51 value="0" />
+			<Unk52>hash_B3BAE87C</Unk52>
+			<Unk53>hash_68A35E88</Unk53>
+			<Unk54 value="-200" />
+			<Unk55 value="500" />
+			<Unk56 value="500" />
+			<Unk57 value="500" />
+			<Unk58 value="1" />
+			<Unk59 value="0.2" />
+		</Item>
+	</Items>
+</Dat151>

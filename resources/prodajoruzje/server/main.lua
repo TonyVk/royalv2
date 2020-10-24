@@ -70,6 +70,16 @@ function getIdentity(source)
 	end
 end
 
+ESX.RegisterUsableItem('ronjenje', function(source)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local oprema = xPlayer.getInventoryItem("ronjenje").count
+	if oprema > 0 then
+		TriggerClientEvent('ronjenje:PocniRonit', source)
+	else
+		xPlayer.showNotification("Nemate opremu za ronjenje!")
+	end
+end)
+
 RegisterCommand("ispisip", function(source, args, rawCommandString)
 		local elements = {}
 		MySQL.Async.fetchAll('SELECT identifier FROM priority', {}, function(result)
