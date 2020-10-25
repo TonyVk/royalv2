@@ -66,17 +66,10 @@ function OpenBuyLicenseMenu (zone)
 		--CurrentActionMsg  = _U('shop_menu')
 		--CurrentActionData = {zone = zone}
       end
-
       menu.close()
-	  CurrentAction     = 'shop_menu'
-	  CurrentActionMsg  = _U('shop_menu')
-	  CurrentActionData = {zone = zone}
     end,
     function (data, menu)
       menu.close()
-	  CurrentAction     = 'shop_menu'
-	  CurrentActionMsg  = _U('shop_menu')
-	  CurrentActionData = {zone = zone}
     end
   )
 end

@@ -7,6 +7,7 @@
   <link href="vendor/flexboxgrid.6.3.1.min.css" rel="stylesheet"></link>
   <link href="vendor/animate.3.5.2.min.css" rel="stylesheet"></link>
   <link href="index.css" rel="stylesheet"></link>
+  <link href="http://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet"></link>
 
   <script src="vendor/vue.2.3.3.min.js" type="text/javascript"></script>
   <script src="config.default.js" type="text/javascript"></script>
@@ -18,7 +19,7 @@
   <!-- App Template -->
   <script type="text/x-template" id="app_template">
     <div id="app">
-      <div class="chat-window" :style="this.style" :class="{ 'fadeOut animated': !showWindow, 'hidden': shouldHide }">
+      <div class="chat-window" :style="this.style" :class="{'slideInLeft animated': showWindow, 'slideOutLeft animated': !showWindow, 'hidden': shouldHide}">
         <div class="chat-messages" ref="messages">
           <message v-for="msg in messages"
                    :templates="templates"
@@ -31,7 +32,7 @@
           </message>
         </div>
       </div>
-      <div class="chat-input" v-show="showInput">
+      <div class="chat-input" :class="{'rotateInDownLeft animated': showInput, 'rotateOutDownRight animated': !showInput}" v-show="showInput">
         <div>
           <span class="prefix">➤</span>
           <textarea v-model="message"
@@ -53,7 +54,7 @@
 
   <!-- Message Template -->
   <script type="text/x-template" id="message_template">
-    <div class="msg" :class="{ multiline }">
+    <div class="msg" :class="{'slideInLeft animated': multiline}">
       <span v-html="textEscaped"></span>
     </div>
   </script>
@@ -64,12 +65,12 @@
       <ul class="suggestions">
         <li class="suggestion" v-for="s in currentSuggestions">
           <p>
-            <span :class="{ 'disabled': s.disabled }">
+            <span :class="{'disabled': s.disabled}">
               {{s.name}}
             </span>
             <span class="param"
                   v-for="(p, index) in s.params"
-                  :class="{ 'disabled': p.disabled }">
+                  :class="{'disabled': p.disabled}">
               [{{p.name}}]
             </span>
           </p>
@@ -98,19 +99,19 @@
     request.open('POST', url, true);
     request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
     request.send(data);
-  }
+ }
 
   const instance = new Vue({
     el: '#app',
     render: h => h(APP),
-  });
+ });
 
   window.emulate = (type, detail = {}) => {
     detail.type = type;
     window.dispatchEvent(new CustomEvent('message', {
       detail,
-    }));
-  };
+   }));
+ };
   </script>
 
 </body>

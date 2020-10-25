@@ -8,6 +8,7 @@ local Oruzja = {}
 local Boje = {}
 local EnableESXIdentity = true
 local EnableLicenses = true
+local Kutije = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -706,8 +707,26 @@ ESX.RegisterServerCallback('mafije:DohvatiMafijev2', function(source, cb)
 	cb(Mafije)
 end)
 
+ESX.RegisterServerCallback('mafije:DohvatiKutiju', function(source, cb, maf)
+	local naso = 0
+	for i=1, #Kutije, 1 do
+		if Kutije[i] ~= nil and Kutije[i].Mafija == maf then
+			cb(Kutije[i])
+			naso = 1
+		end
+	end
+	if naso == 0 then
+		cb(nil)
+	end
+end)
+
 RegisterNetEvent('mafije:ResetirajOruzje')
 AddEventHandler('mafije:ResetirajOruzje', function(maf)
+	for i=1, #Kutije, 1 do
+		if Kutije[i] ~= nil and Kutije[i].Mafija == maf then
+			table.remove(Kutije, i)
+		end
+	end
 	TriggerClientEvent("mafije:ResetOruzja", -1, maf)
 end)
 
@@ -982,18 +1001,44 @@ AddEventHandler('mafije:getStockItem', function(itemName, count, maf, torba)
 end)
 
 RegisterServerEvent('mafije:SaljiCrate')
-AddEventHandler('mafije:SaljiCrate', function(cr, par, job, id)
-    TriggerClientEvent('mafije:VratiCrate', -1, cr, par, job, id)
+AddEventHandler('mafije:SaljiCrate', function(par, job)
+	print("primio")
+    TriggerClientEvent('mafije:VratiCrate', -1, par, job)
 end)
 
 RegisterServerEvent('mafije:BrisiCrate')
-AddEventHandler('mafije:BrisiCrate', function(id)
-    TriggerClientEvent('mafije:ObrisiCrate', -1, id)
+AddEventHandler('mafije:BrisiCrate', function(id, job)
+	for i=1, #Kutije, 1 do
+		if Kutije[i] ~= nil and Kutije[i].Mafija == job then
+			Kutije[i].Pokupljen = true
+		end
+	end
+    TriggerClientEvent('mafije:ObrisiCrate', -1, id, job)
+end)
+
+RegisterServerEvent('mafije:SpremiNetID')
+AddEventHandler('mafije:SpremiNetID', function(id, job)
+	for i=1, #Kutije, 1 do
+		if Kutije[i] ~= nil and Kutije[i].Mafija == job then
+			Kutije[i].NetID = id
+		end
+	end
 end)
 
 RegisterServerEvent('mafije:SpremiIme')
-AddEventHandler('mafije:SpremiIme', function(ime, br)
-    TriggerClientEvent('mafije:VratiIme', -1, ime, br)
+AddEventHandler('mafije:SpremiIme', function(maf, ime, br)
+	local naso = 0
+	for i=1, #Kutije, 1 do
+		if Kutije[i] ~= nil and Kutije[i].Mafija == maf then
+			Kutije[i].Oruzja = ime
+			Kutije[i].Broj = br
+			naso = 1
+		end
+	end
+	if naso == 0 then
+		table.insert(Kutije, {Mafija = maf, Oruzja = ime, Broj = br, Pokupljen = false, NetID = nil})
+	end
+    TriggerClientEvent('mafije:VratiIme', -1, maf, ime, br)
 end)
 
 RegisterServerEvent('mafije:makniOruzjeItem')

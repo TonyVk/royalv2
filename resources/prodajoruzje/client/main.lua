@@ -98,13 +98,13 @@ end
 function DeleteGear()
 	if currentGear.mask ~= 0 then
         DetachEntity(currentGear.mask, 0, 1)
-        DeleteEntity(currentGear.mask)
+        ESX.Game.DeleteObject(currentGear.mask)
 		currentGear.mask = 0
     end
     
 	if currentGear.tank ~= 0 then
         DetachEntity(currentGear.tank, 0, 1)
-        DeleteEntity(currentGear.tank)
+        ESX.Game.DeleteObject(currentGear.tank)
 		currentGear.tank = 0
 	end
 end

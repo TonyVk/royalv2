@@ -1762,11 +1762,12 @@ function OpenBuyWeaponsMenu()
 				ESX.TriggerServerCallback('mafije:piku4', function(hasEnoughMoney)
 					if hasEnoughMoney then
 						ZatrazioOruzje[ZOBr] = data.current.value
-						TriggerServerEvent('mafije:SpremiIme', ZatrazioOruzje[ZOBr], ZOBr)
 						ZOBr = ZOBr+1
+						TriggerServerEvent('mafije:SpremiIme', PlayerData.job.name, ZatrazioOruzje, ZOBr)
 						if ZOBr == 1 then
 							ESX.ShowNotification("Uzmite Big 4x4(Guardian) i odite na zeleni kofer oznacen na mapi kako bi ste pokupili paket")
-							TriggerEvent("mafije:crateDrop", data.current.value, 250, true, 400.0, {["x"] = x, ["y"] = y, ["z"] = z})
+							CrateDrop("weapon_pistol", 55, 400.0, {["x"] = x, ["y"] = y, ["z"] = z})
+							print("tu sam")
 						end
 					else
 						ESX.ShowNotification(_U('not_enough_money'))
@@ -1786,44 +1787,23 @@ function OpenBuyWeaponsMenu()
 
 end
 
-RegisterNetEvent("mafije:crateDrop")
-
-AddEventHandler("mafije:crateDrop", function(weapon, ammo, roofCheck, planeSpawnDistance, dropCoords)
-    Citizen.CreateThread(function()
-
-        -- print("WEAPON: " .. string.lower(weapon))
-
-        local ammo = (ammo and tonumber(ammo)) or 250
-        if ammo > 9999 then
-            ammo = 9999
-        elseif ammo < -1 then
-            ammo = -1
-        end
-
-        -- print("AMMO: " .. ammo)
-
-        if dropCoords.x and dropCoords.y and dropCoords.z and tonumber(dropCoords.x) and tonumber(dropCoords.y) and tonumber(dropCoords.z) then
-            -- print(("DROP COORDS: success, X = %.4f; Y = %.4f; Z = %.4f"):format(dropCoords.x, dropCoords.y, dropCoords.z))
-        else
-            dropCoords = {0.0, 0.0, 72.0}
-            -- print("DROP COORDS: fail, defaulting to X = 0; Y = 0")
-        end
-        -- print("ROOFCHECK: false")
-        CrateDrop(weapon, ammo, planeSpawnDistance, dropCoords)
-
-    end)
-end)
-
 function CrateDrop(weapon, ammo, planeSpawnDistance, dropCoords)
     local crateSpawn = vector3(dropCoords.x, dropCoords.y, dropCoords.z)
-	local id = GetPlayerServerId(PlayerId())
-	TriggerServerEvent('mafije:SaljiCrate', crate,  crateSpawn, PlayerData.job.name, id)
+	print("doso vamo")
+	TriggerServerEvent('mafije:SaljiCrate', crateSpawn, PlayerData.job.name)
 end
 
 function CrateDrop2(parachute)
     --Citizen.CreateThread(function()
-		crate = CreateObject(GetHashKey("prop_box_wood05a"), parachute, false, true, true)
-	
+		local model = GetHashKey("prop_box_wood05a")
+		RequestModel(model)
+		
+		while not HasModelLoaded(model) do
+			Wait(1)
+		end
+		print("doso tu")
+		crate = CreateObject(model, parachute, false, false, false)
+		print("proso tu")
         soundID = GetSoundId()
         PlaySoundFromEntity(soundID, "Crate_Beeps", crate, "MP_CRATE_DROP_SOUNDS", true, 0)
 		local x,y,z = table.unpack(parachute)
@@ -1842,7 +1822,7 @@ function CrateDrop2(parachute)
         end
 		
 		local id = GetPlayerServerId(PlayerId())
-		TriggerServerEvent('mafije:BrisiCrate', id)
+		TriggerServerEvent('mafije:BrisiCrate', id, PlayerData.job.name)
 
         if DoesBlipExist(blipa) then
             RemoveBlip(blipa)
@@ -1874,26 +1854,27 @@ AddEventHandler('mafije:VracamOtvoren', function(menu)
 end)
 
 RegisterNetEvent('mafije:VratiCrate')
-AddEventHandler('mafije:VratiCrate', function(cr, par, job, id)
-	local ida = GetPlayerServerId(PlayerId())
-	--if ida ~= id then
-		if PlayerData.job.name == job then
-			crate = cr
-			parachute = par
-			CrateDrop2(parachute)
-		end
-	--end
+AddEventHandler('mafije:VratiCrate', function(par, job)
+	print(PlayerData.job.name)
+	print(job)
+	if PlayerData.job.name == job then
+		parachute = par
+		print("koi kurac")
+		CrateDrop2(parachute)
+	end
 end)
 
 RegisterNetEvent('mafije:ObrisiCrate')
-AddEventHandler('mafije:ObrisiCrate', function(id)
+AddEventHandler('mafije:ObrisiCrate', function(id, job)
 	local ida = GetPlayerServerId(PlayerId())
 	if ida ~= id then
-		if DoesEntityExist(crate) then
-			DeleteEntity(crate)
-			StopSound(soundID)
-			ReleaseSoundId(soundID)
-			SpawnajDropMarker = false
+		if PlayerData.job.name == job then
+			if DoesEntityExist(crate) then
+				DeleteEntity(crate)
+				StopSound(soundID)
+				ReleaseSoundId(soundID)
+				SpawnajDropMarker = false
+			end
 		end
 	end
 end)
@@ -1909,9 +1890,11 @@ AddEventHandler('mafije:ResetOruzja', function(maf)
 end)
 
 RegisterNetEvent('mafije:VratiIme')
-AddEventHandler('mafije:VratiIme', function(ime, br)
-	ZatrazioOruzje[br] = ime
-	ZOBr = br+1
+AddEventHandler('mafije:VratiIme', function(maf, ime, br)
+	if PlayerData.job.name == maf then
+		ZatrazioOruzje = ime
+		ZOBr = br
+	end
 end)
 
 function OpenGetStocksMenu()
@@ -2075,6 +2058,33 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
 	PlayerData = xPlayer
 end)
 
+local prvispawn = false
+
+AddEventHandler("playerSpawned", function()
+	while PlayerData.job == nil do
+		Wait(1)
+	end
+	if not prvispawn then
+		ESX.TriggerServerCallback('mafije:DohvatiKutiju', function(br)
+			if br ~= nil then
+				ZatrazioOruzje = br.Oruzja
+				ZOBr = br.Broj
+				if br.Pokupljen == false then
+					local x,y,z
+					for i=1, #Koord, 1 do
+						if Koord[i].Mafija == PlayerData.job.name and Koord[i].Ime == "CrateDrop" then
+							x,y,z = table.unpack(Koord[i].Coord)
+							break
+						end
+					end
+					CrateDrop("weapon_pistol", 55, 400.0, {["x"] = x, ["y"] = y, ["z"] = z})
+				end
+			end
+		end, PlayerData.job.name)
+		prvispawn = true
+	end
+end)
+
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
 	PlayerData.job = job
@@ -2104,7 +2114,15 @@ AddEventHandler('mafije:hasEnteredMarker', function(station, part, partNum)
 			PokupioCrate = true
 			SpawnajDropMarker = false
 			DeleteEntity(crate)
-			crate = CreateObject(GetHashKey("prop_box_wood05a"), crateSpawn, true, true, true)
+			local model = GetHashKey("prop_box_wood05a")
+			RequestModel(model)
+			
+			while not HasModelLoaded(model) do
+				Wait(1)
+			end
+			crate = CreateObject(model, crateSpawn, true, true, false)
+			local nid = NetworkGetNetworkIdFromEntity(crate)
+			TriggerServerEvent("mafije:SpremiNetID", nid, PlayerData.job.name)
 			local veh = GetVehiclePedIsIn(PlayerPedId(), false)
 			local ent = GetEntityBoneIndexByName(veh, "boot")
 			AttachEntityToEntity(crate, GetVehiclePedIsIn(PlayerPedId(), false), ent, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1, 0, 0, 0, 2, 1)
@@ -2155,6 +2173,7 @@ AddEventHandler('mafije:hasEnteredMarker', function(station, part, partNum)
 					end, ZatrazioOruzje[i], 250, PlayerData.job.name)
 					ZatrazioOruzje[i] = nil
 				end
+				Wait(100)
 			end
 			TriggerServerEvent('mafije:ResetirajOruzje', PlayerData.job.name)
 			ZOBr = 0

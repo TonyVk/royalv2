@@ -27,9 +27,8 @@ AddEventHandler('oruzje:dajgalicenca', function (zona)
 
     TriggerEvent('esx_license:addLicense', _source, 'weapon', function ()
       LoadLicenses(_source)
+	  TriggerClientEvent("oruzje:OtvoriMenu", _source, zona)
     end)
-	
-	TriggerClientEvent("oruzje:OtvoriMenu", _source, zona)
   else
     TriggerClientEvent('esx:showNotification', _source, _U('not_enough'))
   end

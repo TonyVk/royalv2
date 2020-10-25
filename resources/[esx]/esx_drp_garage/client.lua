@@ -458,6 +458,7 @@ AddEventHandler('garaza:VratiVozilo', function(nid, vehicle, tip)
 			attempt = attempt+1
 		end
 		if attempt < 100 then
+			WaitForVehicleToLoad(vehicle.model)
 			local callback_vehicle = NetworkGetEntityFromNetworkId(nid)
 			while not DoesEntityExist(callback_vehicle) do
 				Wait(1)
@@ -485,6 +486,7 @@ AddEventHandler('garaza:VratiVozilo', function(nid, vehicle, tip)
 			TriggerEvent("esx_property:ProsljediVozilo", nid, Vblip)
 		else
 			print("Greska prilikom kreiranja vozila. NetID: "..nid)
+			WaitForVehicleToLoad(vehicle.model)
 			local ped = GetPlayerPed(-1)
 			local coords = GetEntityCoords(ped)
 			local veh = GetClosestVehicle(coords.x, coords.y, coords.z, 3.000, 0, 70)
@@ -519,6 +521,7 @@ AddEventHandler('garaza:VratiVozilo', function(nid, vehicle, tip)
 			attempt = attempt+1
 		end
 		if attempt < 100 then
+			WaitForVehicleToLoad(vehicle.model)
 			local callback_vehicle = NetworkGetEntityFromNetworkId(nid)
 			while not DoesEntityExist(callback_vehicle) do
 				Wait(1)
@@ -531,6 +534,7 @@ AddEventHandler('garaza:VratiVozilo', function(nid, vehicle, tip)
 			TriggerServerEvent('eden_garage:modifystate2', vehicle, 0)
 		else
 			print("Greska prilikom kreiranja vozila. NetID: "..nid)
+			WaitForVehicleToLoad(vehicle.model)
 			local ped = GetPlayerPed(-1)
 			local coords = GetEntityCoords(ped)
 			local veh = GetClosestVehicle(coords.x, coords.y, coords.z, 3.000, 0, 70)
