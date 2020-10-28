@@ -68,7 +68,7 @@ ESX.RegisterUsableItem('rakija', function(source)
 
 	xPlayer.removeInventoryItem('rakija', 1)
 
-	TriggerClientEvent('esx_status:add', source, 'drunk', 700000)
+	TriggerClientEvent('esx_status:add', source, 'drunk', 400000)
 	TriggerClientEvent('esx_basicneeds:onDrinkVodka', source)
 	TriggerClientEvent('esx:showNotification', source, 'Sabio rakiju')
 end)
@@ -108,6 +108,7 @@ ESX.RegisterUsableItem('milk', function(source)
 
 	xPlayer.removeInventoryItem('milk', 1)
 
+	TriggerClientEvent('esx_status:add', source, 'thirst', 100000)
 	TriggerClientEvent('esx_status:add', source, 'drunk', -100000)
 	TriggerClientEvent('esx_basicneeds:onDrinkMilk', source)
 	TriggerClientEvent('esx:showNotification', source, "Popili ste mlijeko!")
