@@ -546,7 +546,7 @@ AddEventHandler('esx:useItem', function(itemName)
 end)
 
 RegisterServerEvent('esx:onPickup')
-AddEventHandler('esx:onPickup', function(id)
+AddEventHandler('esx:onPickup', function(id, torba)
 	local _source = source
 	local pickup  = ESX.Pickups[id]
 	local xPlayer = ESX.GetPlayerFromId(_source)
@@ -554,7 +554,12 @@ AddEventHandler('esx:onPickup', function(id)
 	if pickup.type == 'item_standard' then
 
 		local item      = xPlayer.getInventoryItem(pickup.name)
-		local canTake   = ((item.limit == -1) and (pickup.count)) or ((item.limit - item.count > 0) and (item.limit - item.count)) or 0
+		local canTake
+		if torba then
+			canTake   = ((item.limit == -1) and (pickup.count)) or (((item.limit*2) - item.count > 0) and ((item.limit*2) - item.count)) or 0
+		else
+			canTake   = ((item.limit == -1) and (pickup.count)) or ((item.limit - item.count > 0) and (item.limit - item.count)) or 0
+		end
 		local total     = pickup.count < canTake and pickup.count or canTake
 		local remaining = pickup.count - total
 

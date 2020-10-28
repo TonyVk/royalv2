@@ -60,7 +60,7 @@ ESX.RegisterUsableItem('vodka', function(source)
 
 	TriggerClientEvent('esx_status:add', source, 'drunk', 350000)
 	TriggerClientEvent('esx_basicneeds:onDrinkVodka', source)
-	TriggerClientEvent('esx:showNotification', source, _U('used_vodka'))
+	TriggerClientEvent('esx:showNotification', source, "Popili ste vodku!")
 end)
 
 ESX.RegisterUsableItem('rakija', function(source)

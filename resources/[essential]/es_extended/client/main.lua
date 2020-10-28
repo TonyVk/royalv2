@@ -627,8 +627,15 @@ Citizen.CreateThread(function()
 							ESX.Streaming.RequestAnimDict(dict)
 							TaskPlayAnim(playerPed, dict, anim, 8.0, 1.0, 1000, 16, 0.0, false, false, false)
 							Citizen.Wait(1000)
-
-							TriggerServerEvent('esx:onPickup', v.id)
+							local torba = 0
+							TriggerEvent('skinchanger:getSkin', function(skin)
+								torba = skin['bags_1']
+							end)
+							if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+								TriggerServerEvent('esx:onPickup', v.id, true)
+							else
+								TriggerServerEvent('esx:onPickup', v.id, false)
+							end
 							PlaySoundFrontend(-1, 'PICK_UP', 'HUD_FRONTEND_DEFAULT_SOUNDSET', false)
 						end
 					end

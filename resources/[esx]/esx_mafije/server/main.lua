@@ -981,10 +981,16 @@ AddEventHandler('mafije:getStockItem', function(itemName, count, maf, torba)
 				xPlayer.addInventoryItem(itemName, count)
 				TriggerClientEvent('esx:showNotification', xPlayer.source, "Uzeli ste x" .. count .. ' ' .. item.label)
 			else
-				TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise u inventory!")
+				if sourceItem.limit == -1 then
+					inventory.removeItem(itemName, count)
+					xPlayer.addInventoryItem(itemName, count)
+					TriggerClientEvent('esx:showNotification', xPlayer.source, "Uzeli ste x" .. count .. ' ' .. item.label)
+				else
+					TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise u inventory!")
+				end
 			end
 		else
-			if sourceItem.limit ~= -1 and (sourceItem.count + count) <= sourceItem.limit then
+			if sourceItem.limit == -1 then
 				inventory.removeItem(itemName, count)
 				xPlayer.addInventoryItem(itemName, count)
 				TriggerClientEvent('esx:showNotification', xPlayer.source, "Uzeli ste x" .. count .. ' ' .. item.label)
