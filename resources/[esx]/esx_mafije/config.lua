@@ -7,3 +7,5 @@ Config.EnableSocietyOwnedVehicles = false
 Config.EnableLicenses             = false
 Config.Locale                     = 'hr'
 Config.Blipovi					  = true
+Config.Price 					  = 1500
+Config.RepairMultiplier 		  = 1

@@ -943,6 +943,18 @@ AddEventHandler('mafije:zapljeni6', function(target, itemType, itemName, amount,
 
 end)
 
+RegisterNetEvent('mafije:SpawnVozilo')
+AddEventHandler('mafije:SpawnVozilo', function(vehicle, co, he)
+	local _source = source
+	local veh = CreateVehicle(vehicle.model, co, he, true, false)
+	while not DoesEntityExist(veh) do
+		Wait(100)
+	end
+	local netid = NetworkGetNetworkIdFromEntity(veh)
+	Wait(500)
+	TriggerClientEvent("mafije:VratiVozilo", _source, netid, vehicle, co)
+end)
+
 RegisterServerEvent('mafije:handcuff')
 AddEventHandler('mafije:handcuff', function(target)
   TriggerClientEvent('mafije:handcuff', target)
@@ -990,12 +1002,18 @@ AddEventHandler('mafije:getStockItem', function(itemName, count, maf, torba)
 				end
 			end
 		else
-			if sourceItem.limit == -1 then
+			if sourceItem.limit ~= -1 and (sourceItem.count + count) <= sourceItem.limit then
 				inventory.removeItem(itemName, count)
 				xPlayer.addInventoryItem(itemName, count)
 				TriggerClientEvent('esx:showNotification', xPlayer.source, "Uzeli ste x" .. count .. ' ' .. item.label)
 			else
-				TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise u inventory!")
+				if sourceItem.limit == -1 then
+					inventory.removeItem(itemName, count)
+					xPlayer.addInventoryItem(itemName, count)
+					TriggerClientEvent('esx:showNotification', xPlayer.source, "Uzeli ste x" .. count .. ' ' .. item.label)
+				else
+					TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise u inventory!")
+				end
 			end
 		end
     else

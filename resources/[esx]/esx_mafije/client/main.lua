@@ -39,6 +39,8 @@ local Blipovi = {}
 local Boje = {}
 local OruzarnicaMenu = false
 local Vratio = nil
+local GarazaV 					= nil
+local Vblip 					= nil
 
 local parachute, crate, pickup, blipa, soundID
 local requiredModels = {"p_cargo_chute_s", "ex_prop_adv_case_sm", "prop_box_wood05a"} -- parachute, pickup case, plane, pilot, crate
@@ -56,6 +58,17 @@ Citizen.CreateThread(function()
   end
   Wait(5000)
   ProvjeriPosao()
+end)
+
+RegisterNetEvent('esx_property:ProsljediVozilo')
+AddEventHandler('esx_property:ProsljediVozilo', function(voz, bl)
+	if bl == nil then
+		if DoesEntityExist(Vblip) then
+			RemoveBlip(Vblip)
+		end
+	end
+	GarazaV = voz
+	Vblip = bl
 end)
 
 function ProvjeriPosao()
@@ -1109,6 +1122,301 @@ function OpenSellWeaponMenu()
 
   end, PlayerData.job.name)
 
+end
+
+function OpenGarageMenu()
+	local x,y,z,he
+	for i=1, #Koord, 1 do
+		if Koord[i] ~= nil then
+			if Koord[i].Mafija == PlayerData.job.name and Koord[i].Ime == "LokVozila" then
+				x,y,z,he = table.unpack(Koord[i].Coord)
+				break
+			end
+		end
+    end
+	if (x == 0 or x == nil) and (y == 0 or y == nil) and (z == 0 or z == nil) then
+		ESX.ShowNotification("Vasoj mafiji nije postavljena lokacija spawna vozila, javite se adminu!")
+		return
+	end
+	local co = vector3(x,y,z)
+	local elements = {}
+
+	ESX.TriggerServerCallback('eden_garage:getVehicles', function(vehicles)
+
+ 	for _,v in pairs(vehicles) do
+		if v.brod == 0 then
+        	local hashVehicule = v.vehicle.model
+        	local vehicleName = GetDisplayNameFromVehicleModel(hashVehicule)
+        	local labelvehicle
+        	if v.state == 1 then
+				labelvehicle = vehicleName..' <font color="green">U garazi</font>'
+        	elseif v.state == 2 then
+				labelvehicle = vehicleName..' <font color="red">Ukradeno</font>'
+			elseif v.state == 0 then
+				labelvehicle = vehicleName..' <font color="red">Izvan garaze</font>'
+        	end    
+        	table.insert(elements, {label =labelvehicle , value = v})
+        end
+   	 end
+
+		ESX.UI.Menu.Open(
+		'default', GetCurrentResourceName(), 'spawn_vehicle',
+		{
+			title    = "Garaza",
+			align    = 'top-left',
+			elements = elements,
+		},
+		function(data, menu)
+			if data.current.value.state == 1 then
+				menu.close()
+				SpawnVehicle(data.current.value.vehicle, co, he)
+			elseif data.current.value.state == 2 then
+				exports.pNotify:SendNotification({ text = "Vase vozilo je ukradeno", queue = "right", timeout = 3000, layout = "centerLeft" })
+			else
+				ESX.UI.Menu.CloseAll()
+
+				local elements2 = {
+					{label = "Da $"..Config.Price, value = 'yes'},
+					{label = "Ne", value = 'no'},
+				}
+				ESX.UI.Menu.Open(
+					'default', GetCurrentResourceName(), 'plati_menu',
+					{
+						title    = "Zelite li platiti vracanje vozila u garazu?",
+						align    = 'top-left',
+						elements = elements2,
+					},
+					function(data2, menu2)
+
+						
+						if(data2.current.value == 'yes') then
+							ESX.TriggerServerCallback('eden_garage:checkMoney', function(hasEnoughMoney)
+								if hasEnoughMoney then
+									menu2.close()
+									TriggerServerEvent('garaza:tuljaniziraj2')
+									SpawnVehicle(data.current.value.vehicle, co, he)
+								else
+									menu2.close()
+									exports.pNotify:SendNotification({ text = "Nemate dovoljno novca", queue = "right", timeout = 3000, layout = "centerLeft" })
+								end
+							end)
+						end
+						if(data2.current.value == 'no') then
+							menu2.close()
+						end
+					end,
+					function(data2, menu2)
+						menu2.close()
+					end
+				)	
+			end
+		end,
+		function(data, menu)
+			menu.close()
+			--CurrentAction = 'open_garage_action'
+		end
+	)	
+	end)
+end
+
+function SpawnVehicle(vehicle, co, he)
+	if GarazaV ~= nil then
+		TriggerServerEvent("garaza:ObrisiVozilo", GarazaV)
+		GarazaV = nil
+		if Vblip ~= nil then
+			RemoveBlip(Vblip)
+			Vblip = nil
+		end
+	end
+	TriggerServerEvent("mafije:SpawnVozilo", vehicle, co, he)
+end
+
+RegisterNetEvent('mafije:VratiVozilo')
+AddEventHandler('mafije:VratiVozilo', function(nid, vehicle, co)
+	local attempt = 0
+	while not NetworkDoesEntityExistWithNetworkId(nid) and attempt < 100 do
+		Wait(1)
+		attempt = attempt+1
+	end
+	if attempt < 100 then
+		local callback_vehicle = NetworkGetEntityFromNetworkId(nid)
+		while not DoesEntityExist(callback_vehicle) do
+			Wait(1)
+			callback_vehicle = NetworkGetEntityFromNetworkId(nid)
+		end
+		ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
+		--SetEntityHeading(callback_vehicle, he)
+		SetVehRadioStation(callback_vehicle, "OFF")
+		GarazaV = nid
+		TaskWarpPedIntoVehicle(GetPlayerPed(-1), callback_vehicle, -1)
+		local plate = GetVehicleNumberPlateText(callback_vehicle)
+		local pla = vehicle.plate:gsub("^%s*(.-)%s*$", "%1")
+		TriggerServerEvent("garaza:SpremiModel", pla, vehicle.model)
+		TriggerServerEvent("ls:mainCheck", plate, callback_vehicle, true)
+		ESX.ShowNotification("Uzeli ste vozilo iz garaze")
+		TriggerServerEvent('eden_garage:modifystate', vehicle, 0)
+		Vblip = AddBlipForEntity(callback_vehicle)
+		SetBlipSprite (Vblip, 225)
+		SetBlipDisplay(Vblip, 4)
+		SetBlipScale  (Vblip, 1.0)
+		SetBlipColour (Vblip, 30)
+		SetBlipAsShortRange(Vblip, true)
+		BeginTextCommandSetBlipName("STRING")
+		AddTextComponentString("Vase vozilo")
+		EndTextCommandSetBlipName(Vblip)
+		TriggerEvent("esx_property:ProsljediVozilo", GarazaV, Vblip)
+	else
+		print("Greska prilikom kreiranja vozila. NetID: "..nid)
+		local ped = GetPlayerPed(-1)
+		SetEntityCoords(ped, co)
+		local coords = GetEntityCoords(ped)
+		local veh = GetClosestVehicle(coords.x, coords.y, coords.z, 3.000, 0, 70)
+		local callback_vehicle = veh
+		ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
+		--SetEntityHeading(callback_vehicle, he)
+		SetVehRadioStation(callback_vehicle, "OFF")
+		GarazaV = nid
+		TaskWarpPedIntoVehicle(GetPlayerPed(-1), callback_vehicle, -1)
+		local plate = GetVehicleNumberPlateText(callback_vehicle)
+		local pla = vehicle.plate:gsub("^%s*(.-)%s*$", "%1")
+		TriggerServerEvent("garaza:SpremiModel", pla, vehicle.model)
+		TriggerServerEvent("ls:mainCheck", plate, callback_vehicle, true)
+		ESX.ShowNotification("Uzeli ste vozilo iz garaze")
+		TriggerServerEvent('eden_garage:modifystate', vehicle, 0)
+		Vblip = AddBlipForEntity(callback_vehicle)
+		SetBlipSprite (Vblip, 225)
+		SetBlipDisplay(Vblip, 4)
+		SetBlipScale  (Vblip, 1.0)
+		SetBlipColour (Vblip, 30)
+		SetBlipAsShortRange(Vblip, true)
+		BeginTextCommandSetBlipName("STRING")
+		AddTextComponentString("Vase vozilo")
+		EndTextCommandSetBlipName(Vblip)
+		TriggerEvent("esx_property:ProsljediVozilo", GarazaV, Vblip)
+	end
+end)
+
+function reparation(prix,vehicle,vehicleProps)
+	
+	ESX.UI.Menu.CloseAll()
+
+	local elements = {
+		{label = _U('reparation_yes', prix), value = 'yes'},
+		{label = _U('reparation_no', prix), value = 'no'},
+	}
+	ESX.UI.Menu.Open(
+		'default', GetCurrentResourceName(), 'delete_menu',
+		{
+			title    = _U('reparation'),
+			align    = 'top-left',
+			elements = elements,
+		},
+		function(data, menu)
+
+			menu.close()
+			if(data.current.value == 'yes') then
+				TriggerServerEvent('garaza:tuljanizirajhealth', prix)
+				ranger(vehicle,vehicleProps)
+			end
+			if(data.current.value == 'no') then
+				ESX.ShowNotification(_U('reparation_no_notif'))
+			end
+
+		end,
+		function(data, menu)
+			menu.close()
+			
+		end
+	)	
+end
+
+function ranger(vehicle,vehicleProps)
+	TriggerServerEvent('eden_garage:deletevehicle_sv', vehicleProps.plate)
+
+	TriggerServerEvent('eden_garage:modifystate', vehicleProps, 1)
+	exports.pNotify:SendNotification({ text = _U('ranger'), queue = "right", timeout = 3000, layout = "centerLeft" })
+end
+
+-- Function that allows player to enter a vehicle
+function StockVehicleMenu()
+	local playerPed  = GetPlayerPed(-1)
+	if IsPedInAnyVehicle(playerPed,  false) then
+    	local coords    = GetEntityCoords(playerPed)
+    	local vehicle = GetVehiclePedIsIn(playerPed,false)     
+		local vehicleProps  = ESX.Game.GetVehicleProperties(vehicle)
+		local current 	    = GetPlayersLastVehicle(GetPlayerPed(-1), true)
+		local engineHealth  = GetVehicleEngineHealth(current)
+
+		ESX.TriggerServerCallback('eden_garage:stockv',function(valid)
+			if (valid) then
+				ESX.TriggerServerCallback('eden_garage:getVehicles', function(vehicules)
+					local plate = vehicleProps.plate:gsub("^%s*(.-)%s*$", "%1")
+					local owned = false
+					for _,v in pairs(vehicules) do
+						if plate == v.plate then
+							TriggerServerEvent("garaza:SpremiModel", plate, nil)
+							TriggerEvent("esx_property:ProsljediVozilo", nil, nil)
+							owned = true
+							TriggerServerEvent('eden_garage:debug', "vehicle plate returned to the garage: "  .. vehicleProps.plate)
+							TriggerServerEvent('eden_garage:logging',"vehicle returned to the garage: " .. engineHealth)
+							GarazaV = nil
+							Vblip = nil
+							if engineHealth < 1000 then
+								local fraisRep= math.floor((1000 - engineHealth)*Config.RepairMultiplier)
+								reparation(fraisRep,vehicle,vehicleProps)
+							else
+								ranger(vehicle,vehicleProps)
+							end
+							break
+						end
+					end
+					if owned == false then
+						ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
+						BVozilo = nil
+					end
+				end)
+			else
+				ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
+				BVozilo = nil
+			end
+		end,vehicleProps)
+	else		
+		exports.pNotify:SendNotification({ text = _U('stockv_not_in_veh'), queue = "right", timeout = 3000, layout = "centerLeft" })
+	end
+
+end
+
+function OpenIzborMenu()
+    local elements = {}
+	table.insert(elements, {label = "Vozila mafije", value = 'voz_maf'})
+	table.insert(elements, {label = 'Osobna vozila',  value = 'voz_oso'})
+
+
+    ESX.UI.Menu.Open(
+      'default', GetCurrentResourceName(), 'armory',
+      {
+        title    = _U('armory'),
+        align    = 'top-left',
+        elements = elements,
+      },
+      function(data, menu)
+		if data.current.value == 'voz_maf' then
+          OpenVehicleSpawnerMenu()
+        end
+
+        if data.current.value == 'voz_oso' then
+          OpenGarageMenu()
+        end
+      end,
+      function(data, menu)
+
+        menu.close()
+
+        CurrentAction     = 'menu_armory'
+        CurrentActionMsg  = _U('open_armory')
+        CurrentActionData = {}
+      end
+    )
 end
 
 function OpenVehicleSpawnerMenu()
@@ -2510,12 +2818,11 @@ Citizen.CreateThread(function()
         end
 
         if CurrentAction == 'menu_vehicle_spawner' then
-          OpenVehicleSpawnerMenu()
+          OpenIzborMenu()
         end
 
         if CurrentAction == 'delete_vehicle' then
-          ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
-		  BVozilo = nil
+			StockVehicleMenu()
         end
 
         if CurrentAction == 'menu_boss_actions' then

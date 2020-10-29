@@ -130,22 +130,26 @@ Config.AuthorizedVehicles = {
 
 	ambulance = {
 		{ model = 'ambulance', label = 'Ambulance Van', price = 5000},
-		{ model = 'tahoe', label = 'Tahoe', price = 5000}
+		{ model = 'tahoe', label = 'Tahoe', price = 5000},
+		{ model = 'emsnspeedo', label = 'Novi Kombi', price = 5000}
 	},
 
 	doctor = {
 		{ model = 'ambulance', label = 'Ambulance Van', price = 4500},
-		{ model = 'tahoe', label = 'Tahoe', price = 5000}
+		{ model = 'tahoe', label = 'Tahoe', price = 5000},
+		{ model = 'emsnspeedo', label = 'Novi Kombi', price = 5000}
 	},
 
 	chief_doctor = {
 		{ model = 'ambulance', label = 'Ambulance Van', price = 3000},
-		{ model = 'tahoe', label = 'Tahoe', price = 5000}
+		{ model = 'tahoe', label = 'Tahoe', price = 5000},
+		{ model = 'emsnspeedo', label = 'Novi Kombi', price = 5000}
 	},
 
 	boss = {
 		{ model = 'ambulance', label = 'Ambulance Van', price = 2000},
-		{ model = 'tahoe', label = 'Tahoe', price = 5000}
+		{ model = 'tahoe', label = 'Tahoe', price = 5000},
+		{ model = 'emsnspeedo', label = 'Novi Kombi', price = 5000}
 	}
 
 }
@@ -155,12 +159,12 @@ Config.AuthorizedHelicopters = {
 	ambulance = {},
 
 	doctor = {
-		{ model = 'buzzard2', label = 'Nagasaki Buzzard', price = 0 }
+		{ model = 'bmx', label = 'Najjaci Helikopter', price = 0 }
 	},
 
 	chief_doctor = {
 		{ model = 'buzzard2', label = 'Nagasaki Buzzard', price = 0 },
-		{ model = 'seasparrow', label = 'Sea Sparrow', price = 0 }
+		{ model = 'bmx', label = 'Najjaci Helikopter', price = 0 }
 	},
 
 	boss = {
@@ -174,7 +178,7 @@ Config.AuthorizedHelicopters = {
 
 Config.Uniforms = {
 	ambulance_wear = { 
-		EUP = true,
+		EUP = false,
 		male = {
 			['tshirt_1'] = 15,  ['tshirt_2'] = 0,
 			['torso_1'] = 13,   ['torso_2'] = 3,
