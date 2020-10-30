@@ -8,6 +8,7 @@ local TrajeZombi = false
 local Igraci = {}
 local ZombiBr = 0
 local CovjekBr = 0
+local Minuta = 0
 
 RegisterNetEvent("zombi:SyncajVrijeme")
 AddEventHandler('zombi:SyncajVrijeme', function(sec)
@@ -44,6 +45,8 @@ TriggerEvent('es:addGroupCommand', 'zaustavizombi', "admin", function(source, ar
 		PokrenutZombi = false
 		TrajeZombi = false
 		ZadnjaPozicija = 1
+		ZombiBr = 0
+		CovjekBr = 0
 		TriggerClientEvent('esx:showNotification', source, "Zombi event je zaustavljen!")
 		TriggerEvent("zombi:ZavrsiZombi")
 	else
@@ -114,11 +117,12 @@ AddEventHandler('esx:playerDropped', function(playerID, reason)
 				TrajeZombi = false
 				TriggerClientEvent("zombi:Kraj", -1)
 				ZadnjaPozicija = 1
-			end
-			if ZadnjaPozicija == 2 then
+				ZombiBr = 0
+				CovjekBr = 0
+			elseif ZombiBr == 0 then
 				PokrenutZombi = false
 				TrajeZombi = false
-				TriggerClientEvent("zombi:Zavrsi", -1)
+				TriggerClientEvent("zombi:Prekini", -1)
 				ZadnjaPozicija = 1
 			elseif ZadnjaPozicija == 1 then
 				PokrenutZombi = false
@@ -131,11 +135,12 @@ end)
 
 RegisterNetEvent("zombi:SyncajKraj")
 AddEventHandler('zombi:SyncajKraj', function(mina)
+	Minuta = mina
 	Citizen.CreateThread(function()
-		while mina ~= 0 do
+		while Minuta ~= 0 do
 			Citizen.Wait(60000)
-			mina = mina-1
-			TriggerClientEvent('zombi:VrimeKraj', -1, mina)
+			Minuta = Minuta-1
+			TriggerClientEvent('zombi:VrimeKraj', -1, Minuta)
 		end
 	end)
 end)
@@ -169,21 +174,13 @@ AddEventHandler('zombi:SmanjiPoziciju', function(br)
 		TriggerClientEvent("zombi:Kraj", -1)
 		ZadnjaPozicija = 1
 	end
-	if ZadnjaPozicija == 2 then
-		PokrenutZombi = false
-		TrajeZombi = false
-		TriggerClientEvent("zombi:Zavrsi", -1)
-		ZadnjaPozicija = 1
-	end
-	if ZadnjaPozicija == 1 then
-		PokrenutZombi = false
-		TrajeZombi = false
-	end
 end)
 
 RegisterNetEvent("zombi:ZavrsiZombi")
 AddEventHandler('zombi:ZavrsiZombi', function()
 	ZadnjaPozicija = 1
+	ZombiBr = 0
+	CovjekBr = 0
 	TriggerClientEvent("zombi:Prekini", -1)
 end)
 

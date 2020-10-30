@@ -81,6 +81,7 @@ AddEventHandler('zombi:Kraj', function()
 		SendNUIMessage({
 			zatvoriscore = true
 		})
+		Wait(5000)
 		ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 			local isMale = skin.sex == 0
 			TriggerEvent('skinchanger:loadDefaultModel', isMale, function()
@@ -170,7 +171,7 @@ AddEventHandler('baseevents:onPlayerKilled', function(kid, ostalo)
 	if UZombi then
 		if TipIgraca == 1 then
 			if ostalo.weaponhash == GetHashKey("WEAPON_UNARMED") then
-				TriggerServerEvent("zombi:SmanjiPoziciju", TipIgraca)
+				TriggerServerEvent("zombi:SmanjiPoziciju", 1)
 				TipIgraca = 2
 				DoScreenFadeOut(1)
 				FreezeEntityPosition(PlayerPedId(), true)
@@ -380,6 +381,7 @@ AddEventHandler('zombi:Prekini', function()
 		SendNUIMessage({
 			zatvoriscore = true
 		})
+		Wait(5000)
 		ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 			local isMale = skin.sex == 0
 			TriggerEvent('skinchanger:loadDefaultModel', isMale, function()
