@@ -1,0 +1,54 @@
+<html>
+<head>
+<style>
+#pozadina
+{
+	position: absolute;
+    width: 230px;
+    height: 65px;
+    background: #949494;
+    bottom: 0px;
+    right: 25%;
+    border-style: solid;
+    border-bottom: 0;
+    left: 50%;
+    margin-left: -115px;
+	display:none;
+}
+</style>
+</head>
+<body>
+<div id="pozadina">
+<center>
+<img src="score.png" style="position: absolute;top: -60px;z-index: -1;overflow: hidden;height: 59px;width: 236px;left: -3px;">
+<font id="vrijeme" size="6" style="position: relative;top: -6px;" align="center"><img src="time.png" style="width: 25px;height: 20px;"><font id="minute" style="margin-left: 3px;">10 minuta</font></font><br>
+<font id="score" size="5" style="position: relative;top: -4px;" align="center"><img src="zombie.png" style="width: 20px;height: 18px;"><font id="kill" style="margin-left: 3px;margin-right: 55px;">0</font><img src="human.png" style="width: 20px;height: 18px;"><font id="death" style="margin-left: 3px;margin-right: 5px;">0</font></font>
+</center>
+</div>
+<script src="nui://game/ui/jquery.js" type="text/javascript"></script>
+<script>
+window.addEventListener('message', function(event) {
+            var item = event.data;
+			var x = document.getElementById("pozadina");
+			if (item.zombie) {
+				var y = document.getElementById("kill");
+				y.innerHTML = item.brzom;
+			}
+			if (item.human) {
+				var y = document.getElementById("death");
+				y.innerHTML = item.brhum;
+			}
+			if (item.vrijeme) {
+				var y = document.getElementById("minute");
+				y.innerHTML = item.minuta;
+			}
+            if (item.prikaziscore) {
+				x.style.display = "block";
+            }
+			else if (item.zatvoriscore) {
+				x.style.display = "none";
+            }
+        });
+</script>
+</body>
+</html>

@@ -36,7 +36,7 @@ end)
 RegisterNetEvent('markeri:OdradioSpawn')
 AddEventHandler('markeri:OdradioSpawn', function()
 	Wait(3000)
-	TriggerServerEvent('esx_communityservice:checkIfSentenced')
+	TriggerServerEvent('esx_markeras:checkIfSentenced')
 end)
 
 function FillActionTable(last_action)
@@ -70,8 +70,8 @@ function FillActionTable(last_action)
 end
 
 
-RegisterNetEvent('esx_communityservice:inCommunityService')
-AddEventHandler('esx_communityservice:inCommunityService', function(actions_remaining)
+RegisterNetEvent('esx_markeras:inCommunityService')
+AddEventHandler('esx_markeras:inCommunityService', function(actions_remaining)
 	if isSentenced then
 		return
 	end
@@ -99,7 +99,7 @@ AddEventHandler('esx_communityservice:inCommunityService', function(actions_rema
 			if GetDistanceBetweenCoords(kord, Config.ServiceLocation.x, Config.ServiceLocation.y, Config.ServiceLocation.z, true) > 45 then
 				ESX.Game.Teleport(playerPed, Config.ServiceLocation)
 				TriggerEvent('chat:addMessage', { args = { _U('judge'), _U('escape_attempt') }, color = { 147, 196, 109 } })
-				TriggerServerEvent('esx_communityservice:extendService')
+				TriggerServerEvent('esx_markeras:extendService')
 				actionsRemaining = actionsRemaining + Config.ServiceExtensionOnEscape
 			end
 		end
@@ -108,8 +108,8 @@ end)
 
 
 
-RegisterNetEvent('esx_communityservice:finishCommunityService')
-AddEventHandler('esx_communityservice:finishCommunityService', function(source)
+RegisterNetEvent('esx_markeras:finishCommunityService')
+AddEventHandler('esx_markeras:finishCommunityService', function(source)
 	communityServiceFinished = true
 	isSentenced = false
 	actionsRemaining = 0
@@ -143,7 +143,7 @@ Citizen.CreateThread(function()
 							FillActionTable(tmp_action)
 							disable_actions = true
 
-							TriggerServerEvent('esx_communityservice:completeService')
+							TriggerServerEvent('esx_markeras:completeService')
 							actionsRemaining = actionsRemaining - 1
 
 							if (tmp_action.type == "cleaning") then
@@ -169,7 +169,7 @@ Citizen.CreateThread(function()
 										vassour_net = nil
 										ClearPedTasks(PlayerPedId())
 										if actionsRemaining == 0 then
-											TriggerServerEvent("esx_communityservice:finishCommunityService")
+											TriggerServerEvent("esx_markeras:finishCommunityService")
 										end
 									end)
 
@@ -196,7 +196,7 @@ Citizen.CreateThread(function()
 									spatula_net = nil
 									ClearPedTasks(PlayerPedId())
 									if actionsRemaining == 0 then
-										TriggerServerEvent("esx_communityservice:finishCommunityService")
+										TriggerServerEvent("esx_markeras:finishCommunityService")
 									end
 								end)
 							end

@@ -83,20 +83,24 @@ function resetNormalCamera()
 end
 
 function getPlayersList()
+	ESX.TriggerServerCallback('esx_spectate:DohvatiIgrace', function(igraci)
+		local data = {}
 
-	local players = ESX.Game.GetPlayers()
-	local data = {}
+		for i=1, #igraci, 1 do
 
-	for i=1, #players, 1 do
+			local _data = {
+				id = igraci[i],
+				name = GetPlayerName(GetPlayerFromServerId(tonumber(igraci[i])))
+			}
+			table.insert(data, _data)
+		end
 
-		local _data = {
-			id = GetPlayerServerId(players[i]),
-			name = GetPlayerName(players[i])
-		}
-		table.insert(data, _data)
-	end
-
-	return data
+		SendNUIMessage({
+			type = 'show',
+			data = data,
+			player = GetPlayerServerId(PlayerId())
+		})
+	end)
 end
 
 function OpenAdminActionMenu(player)
@@ -252,13 +256,7 @@ RegisterNetEvent('esx_spectate:spectate')
 AddEventHandler('esx_spectate:spectate', function()
 
 	SetNuiFocus(true, true)
-
-	SendNUIMessage({
-		type = 'show',
-		data = getPlayersList(),
-		player = GetPlayerServerId(PlayerId())
-	})
-
+	getPlayersList()
 end)
 
 RegisterNUICallback('select', function(data, cb)

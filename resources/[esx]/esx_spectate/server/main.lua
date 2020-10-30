@@ -27,6 +27,10 @@ AddEventHandler('esx_spectate:kick', function(target, msg)
 	end
 end)
 
+ESX.RegisterServerCallback('esx_spectate:DohvatiIgrace', function(source, cb)
+	cb(GetPlayers())
+end)
+
 ESX.RegisterServerCallback('esx_spectate:getOtherPlayerData', function(source, cb, target)
         
         local xPlayer = ESX.GetPlayerFromId(target)

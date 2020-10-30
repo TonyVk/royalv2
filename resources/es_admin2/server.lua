@@ -50,6 +50,10 @@ function removeBan(id)
 	SaveResourceFile(GetCurrentResourceName(), "bans.json", json.encode(bannedTable), -1)
 end
 
+ESX.RegisterServerCallback('es_admin:DohvatiIgrace', function(source, cb)
+	cb(GetPlayers())
+end)
+
 function isBanned(id)
 	if bannedTable[id] ~= nil then
 		if bannedTable[id].expire < os.time() then

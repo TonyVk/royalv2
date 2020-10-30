@@ -178,7 +178,7 @@ Config.AuthorizedHelicopters = {
 
 Config.Uniforms = {
 	ambulance_wear = { 
-		EUP = false,
+		EUP = true,
 		male = {
 			['tshirt_1'] = 15,  ['tshirt_2'] = 0,
 			['torso_1'] = 13,   ['torso_2'] = 3,

@@ -458,7 +458,7 @@ AddEventHandler('garaza:VratiVozilo', function(nid, vehicle, tip)
 			attempt = attempt+1
 		end
 		if attempt < 100 then
-			vrativozilo(vehicle.model)
+			WaitForVehicleToLoad(vehicle.model)
 			local callback_vehicle = NetworkGetEntityFromNetworkId(nid)
 			while not DoesEntityExist(callback_vehicle) do
 				Wait(1)

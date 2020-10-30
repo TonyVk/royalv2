@@ -20,7 +20,7 @@ Citizen.CreateThread(function()
 			ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 				if br == 1 then
 					SetNuiFocus(true, true)
-					SendNUIMessage({type = 'open', players = getPlayers()})
+					getPlayers(true)
 				end
 			end)
 		end
@@ -343,10 +343,16 @@ AddEventHandler("es_admin:noclip", function(t)
 	TriggerEvent("chatMessage", "SYSTEM", {255, 0, 0}, "Noclip je ^2^*" .. msg)
 end)
 
-function getPlayers()
-    local players = {}
-    for _, player in ipairs(GetActivePlayers()) do
-        table.insert(players, {id = GetPlayerServerId(player), name = GetPlayerName(player)})
-    end
-    return players
+function getPlayers(br)
+	ESX.TriggerServerCallback('es_admin:DohvatiIgrace', function(igraci)
+		local players = {}
+		for _, player in ipairs(igraci) do
+			table.insert(players, {id = player, name = GetPlayerName(GetPlayerFromServerId(tonumber(player)))})
+		end
+		if br then
+			SendNUIMessage({type = 'open', players = players})
+		else
+			return players
+		end
+	end)
 end

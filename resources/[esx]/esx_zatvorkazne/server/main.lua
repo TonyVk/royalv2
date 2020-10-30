@@ -9,7 +9,7 @@ TriggerEvent('es:addGroupCommand', 'kazna', 'admin', function(source, args, user
 	if args[1] and GetPlayerName(args[1]) ~= nil and tonumber(args[2]) and args[3] ~= nil then
 		local _source = source
 		local razlog = table.concat(args, " ", 3)
-		TriggerEvent('esx_communityservice:sendToCommunityService', tonumber(args[1]), tonumber(args[2]), razlog)
+		TriggerEvent('esx_markeras:sendToCommunityService', tonumber(args[1]), tonumber(args[2]), razlog)
 		TriggerEvent("DiscordBot:Markeri", GetPlayerName(args[1]).."["..args[1].."] je stavljen na "..args[2].." markera od admina "..GetPlayerName(_source)..". Razlog: "..razlog)
 	else
 		TriggerClientEvent('chat:addMessage', source, { args = { _U('system_msn'), _U('invalid_player_id_or_actions') } } )
@@ -23,13 +23,13 @@ TriggerEvent('es:addGroupCommand', 'maknikaznu', 'admin', function(source, args,
 	if args[1] then
 		if GetPlayerName(args[1]) ~= nil then
 			local _source = source
-			TriggerEvent('esx_communityservice:endCommunityServiceCommand', tonumber(args[1]))
+			TriggerEvent('esx_markeras:endCommunityServiceCommand', tonumber(args[1]))
 			TriggerEvent("DiscordBot:Markeri", GetPlayerName(args[1]).."["..args[1].."] su maknuti markeri od admina "..GetPlayerName(_source))
 		else
 			TriggerClientEvent('chat:addMessage', source, { args = { _U('system_msn'), _U('invalid_player_id')  } } )
 		end
 	else
-		TriggerEvent('esx_communityservice:endCommunityServiceCommand', source)
+		TriggerEvent('esx_markeras:endCommunityServiceCommand', source)
 	end
 end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, { args = { _U('system_msn'), _U('insufficient_permissions') } })
@@ -67,16 +67,16 @@ AddEventHandler('playerDropped', function()
 	end
 end)
 
-RegisterServerEvent('esx_communityservice:endCommunityServiceCommand')
-AddEventHandler('esx_communityservice:endCommunityServiceCommand', function(source)
+RegisterServerEvent('esx_markeras:endCommunityServiceCommand')
+AddEventHandler('esx_markeras:endCommunityServiceCommand', function(source)
 	if source ~= nil then
 		releaseFromCommunityService(source)
 	end
 end)
 
 -- unjail after time served
-RegisterServerEvent('esx_communityservice:finishCommunityService')
-AddEventHandler('esx_communityservice:finishCommunityService', function()
+RegisterServerEvent('esx_markeras:finishCommunityService')
+AddEventHandler('esx_markeras:finishCommunityService', function()
 	releaseFromCommunityService(source)
 end)
 
@@ -84,8 +84,8 @@ end)
 
 
 
-RegisterServerEvent('esx_communityservice:completeService')
-AddEventHandler('esx_communityservice:completeService', function()
+RegisterServerEvent('esx_markeras:completeService')
+AddEventHandler('esx_markeras:completeService', function()
 
 	local _source = source
 	local identifier = GetPlayerIdentifiers(_source)[1]
@@ -99,7 +99,7 @@ AddEventHandler('esx_communityservice:completeService', function()
 				['@identifier'] = identifier
 			})
 		else
-			print ("ESX_CommunityService :: Problem matching player identifier in database to reduce actions.")
+			print ("esx_markeras :: Problem matching player identifier in database to reduce actions.")
 		end
 	end)
 end)
@@ -107,8 +107,8 @@ end)
 
 
 
-RegisterServerEvent('esx_communityservice:extendService')
-AddEventHandler('esx_communityservice:extendService', function()
+RegisterServerEvent('esx_markeras:extendService')
+AddEventHandler('esx_markeras:extendService', function()
 
 	local _source = source
 	local identifier = GetPlayerIdentifiers(_source)[1]
@@ -123,7 +123,7 @@ AddEventHandler('esx_communityservice:extendService', function()
 				['@extension_value'] = Config.ServiceExtensionOnEscape
 			})
 		else
-			print ("ESX_CommunityService :: Problem matching player identifier in database to reduce actions.")
+			print ("esx_markeras :: Problem matching player identifier in database to reduce actions.")
 		end
 	end)
 end)
@@ -133,8 +133,8 @@ end)
 
 
 
-RegisterServerEvent('esx_communityservice:sendToCommunityService')
-AddEventHandler('esx_communityservice:sendToCommunityService', function(target, actions_count, razlog)
+RegisterServerEvent('esx_markeras:sendToCommunityService')
+AddEventHandler('esx_markeras:sendToCommunityService', function(target, actions_count, razlog)
 
 	local identifier = GetPlayerIdentifiers(target)[1]
 
@@ -157,7 +157,7 @@ AddEventHandler('esx_communityservice:sendToCommunityService', function(target, 
 	TriggerClientEvent('chat:addMessage', -1, { args = { _U('judge'), _U('comserv_msg', GetPlayerName(target), actions_count) }, color = { 147, 196, 109 } })
 	TriggerClientEvent('chat:addMessage', target, { args = { _U('judge'), "Razlog osudjivanja: "..razlog }, color = { 147, 196, 109 } })
 	TriggerClientEvent('esx_policejob:unrestrain', target)
-	TriggerClientEvent('esx_communityservice:inCommunityService', target, actions_count)
+	TriggerClientEvent('esx_markeras:inCommunityService', target, actions_count)
 end)
 
 
@@ -177,8 +177,8 @@ end)
 
 
 
-RegisterServerEvent('esx_communityservice:checkIfSentenced')
-AddEventHandler('esx_communityservice:checkIfSentenced', function()
+RegisterServerEvent('esx_markeras:checkIfSentenced')
+AddEventHandler('esx_markeras:checkIfSentenced', function()
 	local _source = source -- cannot parse source to client trigger for some weird reason
 	local identifier = GetPlayerIdentifiers(_source)[1] -- get steam identifier
 
@@ -187,7 +187,7 @@ AddEventHandler('esx_communityservice:checkIfSentenced', function()
 	}, function(result)
 		if result[1] ~= nil and result[1].actions_remaining > 0 then
 			--TriggerClientEvent('chat:addMessage', -1, { args = { _U('judge'), _U('jailed_msg', GetPlayerName(_source), ESX.Math.Round(result[1].jail_time / 60)) }, color = { 147, 196, 109 } })
-			TriggerClientEvent('esx_communityservice:inCommunityService', _source, tonumber(result[1].actions_remaining))
+			TriggerClientEvent('esx_markeras:inCommunityService', _source, tonumber(result[1].actions_remaining))
 		end
 	end)
 end)
@@ -213,5 +213,5 @@ function releaseFromCommunityService(target)
 		end
 	end)
 
-	TriggerClientEvent('esx_communityservice:finishCommunityService', target)
+	TriggerClientEvent('esx_markeras:finishCommunityService', target)
 end
