@@ -26,11 +26,11 @@ TriggerEvent('es:addGroupCommand', 'pokrenizombi', "admin", function(source, arg
 		Igraci = {}
 		PokrenutZombi = true
 		ZadnjaPozicija = 1
-		TriggerEvent("zombi:Poruka1")
+		--TriggerEvent("zombi:Poruka1")
 		TriggerEvent("zombi:SyncajVrijeme", 60)
 		SetTimeout(30000, function()
 			if PokrenutZombi then
-				TriggerEvent("zombi:Poruka2")
+				--TriggerEvent("zombi:Poruka2")
 			end
 		end)
 	else
@@ -157,9 +157,9 @@ AddEventHandler('zombi:SmanjiPoziciju', function(br)
 	local src = source
 	ZadnjaPozicija = ZadnjaPozicija-1
 	if br == 1 then
-		CovjekBr = CovjekBr+1
+		CovjekBr = CovjekBr-1
 	else
-		ZombiBr = ZombiBr+1
+		ZombiBr = ZombiBr-1
 	end
 	for i = 1, #Igraci, 1 do
         if src == Igraci[i].id then

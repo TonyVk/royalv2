@@ -172,7 +172,7 @@ AddEventHandler('baseevents:onPlayerKilled', function(kid, ostalo)
 		if TipIgraca == 1 then
 			if ostalo.weaponhash == GetHashKey("WEAPON_UNARMED") then
 				TriggerServerEvent("zombi:SmanjiPoziciju", 1)
-				TipIgraca = 2
+				TipIgraca = 3
 				DoScreenFadeOut(1)
 				FreezeEntityPosition(PlayerPedId(), true)
 				SetEntityInvincible(PlayerPedId(), true)
@@ -204,7 +204,7 @@ AddEventHandler('baseevents:onPlayerKilled', function(kid, ostalo)
 					end
 				end)
 			end
-		elseif TipIgraca == 2 then
+		else
 			DoScreenFadeOut(1)
 			FreezeEntityPosition(PlayerPedId(), true)
 			SetEntityInvincible(PlayerPedId(), true)
@@ -240,7 +240,7 @@ AddEventHandler('baseevents:onPlayerDied', function(kid, ostalo)
 			FreezeEntityPosition(PlayerPedId(), false)
 			SetEntityInvincible(PlayerPedId(), false)
 			DoScreenFadeIn(1)
-		elseif TipIgraca == 2 then
+		else
 			DoScreenFadeOut(1)
 			FreezeEntityPosition(PlayerPedId(), true)
 			SetEntityInvincible(PlayerPedId(), true)
@@ -416,7 +416,11 @@ end)
 
 RegisterCommand("napustizombi", function(source, args, rawCommandString)
 	if UZombi then
-		TriggerServerEvent("zombi:SmanjiPoziciju", TipIgraca)
+		if TipIgraca == 3 then
+			TriggerServerEvent("zombi:SmanjiPoziciju", 2)
+		else
+			TriggerServerEvent("zombi:SmanjiPoziciju", TipIgraca)
+		end
 		UZombi = false
 		TipIgraca = 0
 		SetEntityCoords(PlayerPedId(), StareKoord, false, false, false, false)
