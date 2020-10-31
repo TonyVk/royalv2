@@ -194,7 +194,20 @@ end)
 
 
 
+ESX.RegisterServerCallback('esx_markeras:ProvjeriMarkere', function(source, cb)
+	local _source = source -- cannot parse source to client trigger for some weird reason
+	local identifier = GetPlayerIdentifiers(_source)[1] -- get steam identifier
 
+	MySQL.Async.fetchAll('SELECT * FROM communityservice WHERE identifier = @identifier', {
+		['@identifier'] = identifier
+	}, function(result)
+		if result[1] ~= nil and result[1].actions_remaining > 0 then
+			cb(true)
+		else
+			cb(false)
+		end
+	end)
+end)
 
 
 

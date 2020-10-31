@@ -9,6 +9,7 @@ local Igraci = {}
 local ZombiBr = 0
 local CovjekBr = 0
 local Minuta = 0
+local PokrenuoTimer = false
 
 RegisterNetEvent("zombi:SyncajVrijeme")
 AddEventHandler('zombi:SyncajVrijeme', function(sec)
@@ -26,11 +27,14 @@ TriggerEvent('es:addGroupCommand', 'pokrenizombi', "admin", function(source, arg
 		Igraci = {}
 		PokrenutZombi = true
 		ZadnjaPozicija = 1
-		--TriggerEvent("zombi:Poruka1")
+		ZombiBr = 0
+		CovjekBr = 0
+		PokrenuoTimer = false
+		TriggerEvent("zombi:Poruka1")
 		TriggerEvent("zombi:SyncajVrijeme", 60)
 		SetTimeout(30000, function()
 			if PokrenutZombi then
-				--TriggerEvent("zombi:Poruka2")
+				TriggerEvent("zombi:Poruka2")
 			end
 		end)
 	else
@@ -67,13 +71,15 @@ end, false)
 RegisterNetEvent("zombi:Poruka1")
 AddEventHandler('zombi:Poruka1', function()
 	ZadnjaPozicija = 1
+	ZombiBr = 0
+	CovjekBr = 0
 	TriggerClientEvent('esx:showAdvancedNotification', -1, 'Event System', 'Zombi', 'Zapocelo je popunjavanje zombi eventa, da se pridruzite upisite /zjoin!', 'CHAR_PLANESITE', 1)
 	TriggerClientEvent('esx:showAdvancedNotification', -1, 'Event System', 'Zombi', 'Zombi event ce poceti za 60 sekundi!', 'CHAR_PLANESITE', 1)
 end)
 
 RegisterNetEvent("zombi:Poruka2")
 AddEventHandler('zombi:Poruka2', function()
-	if ZadnjaPozicija < 21 then
+	if ZadnjaPozicija < 61 then
 		TriggerClientEvent('esx:showAdvancedNotification', -1, 'Event System', 'Zombi', 'U zombi eventu jos ima mjesta, ukoliko zelite sudjelovati upisite /zjoin!', 'CHAR_PLANESITE', 1)
 		TriggerClientEvent('esx:showAdvancedNotification', -1, 'Event System', 'Zombi', 'Zombi event ce poceti za 30 sekundi!', 'CHAR_PLANESITE', 1)
 	end
@@ -83,6 +89,7 @@ AddEventHandler('zombi:Poruka2', function()
 			if #Igraci == 0 then
 				TrajeZombi = false
 				PokrenutZombi = false
+				PokrenuoTimer = false
 				ZadnjaPozicija = 1
 			end
 		end
@@ -135,14 +142,17 @@ end)
 
 RegisterNetEvent("zombi:SyncajKraj")
 AddEventHandler('zombi:SyncajKraj', function(mina)
-	Minuta = mina
-	Citizen.CreateThread(function()
-		while Minuta ~= 0 do
-			Citizen.Wait(60000)
-			Minuta = Minuta-1
-			TriggerClientEvent('zombi:VrimeKraj', -1, Minuta)
-		end
-	end)
+	if PokrenuoTimer == false then
+		PokrenuoTimer = true
+		Minuta = tonumber(mina)
+		Citizen.CreateThread(function()
+			while Minuta ~= 0 do
+				Citizen.Wait(60000)
+				Minuta = Minuta-1
+				TriggerClientEvent('zombi:VrimeKraj', -1, Minuta)
+			end
+		end)
+	end
 end)
 
 RegisterNetEvent("zombi:DajOruzja")
@@ -171,6 +181,9 @@ AddEventHandler('zombi:SmanjiPoziciju', function(br)
 	if CovjekBr == 0 then
 		PokrenutZombi = false
 		TrajeZombi = false
+		CovjekBr = 0
+		Minuta = 0
+		ZombiBr = 0
 		TriggerClientEvent("zombi:Kraj", -1)
 		ZadnjaPozicija = 1
 	end
@@ -181,6 +194,7 @@ AddEventHandler('zombi:ZavrsiZombi', function()
 	ZadnjaPozicija = 1
 	ZombiBr = 0
 	CovjekBr = 0
+	Minuta = 0
 	TriggerClientEvent("zombi:Prekini", -1)
 end)
 
@@ -193,6 +207,6 @@ RegisterNetEvent("zombi:Tuljan")
 AddEventHandler('zombi:Tuljan', function()
 	local src = source
 	local xPlayer = ESX.GetPlayerFromId(src)
-	xPlayer.addMoney(15000)
-	TriggerClientEvent('esx:showNotification', xPlayer.source, "Cestitamo!! Prezivjeli ste zombi event i dobili $15000!")
+	xPlayer.addMoney(10000)
+	TriggerClientEvent('esx:showNotification', xPlayer.source, "Cestitamo!! Pobjedili ste zombi event i dobili $10000!")
 end)
