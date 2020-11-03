@@ -723,18 +723,19 @@ Citizen.CreateThread(function()
 				isPauseMenu = not isPauseMenu
 				SendNUIMessage({ action = 'toggleUi', value = true })
 			end
-
-			HideHudComponentThisFrame(1)  -- Wanted Stars
-			HideHudComponentThisFrame(2)  -- Weapon Icon
-			HideHudComponentThisFrame(3)  -- Cash
-			HideHudComponentThisFrame(4)  -- MP Cash
-			HideHudComponentThisFrame(6)  -- Vehicle Name
-			HideHudComponentThisFrame(7)  -- Area Name
-			HideHudComponentThisFrame(8)  -- Vehicle Class
-			HideHudComponentThisFrame(9)  -- Street Name
-			HideHudComponentThisFrame(13) -- Cash Change
-			HideHudComponentThisFrame(17) -- Save Game
-			HideHudComponentThisFrame(20) -- Weapon Stats
+			HideHudComponentThisFrame(2)
+			if IsHudComponentActive(1) or IsHudComponentActive(3) or IsHudComponentActive(4) or IsHudComponentActive(6) or IsHudComponentActive(7) or IsHudComponentActive(8) or IsHudComponentActive(9) or IsHudComponentActive(13) or IsHudComponentActive(17) or IsHudComponentActive(20) then
+				HideHudComponentThisFrame(1)  -- Wanted Stars
+				HideHudComponentThisFrame(3)  -- Cash
+				HideHudComponentThisFrame(4)  -- MP Cash
+				HideHudComponentThisFrame(6)  -- Vehicle Name
+				HideHudComponentThisFrame(7)  -- Area Name
+				HideHudComponentThisFrame(8)  -- Vehicle Class
+				HideHudComponentThisFrame(9)  -- Street Name
+				HideHudComponentThisFrame(13) -- Cash Change
+				HideHudComponentThisFrame(17) -- Save Game
+				HideHudComponentThisFrame(20) -- Weapon State
+			end
 		end
 
 		local player = GetPlayerPed(-1)

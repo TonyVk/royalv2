@@ -145,8 +145,9 @@ end
 local borsa = nil
 
 Citizen.CreateThread(function()
-      
+    local waitara = 500
 	while true do
+		local naso = false
 		local pos = GetEntityCoords(GetPlayerPed(-1), true)
 
 		for k,v in pairs(Stores)do
@@ -154,6 +155,8 @@ Citizen.CreateThread(function()
 
 			if(Vdist(pos.x, pos.y, pos.z, pos2.x, pos2.y, pos2.z) < 15.0)then
 				if not holdingup then
+					naso = true
+					waitara = 0
 					DrawMarker(27, v.position.x, v.position.y, v.position.z-0.9, 0, 0, 0, 0, 0, 0, 2.001, 2.0001, 0.5001, 255, 0, 0, 200, 0, 0, 0, 0)
 
 					if(Vdist(pos.x, pos.y, pos.z, pos2.x, pos2.y, pos2.z) < 1.0)then
@@ -197,6 +200,8 @@ Citizen.CreateThread(function()
 		end
 
 		if holdingup then
+			naso = true
+			waitara = 0
 			drawTxt(0.3, 1.4, 0.45, _U('smash_case') .. ' :~r~ ' .. vetrineRotte .. '/' .. Config.MaxWindows, 185, 185, 185, 255)
 
 			for i,v in pairs(vetrine) do 
@@ -258,8 +263,10 @@ Citizen.CreateThread(function()
 			end
 
 		end
-
-		Citizen.Wait(0)
+		if not naso then
+			waitara = 500
+		end
+		Citizen.Wait(waitara)
 	end
 end)
 
@@ -293,14 +300,16 @@ blip = false
 
 Citizen.CreateThread(function()
 	TriggerEvent('lester:createBlip', 77, 64.919, 6664.098, 31.413)
+	local waitara = 500
 	while true do
-	
-		Citizen.Wait(1)
-	
+		Citizen.Wait(waitara)
+		local naso = false
 			local playerPed = PlayerPedId()
 			local coords    = GetEntityCoords(playerPed)
 			
 			if GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(-1)), 64.919, 6664.098, 31.413, true) <= 10 and not blip then
+				naso = true
+				waitara = 1
 				DrawMarker(20, 64.919, 6664.098, 31.413, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.5, 102, 100, 102, 100, false, true, 2, false, false, false, false)
 				if GetDistanceBetweenCoords(coords, 64.919, 6664.098, 31.413, true) < 1.0 then
 					DisplayHelpText(_U('press_to_sell'))
@@ -329,6 +338,9 @@ Citizen.CreateThread(function()
 					end
 				end
 			end
+		if not naso then
+			waitara = 500
+		end
 	end
 end)
 

@@ -27,6 +27,11 @@ AddEventHandler('SaljiTamoSkin', function(id, pid)
 	TriggerClientEvent("VratiTamoSkin", id, pid)
 end)
 
+RegisterNetEvent("weaponDamageEvent")
+AddEventHandler('weaponDamageEvent', function(aha)
+	print(aha)
+end)
+
 RegisterNetEvent("ObrisiSociety")
 AddEventHandler('ObrisiSociety', function(soc, broj)
 	local societyAccount = nil

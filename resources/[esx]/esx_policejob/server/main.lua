@@ -65,12 +65,6 @@ AddEventHandler('popo:zapljeni9', function(target, itemType, itemName, amount)
     end
 end)
 
-RegisterNetEvent('policija:SpawnoObjekt')
-AddEventHandler('policija:SpawnoObjekt', function()
-	BrojObjekata = BrojObjekata+1
-	TriggerClientEvent("policija:EoObjekti", -1, BrojObjekata)
-end)
-
 RegisterNetEvent('policija:UpaliSirenu')
 AddEventHandler('policija:UpaliSirenu', function(nid, sir, mut)
 	TriggerClientEvent("policija:VratiSirenu", -1, nid, sir, mut)

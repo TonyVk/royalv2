@@ -547,7 +547,7 @@ end
 if Config.DisableWantedLevel then
 	Citizen.CreateThread(function()
 		while true do
-			Citizen.Wait(1000)
+			Citizen.Wait(5000)
 
 			local playerId = PlayerId()
 			if GetPlayerWantedLevel(playerId) ~= 0 then
@@ -651,7 +651,7 @@ end)
 -- Last position
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(1000)
+		Citizen.Wait(5000)
 
 		if ESX.PlayerLoaded and isPlayerSpawned then
 			local playerPed = PlayerPedId()

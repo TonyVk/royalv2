@@ -14,7 +14,7 @@ AddEventHandler("Heroin:get", function(torba)
 	if torba then
 		if xPlayer.getInventoryItem('gljive').count < 30*2 then
 			local randa = math.random(1,3)
-			if xPlayer.getInventoryItem('gljive').count+randa > 30 then
+			if xPlayer.getInventoryItem('gljive').count+randa > 30*2 then
 				xPlayer.addInventoryItem("gljive", 1)
 			else
 				xPlayer.addInventoryItem("gljive", randa)

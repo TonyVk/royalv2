@@ -12,7 +12,6 @@ local Cufan = false
 local BVozilo = nil
 local PostavioEUP = false
 local PlayerLoaded = false
-local BrojObjekata = 0
 local toggle_rappel = 154 -- INPUT_DUCK (X)
 local polmav_hash = GetHashKey("polmav")
 local UpaljenaSirena = false
@@ -29,9 +28,6 @@ Citizen.CreateThread(function()
 	end
 	PlayerLoaded = true
 	PlayerData = ESX.GetPlayerData()
-	ESX.TriggerServerCallback('policija:DohvatiObjekte', function(br)
-		BrojObjekata = br
-	end)
 end)
 
 function cleanPlayer(playerPed)
@@ -57,16 +53,12 @@ Citizen.CreateThread(function()
 		if IsPedBeingStunned(GetPlayerPed(-1)) then
 			
 			SetPedToRagdoll(GetPlayerPed(-1), 5000, 5000, 0, 0, 0, 0)
-			
-		end
-		
-		if IsPedBeingStunned(GetPlayerPed(-1)) and not isTaz then
-			
-			isTaz = true
-			SetTimecycleModifier("REDMIST_blend")
-			ShakeGameplayCam("FAMILY5_DRUG_TRIP_SHAKE", 1.0)
-			
-		elseif not IsPedBeingStunned(GetPlayerPed(-1)) and isTaz then
+			if not isTaz then
+				isTaz = true
+				SetTimecycleModifier("REDMIST_blend")
+				ShakeGameplayCam("FAMILY5_DRUG_TRIP_SHAKE", 1.0)
+			end
+		elseif isTaz then
 			isTaz = false
 			Wait(5000)
 			
@@ -147,26 +139,30 @@ Citizen.CreateThread(function()
 	local waitara = 500
 	while true do
         Citizen.Wait(waitara)
-		if IsPlayerInPolmav() then
-			waitara = 0
-			local lPed = GetPlayerPed(-1)
-			local heli = GetVehiclePedIsIn(lPed)
-			
-			if IsHeliHighEnough(heli) then
-				if IsControlJustPressed(0, toggle_rappel) then -- Initiate rappel
-					if GetPedInVehicleSeat(heli, 1) == lPed or GetPedInVehicleSeat(heli, 2) == lPed then
-						PlaySoundFrontend(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", false)
-						TaskRappelFromHeli(GetPlayerPed(-1), 1)
-					else
-						SetNotificationTextEntry( "STRING" )
-						AddTextComponentString("~r~Ne mozete se spustit sa spagom iz ovog sjedala!")
-						DrawNotification(false, false )
-						PlaySoundFrontend(-1, "5_Second_Timer", "DLC_HEISTS_GENERAL_FRONTEND_SOUNDS", false) 
+		if PlayerData.job and (PlayerData.job.name == 'police' or PlayerData.job.name == 'sipa') then
+			if IsPlayerInPolmav() then
+				waitara = 0
+				local lPed = GetPlayerPed(-1)
+				local heli = GetVehiclePedIsIn(lPed)
+				
+				if IsHeliHighEnough(heli) then
+					if IsControlJustPressed(0, toggle_rappel) then -- Initiate rappel
+						if GetPedInVehicleSeat(heli, 1) == lPed or GetPedInVehicleSeat(heli, 2) == lPed then
+							PlaySoundFrontend(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", false)
+							TaskRappelFromHeli(GetPlayerPed(-1), 1)
+						else
+							SetNotificationTextEntry( "STRING" )
+							AddTextComponentString("~r~Ne mozete se spustit sa spagom iz ovog sjedala!")
+							DrawNotification(false, false )
+							PlaySoundFrontend(-1, "5_Second_Timer", "DLC_HEISTS_GENERAL_FRONTEND_SOUNDS", false) 
+						end
 					end
 				end
+			else
+				waitara = 500
 			end
 		else
-			waitara = 500
+			waitara = 5000
 		end
 	end
 end)
@@ -840,7 +836,7 @@ function OpenPoliceActionsMenu()
 		elements = {
 			{label = _U('citizen_interaction'), value = 'citizen_interaction'},
 			{label = _U('vehicle_interaction'), value = 'vehicle_interaction'},
-			{label = _U('object_spawner'), value = 'object_spawner'},
+			--{label = _U('object_spawner'), value = 'object_spawner'},
 			{label = "Jail menu", value = 'jail_menu'},
 			{label = 'Dosije', value = 'criminalrecords'},
 	}}, function(data, menu)
@@ -1006,7 +1002,6 @@ function OpenPoliceActionsMenu()
 					SetNetworkIdExistsOnAllMachines(netid, true)
 					SetNetworkIdCanMigrate(netid, false)
 				end)
-				TriggerServerEvent("policija:SpawnoObjekt")
 				SetModelAsNoLongerNeeded(model)
 			end, function(data2, menu2)
 				menu2.close()
@@ -1590,11 +1585,6 @@ function OpenPutStocksMenu()
 		end)
 	end)
 end
-
-RegisterNetEvent('policija:EoObjekti')
-AddEventHandler('policija:EoObjekti', function(br)
-	BrojObjekata = br
-end)
 
 RegisterNetEvent('esx_policejob:DajNaDuznosti')
 AddEventHandler('esx_policejob:DajNaDuznosti', function()
@@ -2311,57 +2301,15 @@ Citizen.CreateThread(function()
 	end
 end)
 
--- Enter / Exit entity zone events
-Citizen.CreateThread(function()
-	local trackedEntities = {
-		'prop_roadcone02a',
-		'prop_barrier_work05',
-		'p_ld_stinger_s'
-	}
-	while true do
-		Citizen.Wait(500)
-		if BrojObjekata > 0 then
-
-			local playerPed = PlayerPedId()
-			local coords    = GetEntityCoords(playerPed)
-
-			local closestDistance = -1
-			local closestEntity   = nil
-
-			for i=1, #trackedEntities, 1 do
-				local object = GetClosestObjectOfType(coords, 3.0, GetHashKey(trackedEntities[i]), false, false, false)
-
-				if DoesEntityExist(object) then
-					local objCoords = GetEntityCoords(object)
-					local distance  = GetDistanceBetweenCoords(coords, objCoords, true)
-
-					if closestDistance == -1 or closestDistance > distance then
-						closestDistance = distance
-						closestEntity   = object
-					end
-				end
-			end
-
-			if closestDistance ~= -1 and closestDistance <= 3.0 then
-				if LastEntity ~= closestEntity then
-					TriggerEvent('esx_policejob:hasEnteredEntityZone', closestEntity)
-					LastEntity = closestEntity
-				end
-			else
-				if LastEntity then
-					TriggerEvent('esx_policejob:hasExitedEntityZone', LastEntity)
-					LastEntity = nil
-				end
-			end
-		end
-	end
-end)
-
 -- Key Controls
 Citizen.CreateThread(function()
+	local waitara = 500
 	while true do
-		Citizen.Wait(0)
+		Citizen.Wait(waitara)
+		local naso = false
 		if CurrentAction then
+			waitara = 0
+			naso = true
 			ESX.ShowHelpNotification(CurrentActionMsg)
 			
 			if IsControlJustReleased(0, 38) and PlayerData.job and (PlayerData.job.name == 'police' or PlayerData.job.name == 'sipa') then
@@ -2418,6 +2366,8 @@ Citizen.CreateThread(function()
 		end -- CurrentAction end
 
 		if PlayerData.job and PlayerData.job.name == 'police' then
+			waitara = 0
+			naso = true
 			if IsControlJustReleased(0, 167) and not isDead and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'police_actions') then
 				if Config.MaxInService == -1 then
 					OpenPoliceActionsMenu()
@@ -2456,6 +2406,9 @@ Citizen.CreateThread(function()
 
 				currentTask.busy = false
 			end
+		end
+		if not naso then
+			waitara = 500
 		end
 	end
 end)
@@ -2529,9 +2482,6 @@ AddEventHandler('playerSpawned', function(spawn)
 
 	if not hasAlreadyJoined then
 		TriggerServerEvent('esx_policejob:spawned')
-		ESX.TriggerServerCallback('policija:DohvatiObjekte', function(br)
-			BrojObjekata = br
-		end)
 	end
 	hasAlreadyJoined = true
 end)

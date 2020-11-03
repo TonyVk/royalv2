@@ -232,15 +232,21 @@ end)
 
 -- Display markers
 Citizen.CreateThread(function()
+	local waitara = 500
 	while true do
-		Citizen.Wait(0)
-
+		Citizen.Wait(waitara)
+		local naso = false
 		local coords = GetEntityCoords(PlayerPedId())
 
 		for k,v in pairs(Config.Zones) do
 			if(v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+				naso = true
+				waitara = 0
 				DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 			end
+		end
+		if not naso then
+			waitara = 500
 		end
 	end
 end)
