@@ -701,27 +701,30 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
+		if ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
+			if CurrentAction and not IsDead then
+				ESX.ShowHelpNotification(CurrentActionMsg)
 
-		if CurrentAction and not IsDead then
-			ESX.ShowHelpNotification(CurrentActionMsg)
+				if IsControlJustReleased(0, 38) and ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
+					if CurrentAction == 'cloakroom' then
+						OpenCloakroom()
+					elseif CurrentAction == 'taxi_actions_menu' then
+						OpenTaxiActionsMenu()
+					elseif CurrentAction == 'vehicle_spawner' then
+						OpenVehicleSpawnerMenu()
+					elseif CurrentAction == 'delete_vehicle' then
+						DeleteJobVehicle()
+					end
 
-			if IsControlJustReleased(0, 38) and ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
-				if CurrentAction == 'cloakroom' then
-					OpenCloakroom()
-				elseif CurrentAction == 'taxi_actions_menu' then
-					OpenTaxiActionsMenu()
-				elseif CurrentAction == 'vehicle_spawner' then
-					OpenVehicleSpawnerMenu()
-				elseif CurrentAction == 'delete_vehicle' then
-					DeleteJobVehicle()
+					CurrentAction = nil
 				end
-
-				CurrentAction = nil
 			end
-		end
 
-		if IsControlJustReleased(0, 167) and IsInputDisabled(0) and not IsDead and Config.EnablePlayerManagement and ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
-			OpenMobileTaxiActionsMenu()
+			if IsControlJustReleased(0, 167) and IsInputDisabled(0) and not IsDead and Config.EnablePlayerManagement then
+				OpenMobileTaxiActionsMenu()
+			end
+		else
+			Citizen.Wait(1000)
 		end
 	end
 end)

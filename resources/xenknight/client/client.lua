@@ -167,58 +167,6 @@ function showFixePhoneHelper (coords)
     end
   end
 end
- 
-
-Citizen.CreateThread(function ()
-  local mod = 0
-  while true do 
-    local playerPed   = PlayerPedId()
-    local coords      = GetEntityCoords(playerPed)
-    local inRangeToActivePhone = false
-    local inRangedist = 0
-    for i, _ in pairs(PhoneInCall) do 
-        local dist = GetDistanceBetweenCoords(
-          PhoneInCall[i].coords.x, PhoneInCall[i].coords.y, PhoneInCall[i].coords.z,
-          coords.x, coords.y, coords.z, 1)
-        if (dist <= soundDistanceMax) then
-          DrawMarker(1, PhoneInCall[i].coords.x, PhoneInCall[i].coords.y, PhoneInCall[i].coords.z,
-              0,0,0, 0,0,0, 0.1,0.1,0.1, 0,255,0,255, 0,0,0,0,0,0,0)
-          inRangeToActivePhone = true
-          inRangedist = dist
-          if (dist <= 1.5) then 
-            SetTextComponentFormat("STRING")
-            AddTextComponentString("~INPUT_PICKUP~ Décrocher")
-            DisplayHelpTextFromStringLabel(0, 0, 1, -1)
-            if IsControlJustPressed(1, KeyTakeCall) then
-              PhonePlayCall(true)
-              TakeAppel(PhoneInCall[i])
-              PhoneInCall = {}
-              StopSoundJS('ring2.ogg')
-            end
-          end
-          break
-        end
-    end
-    if inRangeToActivePhone == false then
-      showFixePhoneHelper(coords)
-    end
-    if inRangeToActivePhone == true and currentPlaySound == false then
-      PlaySoundJS('ring2.ogg', 0.2 + (inRangedist - soundDistanceMax) / -soundDistanceMax * 0.8 )
-      currentPlaySound = true
-    elseif inRangeToActivePhone == true then
-      mod = mod + 1
-      if (mod == 15) then
-        mod = 0
-        SetSoundVolumeJS('ring2.ogg', 0.2 + (inRangedist - soundDistanceMax) / -soundDistanceMax * 0.8 )
-      end
-    elseif inRangeToActivePhone == false and currentPlaySound == true then
-      currentPlaySound = false
-      StopSoundJS('ring2.ogg')
-    end
-    Citizen.Wait(0)
-  end
-end)
-
 
 function PlaySoundJS (sound, volume)
   SendNUIMessage({ event = 'playSound', sound = sound, volume = volume })

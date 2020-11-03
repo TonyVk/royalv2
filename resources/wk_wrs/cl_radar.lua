@@ -55,6 +55,28 @@ end
 --[[------------------------------------------------------------------------
     Police Vehicle Radar 
 ------------------------------------------------------------------------]]--
+ESX	= nil
+
+local PlayerData = {}
+
+Citizen.CreateThread(function()
+	while ESX == nil do
+		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+		Citizen.Wait(0)
+	end
+
+	while ESX.GetPlayerData().job == nil do
+		Citizen.Wait(10)
+	end
+
+	PlayerData = ESX.GetPlayerData()
+end)
+
+RegisterNetEvent('esx:setJob')
+AddEventHandler('esx:setJob', function(job)
+	PlayerData.job = job
+end)
+
 local radarEnabled = false 
 local hidden = false 
 local radarInfo = 
@@ -425,36 +447,39 @@ end )
 
 Citizen.CreateThread( function()
     while true do 
-        local ped = GetPlayerPed( -1 )
-        -- These control pressed natives must be the disabled check ones. 
+		if PlayerData.job and PlayerData.job.name == "police" then
+			local ped = GetPlayerPed( -1 )
+			-- These control pressed natives must be the disabled check ones. 
 
-        -- LCtrl is pressed and M has just been pressed 
-        if ( IsDisabledControlPressed( 1, 36 ) and IsDisabledControlJustPressed( 1, 244 ) and IsPedSittingInAnyVehicle( ped ) ) then 
-            TriggerEvent( 'wk:radarRC' )
-        end 
+			-- LCtrl is pressed and M has just been pressed 
+			if ( IsDisabledControlPressed( 1, 36 ) and IsDisabledControlJustPressed( 1, 244 ) and IsPedSittingInAnyVehicle( ped ) ) then 
+				TriggerEvent( 'wk:radarRC' )
+			end 
 
-        -- LCtrl is not being pressed and M has just been pressed 
-        if ( not IsDisabledControlPressed( 1, 36 ) and IsDisabledControlJustPressed( 1, 244 ) ) then 
-            ResetFrontFast()
-            ResetRearFast()
-        end 
+			-- LCtrl is not being pressed and M has just been pressed 
+			if ( not IsDisabledControlPressed( 1, 36 ) and IsDisabledControlJustPressed( 1, 244 ) ) then 
+				ResetFrontFast()
+				ResetRearFast()
+			end 
 
-        local inVeh = IsPedSittingInAnyVehicle( ped )
-        local veh = nil 
+			local inVeh = IsPedSittingInAnyVehicle( ped )
+			local veh = nil 
 
-        if ( inVeh ) then
-            veh = GetVehiclePedIsIn( ped, false )
-        end 
+			if ( inVeh ) then
+				veh = GetVehiclePedIsIn( ped, false )
+			end 
 
-        if ( ( (not inVeh or (inVeh and GetVehicleClass( veh ) ~= 18)) and radarEnabled and not hidden) or IsPauseMenuActive() and radarEnabled ) then 
-            hidden = true 
-            SendNUIMessage( { hideradar = true } )
-        elseif ( inVeh and GetVehicleClass( veh ) == 18 and radarEnabled and hidden ) then 
-            hidden = false 
-            SendNUIMessage( { hideradar = false } )
-        end 
-
-        Citizen.Wait( 0 )
+			if ( ( (not inVeh or (inVeh and GetVehicleClass( veh ) ~= 18)) and radarEnabled and not hidden) or IsPauseMenuActive() and radarEnabled ) then 
+				hidden = true 
+				SendNUIMessage( { hideradar = true } )
+			elseif ( inVeh and GetVehicleClass( veh ) == 18 and radarEnabled and hidden ) then 
+				hidden = false 
+				SendNUIMessage( { hideradar = false } )
+			end
+		else
+			Citizen.Wait(1000)
+		end
+        Citizen.Wait(0)
     end 
 end )
 

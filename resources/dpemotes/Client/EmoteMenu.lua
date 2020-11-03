@@ -12,6 +12,8 @@ if Config.MenuPosition then
   end
 end
 
+local Otvoren = false
+
 if Config.CustomMenuEnabled then
   local RuntimeTXD = CreateRuntimeTxd('Custom_Menu_Head')
   local Object = CreateDui(Config.MenuImage, 512, 128)
@@ -42,22 +44,6 @@ local WalkTable = {}
 local FaceTable = {}
 local ShareTable = {}
 local FavoriteEmote = ""
-
-Citizen.CreateThread(function()
-  while true do
-    if Config.FavKeybindEnabled then
-      if IsControlPressed(0, Config.FavKeybind) then
-        if not IsPedSittingInAnyVehicle(PlayerPedId()) then
-          if FavoriteEmote ~= "" then
-            EmoteCommandStart(nil,{FavoriteEmote, 0})
-            Wait(3000)
-          end
-        end
-      end
-    end
-    Citizen.Wait(1)
-  end
-end)
 
 lang = Config.MenuLanguage
 
@@ -275,6 +261,7 @@ end
 
 function OpenEmoteMenu()
     mainMenu:Visible(not mainMenu:Visible())
+	Otvoren = mainMenu:Visible()
 end
 
 function firstToUpper(str)
@@ -295,7 +282,9 @@ _menuPool:RefreshIndex()
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
-        _menuPool:ProcessMenus()
+		if Otvoren then
+			_menuPool:ProcessMenus()
+		end
     end
 end)
 

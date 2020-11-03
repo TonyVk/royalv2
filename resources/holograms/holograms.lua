@@ -28,14 +28,21 @@ Citizen.CreateThread(function()
 end)
 
 function Holograms()
-		while true do
-			Citizen.Wait(0)			
-				-- Hologram No. 1
+	local waitara = 1000
+	while true do
+		Citizen.Wait(waitara)
+		local naso = false
+		-- Hologram No. 1
 		if GetDistanceBetweenCoords( -1034.4967041016, -2727.8981933594, 13.756633758544, GetEntityCoords(GetPlayerPed(-1))) < 10.0 then
+			naso = true
+			waitara = 0
 			Draw3DText( -1034.4967041016, -2727.8981933594, 13.756633758544  -1.400, "Dobrodosli na Hugo Roleplay", 4, 0.1, 0.1)
 			Draw3DText( -1034.4967041016, -2727.8981933594, 13.756633758544  -1.600, "https://discord.gg/rAWxYmp", 4, 0.1, 0.1)
 			--Draw3DText( -408.50, 1163.00, 326.00  -1.800, "Tuljan", 4, 0.1, 0.1)		
-		end		
+		end
+		if not naso then
+			waitara = 1000
+		end
 	end
 end
 

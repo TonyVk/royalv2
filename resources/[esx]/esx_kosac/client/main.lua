@@ -655,6 +655,8 @@ Citizen.CreateThread(function()
 					CurrentAction = nil
 				end
 			end
+		else
+			Citizen.Wait(500)
 		end
     end
 end)

@@ -164,31 +164,18 @@ Citizen.CreateThread(function()
 		local nasosta = 0
 
 		local coords = GetEntityCoords(PlayerPedId())
-
+		local isInMarker  = false
+		local currentZone = nil
+		
 		for k,v in pairs(Config.Zones) do
 			if(v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
 				waitara = 0
 				nasosta = 1
 				DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 			end
-		end
-		if nasosta == 0 then
-			waitara = 500
-		end
-	end
-end)
-
--- Enter / Exit marker events
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(200)
-
-		local coords      = GetEntityCoords(PlayerPedId())
-		local isInMarker  = false
-		local currentZone = nil
-
-		for k,v in pairs(Config.Zones) do
 			if GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x then
+				waitara = 0
+				nasosta = 1
 				isInMarker  = true
 				currentZone = k
 				TriggerEvent("dpc:EquipLast")
@@ -205,6 +192,9 @@ Citizen.CreateThread(function()
 			HasAlreadyEnteredMarker = false
 			TriggerEvent('esx_barbershop:hasExitedMarker', LastZone)
 		end
+		if nasosta == 0 then
+			waitara = 500
+		end
 	end
 end)
 
@@ -212,7 +202,6 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
-
 		if CurrentAction ~= nil then
 			ESX.ShowHelpNotification(CurrentActionMsg)
 

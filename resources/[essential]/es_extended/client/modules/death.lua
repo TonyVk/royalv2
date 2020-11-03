@@ -21,7 +21,7 @@ Citizen.CreateThread(function()
 					PlayerKilled(deathCause)
 				end
 
-			elseif not IsPedFatallyInjured(playerPed) then
+			elseif not IsPedFatallyInjured(playerPed) and isDead then
 				isDead = false
 			end
 		end

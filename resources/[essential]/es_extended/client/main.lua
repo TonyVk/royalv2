@@ -526,17 +526,6 @@ Citizen.CreateThread(function()
 	end
 end)
 
--- Menu interactions
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(0)
-
-		--if IsControlJustReleased(0, 289) and IsInputDisabled(0) and not isDead and not NeOtvaraj and not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
-			--ESX.ShowInventory()
-		--end
-	end
-end)
-
 -- Dot above head
 if Config.ShowDotAbovePlayer then
 	Citizen.CreateThread(function()
@@ -558,7 +547,7 @@ end
 if Config.DisableWantedLevel then
 	Citizen.CreateThread(function()
 		while true do
-			Citizen.Wait(0)
+			Citizen.Wait(1000)
 
 			local playerId = PlayerId()
 			if GetPlayerWantedLevel(playerId) ~= 0 then

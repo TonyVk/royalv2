@@ -82,24 +82,28 @@ end)
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(5)
-        if IsControlJustPressed(1, 303) and isRequestAnim then
-        target, distance = GetClosestPlayer()
-            if(distance ~= -1 and distance < 3) then
-                if DP.Shared[requestedemote] ~= nil then
-                    _,_,_,otheremote = table.unpack(DP.Shared[requestedemote])
-                elseif DP.Dances[requestedemote] ~= nil then
-                    _,_,_,otheremote = table.unpack(DP.Dances[requestedemote])
-                end
-                if otheremote == nil then otheremote = requestedemote end
-                TriggerServerEvent("ServerValidEmote", GetPlayerServerId(target), requestedemote, otheremote)
-                isRequestAnim = false
-            else
-                SimpleNotify(Config.Languages[lang]['nobodyclose'])
-            end
-        elseif IsControlJustPressed(1, 182) and isRequestAnim then
-            SimpleNotify(Config.Languages[lang]['refuseemote'])
-            isRequestAnim = false
-        end
+		if isRequestAnim then
+			if IsControlJustPressed(1, 303) then
+			target, distance = GetClosestPlayer()
+				if(distance ~= -1 and distance < 3) then
+					if DP.Shared[requestedemote] ~= nil then
+						_,_,_,otheremote = table.unpack(DP.Shared[requestedemote])
+					elseif DP.Dances[requestedemote] ~= nil then
+						_,_,_,otheremote = table.unpack(DP.Dances[requestedemote])
+					end
+					if otheremote == nil then otheremote = requestedemote end
+					TriggerServerEvent("ServerValidEmote", GetPlayerServerId(target), requestedemote, otheremote)
+					isRequestAnim = false
+				else
+					SimpleNotify(Config.Languages[lang]['nobodyclose'])
+				end
+			elseif IsControlJustPressed(1, 182) then
+				SimpleNotify(Config.Languages[lang]['refuseemote'])
+				isRequestAnim = false
+			end
+		else
+			Citizen.Wait(500)
+		end
     end
 end)
 
