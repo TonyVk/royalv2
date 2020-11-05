@@ -125,6 +125,16 @@ AddEventHandler("entityCreating",  function(entity)
 end)
 
 --Fake eventi
+RegisterServerEvent('esx_vangelico_robbery:gioielli')
+AddEventHandler('esx_vangelico_robbery:gioielli', function()
+    TriggerEvent('AntiCheat:FakeEvent', source)
+end)
+
+RegisterServerEvent('lester:vendita')
+AddEventHandler('lester:vendita', function()
+    TriggerEvent('AntiCheat:FakeEvent', source)
+end)
+
 RegisterServerEvent('esx_drugs:pickedUpCannabis')
 AddEventHandler('esx_drugs:pickedUpCannabis', function()
     TriggerEvent('AntiCheat:FakeEvent', source)

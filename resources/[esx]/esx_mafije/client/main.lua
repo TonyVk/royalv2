@@ -89,7 +89,7 @@ end
 
 function SpawnBlipove()
 	for i=1, #Koord, 1 do
-		if Koord[i] ~= nil and Koord[i].Ime == "Lider" then
+		if Koord[i] ~= nil and Koord[i].Ime == "SpawnV" then
 			if Koord[i].Mafija == PlayerData.job.name then
 				local x,y,z = table.unpack(Koord[i].Coord)
 				if x ~= 0 and x ~= nil then

@@ -107,23 +107,22 @@ AddEventHandler('esx_vangelico_robbery:rob', function(robb)
 	end
 end)
 
-RegisterServerEvent('esx_vangelico_robbery:gioielli')
-AddEventHandler('esx_vangelico_robbery:gioielli', function()
-
+RegisterServerEvent('esx_vangelico_robbery:PitajBogaStaRadi')
+AddEventHandler('esx_vangelico_robbery:PitajBogaStaRadi', function()
 	local xPlayer = ESX.GetPlayerFromId(source)
-
 	xPlayer.addInventoryItem('jewels', math.random(Config.MinJewels, Config.MaxJewels))
 end)
 
-RegisterServerEvent('lester:vendita')
-AddEventHandler('lester:vendita', function()
-
+RegisterServerEvent('seal:AeRekoStae')
+AddEventHandler('seal:AeRekoStae', function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
+	local quantity = xPlayer.getInventoryItem("jewels").count
 	local reward = math.floor(Config.PriceForOneJewel * Config.MaxJewelsSell)
-
-	xPlayer.removeInventoryItem('jewels', Config.MaxJewelsSell)
-	xPlayer.addMoney(reward)
+	if quantity >= Config.MaxJewelsSell then
+		xPlayer.removeInventoryItem('jewels', Config.MaxJewelsSell)
+		xPlayer.addMoney(reward)
+	end
 end)
 
 ESX.RegisterServerCallback('esx_vangelico_robbery:conteggio', function(source, cb)
