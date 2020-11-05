@@ -2189,7 +2189,7 @@ end)
 
 RegisterNetEvent('mafije:ResetOruzja')
 AddEventHandler('mafije:ResetOruzja', function(maf)
-	if PlayerData.job.name == maf then
+	if PlayerData.job ~= nil and PlayerData.job.name == maf then
 		for i=0, 10, 1 do
 			ZatrazioOruzje[i] = nil
 		end
@@ -2802,7 +2802,10 @@ Citizen.CreateThread(function()
 				if Koord[i] ~= nil and Koord[i].Mafija == PlayerData.job.name and Koord[i].Ime == "Izlaz" then
 					local x,y,z = table.unpack(Koord[i].Coord)
 					SetEntityCoords(PlayerPedId(), x, y, z, false, false, false, true)
+					FreezeEntityPosition(PlayerPedId(), true)
 					TriggerServerEvent("kuce:UKuci", true)
+					Wait(3000)
+					FreezeEntityPosition(PlayerPedId(), false)
 				end
 			end
         end

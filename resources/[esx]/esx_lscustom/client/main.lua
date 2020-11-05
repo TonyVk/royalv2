@@ -71,7 +71,7 @@ function OpenLSMenu(elems, menuName, menuTitle, parent)
 		align    = 'top-left',
 		elements = elems
 	}, function(data, menu)
-		local isRimMod, found, isMjenjac, isSvijetla = false, false, false, false
+		local isRimMod, found, isMjenjac, isSvijetla, isDodaci = false, false, false, false, false
 		local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
 		local vehicleProps = ESX.Game.GetVehicleProperties(vehicle)
 		local tablica = vehicleProps.plate
@@ -84,13 +84,17 @@ function OpenLSMenu(elems, menuName, menuTitle, parent)
 			isMjenjac = true
 		end
 		
+		if data.current.modType == "dodaci" then
+			isDodaci = true
+		end
+		
 		if data.current.modType == "svijetlaColor" then
 			isSvijetla = true
 		end
 
 		for k,v in pairs(Config.Menus) do
 
-			if k == data.current.modType or isRimMod or isMjenjac or isSvijetla then
+			if k == data.current.modType or isRimMod or isMjenjac or isSvijetla or isDodaci then
 
 				if data.current.label == _U('by_default') or string.match(data.current.label, _U('installed')) then
 					ESX.ShowNotification(_U('already_own', data.current.label))
@@ -134,6 +138,11 @@ function OpenLSMenu(elems, menuName, menuTitle, parent)
 						end
 						local globalplate = GetVehicleNumberPlateText(vehicle)
 						TriggerServerEvent("meh:PromjeniMjenjac", data.current.modNum, globalplate)
+					elseif isDodaci then
+						price = 50
+						TriggerServerEvent("lscs:kupiPeraje", GetEntityModel(vehicle), price, tablica)
+						TriggerServerEvent("DiscordBot:Mehanicari", GetPlayerName(PlayerId()).." je kupio dio za $"..price)
+						SetVehicleExtra(vehicle, data.current.modNum, data.current.odradi)
 					else
 						price = math.floor(vehiclePrice * v.price / 800)
 						TriggerServerEvent("lscs:kupiPeraje", GetEntityModel(vehicle), price, tablica)
@@ -257,7 +266,7 @@ function GetAction(data)
 				elseif v.modType == 17 then
 					table.insert(elements, {label = " " .. _U('no_turbo'), modType = k, modNum = false})
  				else
-					if v.modType ~= "mjenjac" then
+					if v.modType ~= "mjenjac" and v.modType ~= "dodaci" then
 						table.insert(elements, {label = " " .. _U('by_default'), modType = k, modNum = -1})
 					end
 				end
@@ -332,6 +341,23 @@ function GetAction(data)
 						end, globalplate)
 					end
 					Wait(200)
+				elseif v.modType == 'dodaci' then
+					local globalplate  = GetVehicleNumberPlateText(vehicle)
+					local _label = ''
+					price = 50
+					if globalplate ~= nil or globalplate ~= "" or globalplate ~= " " then
+						for i = 1, 14 do
+							if DoesExtraExist(vehicle, i) then
+								if IsVehicleExtraTurnedOn(vehicle, i) then
+									_label = 'Dodatak #'..i..' - <span style="color:cornflowerblue;">'.. 'instalirano' ..' $'..price..'</span>'
+									table.insert(elements, {label = _label, modType = k, modNum = i, odradi = true})
+								else
+									_label = 'Dodatak #'..i..' - <span style="color:green;">$' .. price .. ' </span>'
+									table.insert(elements, {label = _label, modType = k, modNum = i, odradi = false})
+								end
+							end
+						end
+					end
 				elseif v.modType == 'windowTint' then -- WINDOWS TINT
 					for j = 1, 5, 1 do
 						local _label = ''

@@ -555,8 +555,13 @@ Config.Menus = {
 	},
 	mjenjac = {
 		label			= "Mjenjaci",
-		parent			= 'upgrades',
+		parent			= 'cosmetics',
 		modType 		= 'mjenjac'
+	},
+	dodaci = {
+		label			= "Dodaci",
+		parent			= 'upgrades',
+		modType 		= 'dodaci'
 	},
 	upgrades = {
 		label			= _U('upgrades'),
@@ -609,6 +614,7 @@ Config.Menus = {
 		label				= _U('cosmetics'),
 		parent				= 'main',
 		bodyparts			= _U('bodyparts'),
+		dodaci				= "Dodaci",
 		windowTint			= _U('windowtint'),
 		modHorns			= _U('horns'),
 		neonColor			= _U('neons'),
