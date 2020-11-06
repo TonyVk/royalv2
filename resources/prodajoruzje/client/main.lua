@@ -109,6 +109,13 @@ function DeleteGear()
 	end
 end
 
+Citizen.CreateThread(function()
+	while true do
+		Citizen.Wait(1000 * 60)
+		TriggerServerEvent("minute:SpremiIh")
+	end
+end)
+
 RegisterNetEvent('ronjenje:PocniRonit')
 AddEventHandler('ronjenje:PocniRonit', function()
     if currentGear.enabled == false then
@@ -153,6 +160,26 @@ AddEventHandler('ronjenje:PocniRonit', function()
 		ESX.ShowNotification("Skinuli ste opremu za ronjenje!")
 	end
 end)
+
+RegisterCommand("psate", function(source, args, rawCommandString)
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if br == 1 then
+			ESX.TriggerServerCallback('minute:DohvatiSate', function(elem)
+				ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'sati_list', {
+					title    = "Sati igraca",
+					align    = 'top-left',
+					elements = elem
+				}, function(data, menu)
+					menu.close()	
+				end, function(data, menu)
+					menu.close()
+				end)
+			end)
+		else
+			ESX.ShowNotification("Nemate pristup ovoj komandi!")
+		end
+	end)
+end, false)
 
 RegisterCommand("ndv", function(source, args, rawCommandString)
 	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)

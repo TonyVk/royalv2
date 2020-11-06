@@ -54,6 +54,32 @@ ESX.RegisterServerCallback('prodajoruzje:DajNovac', function(source, cb, target)
 	cb(missingMoney)
 end)
 
+function mTOh(mins)
+    return {sat = math.floor(mins/60), minuta = (mins%60)}
+end
+
+ESX.RegisterServerCallback('minute:DohvatiSate', function(source, cb)
+	local elements = {}
+	MySQL.Async.fetchAll('SELECT identifier, minute FROM minute', {}, function(result)
+		MySQL.Async.fetchAll('SELECT identifier, name FROM users', {}, function(result2)
+			for i=1, #result, 1 do
+				for j=1, #result2, 1 do
+					if result[i].identifier == result2[j].identifier then
+						local str
+						if result[i].minute < 60 then
+							str = result2[j].name.." ("..result[i].minute.." minuta)"
+						else
+							str = result2[j].name.." ("..mTOh(result[i].minute).sat.."h i "..mTOh(result[i].minute).minuta.."min)"
+						end
+						table.insert(elements, { label = str, value = "nema" })
+					end
+				end
+			end
+			cb(elements)
+		end)
+	end)
+end)
+
 function getIdentity(source)
 	local identifier = GetPlayerIdentifiers(source)[1]
 	local result = MySQL.Sync.fetchAll("SELECT * FROM users WHERE identifier = @identifier", {['@identifier'] = identifier})
@@ -73,6 +99,34 @@ function getIdentity(source)
 		return nil
 	end
 end
+
+function CronTask(d, h, m)
+	local dan = os.date("%d")
+	if dan == "01" then
+		MySQL.Async.execute('DELETE FROM minute', {})
+	end
+end
+TriggerEvent('cron:runAt', 0, 0, CronTask)
+
+RegisterNetEvent("minute:SpremiIh")
+AddEventHandler('minute:SpremiIh', function(minute)
+	local src = source
+	local identifier = GetPlayerIdentifiers(src)[1]
+	MySQL.Async.fetchAll('SELECT * FROM minute WHERE identifier = @identifier', {['@identifier'] = identifier}, function(result)
+		if result[1] == nil then
+			MySQL.Async.execute('INSERT INTO minute (identifier, minute) VALUES (@ident, @mina)',
+			{
+				['@ident'] = identifier,
+				['@mina']  = 1
+			})
+		else
+			MySQL.Async.execute('UPDATE minute SET minute = @minute WHERE identifier = @ident', {
+				['@ident'] = identifier,
+				['@minute'] = result[1].minute+1
+			})
+		end
+	end)
+end)
 
 ESX.RegisterUsableItem('ronjenje', function(source)
 	local xPlayer = ESX.GetPlayerFromId(source)
