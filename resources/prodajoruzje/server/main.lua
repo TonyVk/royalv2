@@ -27,7 +27,6 @@ AddEventHandler('SaljiTamoSkin', function(id, pid)
 	TriggerClientEvent("VratiTamoSkin", id, pid)
 end)
 
-RegisterNetEvent("weaponDamageEvent")
 AddEventHandler('weaponDamageEvent', function(aha)
 	print(aha)
 end)

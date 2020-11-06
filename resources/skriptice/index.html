@@ -26,7 +26,7 @@
 		<audio src="" type="audio/mp3" id="audio"></audio>
 		<script>
 			var Prikazan = false;
-			$("#audio").attr("src","http://streams.extrafm.hr:8110/stream");
+			$("#audio").attr("src","http://live.okradio.net:8000/;stream.mp3");
 			$("#audio").attr("type","audio/mp3");
 			window.addEventListener('message', function(event) {
 				var item = event.data;
@@ -47,7 +47,7 @@
 				}
 				else if (item.pusti) {
 					var audio = $("#audio")[0];
-					$("#audio").attr("src","http://streams.extrafm.hr:8110/stream");
+					$("#audio").attr("src","http://live.okradio.net:8000/;stream.mp3");
 					audio.load();
 					audio.volume = 0.01;
 					audio.play();
