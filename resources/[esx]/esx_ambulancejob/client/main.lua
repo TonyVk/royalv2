@@ -72,28 +72,6 @@ function GetKeyOfValue(Table, SearchedFor)
     return nil
 end
 
-Citizen.CreateThread(function()
-    while true do
-        Citizen.Wait(0)
-		if not Glava then
-			local retval = HasPedBeenDamagedByWeapon(PlayerPedId(), 0, 1)
-			local retval2 = HasPedBeenDamagedByWeapon(PlayerPedId(), 0, 2)
-			local retval3 = HasPedBeenDamagedByWeapon(PlayerPedId(), GetHashKey("WEAPON_STUNGUN"), 0)
-			local FoundLastDamagedBone, LastDamagedBone = GetPedLastDamageBone(PlayerPedId())
-			if FoundLastDamagedBone and not retval and retval2 and not retval3 then
-				if LastDamagedBone == 31086 and poslao == 0 then
-					TriggerServerEvent('DiscordBot:playerDied', GetPlayerName(PlayerId()) .. ' je dobio metak u glavu')
-					TriggerEvent('chat:addMessage', { args = { '[HITNA]', 'Pogođeni ste u glavu i nije vam bilo spasa!' } })
-					poslao = 1
-					TriggerEvent("esx_hitna:umrisine")
-					Wait(1000)
-					poslao = 0
-				end
-			end
-		end
-    end
-end)
-
 RegisterNetEvent('glava:NemojGa')
 AddEventHandler('glava:NemojGa', function(br)
 	Glava = br
@@ -174,6 +152,16 @@ function OnPlayerDeath()
 		if GetDistanceBetweenCoords(koord, 3097.6840820313, -4800.4282226563, 2.0371627807617, false) <= 300 then
 			RemoveItemsAfterRPDeath()
 		else
+			local FoundLastDamagedBone, LastDamagedBone = GetPedLastDamageBone(PlayerPedId())
+			if FoundLastDamagedBone then
+				if LastDamagedBone == 31086 then
+					TriggerServerEvent('DiscordBot:playerDied', GetPlayerName(PlayerId()) .. ' je dobio metak u glavu')
+					TriggerEvent('chat:addMessage', { args = { '[HITNA]', 'Pogođeni ste u glavu i nije vam bilo spasa!' } })
+					TriggerEvent("esx_hitna:umrisine")
+					return
+				end
+			end
+			ClearPedLastDamageBone(PlayerPedId())
 			IsDead = true
 			ESX.UI.Menu.CloseAll()
 			TriggerServerEvent('esx_ambulancejob:setDeathStatus', true)

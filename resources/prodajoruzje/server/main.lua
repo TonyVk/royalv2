@@ -27,10 +27,6 @@ AddEventHandler('SaljiTamoSkin', function(id, pid)
 	TriggerClientEvent("VratiTamoSkin", id, pid)
 end)
 
-AddEventHandler('weaponDamageEvent', function(aha)
-	print(aha)
-end)
-
 RegisterNetEvent("ObrisiSociety")
 AddEventHandler('ObrisiSociety', function(soc, broj)
 	local societyAccount = nil
@@ -60,7 +56,7 @@ end
 
 ESX.RegisterServerCallback('minute:DohvatiSate', function(source, cb)
 	local elements = {}
-	MySQL.Async.fetchAll('SELECT identifier, minute FROM minute', {}, function(result)
+	MySQL.Async.fetchAll('SELECT identifier, minute FROM minute ORDER BY minute DESC', {}, function(result)
 		MySQL.Async.fetchAll('SELECT identifier, name FROM users', {}, function(result2)
 			for i=1, #result, 1 do
 				for j=1, #result2, 1 do
@@ -117,18 +113,19 @@ AddEventHandler('minute:SpremiIh', function(minute)
 			MySQL.Async.execute('INSERT INTO minute (identifier, minute) VALUES (@ident, @mina)',
 			{
 				['@ident'] = identifier,
-				['@mina']  = 1
+				['@mina']  = 5
 			})
 		else
 			MySQL.Async.execute('UPDATE minute SET minute = @minute WHERE identifier = @ident', {
 				['@ident'] = identifier,
-				['@minute'] = result[1].minute+1
+				['@minute'] = result[1].minute+5
 			})
 		end
 	end)
 end)
 
 ESX.RegisterUsableItem('ronjenje', function(source)
+	print(GetPlayerPed(source))
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local oprema = xPlayer.getInventoryItem("ronjenje").count
 	if oprema > 0 then

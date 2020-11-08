@@ -10,8 +10,9 @@ end)
 
 ESX.RegisterServerCallback('esx_spectate:getPlayerData', function(source, cb, id)
     local xPlayer = ESX.GetPlayerFromId(id)
+	local kord = GetEntityCoords(GetPlayerPed(id))
     if xPlayer ~= nil then
-        cb(xPlayer)
+        cb(xPlayer, kord)
     end
 end)
 
@@ -28,7 +29,12 @@ AddEventHandler('esx_spectate:kick', function(target, msg)
 end)
 
 ESX.RegisterServerCallback('esx_spectate:DohvatiIgrace', function(source, cb)
-	cb(GetPlayers())
+	local igraci = {}
+	for _, playerId in ipairs(GetPlayers()) do
+		local name = GetPlayerName(playerId)
+		table.insert(igraci, {ID = playerId, Ime = name, Koord = GetEntityCoords(GetPlayerPed(playerId))})
+	end
+	cb(igraci)
 end)
 
 ESX.RegisterServerCallback('esx_spectate:getOtherPlayerData', function(source, cb, target)

@@ -49,7 +49,7 @@ RegisterNetEvent('VratiTamoSkin')
 AddEventHandler('VratiTamoSkin', function(pid)
 	local retval = NetworkGetNetworkIdFromEntity(PlayerPedId())
 	TriggerServerEvent("EoTiSkinara", retval, GetEntityModel(PlayerPedId()), pid)
-end) 
+end)
 
 local function EnumerateEntities(initFunc, moveFunc, disposeFunc)
     return coroutine.wrap(function()
@@ -111,7 +111,7 @@ end
 
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(1000 * 60)
+		Citizen.Wait(300000)
 		TriggerServerEvent("minute:SpremiIh")
 	end
 end)

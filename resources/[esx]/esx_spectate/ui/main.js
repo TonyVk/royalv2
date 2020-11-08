@@ -5,12 +5,13 @@
 		let target = $(this).data('spectate');
 
 		let player = $('.spectate').attr('id');
+		let korda = $('.spectate').attr('kord');
 
 		if (target == player) {
 			alert("You can't spectate yourself !");
 		} else {
 			$('.spectate').fadeOut();
-			$.post('http://esx_spectate/select', JSON.stringify({id: target}));
+			$.post('http://esx_spectate/select', JSON.stringify({id: target, kord: korda}));
 		}
 
 	});

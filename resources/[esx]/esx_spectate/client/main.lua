@@ -33,8 +33,7 @@ function polar3DToWorld3D(entityPosition, radius, polarAngleDeg, azimuthAngleDeg
 end
 
 function spectate(target)
-
-	ESX.TriggerServerCallback('esx:getPlayerData', function(player)
+	ESX.TriggerServerCallback('esx_spectate:getPlayerData', function(player, kord)
 		if not InSpectatorMode then
 			LastPosition = GetEntityCoords(GetPlayerPed(-1))
 		end
@@ -43,6 +42,8 @@ function spectate(target)
 
 		SetEntityCollision(playerPed, false, false)
 		SetEntityVisible(playerPed, false)
+		local xa, ya, za = table.unpack(kord)
+		SetEntityCoords(playerPed, xa, ya, za - 5)
 
 		PlayerData = player
 		if ShowInfos then
@@ -89,8 +90,9 @@ function getPlayersList()
 		for i=1, #igraci, 1 do
 
 			local _data = {
-				id = igraci[i],
-				name = GetPlayerName(GetPlayerFromServerId(tonumber(igraci[i])))
+				id = igraci[i].ID,
+				name = igraci[i].Ime,
+				kord = igraci[i].Koord
 			}
 			table.insert(data, _data)
 		end
@@ -98,7 +100,7 @@ function getPlayersList()
 		SendNUIMessage({
 			type = 'show',
 			data = data,
-			player = GetPlayerServerId(PlayerId())
+			player = data.id
 		})
 	end)
 end

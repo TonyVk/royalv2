@@ -3,7 +3,7 @@
 <CVehicleModelInfoVariation>
   <variationData>
      <Item>
-      <modelName>HUMMER</modelName>
+      <modelName>h1</modelName>
       <colors>
         <Item>
           <indices content="char_array">
@@ -113,13 +113,13 @@
           <indices content="char_array">
             99
             4
-						0 
+			0 
             99
           </indices>
         </Item>
       </colors>
       <kits>
-        <Item>0_default_modkit</Item>
+        <Item>2456_HUMMER_modkit</Item>
       </kits>
       <windowsWithExposedEdges />
       <plateProbabilities>

@@ -83,12 +83,12 @@ AddEventHandler('es_admin:viewname', function(t)
 end)--test
 
 RegisterNetEvent('es_admin:quick')
-AddEventHandler('es_admin:quick', function(t, target)
+AddEventHandler('es_admin:quick', function(t, target, kord)
 	if t == "slay" then SetEntityHealth(PlayerPedId(), 0) end
-	if t == "goto" then SetPedCoordsKeepVehicle(PlayerPedId(), GetEntityCoords(GetPlayerPed(GetPlayerFromServerId(target)))) end
+	if t == "goto" then SetPedCoordsKeepVehicle(PlayerPedId(), kord) end
 	if t == "bring" then 
-		states.frozenPos = GetEntityCoords(GetPlayerPed(GetPlayerFromServerId(target)))
-		SetPedCoordsKeepVehicle(PlayerPedId(), GetEntityCoords(GetPlayerPed(GetPlayerFromServerId(target)))) 
+		states.frozenPos = kord
+		SetPedCoordsKeepVehicle(PlayerPedId(), kord) 
 	end
 	if t == "crash" then 
 		Citizen.Trace("Kreten od admina te crashao.\n")
@@ -346,8 +346,8 @@ end)
 function getPlayers(br)
 	ESX.TriggerServerCallback('es_admin:DohvatiIgrace', function(igraci)
 		local players = {}
-		for _, player in ipairs(igraci) do
-			table.insert(players, {id = player, name = GetPlayerName(GetPlayerFromServerId(tonumber(player)))})
+		for i=1, #igraci, 1 do
+			table.insert(players, {id = igraci[i].ID, name = igraci[i].Ime})
 		end
 		if br then
 			SendNUIMessage({type = 'open', players = players})

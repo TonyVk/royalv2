@@ -51,7 +51,12 @@ function removeBan(id)
 end
 
 ESX.RegisterServerCallback('es_admin:DohvatiIgrace', function(source, cb)
-	cb(GetPlayers())
+	local igraci = {}
+	for _, playerId in ipairs(GetPlayers()) do
+		local name = GetPlayerName(playerId)
+		table.insert(igraci, {ID = playerId, Ime = name})
+	end
+	cb(igraci)
 end)
 
 function isBanned(id)
@@ -147,12 +152,14 @@ AddEventHandler('es_admin:quick', function(id, type)
 			TriggerEvent('es:canGroupTarget', user.getGroup(), "admin", function(available)
 				TriggerEvent('es:canGroupTarget', user.getGroup(), target.getGroup(), function(canTarget)
 					if canTarget and available then
+						local cord = GetEntityCoords(GetPlayerPed(id))
+						local corda = GetEntityCoords(GetPlayerPed(Source))
 						if type == "slay" then TriggerClientEvent('es_admin:quick', id, type) end
 						if type == "noclip" then TriggerClientEvent('es_admin:quick', id, type) end
 						if type == "freeze" then TriggerClientEvent('es_admin:quick', id, type) end
 						if type == "crash" then TriggerClientEvent('es_admin:quick', id, type) end
-						if type == "bring" then TriggerClientEvent('es_admin:quick', id, type, Source) end
-						if type == "goto" then TriggerClientEvent('es_admin:quick', Source, type, id) end
+						if type == "bring" then TriggerClientEvent('es_admin:quick', id, type, Source, corda) end
+						if type == "goto" then TriggerClientEvent('es_admin:quick', Source, type, id, cord) end
 						if type == "slap" then TriggerClientEvent('es_admin:quick', id, type) end
 						if type == "slay" then TriggerClientEvent('es_admin:quick', id, type) end
 						if type == "kick" then DropPlayer(id, 'Kikan od es_admin GUI') end

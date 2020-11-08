@@ -146,7 +146,7 @@
  <txdRelationships>
     <Item>
       <parent>vehicles_cav_interior</parent>
-      <child>H1</child>
+      <child>h1</child>
     </Item>
  </txdRelationships>
 </CVehicleModelInfo__InitDataList> 
