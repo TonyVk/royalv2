@@ -445,7 +445,7 @@ AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
 		local playerPed  = GetPlayerPed(-1)
 		local weaponList = ESX.GetWeaponList()
 
-		if PlayerData.job.name ~= "police" and PlayerData.job.name ~= "sipa" and PlayerData.job.name ~= "zastitar" then
+		if PlayerData.job.name ~= "police" and PlayerData.job.name ~= "sipa" and PlayerData.job.name ~= "zastitar" and PlayerData.job.name ~= "Gradonacelnik" then
 			for i=1, #weaponList, 1 do
 
 			  local weaponHash = GetHashKey(weaponList[i].name)

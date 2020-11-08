@@ -45,7 +45,7 @@ function UcitajMafije()
 			TriggerEvent("RefreshAddone")
 			TriggerEvent("RefreshSociety")
 			TriggerEvent('esx_society:registerSociety', result[i].Ime, result[i].Label, soc, soc, soc, {type = 'public'})
-			table.insert(Mafije, {Ime = result[i].Ime, Label = result[i].Label})
+			table.insert(Mafije, {Ime = result[i].Ime, Label = result[i].Label, Gradonacelnik = result[i].Gradonacelnik})
 			local data = json.decode(result[i].Rankovi)
 			if data ~= nil then
 				for a=1, #data do
@@ -1402,6 +1402,15 @@ ESX.RegisterServerCallback('mafije:dajWeaponItem', function(source, cb, weaponNa
 		end)
 	end
 	cb()
+end)
+
+RegisterNetEvent('mafije:DajOruzje')
+AddEventHandler('mafije:DajOruzje', function(oruzje, job)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	if xPlayer.job.name == job then
+		xPlayer.addWeapon(oruzje, 250)
+	end
 end)
 
 ESX.RegisterServerCallback('mafije:removeArmoryWeapon', function(source, cb, weaponName, am, maf)

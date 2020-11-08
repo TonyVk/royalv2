@@ -43,7 +43,7 @@ weaponStorage = function(id)
 
                 local elements = {}
 				local jobe = ESX.GetPlayerData().job
-				if jobe.name ~= "police" and jobe.name ~= "sipa" and jobe.name ~= "zastitar" then
+				if jobe.name ~= "police" and jobe.name ~= "sipa" and jobe.name ~= "zastitar" and jobe.name ~= "Gradonacelnik" then
 					for k, v in pairs(inv['weapons']) do
 						table.insert(elements, {label = v['label'], weapon = v['name'], ammo = v['ammo']})            
 					end

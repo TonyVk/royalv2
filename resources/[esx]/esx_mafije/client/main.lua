@@ -123,7 +123,7 @@ end
 
 function SpawnBlip()
 	for i=1, #Koord, 1 do
-		if Koord[i] ~= nil and Koord[i].Ime == "Lider" then
+		if Koord[i] ~= nil and Koord[i].Ime == "SpawnV" then
 			if DoesBlipExist(Blipovi[Koord[i].Mafija]) then
 				RemoveBlip(Blipovi[Koord[i].Mafija])
 			end
@@ -766,8 +766,19 @@ end, false)
 function OpenNewMenu()
 
   if Config.EnableArmoryManagement then
+	local grado = 0
+	for i=1, #Mafije, 1 do
+		if Mafije[i] ~= nil and Mafije[i].Ime == PlayerData.job.name then
+			if Mafije[i].Gradonacelnik == 1 then
+				grado = 1
+			end
+			break
+		end
+	end
     local elements = {}
-	table.insert(elements, {label = "Kupovina stvari", value = 'buy_stvar'})
+	if grado == 0 then
+		table.insert(elements, {label = "Kupovina stvari", value = 'buy_stvar'})
+	end
 	table.insert(elements, {label = 'Oruzarnica',  value = 'buy_oruzje'})
 
 
@@ -784,7 +795,7 @@ function OpenNewMenu()
         end
 
         if data.current.value == 'buy_oruzje' then
-          OpenArmoryMenu()
+			OpenArmoryMenu(grado)
         end
       end,
       function(data, menu)
@@ -978,7 +989,7 @@ function OpenCloakroomMenu()
 
 end
 
-function OpenArmoryMenu()
+function OpenArmoryMenu(br)
 	OruzarnicaMenu = false
 	local g,h=ESX.Game.GetClosestPlayer()
 	if g~=-1 and h<=3.0 then 
@@ -990,18 +1001,22 @@ function OpenArmoryMenu()
 	Vratio = nil
 	if OruzarnicaMenu == false then
 		local elements = {}
-		if PlayerData.job.grade > 0 then
+		if PlayerData.job.grade > 0 or br == 1 then
 			--table.insert(elements, {label = "Prodaj oruzje", value = 'sell_weapon'})
 			table.insert(elements, {label = _U('get_weapon'), value = 'get_weapon'})
 		end
 		table.insert(elements, {label = _U('put_weapon'), value = 'put_weapon'})
-		if PlayerData.job.grade > 0 then
+		if PlayerData.job.grade > 0 or br == 1 then
 			table.insert(elements, {label = 'Uzmi stvar',  value = 'get_stock'})
 		end
 		table.insert(elements, {label = 'Ostavi stvar',  value = 'put_stock'})
 
-		if PlayerData.job.grade_name == 'boss' or PlayerData.job.grade_name == 'vlasnik' then
-		  table.insert(elements, {label = _U('buy_weapons'), value = 'buy_weapons'})
+		if br == 0 then
+			if PlayerData.job.grade_name == 'boss' or PlayerData.job.grade_name == 'vlasnik' then
+			  table.insert(elements, {label = _U('buy_weapons'), value = 'buy_weapons'})
+			end
+		else
+			table.insert(elements, {label = _U('buy_weapons'), value = 'buy_weapons'})
 		end
 
 		ESX.UI.Menu.CloseAll()
@@ -1027,7 +1042,7 @@ function OpenArmoryMenu()
 			end
 
 			if data.current.value == 'buy_weapons' then
-			  OpenBuyWeaponsMenu()
+			  OpenBuyWeaponsMenu(br)
 			end
 
 			if data.current.value == 'put_stock' then
@@ -2026,7 +2041,7 @@ function OpenPutWeaponMenu()
 
 end
 
-function OpenBuyWeaponsMenu()
+function OpenBuyWeaponsMenu(br)
 
   ESX.TriggerServerCallback('mafije:getArmoryWeapons', function(weapons)
 
@@ -2056,34 +2071,38 @@ function OpenBuyWeaponsMenu()
         elements = elements,
       },
       function(data, menu)
-		if ZatrazioOruzje[10] ~= nil or ZOBr >= 10 then
-			ESX.ShowNotification("Vec imate naruceno 10 oruzja!")
-		else
-			local x,y,z
-			for i=1, #Koord, 1 do
-				if Koord[i].Mafija == PlayerData.job.name and Koord[i].Ime == "CrateDrop" then
-					x,y,z = table.unpack(Koord[i].Coord)
-					break
+		if br == 0 then
+			if ZatrazioOruzje[10] ~= nil or ZOBr >= 10 then
+				ESX.ShowNotification("Vec imate naruceno 10 oruzja!")
+			else
+				local x,y,z
+				for i=1, #Koord, 1 do
+					if Koord[i].Mafija == PlayerData.job.name and Koord[i].Ime == "CrateDrop" then
+						x,y,z = table.unpack(Koord[i].Coord)
+						break
+					end
+				end
+				if x ~= nil then
+					ESX.TriggerServerCallback('mafije:piku4', function(hasEnoughMoney)
+						if hasEnoughMoney then
+							ZatrazioOruzje[ZOBr] = data.current.value
+							ZOBr = ZOBr+1
+							TriggerServerEvent('mafije:SpremiIme', PlayerData.job.name, ZatrazioOruzje, ZOBr)
+							if ZOBr == 1 then
+								ESX.ShowNotification("Uzmite Big 4x4(Guardian) i odite na zeleni kofer oznacen na mapi kako bi ste pokupili paket")
+								CrateDrop("weapon_pistol", 55, 400.0, {["x"] = x, ["y"] = y, ["z"] = z})
+								print("tu sam")
+							end
+						else
+							ESX.ShowNotification(_U('not_enough_money'))
+						end
+					end, data.current.price, PlayerData.job.name)
+				else
+					ESX.ShowNotification("Vasoj mafiji jos nisu postavljene koordinate spawna crate dropa, javite adminima!")
 				end
 			end
-			if x ~= nil then
-				ESX.TriggerServerCallback('mafije:piku4', function(hasEnoughMoney)
-					if hasEnoughMoney then
-						ZatrazioOruzje[ZOBr] = data.current.value
-						ZOBr = ZOBr+1
-						TriggerServerEvent('mafije:SpremiIme', PlayerData.job.name, ZatrazioOruzje, ZOBr)
-						if ZOBr == 1 then
-							ESX.ShowNotification("Uzmite Big 4x4(Guardian) i odite na zeleni kofer oznacen na mapi kako bi ste pokupili paket")
-							CrateDrop("weapon_pistol", 55, 400.0, {["x"] = x, ["y"] = y, ["z"] = z})
-							print("tu sam")
-						end
-					else
-						ESX.ShowNotification(_U('not_enough_money'))
-					end
-				end, data.current.price, PlayerData.job.name)
-			else
-				ESX.ShowNotification("Vasoj mafiji jos nisu postavljene koordinate spawna crate dropa, javite adminima!")
-			end
+		else
+			TriggerServerEvent("mafije:DajOruzje", data.current.value, PlayerData.job.name)
 		end
       end,
       function(data, menu)

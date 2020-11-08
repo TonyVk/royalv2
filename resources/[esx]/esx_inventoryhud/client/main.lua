@@ -216,7 +216,7 @@ RegisterNUICallback(
 		
 		if data.item.type == "item_weapon" then
             local dataa = ESX.GetPlayerData()
-			if dataa.job.name == 'police' or dataa.job.name == 'sipa' or dataa.job.name == 'zastitar' then
+			if dataa.job.name == 'police' or dataa.job.name == 'sipa' or dataa.job.name == 'zastitar' or dataa.job.name == 'Gradonacelnik' then
 				ESX.ShowNotification("Vi ste u policiji/zastitar i zato ne mozete bacati oruzje po ulici!")
 				return
 			end
@@ -260,7 +260,7 @@ RegisterNUICallback(
 			
 			if data.item.type == "item_weapon" then
 				local dataa = ESX.GetPlayerData()
-				if dataa.job.name == 'police' or dataa.job.name == 'sipa' or dataa.job.name == 'zastitar' then
+				if dataa.job.name == 'police' or dataa.job.name == 'sipa' or dataa.job.name == 'zastitar' or dataa.job.name == 'Gradonacelnik' then
 					ESX.ShowNotification("Vi ste u policiji/zastitar i zato ne mozete davati oruzje drugim igracima!")
 					return
 				end
