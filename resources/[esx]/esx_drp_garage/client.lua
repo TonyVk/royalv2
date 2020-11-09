@@ -445,6 +445,9 @@ function SpawnVehicle(vehicle)
 			Vblip = nil
 		end
 	end
+	if vehicle.model == GetHashKey("DUBSTA") then
+		vehicle.model = GetHashKey("G65")
+	end
 	local korde = vector3(this_Garage.SpawnPoint.Pos.x, this_Garage.SpawnPoint.Pos.y, this_Garage.SpawnPoint.Pos.z)
 	TriggerServerEvent("garaza:SpawnVozilo", vehicle, korde, this_Garage.SpawnPoint.Heading, 1)
 end

@@ -178,7 +178,7 @@ Config = {
         maxRange    = 200,
       },
       abilities = {
-        infared     = true,
+        infared     = false,
         nightvision = true,
         boost       = false,
         tazer       = false,
