@@ -881,12 +881,21 @@ end
 commands.addp = function(args)
 	if not args[1] or not args[2] then return end
 	if _Queue.Priority[string_lower(args[1])] == nil then
-		MySQL.Async.execute('INSERT INTO priority (identifier, power) VALUES (@id, @pow)',{
-			['@id'] = string_lower(args[1]),
-			['@pow'] = args[2]
-		})
-		LoadPriority()
-		Queue:DebugPrint("Igrac dodan u priority queue!")
+		MySQL.Async.fetchAll('SELECT identifier, name FROM users WHERE identifier = @iden', { ['@iden'] = string_lower(args[1]) }, function(result)
+			for i=1, #result, 1 do
+				if string_lower(result[i].identifier) == string_lower(args[1]) then
+					MySQL.Async.execute('INSERT INTO priority (identifier, power, ime, datum) VALUES (@id, @pow, @ime, @dat)',{
+						['@id'] = string_lower(args[1]),
+						['@pow'] = args[2],
+						['@ime'] = result[i].name,
+						['@dat'] = os.date("%x %X")
+					}, function()
+						LoadPriority()
+						Queue:DebugPrint("Igrac dodan u priority queue!")
+					end)
+				end
+			end
+		end)
 	else
 		Queue:DebugPrint("Igrac vec ima priority!")
 	end
