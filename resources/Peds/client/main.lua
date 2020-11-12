@@ -59,6 +59,7 @@ Citizen.CreateThread(function()
 		end
 	end
 end)
+
 -- Nightclub Girls1
 Citizen.CreateThread(function()
 	local model = GetHashKey("a_f_y_juggalo_01")
@@ -324,7 +325,7 @@ Citizen.CreateThread(function()
         Wait(1)
     end
 	
-	if Config.EnableNightclubs then
+	if Config.EnableGuards then
 		for _, item in pairs(Config.Locations11) do
 			local npc = CreatePed(4, model, item.x, item.y, item.z, item.heading, false, true)
 			

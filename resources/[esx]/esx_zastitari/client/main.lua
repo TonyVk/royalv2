@@ -1021,28 +1021,36 @@ function OpenBuyWeaponsMenu()
 			hasWeapon = hasWeapon
 		})
 	end
+	table.insert(elements, {
+		label = "Armor",
+		name = "armor"
+	})
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'armory_buy_weapons', {
 		title    = _U('armory_weapontitle'),
 		align    = 'top-left',
 		elements = elements
 	}, function(data, menu)
-		if data.current.hasWeapon then
-			if #data.current.components > 0 then
-				OpenWeaponComponentShop(data.current.components, data.current.name, menu)
-			end
+		if data.current.name == "armor" then
+			SetPedArmour(PlayerPedId(), 100)
 		else
-			ESX.TriggerServerCallback('esx_zastitari:buyWeapon', function(bought)
-				if bought then
-					if data.current.price > 0 then
-						ESX.ShowNotification(_U('armory_bought', data.current.weaponLabel, ESX.Math.GroupDigits(data.current.price)))
-					end
-
-					menu.close()
-					OpenBuyWeaponsMenu()
-				else
-					ESX.ShowNotification(_U('armory_money'))
+			if data.current.hasWeapon then
+				if #data.current.components > 0 then
+					OpenWeaponComponentShop(data.current.components, data.current.name, menu)
 				end
-			end, data.current.name, 1)
+			else
+				ESX.TriggerServerCallback('esx_zastitari:buyWeapon', function(bought)
+					if bought then
+						if data.current.price > 0 then
+							ESX.ShowNotification(_U('armory_bought', data.current.weaponLabel, ESX.Math.GroupDigits(data.current.price)))
+						end
+
+						menu.close()
+						OpenBuyWeaponsMenu()
+					else
+						ESX.ShowNotification(_U('armory_money'))
+					end
+				end, data.current.name, 1)
+			end
 		end
 	end, function(data, menu)
 		menu.close()

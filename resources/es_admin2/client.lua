@@ -166,7 +166,7 @@ Citizen.CreateThread(function()
 		Citizen.Wait(0)
 
 		if(noclip)then
-			local currentSpeed = 2
+			local currentSpeed = 0.01
 			noclipEntity =
             IsPedInAnyVehicle(PlayerPedId(-1), false) and GetVehiclePedIsUsing(PlayerPedId(-1)) or PlayerPedId(-1)
             FreezeEntityPosition(PlayerPedId(-1), true)

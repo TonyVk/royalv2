@@ -10,6 +10,9 @@ Config.EnableCops                 = false    -- If true spawn All Cops at Depart
 --Nightclub--
 Config.EnableStripclub            = true
 Config.EnableNightclubs           = false   -- If true spawn Nightclub NPCs (Need a IPL Loader https://github.com/Bob74/bob74_ipl or other) (After Hours DLC)
+
+Config.EnableGuards           	  = true   -- If true spawn Nightclub NPCs (Need a IPL Loader https://github.com/Bob74/bob74_ipl or other) (After Hours DLC)
+
 Config.EnableSolomun              = false   -- If true spawn Solomun at Nightclub DJ
 Config.EnableDixon                = false   -- If true spawn Dixon at Nightclub DJ
 --Nightclub--
@@ -54,7 +57,10 @@ Config.Locations1 = { -- Some Shop & Interior NPCs
 	{ x = -3241.96, y = 999.86,   z = 11.83, heading = 4.68 },    -- cumash Freeway 24/7
 	{ x = -3038.68, y = 584.38,   z = 6.91,  heading = 24.72 },    -- Ocean Freeway 24/7
 	{ x = -2966.12, y = 391.35,   z = 14.04, heading = 77.04 },    -- Ocean Freeway LT Gasoline5
-	{ x = -1819.51, y = 793.72,   z = 137.08,heading = 134.72 }    -- Ocean Freeway LT Gasoline5
+	{ x = -1819.51, y = 793.72,   z = 137.08,heading = 134.72 },    -- Ocean Freeway LT Gasoline5
+	
+	{ x = 1100.57, y = 194.93,   z = -50.44 ,heading = 315.59 },    -- Ropa Casino
+	{ x = 1118.84, y = 213.54,   z = -50.44 ,heading = 85.24 }    -- CAJERO AUTOMATICO $ Casino
 }
 
 ------------------------------------NIGHTCLUBS-------------------------------------
@@ -87,18 +93,24 @@ Config.Locations5 = { -- Nightclub Girls Slow
 	{ x = -1591.78,   y = -3010.03, z = -80.01, heading = 116.30 },	-- NClub2
 	{ x = -1587.04,   y = -3011.44, z = -77.00, heading = 101.45 },	-- NClub3
 	{ x = -1598.90,   y = -3006.84, z = -77.00, heading = 268.78 },	-- NClub4
-	{ x = -1575.12,   y = -3006.97, z = -80.01, heading = 157.70 }	-- NClub5
+	{ x = -1575.12,   y = -3006.97, z = -80.01, heading = 157.70 },	-- NClub5
+	{ x = 1099.53,    y =  218.68,  z = -49.75, heading = 154.86 }, -- CasinoGirlSlow1(plataforma)
+	{ x = 1100.7,   y = 221.97, z = -49.75, heading = 169.3 },	-- CasinoGirlSlow2(plataforma)
+	{ x = 1100.39,   y = 219.82, z = -49.75, heading = 23.14 },	-- CasinoGirlSlow3(plataforma)
+	{ x = 1102.06,   y = 218.07, z = -49.75, heading = 234.4 }	-- CasinoGirlSlow4(plataforma)
 }
 
 Config.Locations6 = { -- Nightclub Girls Tops
 	{ x = -1598.59,   y = -3015.69, z = -79.21, heading = 282.30 },	-- NCTop1
-	{ x = -1596.21,   y = -3007.97, z = -79.21, heading = 151.05 }	-- NCTop2
+	{ x = -1596.21,   y = -3007.97, z = -79.21, heading = 151.05 },	-- NCTop2
+	{ x = 1110.96,   y = 227.45, z = -50.64, heading = 194.03 },	-- CasinoGirlTop1
 }
 
 Config.Locations7 = { -- Nightclub Mens1
 	{ x = -1599.30,   y = -3012.06, z = -80.01, heading = 316.20 },	-- NClub1
 	{ x = -1587.75,   y = -3007.00, z = -80.01, heading = 354.15 },	-- NClub2
-	{ x = -1575.79,   y = -3008.55, z = -80.01, heading = 324.48 }	-- NClub3
+	{ x = -1575.79,   y = -3008.55, z = -80.01, heading = 324.48 },	-- NClub3
+	{ x = 1104.19,   y = 215.21, z = -49.99, heading = 39.48 }	-- Mens1 Casino ?
 }
 
 Config.Locations8 = { -- Nightclub Mens2
@@ -106,36 +118,34 @@ Config.Locations8 = { -- Nightclub Mens2
 	{ x = -1606.27,   y = -3014.39, z = -78.80, heading = 337.85 },	-- NClub2
 	{ x = -1575.75,   y = -3012.27, z = -80.01, heading = 135.35 },	-- NClub3
 	{ x = -1588.74,   y = -3011.59, z = -77.00, heading = 277.38 },	-- NClub4
-	{ x = -1599.36,   y = -3002.17, z = -76.81, heading = 325.15 }	-- NClub5
+	{ x = -1599.36,   y = -3002.17, z = -76.81, heading = 325.15 },	-- NClub5
+	{ x = 1105.17,   y = 217.04, z = -49.99, heading = 57.21 }	-- Mens2 Casino ?
 }
 
 Config.Locations9 = { -- Nightclub Mens3
 	{ x = -1597.49,   y = -3006.86, z = -77.00, heading = 93.60 },	-- NClub1
 	{ x = -1596.35,   y = -3011.46, z = -80.01, heading = 107.00 },	-- NClub2
-	{ x = -1611.66,   y = -3009.90, z = -80.01, heading = 119.85 }	-- NClub3
+	{ x = -1611.66,   y = -3009.90, z = -80.01, heading = 119.85 },	-- NClub3
+	{ x = 1112.25,   y = 212.55, z = -50.44, heading = 178.4 }	-- Mens3 Casino ?
 }
 
 Config.Locations10 = { -- Nightclub Bartender
 	{ x = -1584.95,   y = -3012.60, z = -77.01, heading = 92.70 },	-- NClub1
 	{ x = -1577.97,   y = -3016.80, z = -80.01, heading = 359.28 },	-- NClub2
-	{ x = -1572.20,   y = -3013.56, z = -75.41, heading = 272.63 }	-- NCWelcome
+	{ x = -1572.20,   y = -3013.56, z = -75.41, heading = 272.63 },	-- NCWelcome
+	{ x = 1110.53,   y = 208.44, z = -50.44, heading = 80.97 }	-- BARTENDER CASINO 1
 }
 
-Config.Locations11 = { -- Nightclub Guards
-	{ x = -1576.46,   y = -3010.37, z = -80.01, heading = 79.00 },	-- NClub1
-	{ x = -1588.06,   y = -3014.43, z = -80.01, heading = 349.75 },	-- NClub2
-	{ x = -1585.96,   y = -3016.78, z = -77.00, heading = 136.40 },	-- NClub3
-	{ x = -1605.85,   y = -3013.04, z = -78.80, heading = 288.05 },	-- NClub4
-	{ x = -1614.12,   y = -3009.50, z = -76.21, heading = 119.75 },	-- NClub5
-	{ x = -1568.17,   y = -3015.47, z = -75.41, heading = 39.15 },	-- NCWelcome
-	{ x = 194.45,     y = -3165.86, z = 4.79,   heading = 115.62 },	-- NCOut
-	--
-	{ x = 123.57,     y = -1290.38, z = 28.29,  heading = 240.82 },	-- Vanilla1
-	{ x = 107.82,     y = -1298.90, z = 27.77,  heading = 172.95 },	-- Vanilla2
-	{ x = 462.81,     y = -992.30,  z = 23.91,  heading = 349.60 },	-- LSPD Prison1
-	{ x = 462.89,     y = -1003.08, z = 23.91,  heading = 347.88 },	-- LSPD Prison2
-	{ x = 470.40,     y = -1015.15, z = 25.39,  heading = 154.75 }	-- LSPD Prison3
-	
+Config.Locations11 = { -- CASINO Guards
+	{ x = 1117.47,    y = 223.36,   z = -50.44, heading = 22.16 },	-- GCasino1 al lado caja
+	{ x = 1124.58,    y = 242.79,   z = -51.44, heading = 134.99 },	-- GCasino2 hall mesas in
+	{ x = 1143.4,     y = 252.11,   z = -52.04, heading = 220.84 },	-- GCasino3 vipderecha
+	{ x = 1134.03,    y = 260.48,   z = -52.04, heading = 34.58 },	-- GCasino4 vipizq
+	{ x = 1143.39,    y = 270.54,   z = -52.84, heading = 223.96 },	-- GCasino5 mesas bj
+	{ x = 1152.02,    y = 262.01,   z = -52.84, heading = 43.07 },	-- GCasino5 mesas bj
+	{ x = 923.57,     y = 43.46,    z = 80.11,  heading = 57.87 },	-- GCasino6 afu1
+	{ x = 927.41,     y = 50.81,    z = 80.11,  heading = 108.14 },	-- GCasinoWelcome
+	{ x = 1087.65,    y = 209.83,   z = -50.0,  heading = 264.7 }	-- GCasinoOut
 }
 
 Config.Locations12 = { -- Nightclub Solomun
