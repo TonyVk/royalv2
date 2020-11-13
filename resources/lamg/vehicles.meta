@@ -91,11 +91,11 @@
       <frequency value="100" />
       <swankness>SWANKNESS_1</swankness>
       <maxNum value="999" />
-      <flags>FLAG_LAW_ENFORCEMENT FLAG_DONT_SPAWN_IN_CARGEN FLAG_IS_OFFROAD_VEHICLE FLAG_HAS_BULLET_RESISTANT_GLASS FLAG_HAS_CAPPED_EXPLOSION_DAMAGE FLAG_HAS_INCREASED_RAMMING_FORCE</flags>
+      <flags>FLAG_DONT_SPAWN_IN_CARGEN FLAG_IS_OFFROAD_VEHICLE FLAG_HAS_BULLET_RESISTANT_GLASS FLAG_HAS_CAPPED_EXPLOSION_DAMAGE FLAG_HAS_INCREASED_RAMMING_FORCE</flags>
       <type>VEHICLE_TYPE_CAR</type>
       <plateType>VPT_FRONT_AND_BACK_PLATES</plateType>
 	  <dashboardType>VDT_CAVALCADE</dashboardType>
-      <vehicleClass>VC_EMERGENCY</vehicleClass>
+      <vehicleClass>VC_SEDAN</vehicleClass>
       <wheelType>VWT_SUV</wheelType>
       <trailers />
       <additionalTrailers />

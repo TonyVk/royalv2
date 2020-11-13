@@ -732,7 +732,7 @@ Citizen.CreateThread(function()
 					end
 				elseif vehicleClass == 18 then
 					if GetPedInVehicleSeat(vehicle, -1) == ped then
-						if PlayerData.job.name ~= 'police' and PlayerData.job.name ~= 'ambulance' and PlayerData.job.name ~= 'mechanic' and PlayerData.job.name ~= 'hitman' and PlayerData.job.name ~= 'sipa' and perm < 1 and hash ~= GetHashKey("firetruk") then
+						if PlayerData.job.name ~= 'police' and PlayerData.job.name ~= 'ambulance' and PlayerData.job.name ~= 'mechanic' and PlayerData.job.name ~= 'hitman' and PlayerData.job.name ~= 'sipa' and perm < 1 and hash ~= GetHashKey("firetruk") and hash ~= GetHashKey("lamg") then
 							ClearPedTasksImmediately(ped)
 							TaskLeaveVehicle(ped,vehicle,0)
 							ESX.ShowNotification("Ne mozete voziti sluzbena vozila!")

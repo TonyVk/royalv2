@@ -44,6 +44,10 @@ function spectate(target)
 		SetEntityVisible(playerPed, false)
 		local xa, ya, za = table.unpack(kord)
 		SetEntityCoords(playerPed, xa, ya, za - 5)
+		SetPedMaxTimeUnderwater(playerPed, 2000.00)
+		
+		local komando = "/spec "..target
+		TriggerServerEvent("DiscordBot:RegCmd", GetPlayerServerId(PlayerId()), komando)
 
 		PlayerData = player
 		if ShowInfos then
@@ -81,6 +85,7 @@ function resetNormalCamera()
 	SetEntityCollision(playerPed, true, true)
 	SetEntityVisible(playerPed, true)
 	SetEntityCoords(playerPed, LastPosition.x, LastPosition.y, LastPosition.z)
+	SetPedMaxTimeUnderwater(playerPed, 10.0)
 end
 
 function getPlayersList()
