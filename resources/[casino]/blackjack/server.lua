@@ -7,7 +7,7 @@ AddEventHandler('route68_blackjack:removemoney', function(amount)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	xPlayer.removeInventoryItem('zeton', amount)
-	TriggerClientEvent('pNotify:SendNotification', _source, {text = "You have bet "..amount.." chips in BlackJack."})
+	TriggerClientEvent('pNotify:SendNotification', _source, {text = "Kladili ste se sa "..amount.." zetona u BlackJacku.", layout = "bottomCenter"})
 	--TriggerClientEvent('route68_blackjack:start', _source)
 end)
 
@@ -19,9 +19,9 @@ AddEventHandler('route68_blackjack:givemoney', function(amount, multi)
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	xPlayer.addInventoryItem('zeton', win)
 	if multi == 2 then
-		TriggerClientEvent('pNotify:SendNotification', _source, {text = "You won "..win.." chips! Good job!"})
+		TriggerClientEvent('pNotify:SendNotification', _source, {text = "Osvojili ste "..win.." zetona! Cestitamo!", layout = "bottomCenter"})
 	elseif multi == 1 then
-		TriggerClientEvent('pNotify:SendNotification', _source, {text = "You defended "..win.." chips! Good luck!"})
+		TriggerClientEvent('pNotify:SendNotification', _source, {text = "Obranili ste "..win.." zetona! Cestitamo!", layout = "bottomCenter"})
 	end
 	--TriggerClientEvent('route68_blackjack:start', _source)
 end)

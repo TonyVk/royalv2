@@ -369,9 +369,9 @@ $(function() {
 				coins = event.data.coins;
 				$('#ownedCoins').empty().append(coins);
 				BlackJack.myTurn = true;
-				$hit.textContent = '[NEW GAME] - Multipler x2';
-				$stay.textContent = '[BET UP] +100';
-				$score.textContent = '[BET DOWN] -100';
+				$hit.textContent = '[NOVA IGRA] - Multipler x2';
+				$stay.textContent = '[Podigni ulog] +100';
+				$score.textContent = '[Pusti ulog] -100';
 				$('#ownedPoints').empty().append(0);
 				$('#ownedBet').empty().append(100);
 			} else {
@@ -391,9 +391,9 @@ $(function() {
 	
 	document.body.style.backgroundColor = "transparent";
 
-	$hit.textContent = '[NEW GAME] - Multipler x2';
-	$stay.textContent = '[BET UP] +100';
-	$score.textContent = '[BET DOWN] -100';
+	$hit.textContent = '[NOVA IGRA] - Multipler x2';
+	$stay.textContent = '[Podigni ulog] +100';
+	$score.textContent = '[Pusti ulog] -100';
 	$topbar.appendChild($hit);
 	$topbar.appendChild($stay);
 	$topbar.appendChild($score);
@@ -402,7 +402,7 @@ $(function() {
 		if (!canAct())
 			return;
 		
-		if ($hit.textContent.includes("[NEW GAME] - Multipler x2") && BlackJack.bet >= 100) {
+		if ($hit.textContent.includes("[NOVA IGRA] - Multipler x2") && BlackJack.bet >= 100) {
 			$.post("http://blackjack/card", JSON.stringify({}));
 			$('#ownedPoints').empty().append(0);
 			obecnyBet = BlackJack.bet
@@ -416,7 +416,7 @@ $(function() {
 			$('#ownedCoins').empty().append(coins);
 			$('#ownedBet').empty().append(BlackJack.bet);
 			$stay.textContent = "[STAND]";
-			$score.textContent = "Dealer has 0 points;";
+			$score.textContent = "Dealer ima 0 bodova;";
 			$.post("http://blackjack/card", JSON.stringify({}));
 			
 			BlackJack.deck.unmount();
@@ -446,7 +446,7 @@ $(function() {
 			}).then(function() {
 				$stay.textContent = "[STAND]";
 				$('#ownedPoints').empty().append(BlackJack.getScore(BlackJack.hand));
-				$score.textContent = "Dealer has " + BlackJack.getScore(BlackJack.dealerHand.slice(0, 1)) + " points.";
+				$score.textContent = "Dealer ima " + BlackJack.getScore(BlackJack.dealerHand.slice(0, 1)) + " bodova.";
 			});
 		} else if (BlackJack.myTurn) {
 			queActions(1);
@@ -465,10 +465,10 @@ $(function() {
 				if (BlackJack.didBust(BlackJack.hand)) {
 					$.post("http://blackjack/card", JSON.stringify({}));
 					// Did Bust, reset game and set bet to 0;
-					BlackJack.Message('You lost having ' + BlackJack.getScore(BlackJack.hand) + ' points.');
-					$hit.textContent = '[NEW GAME] - Multipler x2';
-					$stay.textContent = '[BET UP] +100';
-					$score.textContent = '[BET DOWN] -100';
+					BlackJack.Message('Izgubili ste sa ' + BlackJack.getScore(BlackJack.hand) + ' bodova.');
+					$hit.textContent = '[NOVA IGRA] - Multipler x2';
+					$stay.textContent = '[Podigni ulog] +100';
+					$score.textContent = '[Pusti ulog] -100';
 					$('#ownedPoints').empty().append(0);
 					$('#ownedBet').empty().append(100);
 					BlackJack.Lost()
@@ -483,7 +483,7 @@ $(function() {
 		if (!canAct())
 			return;
 		
-		if ($stay.textContent.includes("[BET UP] +100")) {
+		if ($stay.textContent.includes("[Podigni ulog] +100")) {
 			//Check to see if can bet up. Then bet up with what ever you are using to handle money.
 			BlackJack.bet += 100;
 
@@ -492,45 +492,45 @@ $(function() {
 			}
 			$.post("http://blackjack/bet", JSON.stringify({}));
 			
-			$hit.textContent = '[NEW GAME] - Multipler x2';
+			$hit.textContent = '[NOVA IGRA] - Multipler x2';
 			$('#ownedPoints').empty().append(0);
 			$('#ownedBet').empty().append(BlackJack.bet);
 		} else if (BlackJack.myTurn) {
 			BlackJack.myTurn = false;
 			BlackJack.deck.cards[3].setSide("front");
-			$score.textContent = "Dealer has " + BlackJack.getScore(BlackJack.dealerHand) + " points.";
+			$score.textContent = "Dealer ima " + BlackJack.getScore(BlackJack.dealerHand) + " bodova.";
 			
 			if (BlackJack.getScore(BlackJack.dealerHand) > BlackJack.getScore(BlackJack.hand)) {
 				$.post("http://blackjack/card", JSON.stringify({}));
-				$hit.textContent = '[NEW GAME] - Multipler x2';
+				$hit.textContent = '[NOVA IGRA] - Multipler x2';
 				$('#ownedPoints').empty().append(0);
 				$('#ownedBet').empty().append(100);
-				$stay.textContent = '[BET UP] +100';
-				$score.textContent = '[BET DOWN] -100';
+				$stay.textContent = '[Podigni ulog] +100';
+				$score.textContent = '[Pusti ulog] -100';
 				BlackJack.Lost();
-				BlackJack.Message('You lost ' + BlackJack.getScore(BlackJack.hand) + ' to ' + BlackJack.getScore(BlackJack.dealerHand) + ".");
+				BlackJack.Message('Izgubili ste ' + BlackJack.getScore(BlackJack.hand) + ' prema ' + BlackJack.getScore(BlackJack.dealerHand) + ".");
 				$('#ownedBet').empty().append(100);
 				queActions(0);
 			} else if (BlackJack.getScore(BlackJack.dealerHand) == BlackJack.getScore(BlackJack.hand)) {
 				$.post("http://blackjack/card", JSON.stringify({}));
-				$hit.textContent = '[NEW GAME] - Multipler x2';
+				$hit.textContent = '[NOVA IGRA] - Multipler x2';
 				$('#ownedPoints').empty().append(0);
 				$('#ownedBet').empty().append(100);
-				$stay.textContent = '[BET UP] +100';
-				$score.textContent = '[BET DOWN] -100';
+				$stay.textContent = '[Podigni ulog] +100';
+				$score.textContent = '[Pusti ulog] -100';
 				BlackJack.Tie();
-				BlackJack.Message('You tied ' + BlackJack.getScore(BlackJack.hand) + ' to ' + BlackJack.getScore(BlackJack.dealerHand) + ".");
+				BlackJack.Message('Zavrsili ste izjednaceno ' + BlackJack.getScore(BlackJack.hand) + ' prema ' + BlackJack.getScore(BlackJack.dealerHand) + ".");
 				$('#ownedBet').empty().append(100);
 				queActions(0);
 			} else if (!BlackJack.willDealerHit(BlackJack.dealerHand)) {
 				$.post("http://blackjack/card", JSON.stringify({}));
-				$hit.textContent = '[NEW GAME] - Multipler x2';
+				$hit.textContent = '[NOVA IGRA] - Multipler x2';
 				$('#ownedPoints').empty().append(0);
 				$('#ownedBet').empty().append(100);
-				$stay.textContent = '[BET UP] +100';
-				$score.textContent = '[BET DOWN] -100';
+				$stay.textContent = '[Podigni ulog] +100';
+				$score.textContent = '[Pusti ulog] -100';
 				BlackJack.Win();
-				BlackJack.Message('You won ' + BlackJack.getScore(BlackJack.hand) + ' to ' + BlackJack.getScore(BlackJack.dealerHand) + ".");
+				BlackJack.Message('Pobjedili ste ' + BlackJack.getScore(BlackJack.hand) + ' prema ' + BlackJack.getScore(BlackJack.dealerHand) + ".");
 				$('#ownedPoints').empty().append(0);
 				$('#ownedBet').empty().append(100);
 				queActions(0);
@@ -575,43 +575,43 @@ $(function() {
 					
 					if (BlackJack.didBust(BlackJack.dealerHand)) {
 						$.post("http://blackjack/card", JSON.stringify({}));
-						$hit.textContent = '[NEW GAME] - Multipler x2';
+						$hit.textContent = '[NOVA IGRA] - Multipler x2';
 						$('#ownedPoints').empty().append(0);
 						$('#ownedBet').empty().append(100);
-						$stay.textContent = '[BET UP] +100';
-						$score.textContent = '[BET DOWN] -100';
+						$stay.textContent = '[Podigni ulog] +100';
+						$score.textContent = '[Pusti ulog] -100';
 						BlackJack.Win();
-						BlackJack.Message('You won ' + BlackJack.getScore(BlackJack.hand) + ' to ' + BlackJack.getScore(BlackJack.dealerHand) + ".");
+						BlackJack.Message('Pobjedili ste ' + BlackJack.getScore(BlackJack.hand) + ' prema ' + BlackJack.getScore(BlackJack.dealerHand) + ".");
 						$('#ownedPoints').empty().append(0);
 						$('#ownedBet').empty().append(100);
 					} else if (BlackJack.getScore(BlackJack.dealerHand) > BlackJack.getScore(BlackJack.hand)) {
 						$.post("http://blackjack/card", JSON.stringify({}));
-						$hit.textContent = '[NEW GAME] - Multipler x2';
-						$stay.textContent = '[BET UP] +100';
-						$score.textContent = '[BET DOWN] -100';
+						$hit.textContent = '[NOVA IGRA] - Multipler x2';
+						$stay.textContent = '[Podigni ulog] +100';
+						$score.textContent = '[Pusti ulog] -100';
 						BlackJack.Lost();
-						BlackJack.Message('You lost ' + BlackJack.getScore(BlackJack.hand) + ' to ' + BlackJack.getScore(BlackJack.dealerHand) + ".");
+						BlackJack.Message('Izgubili ste ' + BlackJack.getScore(BlackJack.hand) + ' prema ' + BlackJack.getScore(BlackJack.dealerHand) + ".");
 						$('#ownedPoints').empty().append(0);
 						$('#ownedBet').empty().append(100);
 					} else if (BlackJack.getScore(BlackJack.dealerHand) == BlackJack.getScore(BlackJack.hand)) {
 						$.post("http://blackjack/card", JSON.stringify({}));
-						$hit.textContent = '[NEW GAME] - Multipler x2';
+						$hit.textContent = '[NOVA IGRA] - Multipler x2';
 						$('#ownedPoints').empty().append(0);
 						$('#ownedBet').empty().append(100);
-						$stay.textContent = '[BET UP] +100';
-						$score.textContent = '[BET DOWN] -100';
+						$stay.textContent = '[Podigni ulog] +100';
+						$score.textContent = '[Pusti ulog] -100';
 						BlackJack.Tie();
-						BlackJack.Message('You tied ' + BlackJack.getScore(BlackJack.hand) + ' to ' + BlackJack.getScore(BlackJack.dealerHand) + ".");
+						BlackJack.Message('Zavrsili ste izjednaceno ' + BlackJack.getScore(BlackJack.hand) + ' prema ' + BlackJack.getScore(BlackJack.dealerHand) + ".");
 						$('#ownedPoints').empty().append(0);
 						$('#ownedBet').empty().append(100);
 						queActions(0);
 					} else {
 						$.post("http://blackjack/card", JSON.stringify({}));
-						$hit.textContent = '[NEW GAME] - Multipler x2';
-						$stay.textContent = '[BET UP] +100';
-						$score.textContent = '[BET DOWN] -100';
+						$hit.textContent = '[NOVA IGRA] - Multipler x2';
+						$stay.textContent = '[Podigni ulog] +100';
+						$score.textContent = '[Pusti ulog] -100';
 						BlackJack.Win();
-						BlackJack.Message('You won ' + BlackJack.getScore(BlackJack.hand) + ' to ' + BlackJack.getScore(BlackJack.dealerHand) + ".");
+						BlackJack.Message('Pobjedili ste ' + BlackJack.getScore(BlackJack.hand) + ' prema ' + BlackJack.getScore(BlackJack.dealerHand) + ".");
 						$('#ownedPoints').empty().append(0);
 						$('#ownedBet').empty().append(100);
 					}
@@ -626,7 +626,7 @@ $(function() {
 		if (!canAct())
 			return;
 		
-		if ($score.textContent.includes("[BET DOWN] -100")) {
+		if ($score.textContent.includes("[Pusti ulog] -100")) {
 			$.post("http://blackjack/bet", JSON.stringify({}));
 			//Check to see if can bet down. Then bet down with what ever you are using to handle money.
 			BlackJack.bet -= 100;
@@ -634,7 +634,7 @@ $(function() {
 			if (BlackJack.bet < 100)
 				BlackJack.bet = 100;
 			
-			$hit.textContent = '[NEW GAME] - Multipler x2';
+			$hit.textContent = '[NOVA IGRA] - Multipler x2';
 			$('#ownedBet').empty().append(BlackJack.bet);
 		} else {
 		}

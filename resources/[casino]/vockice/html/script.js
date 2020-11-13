@@ -57,7 +57,7 @@ function insertCoin(amount) {
   coins += amount;
   backCoins = coins * 2;
   $('#ownedCoins').empty().append(coins);
-  $.post('http://sloty/updateBets', JSON.stringify({
+  $.post('http://vockice/updateBets', JSON.stringify({
         bets: coins
       }));
 }
@@ -127,7 +127,7 @@ var colorHistory = [-1];
 var dubleDate = 0;
 
 function endWithWin(x, sound) {
-  $.post('http://sloty/wygrana', JSON.stringify({
+  $.post('http://vockice/wygrana', JSON.stringify({
       win: x
     }));
 
@@ -392,7 +392,7 @@ function togglePacanele(start, banuti) {
     setTimeout(function(){ rolling = 0; }, 4000);
   } else {
     allFile.css("display", "none");
-    $.post("http://sloty/exitWith", JSON.stringify({
+    $.post("http://vockice/exitWith", JSON.stringify({
       coinAmount: backCoins / 2
     }));
     insertCoin(-coins);

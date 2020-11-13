@@ -30,7 +30,7 @@ AddEventHandler('route68_ruletka:start', function()
 			})
 			SetNuiFocus(true, true)
 		else
-			ESX.ShowNotification('You need at least 10 chips to play!!')
+			ESX.ShowNotification('Trebate minimalno 10 zetona za igrati!!')
 			SendNUIMessage({
 				type = "reset_bet"
 			})
@@ -59,7 +59,14 @@ AddEventHandler('esx_roulette:start_game', function(action, amount)
 	if game_during == false then
 		TriggerServerEvent('esx_roulette:removemoney', amount)
 		local kolorBetu = action
-		TriggerEvent('pNotify:SendNotification', {text = "You have bet "..amount.." chips on "..kolorBetu..". The wheel is spinning..."})
+		if action == "red" then
+			kolorBetu = "crvena"
+		elseif action == "black" then
+			kolorBetu = "crna"
+		else
+			kolorBetu = "zelena"
+		end
+		TriggerEvent('pNotify:SendNotification', {text = "Kladili ste se sa "..amount.." zetona na "..kolorBetu..". Kotac se okrece...", layout = "bottomCenter"})
 		game_during = true
 		local randomNumber = math.floor(math.random() * 36)
 		--local randomNumber = 0
@@ -82,26 +89,26 @@ AddEventHandler('esx_roulette:start_game', function(action, amount)
 		if action == 'black' then
 			if has_value(black, randomNumber) then
 				local win = amount * 2
-				ESX.ShowNotification('You won '..win..' chips!')
+				ESX.ShowNotification('Osvojili ste '..win..' zetona!')
 				TriggerServerEvent('esx_roulette:givemoney', action, amount)
 			else
-				ESX.ShowNotification('Not this time. Try again! Good luck!')
+				ESX.ShowNotification('Izgubili ste. Pokusajte ponovno! Sretno!')
 			end
 		elseif action == 'red' then
 			local win = amount * 2
 			if has_value(red, randomNumber) then
-				ESX.ShowNotification('You won '..win..' chips!')
+				ESX.ShowNotification('Osvojili ste '..win..' zetona!')
 				TriggerServerEvent('esx_roulette:givemoney', action, amount)
 			else
-				ESX.ShowNotification('Not this time. Try again! Good luck!')
+				ESX.ShowNotification('Izgubili ste. Pokusajte ponovno! Sretno!')
 			end
 		elseif action == 'green' then
 			local win = amount * 14
 			if randomNumber == 0 then
-				ESX.ShowNotification('You won '..win..' chips!')
+				ESX.ShowNotification('Osvojili ste '..win..' zetona!')
 				TriggerServerEvent('esx_roulette:givemoney', action, amount)
 			else
-				ESX.ShowNotification('Not this time. Try again! Good luck!')
+				ESX.ShowNotification('Izgubili ste. Pokusajte ponovno! Sretno!')
 			end
 		end
 		--TriggerServerEvent('roulette:givemoney', randomNumber)
@@ -111,6 +118,6 @@ AddEventHandler('esx_roulette:start_game', function(action, amount)
 		game_during = false
 		TriggerEvent('route68_ruletka:start')
 	else
-		ESX.ShowNotification('The wheel is spinning...')
+		ESX.ShowNotification('Kotac se okrece...')
 	end
 end)

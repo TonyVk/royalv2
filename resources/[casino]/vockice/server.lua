@@ -1,24 +1,24 @@
 ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-RegisterServerEvent("esx_slots:BetsAndMoney")
-AddEventHandler("esx_slots:BetsAndMoney", function(bets)
+RegisterServerEvent("vockice:BetsAndMoney")
+AddEventHandler("vockice:BetsAndMoney", function(bets)
     local _source   = source
     local xPlayer   = ESX.GetPlayerFromId(_source)
     if xPlayer then
         local xItem = xPlayer.getInventoryItem('zeton')
         if xItem.count < 10 then
-            TriggerClientEvent('esx:showNotification', _source, "You need at least 10 chips to play!")
+            TriggerClientEvent('esx:showNotification', _source, "Trebate minimalno 10 zetona!")
         else
             MySQL.Sync.execute("UPDATE users SET zeton=@zetony WHERE identifier=@identifier",{['@identifier'] = xPlayer.identifier, ['@zetony'] = xItem.count})
-            TriggerClientEvent("esx_slots:UpdateSlots", _source, xItem.count)
+            TriggerClientEvent("vockice:UpdateSlots", _source, xItem.count)
             xPlayer.removeInventoryItem('zeton', xItem.count)
         end
     end
 end)
 
-RegisterServerEvent("esx_slots:updateCoins")
-AddEventHandler("esx_slots:updateCoins", function(bets)
+RegisterServerEvent("vockice:updateCoins")
+AddEventHandler("vockice:updateCoins", function(bets)
     local _source   = source
     local xPlayer   = ESX.GetPlayerFromId(_source)
     if xPlayer then
@@ -26,8 +26,8 @@ AddEventHandler("esx_slots:updateCoins", function(bets)
     end
 end)
 
-RegisterServerEvent("esx_slots:PayOutRewards")
-AddEventHandler("esx_slots:PayOutRewards", function(amount)
+RegisterServerEvent("vockice:PayOutRewards")
+AddEventHandler("vockice:PayOutRewards", function(amount)
     local _source   = source
     local xPlayer   = ESX.GetPlayerFromId(_source)
     if xPlayer then
@@ -39,59 +39,59 @@ AddEventHandler("esx_slots:PayOutRewards", function(amount)
     end
 end)
 
-RegisterServerEvent("route68_kasyno:WymienZetony")
-AddEventHandler("route68_kasyno:WymienZetony", function(count)
+RegisterServerEvent("vockice:WymienZetony")
+AddEventHandler("vockice:WymienZetony", function(count)
     local _source   = source
     local xPlayer   = ESX.GetPlayerFromId(_source)
     if xPlayer then
         local xItem = xPlayer.getInventoryItem('zeton')
         if xItem.count < count then
-            TriggerClientEvent('pNotify:SendNotification', _source, {text = 'You don`t have that mush chips!'})
+            TriggerClientEvent('pNotify:SendNotification', _source, {text = 'Nemate toliko zetona!', layout = "bottomCenter"})
         elseif xItem.count >= count then
             local kwota = math.floor(count * 5)
             xPlayer.removeInventoryItem('zeton', count)
             xPlayer.addMoney(kwota)
-            TriggerClientEvent('pNotify:SendNotification', _source, {text = 'You got $'..kwota..' for '..count..' chips.'})
+            TriggerClientEvent('pNotify:SendNotification', _source, {text = 'Dobili ste $'..kwota..' za '..count..' zetona.', layout = "bottomCenter"})
         end
     end
 end)
 
-RegisterServerEvent("route68_kasyno:KupZetony")
-AddEventHandler("route68_kasyno:KupZetony", function(count)
+RegisterServerEvent("vockice:KupZetony")
+AddEventHandler("vockice:KupZetony", function(count)
     local _source   = source
     local xPlayer   = ESX.GetPlayerFromId(_source)
     if xPlayer then
         local cash = xPlayer.getMoney()
         local kwota = math.floor(count * 5)
         if kwota > cash then
-            TriggerClientEvent('pNotify:SendNotification', _source, {text = 'You don`t have that much money!'})
+            TriggerClientEvent('pNotify:SendNotification', _source, {text = 'Nemate toliko novca!', layout = "bottomCenter"})
         elseif kwota <= cash then
             xPlayer.addInventoryItem('zeton', count)
             xPlayer.removeMoney(kwota)
-            TriggerClientEvent('pNotify:SendNotification', _source, {text = 'You got '..count..' chips for $'..kwota..'.'})
+            TriggerClientEvent('pNotify:SendNotification', _source, {text = 'Dobili ste '..count..' zetona za $'..kwota..'.', layout = "bottomCenter"})
         end
     end
 end)
 
-RegisterServerEvent("route68_kasyno:KupAlkohol")
-AddEventHandler("route68_kasyno:KupAlkohol", function(count, item)
+RegisterServerEvent("vockice:KupAlkohol")
+AddEventHandler("vockice:KupAlkohol", function(count, item)
     local _source   = source
     local xPlayer   = ESX.GetPlayerFromId(_source)
     if xPlayer then
         local cash = xPlayer.getMoney()
         local kwota = math.floor(count * 10)
         if kwota > cash then
-            TriggerClientEvent('pNotify:SendNotification', _source, {text = 'You don`t have that much money!'})
+            TriggerClientEvent('pNotify:SendNotification', _source, {text = 'Nemate toliko novca!', layout = "bottomCenter"})
         elseif kwota <= cash then
             xPlayer.addInventoryItem(item, count)
             xPlayer.removeMoney(kwota)
-            TriggerClientEvent('pNotify:SendNotification', _source, {text = 'You got '..count..' items for $'..count..'.'})
+            TriggerClientEvent('pNotify:SendNotification', _source, {text = 'Dobili ste '..count..' predmeta za $'..count..'.', layout = "bottomCenter"})
         end
     end
 end)
 
-RegisterServerEvent("route68_kasyno:getJoinChips")
-AddEventHandler("route68_kasyno:getJoinChips", function()
+RegisterServerEvent("vockice:getJoinChips")
+AddEventHandler("vockice:getJoinChips", function()
     local _source   = source
     local xPlayer   = ESX.GetPlayerFromId(_source)
     local identifier = xPlayer.identifier
@@ -101,7 +101,7 @@ AddEventHandler("route68_kasyno:getJoinChips", function()
 		if result[1] then
             local zetony = result[1].zeton
             if zetony > 0 then
-                TriggerClientEvent('pNotify:SendNotification', _source, {text = 'You got '..tostring(zetony)..' chips, because you left during slots game.'})
+                TriggerClientEvent('pNotify:SendNotification', _source, {text = 'Dobili ste '..tostring(zetony)..' zetona, zato sto ste izasli iz igre za vrijeme kladjenja.', layout = "bottomCenter"})
                 xPlayer.addInventoryItem('zeton', zetony)
                 MySQL.Sync.execute("UPDATE users SET zeton=0 WHERE identifier=@identifier",{['@identifier'] = xPlayer.identifier})
             end

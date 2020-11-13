@@ -19,7 +19,7 @@ AddEventHandler('route68_blackjack:start', function()
 			})
 			SetNuiFocus(true, true)
 		else
-			ESX.ShowNotification('You need at least 100 chips to play!')
+			ESX.ShowNotification('Morate imati minimalno 100 zetona!')
 		end
 	end, '')
 	--roulette_menu()
@@ -51,7 +51,7 @@ RegisterNUICallback('escape2', function(data, cb)
 		type = "enableui",
 		enable = false
 	})
-	TriggerEvent('pNotify:SendNotification', {text = 'You don`t have any more chips!'})
+	TriggerEvent('pNotify:SendNotification', {text = 'Nemate vise zetona!', layout = "bottomCenter"})
 end)
 
 RegisterNUICallback('WinBet', function(data, cb)
@@ -69,12 +69,12 @@ end)
 RegisterNUICallback('LostBet', function(data, cb)
 	cb('ok')
 	local count = data.bets
-	TriggerEvent('pNotify:SendNotification', {text = "You lost "..count.." chips!"})
+	TriggerEvent('pNotify:SendNotification', {text = "Izgubili ste "..count.." zetona!", layout = "bottomCenter"})
 end)
 
 RegisterNUICallback('Status', function(data, cb)
 	cb('ok')
-	TriggerEvent('pNotify:SendNotification', {text = data.tekst})
+	TriggerEvent('pNotify:SendNotification', {text = data.tekst, layout = "bottomCenter"})
 end)
 
 RegisterNUICallback('StartPartia', function(data, cb)
