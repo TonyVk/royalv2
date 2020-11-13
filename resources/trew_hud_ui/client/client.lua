@@ -3,6 +3,10 @@ local Poslao = -69
 local PrviSpawn = false
 local ZabraniHud = false
 local Dozvoljeno = true
+local UVozilu = false
+local Vozilo = nil
+local Klasa = nil
+local Sjedalo = nil
 
 -- ESX
 Citizen.CreateThread(function()
@@ -62,53 +66,6 @@ local AllWeapons = json.decode('{"melee":{"dagger":"0x92A27487","bat":"0x958A4A8
 local vehiclesCars = {0,1,2,3,4,5,6,7,8,9,10,11,12,17,18,19,20};
 
 
--- Date and time update
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(1000)
-		if Config.ui.showDate == true then
-			SendNUIMessage({ action = 'setText', id = 'date', value = trewDate() })
-		end
-	end
-end)
-
-
-
-
-
--- Location update
-Citizen.CreateThread(function()
-
-	while true do
-		Citizen.Wait(100)
-		if Config.ui.showLocation == true then
-			local player = GetPlayerPed(-1)
-			local position = GetEntityCoords(player)
-			local zoneNameFull = zones[GetNameOfZone(position.x, position.y, position.z)]
-			local streetName = GetStreetNameFromHashKey(GetStreetNameAtCoord(position.x, position.y, position.z))
-
-			local locationMessage = nil
-
-			if zoneNameFull then 
-				locationMessage = streetName .. ', ' .. zoneNameFull
-			else
-				locationMessage = streetName
-			end
-
-			locationMessage = string.format(
-				Locales[Config.Locale]['you_are_on_location'],
-				locationMessage
-			)
-
-			SendNUIMessage({ action = 'setText', id = 'location', value = locationMessage })
-		end
-	end
-end)
-
-
-
-
-
 -- Vehicle Info
 local vehicleCruiser
 local vehicleSignalIndicator = 'off'
@@ -125,14 +82,13 @@ Citizen.CreateThread(function()
 		Citizen.Wait(Waitara)
 		local vehicleInfo
 
-		if IsPedInAnyVehicle(PlayerPedId(), false) and ZabraniHud == false then
-			Waitara = 100
+		if UVozilu and ZabraniHud == false then
+			Waitara = 200
 			local player = GetPlayerPed(-1)
-			local vehicle = GetVehiclePedIsIn(player, false)
+			local vehicle = Vozilo
 			local vehicleIsOn = GetIsVehicleEngineRunning(vehicle)
-			if vehicleIsOn or GetVehicleClass(vehicle) == 21 then
-				local position = GetEntityCoords(player)
-				local vehicleClass = GetVehicleClass(vehicle)
+			if vehicleIsOn or Klasa == 21 then
+				local vehicleClass = Klasa
 
 
 				if Config.ui.showMinimap == false then
@@ -213,7 +169,7 @@ Citizen.CreateThread(function()
 						local vehIsMovingFwd = GetEntitySpeedVector(vehicle, true).y > 1.0
 						local vehAcc = (prevSpeed - currSpeed) / GetFrameTime()
 						if (vehIsMovingFwd and (prevSpeed > (seatbeltEjectSpeed/2.237)) and (vehAcc > (seatbeltEjectAccel*9.81))) then
-
+							local position = GetEntityCoords(player)
 							SetEntityCoords(player, position.x, position.y, position.z - 0.47, true, true, true)
 							SetEntityVelocity(player, prevVelocity.x, prevVelocity.y, prevVelocity.z)
 							SetPedToRagdoll(player, 1000, 1000, 0, 0, 0, 0)
@@ -553,7 +509,7 @@ Citizen.CreateThread(function()
 	    RequestAnimDict('mp_facial')
 
 	    while true do
-	        Citizen.Wait(300)
+	        Citizen.Wait(500)
 	        local playerID = PlayerId()
 
 	        for _,player in ipairs(GetActivePlayers()) do
@@ -576,17 +532,10 @@ end)
 
 Citizen.CreateThread(function()
 	if Config.ui.showVoice == true then
-
-
-
 		local isTalking = false
 		local voiceDistance = nil
-
 		while true do
-			Citizen.Wait(1)
-
-
-
+			Citizen.Wait(500)
 
 			if NetworkIsPlayerTalking(PlayerId()) and not isTalking then 
 				isTalking = not isTalking
@@ -597,24 +546,6 @@ Citizen.CreateThread(function()
 			end
 
 
-			if IsControlJustPressed(1, Keys['H']) and IsControlPressed(1, Keys['LEFTALT']) then
-
-				Config.voice.levels.current = (Config.voice.levels.current + 1) % 3
-
-				if Config.voice.levels.current == 0 then
-					NetworkSetTalkerProximity(Config.voice.levels.default)
-					voiceDistance = 'normal'
-				elseif Config.voice.levels.current == 1 then
-					NetworkSetTalkerProximity(Config.voice.levels.shout)
-					voiceDistance = 'shout'
-				elseif Config.voice.levels.current == 2 then
-					NetworkSetTalkerProximity(Config.voice.levels.whisper)
-					voiceDistance = 'whisper'
-				end
-
-				SendNUIMessage({ action = 'setVoiceDistance', value = voiceDistance })
-			end
-
 			if Config.voice.levels.current == 0 then
 				voiceDistance = 'normal'
 			elseif Config.voice.levels.current == 1 then
@@ -623,13 +554,7 @@ Citizen.CreateThread(function()
 				voiceDistance = 'whisper'
 			end
 
-
 		end
-
-
-
-
-
 	end
 end)
 
@@ -641,11 +566,11 @@ Citizen.CreateThread(function()
 	if Config.ui.showWeapons == true then
 		local status = {}
 		while true do
-			Citizen.Wait(100)
+			Citizen.Wait(500)
 
 			local player = GetPlayerPed(-1)
 
-			if IsPedArmed(player, 7) then
+			if IsPedArmed(player, 6) then
 				local weapon = GetSelectedPedWeapon(player)
 				local ammoTotal = GetAmmoInPedWeapon(player,weapon)
 				local bool,ammoClip = GetAmmoInClip(player,weapon)
@@ -700,7 +625,21 @@ end)
 
 
 
+RegisterNetEvent('baseevents:enteredVehicle')
+AddEventHandler('baseevents:enteredVehicle', function(currentVehicle, currentSeat, modelName, netId)
+	UVozilu = true
+	Vozilo = currentVehicle
+	Klasa = GetVehicleClass(currentVehicle)
+	Sjedalo = currentSeat
+end)
 
+RegisterNetEvent('baseevents:leftVehicle')
+AddEventHandler('baseevents:leftVehicle', function(currentVehicle, currentSeat, modelName, netId)
+	UVozilu = false
+	Vozilo = nil
+	Klasa = nil
+	Sjedalo = nil
+end)
 
 
 
@@ -737,20 +676,40 @@ Citizen.CreateThread(function()
 				HideHudComponentThisFrame(20) -- Weapon State
 			end
 		end
+		
+		if IsControlJustPressed(1, Keys['H']) then
+			if IsControlPressed(1, Keys['LEFTALT']) then
+				Config.voice.levels.current = (Config.voice.levels.current + 1) % 3
+
+				if Config.voice.levels.current == 0 then
+					NetworkSetTalkerProximity(Config.voice.levels.default)
+					voiceDistance = 'normal'
+				elseif Config.voice.levels.current == 1 then
+					NetworkSetTalkerProximity(Config.voice.levels.shout)
+					voiceDistance = 'shout'
+				elseif Config.voice.levels.current == 2 then
+					NetworkSetTalkerProximity(Config.voice.levels.whisper)
+					voiceDistance = 'whisper'
+				end
+
+				SendNUIMessage({ action = 'setVoiceDistance', value = voiceDistance })
+			end
+			
+		end
 
 		local player = GetPlayerPed(-1)
 
-		if IsPedInAnyVehicle(player, false) then
-			local vehicle = GetVehiclePedIsIn(player, false)
-			local vehicleClass = GetVehicleClass(vehicle)
+		if UVozilu then
+			local vehicle = Vozilo
+			local vehicleClass = Klasa
 			if GetIsVehicleEngineRunning(vehicle) then
 				if IsControlJustReleased(0, Keys[Config.vehicle.keys.seatbelt]) and (has_value(vehiclesCars, vehicleClass) == true and vehicleClass ~= 8) then
 					seatbeltIsOn = not seatbeltIsOn
 				end
 			end
-			local vozac = GetPedInVehicleSeat(vehicle, -1)
+			local vozac = Sjedalo
 			-- Vehicle Signal Lights
-			if IsControlJustPressed(1, Keys[Config.vehicle.keys.signalLeft]) and (has_value(vehiclesCars, vehicleClass) == true) and vozac == PlayerPedId() then
+			if IsControlJustPressed(1, Keys[Config.vehicle.keys.signalLeft]) and (has_value(vehiclesCars, vehicleClass) == true) and vozac == -1 then
 				local menui = #ESX.UI.Menu.GetOpenedMenus()
 				if menui == nil or menui == 0 then
 					if vehicleSignalIndicator == 'off' then
@@ -763,7 +722,7 @@ Citizen.CreateThread(function()
 				end
 			end
 
-			if IsControlJustPressed(1, Keys[Config.vehicle.keys.signalRight]) and (has_value(vehiclesCars, vehicleClass) == true) and vozac == PlayerPedId() then
+			if IsControlJustPressed(1, Keys[Config.vehicle.keys.signalRight]) and (has_value(vehiclesCars, vehicleClass) == true) and vozac == -1 then
 				local menui = #ESX.UI.Menu.GetOpenedMenus()
 				if menui == nil or menui == 0 then
 					if vehicleSignalIndicator == 'off' then
@@ -776,7 +735,7 @@ Citizen.CreateThread(function()
 				end
 			end
 
-			if IsControlJustPressed(1, Keys[Config.vehicle.keys.signalBoth]) and (has_value(vehiclesCars, vehicleClass) == true) and vozac == PlayerPedId() then
+			if IsControlJustPressed(1, Keys[Config.vehicle.keys.signalBoth]) and (has_value(vehiclesCars, vehicleClass) == true) and vozac == -1 then
 				local menui = #ESX.UI.Menu.GetOpenedMenus()
 				if menui == nil or menui == 0 then
 					if vehicleSignalIndicator == 'off' then
@@ -792,17 +751,7 @@ Citizen.CreateThread(function()
 	end
 end)
 
-
-
-
-
-
-
-
-
-
-AddEventHandler('onClientMapStart', function()
-
+AddEventHandler('playerSpawned', function()
 	SendNUIMessage({ action = 'ui', config = Config.ui })
 	SendNUIMessage({ action = 'setFont', url = Config.font.url, name = Config.font.name })
 	SendNUIMessage({ action = 'setLogo', value = Config.serverLogo })
@@ -816,9 +765,7 @@ AddEventHandler('onClientMapStart', function()
 			NetworkSetTalkerProximity(Config.voice.levels.whisper)
 		end
 	end
-end)
-
-AddEventHandler('playerSpawned', function()
+	
 	if Config.ui.showVoice == true then
 	    NetworkSetTalkerProximity(12.0)
 	end
@@ -829,6 +776,9 @@ AddEventHandler('playerSpawned', function()
 	HideHudComponentThisFrame(3) -- SP Cash
 	HideHudComponentThisFrame(4) -- MP Cash
 	HideHudComponentThisFrame(13) -- Cash changes!
+	while ESX.PlayerData.job == nil do
+		Wait(0)
+	end
 	if not PrviSpawn then
 		if ESX.PlayerData.job ~= nil then
 			if ESX.PlayerData.job.grade_name ~= nil and (ESX.PlayerData.job.grade_name == 'boss' or ESX.PlayerData.job.grade_name == 'vlasnik') then
@@ -844,6 +794,7 @@ AddEventHandler('playerSpawned', function()
 		end
 		PrviSpawn = true
 	end
+	TriggerServerEvent('trew_hud_ui:getServerInfo')
 end)
 
 

@@ -10,7 +10,7 @@ p {
   padding: 0;
   margin: 0;
   text-transform: uppercase;
-  color: #9e9e9e;
+  color: #FFFFFF;
   font-size: 12px;
 }
 #id-card {
@@ -55,7 +55,7 @@ img {
   position: absolute;
   bottom: 76px;
   left: 152px;
-  color: #b1b177;
+  color: #ffffff;
   font-size: 19px;
   text-transform:capitalize;
   font-family: justsignature;

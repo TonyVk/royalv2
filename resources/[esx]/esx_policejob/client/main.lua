@@ -44,14 +44,16 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
 	PlayerLoaded = true
 end)
 
-local tiempo = 4000 -- 1000 ms = 1s
 local isTaz = false
 Citizen.CreateThread(function()
+	local waitara = 100
 	while true do
-		Citizen.Wait(1)
+		local naso = 0
+		Citizen.Wait(waitara)
 		
 		if IsPedBeingStunned(GetPlayerPed(-1)) then
-			
+			naso = 1
+			waitara = 0
 			SetPedToRagdoll(GetPlayerPed(-1), 5000, 5000, 0, 0, 0, 0)
 			if not isTaz then
 				isTaz = true
@@ -59,6 +61,8 @@ Citizen.CreateThread(function()
 				ShakeGameplayCam("FAMILY5_DRUG_TRIP_SHAKE", 1.0)
 			end
 		elseif isTaz then
+			naso = 1
+			waitara = 0
 			isTaz = false
 			Wait(5000)
 			
@@ -69,6 +73,9 @@ Citizen.CreateThread(function()
 			SetTimecycleModifier("")
 			SetTransitionTimecycleModifier("")
 			StopGameplayCamShaking()
+		end
+		if naso == 0 then
+			waitara = 100
 		end
 	end
 end)

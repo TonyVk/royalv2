@@ -109,14 +109,17 @@ Citizen.CreateThread(function()
 	while not NetworkIsPlayerActive(PlayerId()) do
 		Citizen.Wait(0)
 	end
-	
+	local waitara = 500
 	while true do
-				Citizen.Wait(0)
+				Citizen.Wait(waitara)
+				local naso = 0
 				local player = GetPlayerPed(-1)
 				local x,y,z = table.unpack(GetEntityCoords(player, true))
 				local dist = Vdist(zones[closestZone].x, zones[closestZone].y, zones[closestZone].z, x, y, z)
 			
 				if dist <= 50.0 then  ------------------------------------------------------------------------------ Here you can change the RADIUS of the Safe Zone. Remember, whatever you put here will DOUBLE because 
+					naso = 1
+					waitara = 0
 					if not notifIn then																			  -- it is a sphere. So 50 will actually result in a diameter of 100. I assume it is meters. No clue to be honest.
 						NetworkSetFriendlyFireOption(false)
 						ClearPlayerWantedLevel(PlayerId())
@@ -147,14 +150,16 @@ Citizen.CreateThread(function()
 					end
 				end
 				if notifIn then
-				DisableControlAction(2, 37, true) -- disable weapon wheel (Tab)
-				DisablePlayerFiring(player,true) -- Disables firing all together if they somehow bypass inzone Mouse Disable
-				DisableControlAction(0, 106, true) -- Disable in-game mouse controls
-				DisableControlAction(0, 167, true)
-				DisableControlAction(0, 45, true)
-				DisableControlAction(0, 140, true)
-				DisableControlAction(0, 263, true)
-				SetPlayerCanDoDriveBy(PlayerId(), false)
+					naso = 1
+					waitara = 0
+					DisableControlAction(2, 37, true) -- disable weapon wheel (Tab)
+					DisablePlayerFiring(player,true) -- Disables firing all together if they somehow bypass inzone Mouse Disable
+					DisableControlAction(0, 106, true) -- Disable in-game mouse controls
+					DisableControlAction(0, 167, true)
+					DisableControlAction(0, 45, true)
+					DisableControlAction(0, 140, true)
+					DisableControlAction(0, 263, true)
+					SetPlayerCanDoDriveBy(PlayerId(), false)
 					if IsDisabledControlJustPressed(2, 37) then --if Tab is pressed, send error message
 						SetCurrentPedWeapon(player,GetHashKey("WEAPON_UNARMED"),true) -- if tab is pressed it will set them to unarmed (this is to cover the vehicle glitch until I sort that all out)
 						TriggerEvent("pNotify:SendNotification",{
@@ -175,6 +180,9 @@ Citizen.CreateThread(function()
 							queue = "global"
 						})
 					end
+				end
+				if naso == 0 then
+					waitara = 500
 				end
 				-- Comment out lines 142 - 145 if you dont want a marker.
 				--if DoesEntityExist(player) then	      --The -1.0001 will place it on the ground flush		-- SIZING CIRCLE |  x    y    z | R   G    B   alpha| *more alpha more transparent*

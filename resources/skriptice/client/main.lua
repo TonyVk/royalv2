@@ -285,6 +285,53 @@ end)
 
 Citizen.CreateThread(function()
 	while true do
+		local ped = GetPlayerPed( -1 )
+		if ( DoesEntityExist( ped ) and not IsEntityDead( ped ) and not IsPedInAnyVehicle(ped, false) ) then 
+			ProneMovement()
+			DisableControlAction( 0, proneKey, true ) 
+			DisableControlAction( 0, crouchKey, true ) 
+			if ( not IsPauseMenuActive() ) then 
+				if ( IsDisabledControlJustPressed( 0, crouchKey ) and not proned ) then 
+					ESX.Streaming.RequestAnimSet("move_ped_crouched")
+					ESX.Streaming.RequestAnimSet("MOVE_M@TOUGH_GUY@")		
+					if ( crouched and not proned ) then 
+						ResetPedMovementClipset( ped )
+						ResetPedStrafeClipset(ped)
+						SetPedMovementClipset( ped,"MOVE_M@TOUGH_GUY@", 0.5)
+						crouched = false
+					elseif ( not crouched and not proned ) then
+						SetPedMovementClipset( ped, "move_ped_crouched", 0.55 )
+						SetPedStrafeClipset(ped, "move_ped_crouched_strafing")
+						crouched = true 
+					end 
+				elseif ( IsDisabledControlJustPressed(0, proneKey) and not crouched and not IsPedInAnyVehicle(ped, true) and not IsPedFalling(ped) and not IsPedDiving(ped) and not IsPedInCover(ped, false) and not IsPedInParachuteFreeFall(ped) and (GetPedParachuteState(ped) == 0 or GetPedParachuteState(ped) == -1) ) then
+					if proned then
+						ClearPedTasksImmediately(ped)
+						proned = false
+					elseif not proned then
+						ESX.Streaming.RequestAnimSet( "move_crawl" )
+						ClearPedTasksImmediately(ped)
+						proned = true
+						if IsPedSprinting(ped) or IsPedRunning(ped) or GetEntitySpeed(ped) > 5 then
+							TaskPlayAnim(ped, "move_jump", "dive_start_run", 8.0, 1.0, -1, 0, 0.0, 0, 0, 0)
+							Citizen.Wait(1000)
+						end
+						SetProned()
+					end
+				end
+			end
+		else
+			if proned or crouched then
+				proned = false
+				crouched = false
+			end
+		end
+		Citizen.Wait(0)
+	end
+end)
+
+Citizen.CreateThread(function()
+	while true do
 		if holdingHostage or beingHeldHostage then 
 			while not IsEntityPlayingAnim(GetPlayerPed(-1), takeHostageAnimDictPlaying, takeHostageAnimNamePlaying, 3) do
 				TaskPlayAnim(GetPlayerPed(-1), takeHostageAnimDictPlaying, takeHostageAnimNamePlaying, 8.0, -8.0, 100000, takeHostageControlFlagPlaying, 0, false, false, false)
@@ -800,8 +847,10 @@ end
 
 
 Citizen.CreateThread(function()
+	local waitara = 500
 	while true do
-		Citizen.Wait(0)
+		Citizen.Wait(waitara)
+		local naso = 0
 		--print(weapon) -- To get the weapon hash by pressing F8 in game
 		
 		if once then
@@ -809,6 +858,8 @@ Citizen.CreateThread(function()
         end
 		
 		if holdingHostage then
+			naso = 1
+			waitara = 0
 			if IsEntityDead(GetPlayerPed(-1)) then	
 				holdingHostage = false
 				holdingHostageInProgress = false 
@@ -843,6 +894,8 @@ Citizen.CreateThread(function()
 			end
 		end
 		if beingHeldHostage then 
+			naso = 1
+			waitara = 0
 			DisableControlAction(0,21,true) -- disable sprint
 			DisableControlAction(0,24,true) -- disable attack
 			DisableControlAction(0,25,true) -- disable aim
@@ -868,429 +921,395 @@ Citizen.CreateThread(function()
 			DisableControlAction(0,271,true)
 		end
 		local ped = GetPlayerPed( -1 )
-		if ( DoesEntityExist( ped ) and not IsEntityDead( ped ) ) then 
-			ProneMovement()
-			DisableControlAction( 0, proneKey, true ) 
-			DisableControlAction( 0, crouchKey, true ) 
-			if ( not IsPauseMenuActive() ) then 
-				if ( IsDisabledControlJustPressed( 0, crouchKey ) and not proned ) then 
-					ESX.Streaming.RequestAnimSet("move_ped_crouched")
-					ESX.Streaming.RequestAnimSet("MOVE_M@TOUGH_GUY@")		
-					if ( crouched and not proned ) then 
-						ResetPedMovementClipset( ped )
-						ResetPedStrafeClipset(ped)
-						SetPedMovementClipset( ped,"MOVE_M@TOUGH_GUY@", 0.5)
-						crouched = false
-					elseif ( not crouched and not proned ) then
-						SetPedMovementClipset( ped, "move_ped_crouched", 0.55 )
-						SetPedStrafeClipset(ped, "move_ped_crouched_strafing")
-						crouched = true 
-					end 
-				elseif ( IsDisabledControlJustPressed(0, proneKey) and not crouched and not IsPedInAnyVehicle(ped, true) and not IsPedFalling(ped) and not IsPedDiving(ped) and not IsPedInCover(ped, false) and not IsPedInParachuteFreeFall(ped) and (GetPedParachuteState(ped) == 0 or GetPedParachuteState(ped) == -1) ) then
-					if proned then
-						ClearPedTasksImmediately(ped)
-						proned = false
-					elseif not proned then
-						ESX.Streaming.RequestAnimSet( "move_crawl" )
-						ClearPedTasksImmediately(ped)
-						proned = true
-						if IsPedSprinting(ped) or IsPedRunning(ped) or GetEntitySpeed(ped) > 5 then
-							TaskPlayAnim(ped, "move_jump", "dive_start_run", 8.0, 1.0, -1, 0, 0.0, 0, 0, 0)
-							Citizen.Wait(1000)
-						end
-						SetProned()
-					end
-				end
-			end
-		else
-			proned = false
-			crouched = false
-		end
 		
-		if IsPedShooting(PlayerPedId()) and not IsPedDoingDriveby(PlayerPedId()) then
-			local _,wep = GetCurrentPedWeapon(PlayerPedId())
-			_,cAmmo = GetAmmoInClip(PlayerPedId(), wep)
-			if recoils[wep] and recoils[wep] ~= 0 then
-				tv = 0
-				repeat 
-					Wait(0)
-					p = GetGameplayCamRelativePitch()
-					if GetFollowPedCamViewMode() ~= 4 then
-						SetGameplayCamRelativePitch(p+0.1, 0.2)
-					end
-					tv = tv+0.1
-				until tv >= recoils[wep]
-			end
-		end
 		-- Disable melee while aiming (may be not working)
 		if IsPedArmed(ped, 6) then
-			local weapon = GetSelectedPedWeapon(ped)
-			
-			-- Disable ammo HUD
-			
-			--DisplayAmmoThisFrame(false)
-			
-			-- Shakycam
-			
-			-- Pistol
-			if weapon == GetHashKey("WEAPON_STUNGUN") then
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.01)
+			naso = 1
+			waitara = 0
+			if IsPedShooting(ped) then
+				if not IsPedDoingDriveby(ped) then
+					local _,wep = GetCurrentPedWeapon(ped)
+					_,cAmmo = GetAmmoInClip(ped, wep)
+					if recoils[wep] and recoils[wep] ~= 0 then
+						tv = 0
+						repeat 
+							Wait(0)
+							p = GetGameplayCamRelativePitch()
+							if GetFollowPedCamViewMode() ~= 4 then
+								SetGameplayCamRelativePitch(p+0.1, 0.2)
+							end
+							tv = tv+0.1
+						until tv >= recoils[wep]
+					end
 				end
-			
-			elseif weapon == GetHashKey("WEAPON_FLAREGUN") then	
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.01)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_SNSPISTOL") then		
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.02)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_SNSPISTOL_MK2") then		
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.025)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_PISTOL") then		
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.025)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_PISTOL_MK2") then
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.03)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_APPISTOL") then
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.05)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_COMBATPISTOL") then		
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.03)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_PISTOL50") then
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.05)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_HEAVYPISTOL") then		
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.03)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_VINTAGEPISTOL") then		
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.025)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_MARKSMANPISTOL") then		
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.03)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_REVOLVER") then	
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.045)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_REVOLVER_MK2") then	
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.055)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_DOUBLEACTION") then	
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.025)
-				end
-			
-			-- SMG
-			
-			elseif weapon == GetHashKey("WEAPON_MICROSMG") then	
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.035)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_COMBATPDW") then			
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.045)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_SMG") then
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.045)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_SMG_MK2") then	
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.055)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_ASSAULTSMG") then	
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.050)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_MACHINEPISTOL") then		
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.035)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_MINISMG") then
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.035)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_MG") then
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.07)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_COMBATMG") then		
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.08)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_COMBATMG_MK2") then			
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.085)
-				end
-			
-			
-			-- Rifles
-			
-			elseif weapon == GetHashKey("WEAPON_ASSAULTRIFLE") then			
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.07)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_ASSAULTRIFLE_MK2") then			
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.075)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_CARBINERIFLE") then	
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.06)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_CARBINERIFLE_MK2") then			
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.065)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_ADVANCEDRIFLE") then		
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.06)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_GUSENBERG") then		
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.05)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_SPECIALCARBINE") then		
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.06)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_SPECIALCARBINE_MK2") then		
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.075)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_BULLPUPRIFLE") then			
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.05)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_BULLPUPRIFLE_MK2") then			
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.065)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_COMPACTRIFLE") then		
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.05)
-				end
-			
-			
-			-- Shotgun
-			
-			elseif weapon == GetHashKey("WEAPON_PUMPSHOTGUN") then
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.07)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_PUMPSHOTGUN_MK2") then
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.085)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_SAWNOFFSHOTGUN") then
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.06)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_ASSAULTSHOTGUN") then	
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.12)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_BULLPUPSHOTGUN") then		
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.08)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_DBSHOTGUN") then	
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.05)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_AUTOSHOTGUN") then	
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.08)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_MUSKET") then
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.04)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_HEAVYSHOTGUN") then	
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.13)
-				end
-			
-			
-			-- Sniper
-			
-			elseif weapon == GetHashKey("WEAPON_SNIPERRIFLE") then
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.2)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_HEAVYSNIPER") then	
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.3)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_HEAVYSNIPER_MK2") then
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.35)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_MARKSMANRIFLE") then			
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.1)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_MARKSMANRIFLE_MK2") then			
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.1)
-				end
-			
-			
-			-- Launcher
-			
-			elseif weapon == GetHashKey("WEAPON_GRENADELAUNCHER") then		
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.08)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_RPG") then
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.9)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_HOMINGLAUNCHER") then		
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.9)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_MINIGUN") then	
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.20)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_RAILGUN") then	
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 1.0)
+				-- Disable ammo HUD
+				local weapon = GetSelectedPedWeapon(ped)
+				--DisplayAmmoThisFrame(false)
+				
+				-- Shakycam
+				
+				-- Pistol
+				if weapon == GetHashKey("WEAPON_STUNGUN") then
 					
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_COMPACTLAUNCHER") then		
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.08)
-				end
-			
-			
-			elseif weapon == GetHashKey("WEAPON_FIREWORK") then	
-				if IsPedShooting(ped) then
-					ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.5)
-				end
-			
-			
-			-- Infinite FireExtinguisher
-			
-			elseif weapon == GetHashKey("WEAPON_FIREEXTINGUISHER") then		
-				if IsPedShooting(ped) then
-					SetPedInfiniteAmmo(ped, true, GetHashKey("WEAPON_FIREEXTINGUISHER"))
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.01)
+					
+				
+				elseif weapon == GetHashKey("WEAPON_FLAREGUN") then	
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.01)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_SNSPISTOL") then		
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.02)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_SNSPISTOL_MK2") then		
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.025)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_PISTOL") then		
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.025)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_PISTOL_MK2") then
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.03)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_APPISTOL") then
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.05)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_COMBATPISTOL") then		
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.03)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_PISTOL50") then
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.05)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_HEAVYPISTOL") then		
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.03)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_VINTAGEPISTOL") then		
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.025)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_MARKSMANPISTOL") then		
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.03)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_REVOLVER") then	
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.045)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_REVOLVER_MK2") then	
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.055)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_DOUBLEACTION") then	
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.025)
+					
+				
+				-- SMG
+				
+				elseif weapon == GetHashKey("WEAPON_MICROSMG") then	
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.035)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_COMBATPDW") then			
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.045)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_SMG") then
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.045)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_SMG_MK2") then	
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.055)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_ASSAULTSMG") then	
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.050)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_MACHINEPISTOL") then		
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.035)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_MINISMG") then
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.035)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_MG") then
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.07)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_COMBATMG") then		
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.08)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_COMBATMG_MK2") then			
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.085)
+					
+				
+				
+				-- Rifles
+				
+				elseif weapon == GetHashKey("WEAPON_ASSAULTRIFLE") then			
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.07)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_ASSAULTRIFLE_MK2") then			
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.075)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_CARBINERIFLE") then	
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.06)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_CARBINERIFLE_MK2") then			
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.065)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_ADVANCEDRIFLE") then		
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.06)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_GUSENBERG") then		
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.05)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_SPECIALCARBINE") then		
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.06)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_SPECIALCARBINE_MK2") then		
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.075)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_BULLPUPRIFLE") then			
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.05)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_BULLPUPRIFLE_MK2") then			
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.065)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_COMPACTRIFLE") then		
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.05)
+					
+				
+				
+				-- Shotgun
+				
+				elseif weapon == GetHashKey("WEAPON_PUMPSHOTGUN") then
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.07)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_PUMPSHOTGUN_MK2") then
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.085)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_SAWNOFFSHOTGUN") then
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.06)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_ASSAULTSHOTGUN") then	
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.12)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_BULLPUPSHOTGUN") then		
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.08)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_DBSHOTGUN") then	
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.05)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_AUTOSHOTGUN") then	
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.08)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_MUSKET") then
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.04)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_HEAVYSHOTGUN") then	
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.13)
+					
+				
+				
+				-- Sniper
+				
+				elseif weapon == GetHashKey("WEAPON_SNIPERRIFLE") then
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.2)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_HEAVYSNIPER") then	
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.3)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_HEAVYSNIPER_MK2") then
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.35)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_MARKSMANRIFLE") then			
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.1)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_MARKSMANRIFLE_MK2") then			
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.1)
+					
+				
+				
+				-- Launcher
+				
+				elseif weapon == GetHashKey("WEAPON_GRENADELAUNCHER") then		
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.08)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_RPG") then
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.9)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_HOMINGLAUNCHER") then		
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.9)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_MINIGUN") then	
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.20)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_RAILGUN") then	
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 1.0)
+						
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_COMPACTLAUNCHER") then		
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.08)
+					
+				
+				
+				elseif weapon == GetHashKey("WEAPON_FIREWORK") then	
+					
+						ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.5)
+					
+				
+				
+				-- Infinite FireExtinguisher
+				
+				elseif weapon == GetHashKey("WEAPON_FIREEXTINGUISHER") then		
+					
+						SetPedInfiniteAmmo(ped, true, GetHashKey("WEAPON_FIREEXTINGUISHER"))
 				end
 			end
+		end
+		if naso == 0 then
+			waitara = 500
 		end
 	end
 end)

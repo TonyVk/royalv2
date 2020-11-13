@@ -13,10 +13,10 @@ $(document).ready(function(){
 
         if ( sex.toLowerCase() == 'm' ) {
           $('img').attr('src', 'assets/images/male.png');
-          $('#sex').text('male');
+          $('#sex').text('musko');
         } else {
           $('img').attr('src', 'assets/images/female.png');
-          $('#sex').text('female');
+          $('#sex').text('zensko');
         }
 
         $('#name').text(userData.firstname + ' ' + userData.lastname);
@@ -30,21 +30,24 @@ $(document).ready(function(){
             var type = licenseData[key].type;
 
             if ( type == 'drive_bike') {
-              type = 'bike';
+              type = 'motor';
             } else if ( type == 'drive_truck' ) {
-              type = 'truck';
+              type = 'kamion';
             } else if ( type == 'drive' ) {
-              type = 'car';
+              type = 'auto';
             }
 
-            if ( type == 'bike' || type == 'truck' || type == 'car' ) {
+            if ( type == 'motor' || type == 'kamion' || type == 'auto' ) {
               $('#licenses').append('<p>'+ type +'</p>');
             }
           });
         }
-
+		  $('#sex').css('left', '95px');
+		  $('#height').css('left', '162px');
           $('#id-card').css('background', 'url(assets/images/license.png)');
         } else {
+		  $('#sex').css('left', '102px');
+		  $('#height').css('left', '173px');
           $('#id-card').css('background', 'url(assets/images/idcard.png)');
         }
       } else if ( type == 'weapon' ) {

@@ -30,6 +30,7 @@ end
 
 ESX.ClearTimeout = function(i)
 	ESX.TimeoutCallbacks[i] = nil
+	table.remove(ESX.TimeoutCallbacks, i)
 end
 
 ESX.IsPlayerLoaded = function()
@@ -1367,13 +1368,16 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
-		local currTime = GetGameTimer()
-
-		for i=1, #ESX.TimeoutCallbacks, 1 do
-			if ESX.TimeoutCallbacks[i] then
-				if currTime >= ESX.TimeoutCallbacks[i].time then
-					ESX.TimeoutCallbacks[i].cb()
-					ESX.TimeoutCallbacks[i] = nil
+		if #ESX.TimeoutCallbacks > 0 then
+			local currTime = GetGameTimer()
+			
+			for i=1, #ESX.TimeoutCallbacks, 1 do
+				if ESX.TimeoutCallbacks[i] then
+					if currTime >= ESX.TimeoutCallbacks[i].time then
+						ESX.TimeoutCallbacks[i].cb()
+						ESX.TimeoutCallbacks[i] = nil
+						table.remove(ESX.TimeoutCallbacks, i)
+					end
 				end
 			end
 		end

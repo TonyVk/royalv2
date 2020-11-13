@@ -44,20 +44,10 @@ local _source = source
 end)
 RegisterServerEvent('esx_methcar:make')
 AddEventHandler('esx_methcar:make', function(posx,posy,posz)
-	local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
-	
-	if xPlayer.getInventoryItem('methlab').count >= 1 then
-	
-		local xPlayers = ESX.GetPlayers()
-		for i=1, #xPlayers, 1 do
-			TriggerClientEvent('esx_methcar:smoke',xPlayers[i],posx,posy,posz, 'a') 
-		end
-		
-	else
-		TriggerClientEvent('esx_methcar:stop', _source)
+	local xPlayers = ESX.GetPlayers()
+	for i=1, #xPlayers, 1 do
+		TriggerClientEvent('esx_methcar:smoke',xPlayers[i],posx,posy,posz, 'a') 
 	end
-	
 end)
 RegisterServerEvent('esx_methcar:finish')
 AddEventHandler('esx_methcar:finish', function(qualtiy)

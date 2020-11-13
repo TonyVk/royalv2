@@ -16,6 +16,7 @@ local CurrentVehicle
 local pause = false
 local selection = 0
 local quality = 0
+local ImeModela = nil
 ESX = nil
 
 local LastCar
@@ -284,84 +285,84 @@ AddEventHandler('esx_methcar:drugged', function()
 	ClearTimecycleModifier()
 end)
 
+RegisterNetEvent('baseevents:enteredVehicle')
+AddEventHandler('baseevents:enteredVehicle', function(currentVehicle, currentSeat, modelName, netId)
+	CurrentVehicle = currentVehicle
+	car = currentVehicle
+	LastCar = currentVehicle
+	local playerPed = PlayerPedId()
+	if modelName == 'JOURNEY' then
+		if GetPedInVehicleSeat(car, -1) == playerPed then
+			if started == false then
+				if displayed == false then
+					DisplayHelpText("Pritisni ~INPUT_THROW_GRENADE~ da bi zapoceli kuhanje metha")
+					displayed = true
+					ImeModela = modelName
+				end
+			end
+		end	
+	end
+end)
 
+RegisterNetEvent('baseevents:leftVehicle')
+AddEventHandler('baseevents:leftVehicle', function(currentVehicle, currentSeat, modelName, netId)
+	CurrentVehicle = nil
+	car = nil
+	LastCar = nil
+	ImeModela = nil
+	displayed = false
+	if started then
+		started = false
+		displayed = false
+		TriggerEvent('esx_methcar:stop')
+		print('Zaustavljena kuhanje metha')
+		FreezeEntityPosition(LastCar,false)
+		ImeModela = nil
+	end
+end)
 
 Citizen.CreateThread(function()
+	local waitara = 500
 	while true do
-		Citizen.Wait(10)
-		
-		playerPed = GetPlayerPed(-1)
-		local pos = GetEntityCoords(GetPlayerPed(-1))
-		if IsPedInAnyVehicle(playerPed) then
-			
-			
-			CurrentVehicle = GetVehiclePedIsUsing(PlayerPedId())
-
-			car = GetVehiclePedIsIn(playerPed, false)
-			LastCar = GetVehiclePedIsUsing(playerPed)
-	
-			local model = GetEntityModel(CurrentVehicle)
-			local modelName = GetDisplayNameFromVehicleModel(model)
-			
-			if modelName == 'JOURNEY' and car then
-				
-					if GetPedInVehicleSeat(car, -1) == playerPed then
-						if started == false then
-							if displayed == false then
-								DisplayHelpText("Pritisni ~INPUT_THROW_GRENADE~ da bi zapoceli kuhanje metha")
-								displayed = true
-							end
-						end
-						if IsControlJustReleased(0, Keys['G']) then
-							if pos.y >= 3500 then
-								if IsVehicleSeatFree(CurrentVehicle, 3) then
-									local torba = 0
-									TriggerEvent('skinchanger:getSkin', function(skin)
-										torba = skin['bags_1']
-									end)
-									if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
-										TriggerServerEvent('esx_methcar:start', true)	
-									else
-										TriggerServerEvent('esx_methcar:start', false)	
-									end
-									progress = 0
-									pause = false
-									selection = 0
-									quality = 0
-									
-								else
-									DisplayHelpText('~r~Automobil je vec zauzet')
-								end
+		Citizen.Wait(waitara)
+		local naso = 0
+		if ImeModela ~= nil then
+			if ImeModela == 'JOURNEY' then
+				waitara = 10
+				naso = 1
+				if IsControlJustReleased(0, Keys['G']) then
+					local pos = GetEntityCoords(PlayerPedId())
+					if pos.y >= 3500 then
+						if IsVehicleSeatFree(CurrentVehicle, 3) then
+							local torba = 0
+							TriggerEvent('skinchanger:getSkin', function(skin)
+								torba = skin['bags_1']
+							end)
+							if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+								TriggerServerEvent('esx_methcar:start', true)	
 							else
-								ESX.ShowNotification('~r~Previse ste blizu grada, krenite dalje prema sjeveru da biste zapoceli proizvodnju metha')
+								TriggerServerEvent('esx_methcar:start', false)	
 							end
-							
-							
-							
-							
-		
+							progress = 0
+							pause = false
+							selection = 0
+							quality = 0
+									
+						else
+							DisplayHelpText('~r~Automobil je vec zauzet')
 						end
+					else
+						ESX.ShowNotification('~r~Previse ste blizu grada, krenite dalje prema sjeveru da biste zapoceli proizvodnju metha')
 					end
-					
-				
-				
-			
-			end
-			
-		else
-
-				
-				if started then
-					started = false
-					displayed = false
-					TriggerEvent('esx_methcar:stop')
-					print('Zaustavljena kuhanje metha')
-					FreezeEntityPosition(LastCar,false)
 				end
+			end
 		end
 		
 		if started == true then
-			
+			waitara = 10
+			naso = 1
+			local playerPed = GetPlayerPed(-1)
+			local pos = GetEntityCoords(playerPed)
 			if progress < 96 then
 				Citizen.Wait(6000)
 				if not pause and IsPedInAnyVehicle(playerPed) then
@@ -778,24 +779,10 @@ Citizen.CreateThread(function()
 			end	
 			
 		end
-		
+		if naso == 0 then
+			waitara = 500
+		end
 	end
-end)
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(1000)
-			if IsPedInAnyVehicle(GetPlayerPed(-1)) then
-			else
-				if started then
-					started = false
-					displayed = false
-					TriggerEvent('esx_methcar:stop')
-					print('Kuhanje prekinuto')
-					FreezeEntityPosition(LastCar,false)
-				end		
-			end
-	end
-
 end)
 
 Citizen.CreateThread(function()

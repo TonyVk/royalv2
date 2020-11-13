@@ -7,8 +7,6 @@ Citizen.CreateThread(function ()
 	end
 end)
 
-local UVozilu = false
-
 local setGear = GetHashKey('SET_VEHICLE_CURRENT_GEAR') & 0xFFFFFFFF
 local function SetVehicleCurrentGear(veh, gear)
 	Citizen.InvokeNative(setGear, veh, gear)
@@ -38,6 +36,27 @@ AddEventHandler('EoTiIzSalona', function(br)
 	elseif br == 2 then
 		Manual = true
 	end
+end)
+
+RegisterNetEvent('baseevents:enteredVehicle')
+AddEventHandler('baseevents:enteredVehicle', function(currentVehicle, currentSeat, modelName, netId)
+	local globalplate  = GetVehicleNumberPlateText(currentVehicle)
+	if currentSeat == -1 then
+		if globalplate ~= nil or globalplate ~= "" or globalplate ~= " " then
+			ESX.TriggerServerCallback('mjenjac:ProvjeriVozilo',function(mj)
+				if mj == 2 then
+					Manual = true
+				end
+			end, globalplate)
+		end
+	end
+end)
+
+RegisterNetEvent('baseevents:leftVehicle')
+AddEventHandler('baseevents:leftVehicle', function(currentVehicle, currentSeat, modelName, netId)
+	Manual = false
+	odradio = false
+	TriggerEvent("SaljiGear", -69)
 end)
 
 Citizen.CreateThread(function ()
@@ -112,35 +131,14 @@ Citizen.CreateThread(function ()
 				braking = true
 			end
 	end
-
+	local waitara = 500
 	while true do
-		ped = PlayerPedId()
-		vehicle = GetVehiclePedIsUsing(ped)
-		if DoesEntityExist(vehicle) and GetPedInVehicleSeat(vehicle, -1) == ped then
-			while ESX == nil do
-				Citizen.Wait(0)
-			end
-			if UVozilu == false then
-				local globalplate  = GetVehicleNumberPlateText(vehicle)
-				if globalplate ~= nil or globalplate ~= "" or globalplate ~= " " then
-					ESX.TriggerServerCallback('mjenjac:ProvjeriVozilo',function(mj)
-						if mj == 2 then
-							Manual = true
-						end
-					end, globalplate)
-					UVozilu = true
-				end
-			end
-		else
-			if UVozilu == true then
-				UVozilu = false
-				Manual = false
-				odradio = false
-				TriggerEvent("SaljiGear", -69)
-			end
-		end
+		local naso = 0
 		if Manual == true then
-			
+			naso = 1
+			waitara = 0
+			ped = PlayerPedId()
+			vehicle = GetVehiclePedIsUsing(ped)
 			if DoesEntityExist(vehicle) and GetPedInVehicleSeat(vehicle, -1) == ped then
 				gear = GetVehicleCurrentGear(vehicle)
 
@@ -235,7 +233,10 @@ Citizen.CreateThread(function ()
 				end
 			end
 		end
-		Wait(0)
+		Wait(waitara)
+		if naso == 0 then
+			waitara = 500
+		end
 	end
 end)
 

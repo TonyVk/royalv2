@@ -40,6 +40,7 @@ Citizen.CreateThread(function()
 				local name = GetDisplayNameFromVehicleModel()
 				local netId = VehToNet(currentVehicle)
 				TriggerServerEvent('baseevents:leftVehicle', currentVehicle, currentSeat, GetDisplayNameFromVehicleModel(GetEntityModel(currentVehicle)), netId)
+				TriggerEvent('baseevents:leftVehicle', currentVehicle, currentSeat, GetDisplayNameFromVehicleModel(GetEntityModel(currentVehicle)), netId)
 				isInVehicle = false
 				currentVehicle = 0
 				currentSeat = 0

@@ -4,7 +4,9 @@ local currentCameraIndexIndex = 0
 local createdCamera = 0
 
 Citizen.CreateThread(function()
+	local waitara = 1000
     while true do
+		local naso = 0
         for a = 1, #SecurityCamConfig.Locations do
             local ped = GetPlayerPed(PlayerId())
             local pedPos = GetEntityCoords(ped, false)
@@ -25,6 +27,8 @@ Citizen.CreateThread(function()
 
             if pedAllowed then
                 if distance <= 5.0 then
+					naso = 1
+					waitara = 0
                     local box_label = SecurityCamConfig.Locations[a].camBox.label
                     local box_x = SecurityCamConfig.Locations[a].camBox.x
                     local box_y = SecurityCamConfig.Locations[a].camBox.y
@@ -50,6 +54,8 @@ Citizen.CreateThread(function()
             end
 
             if createdCamera ~= 0 then
+				naso = 1
+				waitara = 0
                 local instructions = CreateInstuctionScaleform("instructional_buttons")
                 DrawScaleformMovieFullscreen(instructions, 255, 255, 255, 255, 0)
                 SetTimecycleModifier("scanline_cam_cheap")
@@ -65,7 +71,7 @@ Citizen.CreateThread(function()
                     SendNUIMessage({
                         type = "disablecam",
                     })
-			if SecurityCamConfig.HideRadar then
+					if SecurityCamConfig.HideRadar then
                     	   DisplayRadar(true)
                 	end
                 end
@@ -148,7 +154,10 @@ Citizen.CreateThread(function()
                 end
             end
         end
-        Citizen.Wait(0)
+        Citizen.Wait(waitara)
+		if naso == 0 then
+			waitara = 1000
+		end
     end
 end)
 

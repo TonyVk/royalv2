@@ -58,7 +58,7 @@ for i, v in ipairs(scenarios) do
   SetScenarioTypeEnabled(v, false)
 end
 
---[[Citizen.CreateThread(function()
+Citizen.CreateThread(function()
   while true do
     Citizen.Wait(0)
 
@@ -86,4 +86,4 @@ end
 function PedDensity()
   SetPedDensityMultiplierThisFrame(0.0)
   SetScenarioPedDensityMultiplierThisFrame(0.0, 0.0)
-end]]
+end

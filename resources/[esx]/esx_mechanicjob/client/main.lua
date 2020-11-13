@@ -832,10 +832,14 @@ end)
 
 -- Pop NPC mission vehicle when inside area
 Citizen.CreateThread(function()
+	local waitara = 500
 	while true do
-		Citizen.Wait(10)
+		Citizen.Wait(waitara)
+		local naso = 0
 		if ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic' then
 			if NPCTargetTowableZone and not NPCHasSpawnedTowable then
+				waitara = 10
+				naso = 1
 				local coords = GetEntityCoords(PlayerPedId())
 				local zone   = Config.Zones[NPCTargetTowableZone]
 
@@ -851,6 +855,8 @@ Citizen.CreateThread(function()
 			end
 
 			if NPCTargetTowableZone and NPCHasSpawnedTowable and not NPCHasBeenNextToTowable then
+				waitara = 10
+				naso = 1
 				local coords = GetEntityCoords(PlayerPedId())
 				local zone   = Config.Zones[NPCTargetTowableZone]
 
@@ -859,6 +865,11 @@ Citizen.CreateThread(function()
 					NPCHasBeenNextToTowable = true
 				end
 			end
+			if naso == 0 then
+				waitara = 500
+			end
+		else
+			waitara = 2000
 		end
 	end
 end)
@@ -942,9 +953,11 @@ end)
 
 -- Key Controls
 Citizen.CreateThread(function()
+	local waitara = 0
 	while true do
-		Citizen.Wait(0)
+		Citizen.Wait(waitara)
 		if ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic' then
+			waitara = 0
 			if CurrentAction then
 				ESX.ShowHelpNotification(CurrentActionMsg)
 
@@ -1003,6 +1016,8 @@ Citizen.CreateThread(function()
 					end
 				end
 			end
+		else
+			waitara = 2000
 		end
 	end
 end)

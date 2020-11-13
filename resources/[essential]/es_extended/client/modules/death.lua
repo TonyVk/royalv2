@@ -1,4 +1,4 @@
-Citizen.CreateThread(function()
+--[[Citizen.CreateThread(function()
 	local isDead = false
 
 	while true do
@@ -8,24 +8,40 @@ Citizen.CreateThread(function()
 
 		if NetworkIsPlayerActive(player) then
 			local playerPed = PlayerPedId()
+			if not isDead then
+				if IsPedFatallyInjured(playerPed) then
+					isDead = true
+					
+					local killerEntity, deathCause = GetPedSourceOfDeath(playerPed), GetPedCauseOfDeath(playerPed)
+					local killerClientId = NetworkGetPlayerIndexFromPed(killerEntity)
 
-			if IsPedFatallyInjured(playerPed) and not isDead then
-				isDead = true
-				
-				local killerEntity, deathCause = GetPedSourceOfDeath(playerPed), GetPedCauseOfDeath(playerPed)
-				local killerClientId = NetworkGetPlayerIndexFromPed(killerEntity)
-
-				if killerEntity ~= playerPed and killerClientId and NetworkIsPlayerActive(killerClientId) then
-					PlayerKilledByPlayer(GetPlayerServerId(killerClientId), killerClientId, deathCause)
-				else
-					PlayerKilled(deathCause)
+					if killerEntity ~= playerPed and killerClientId and NetworkIsPlayerActive(killerClientId) then
+						PlayerKilledByPlayer(GetPlayerServerId(killerClientId), killerClientId, deathCause)
+					else
+						PlayerKilled(deathCause)
+					end
 				end
-
-			elseif not IsPedFatallyInjured(playerPed) and isDead then
-				isDead = false
+			else
+				if not IsPedFatallyInjured(playerPed) then
+					isDead = false
+				end
 			end
 		end
 	end
+end)]]
+
+RegisterNetEvent('baseevents:onPlayerDied')
+AddEventHandler('baseevents:onPlayerDied', function(ktype, koord)
+	local playerPed = PlayerPedId()
+    local deathCause = GetPedCauseOfDeath(playerPed)
+	PlayerKilled(deathCause)
+end)
+
+RegisterNetEvent('baseevents:onPlayerKilled')
+AddEventHandler('baseevents:onPlayerKilled', function(kid, ostalo)
+	local playerPed = PlayerPedId()
+    local deathCause = GetPedCauseOfDeath(playerPed)
+	PlayerKilledByPlayer(kid, GetPlayerFromServerId(kid), deathCause)
 end)
 
 function PlayerKilledByPlayer(killerServerId, killerClientId, deathCause)
