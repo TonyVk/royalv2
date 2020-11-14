@@ -27,6 +27,7 @@ local keyPressed = false
 local showPlayerBlips = false
 local ignorePlayerNameDistance = false
 local playerNamesDist = 10
+local playada = {}
 local displayIDHeight = 1.5 --Height of ID above players head(starts at center body mass)
 --Set Default Values for Colors
 local red = 255
@@ -586,12 +587,21 @@ Citizen.CreateThread(function()
 	while ESX == nil do
 		Wait(500)
 	end
+    while true do
+		playada = ESX.Game.GetPlayersInArea(GetEntityCoords(PlayerPedId()), 10.0)
+        Citizen.Wait(500)
+    end
+end)
+
+Citizen.CreateThread(function()
+	while ESX == nil do
+		Wait(500)
+	end
 	local Cekaj = 500
     while true do
-		local players = ESX.Game.GetPlayersInArea(GetEntityCoords(PlayerPedId()), 10.0)
-		if #players > 1 then
+		if #playada > 1 then
 			Cekaj = 10
-			for _,id in ipairs(players) do
+			for _,id in ipairs(playada) do
 				if GetPlayerPed( id ) ~= GetPlayerPed( -1 ) then
 	 
 					x1, y1, z1 = table.unpack( GetEntityCoords( GetPlayerPed( -1 ), true ) )
@@ -796,6 +806,29 @@ Citizen.CreateThread(function()
 				Valja = false
 			end
 		end
+	end
+end)
+
+AddEventHandler('onClientResourceStart', function (resourceName)
+	if(GetCurrentResourceName() == resourceName) then
+		NetworkSetFriendlyFireOption(true)
+		SetCanAttackFriendly(PlayerPedId(), true, true)
+		--TriggerServerEvent("esx_getout:DajAdmina")
+		if not prvispawn then
+			SendNUIMessage({
+				prikazi = true,
+				id = GetPlayerServerId(PlayerId())
+			})
+			while ESX == nil do
+				Wait(500)
+			end
+			ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+				perm = br
+			end)
+			TriggerServerEvent("skriptice:SpremiLogin")
+			prvispawn = true
+		end
+		isDead = false
 	end
 end)
 
