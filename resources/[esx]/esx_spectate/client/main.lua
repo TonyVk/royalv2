@@ -358,9 +358,6 @@ Citizen.CreateThread(function()
 			else
 				table.insert(text,"Godmode: ~g~Nije pronadjen~w~")
 			end
-			if not CanPedRagdoll(targetPed) and not IsPedInAnyVehicle(targetPed, false) and (GetPedParachuteState(targetPed) == -1 or GetPedParachuteState(targetPed) == 0) and not IsPedInParachuteFreeFall(targetPed) then
-				table.insert(text,"~r~Anti-Ragdoll~w~")
-			end
 			-- health info
 			table.insert(text,"Health"..": "..GetEntityHealth(targetPed).."/"..GetEntityMaxHealth(targetPed))
 			table.insert(text,"Armor"..": "..GetPedArmour(targetPed))

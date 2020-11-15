@@ -9,7 +9,12 @@ end)
 
 RegisterNetEvent("prodajoruzje:PosaljiAdmOdgovor")
 AddEventHandler('prodajoruzje:PosaljiAdmOdgovor', function(id, odg)
-	TriggerClientEvent("prodajoruzje:VratiAdmOdgovor", id, odg)
+	local xPlayer = ESX.GetPlayerFromId(id)
+	if xPlayer ~= nil then
+		TriggerClientEvent("prodajoruzje:VratiAdmOdgovor", id, odg)
+	else
+		TriggerClientEvent('esx:showNotification', source, "Igrac nije online!")
+	end
 end)
 
 RegisterNetEvent("prodajoruzje:TestSkinaa")

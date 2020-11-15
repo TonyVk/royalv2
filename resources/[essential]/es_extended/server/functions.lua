@@ -177,7 +177,7 @@ ESX.CreatePickup = function(type, name, count, label, playerId)
 		coords = xPlayer.getCoords()
 	}
 
-	TriggerClientEvent('esx:pickup', -1, pickupId, label, playerId)
+	TriggerClientEvent('esx:pickup', -1, pickupId, label, playerId, xPlayer.getCoords())
 	ESX.PickupId = pickupId
 end
 

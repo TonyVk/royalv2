@@ -83,5 +83,8 @@ end)
 ------
 RegisterServerEvent('InteractSound_SV:PlayWithinDistance')
 AddEventHandler('InteractSound_SV:PlayWithinDistance', function(maxDistance, soundFile, soundVolume)
-    TriggerClientEvent('InteractSound_CL:PlayWithinDistance', -1, source, maxDistance, soundFile, soundVolume)
+	local player = source
+	local ped = GetPlayerPed(player)
+	local koord = GetEntityCoords(ped)
+    TriggerClientEvent('InteractSound_CL:PlayWithinDistance', -1, source, maxDistance, soundFile, soundVolume, koord)
 end)

@@ -27,5 +27,8 @@ end
 
 RegisterCommand('me', function(source, args)
     local text = "*" .. TableToString(args) .. " *"
-    TriggerClientEvent('3dme:shareDisplay', -1, text, source)
+	local player = source
+	local ped = GetPlayerPed(player)
+	local koord = GetEntityCoords(ped)
+    TriggerClientEvent('3dme:shareDisplay', -1, text, source, koord)
 end)

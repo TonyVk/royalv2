@@ -269,8 +269,8 @@ end, false)
 RegisterCommand("aodg", function(source, args, rawCommandString)
 	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		if br == 1 then
-			local playerIdx = GetPlayerFromServerId(tonumber(args[1]))
-			if playerIdx ~= -1 then
+			--local playerIdx = GetPlayerFromServerId(tonumber(args[1]))
+			--if playerIdx ~= -1 then
 				if args[1] ~= nil and args[2] ~= nil then
 					local razlog = table.concat(args, " ", 2)
 					TriggerServerEvent("prodajoruzje:PosaljiAdmOdgovor", args[1], razlog)
@@ -283,9 +283,9 @@ RegisterCommand("aodg", function(source, args, rawCommandString)
 					message = "/aodg [ID igraca][Odgovor]"
 					TriggerEvent('chat:addMessage', { args = { name, message }, color = r,g,b })
 				end	
-			else
-				ESX.ShowNotification("Igrac nije online!")
-			end
+			--else
+				--ESX.ShowNotification("Igrac nije online!")
+			--end
 		else
 			ESX.ShowNotification("Nemate pristup ovoj komandi!")
 		end

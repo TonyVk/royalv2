@@ -81,13 +81,13 @@ Citizen.CreateThread(function()
 end)
 
 RegisterNetEvent('esx:dowod_pokazZnacka')
-AddEventHandler('esx:dowod_pokazZnacka', function(id, imie, data, dodatek)
+AddEventHandler('esx:dowod_pokazZnacka', function(id, imie, data, dodatek, koord)
     local myId = PlayerId()
     local pid = GetPlayerFromServerId(id)
     local mugshot, mugshotStr = ESX.Game.GetPedMugshot(GetPlayerPed(pid))
     if pid == myId then
         PokazDokument(imie, data, dodatek, mugshotStr, 8, 80)
-    elseif GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(myId)), GetEntityCoords(GetPlayerPed(pid)), true) < 20.00 then
+    elseif GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(myId)), koord, true) < 20.00 then
         PokazDokument(imie, data, dodatek, mugshotStr, 8, 80)
     end
     UnregisterPedheadshot(mugshot)

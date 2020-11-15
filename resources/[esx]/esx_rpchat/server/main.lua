@@ -60,7 +60,10 @@ end
 						args = { imee, msg }
 				  })
 			  else
-				TriggerClientEvent('sendProximityMessage', -1, source, imee, msg)
+				local player = source
+				local ped = GetPlayerPed(player)
+				local koord = GetEntityCoords(ped)
+				TriggerClientEvent('sendProximityMessage', -1, source, imee, msg, koord)
 			  end
 		else
 			TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM ', " Morate pricekati jos "..Mute[source].." minuta do unmutea!" } })
@@ -101,7 +104,10 @@ RegisterCommand('me', function(source, args, rawCommand)
 	if args[1] ~= nil then
 		local name = getIdentity(source)
 		if Mute[source] == nil then
-			TriggerClientEvent('sendProximityMessageMe', -1, source, name.firstname, table.concat(args, " "))
+			local player = source
+			local ped = GetPlayerPed(player)
+			local koord = GetEntityCoords(ped)
+			TriggerClientEvent('sendProximityMessageMe', -1, source, name.firstname, table.concat(args, " "), koord)
 		else
 			TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM ', " Morate pricekati jos "..Mute[source].." minuta do unmutea!" } })
 		end
@@ -112,7 +118,10 @@ RegisterCommand('do', function(source, args, rawCommand)
 	if args[1] ~= nil then
 		if Mute[source] == nil then
 			local name = getIdentity(source)
-			TriggerClientEvent('sendProximityMessageDo', -1, source, name.firstname, table.concat(args, " "))
+			local player = source
+			local ped = GetPlayerPed(player)
+			local koord = GetEntityCoords(ped)
+			TriggerClientEvent('sendProximityMessageDo', -1, source, name.firstname, table.concat(args, " "), koord)
 		else
 			TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM ', " Morate pricekati jos "..Mute[source].." minuta do unmutea!" } })
 		end

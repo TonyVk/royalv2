@@ -122,19 +122,22 @@ AddEventHandler('esx_dowod:pokaznacke', function()
 	local job = xPlayer.job
 	local name = getIdentity(source)
 	local czy_wazna
-	if job.name == "police" or "fbi" then
+	if job.name == "police" or job.name == "fbi" then
 		czy_wazna = "~g~DA"
 	else
 		job.grade_label = "~r~Nema dostupnih podataka"
 		czy_wazna = "~r~NE"
 	end
-	if job.name == "police" or "fbi" then
-	TriggerClientEvent("gln:plateanim", _source)
-	Citizen.Wait(3000)
-	--TriggerClientEvent('esx:dowod_pokazOdznake', -1,_source, '~h~'..name.firstname..' '..name.lastname, 'Znacka LSPD' , 'Stopień ~b~'..job.grade_label..'~s~~n~Znacka jest ważna '..czy_wazna)
-	TriggerClientEvent('esx:dowod_pokazZnacka', -1,_source, '~h~'..name.firstname..' '..name.lastname, 'Znacka' , 'Polozaj ~b~'..job.grade_label)
+	if job.name == "police" or job.name == "fbi" then
+		TriggerClientEvent("gln:plateanim", _source)
+		Citizen.Wait(3000)
+		--TriggerClientEvent('esx:dowod_pokazOdznake', -1,_source, '~h~'..name.firstname..' '..name.lastname, 'Znacka LSPD' , 'Stopień ~b~'..job.grade_label..'~s~~n~Znacka jest ważna '..czy_wazna)
+		local player = source
+		local ped = GetPlayerPed(player)
+		local koord = GetEntityCoords(ped)
+		TriggerClientEvent('esx:dowod_pokazZnacka', -1, _source, '~h~'..name.firstname..' '..name.lastname, 'Znacka' , 'Polozaj ~b~'..job.grade_label, koord)
 	else
-		TriggerClientEvent('esx:showNotification', _source, ('~r~Ne radite u ~s~Policije!'))
+		TriggerClientEvent('esx:showNotification', _source, ('~r~Ne radite u ~s~policiji!'))
 	end
 
 end)

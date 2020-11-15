@@ -211,6 +211,7 @@ end
 RegisterNetEvent('esx_methcar:stop')
 AddEventHandler('esx_methcar:stop', function()
 	started = false
+	TriggerEvent("NeKickaj", false)
 	DisplayHelpText("~r~Kuhanje prekinuto...")
 	FreezeEntityPosition(LastCar, false)
 end)
@@ -248,7 +249,6 @@ AddEventHandler('esx_methcar:blowup', function(posx, posy, posz)
 	local fire = StartParticleFxLoopedAtCoord("ent_ray_heli_aprtmnt_l_fire", posx, posy, posz-0.8 , 0.0, 0.0, 0.0, 0.8, false, false, false, false)
 	Citizen.Wait(6000)
 	StopParticleFxLooped(fire, 0)
-	
 end)
 
 
@@ -347,7 +347,7 @@ Citizen.CreateThread(function()
 							pause = false
 							selection = 0
 							quality = 0
-									
+							TriggerEvent("NeKickaj", true)
 						else
 							DisplayHelpText('~r~Automobil je vec zauzet')
 						end
@@ -382,12 +382,14 @@ Citizen.CreateThread(function()
 						ESX.ShowNotification('~o~2. Ne dirajte nista ')
 						ESX.ShowNotification('~o~3. Zamijenite ga')
 						ESX.ShowNotification('~c~Pritisnite broj opcije koju zelite uciniti')
+						TriggerEvent("NeKickaj", false)
 					end
 					if selection == 1 then
 						print("Opcija 1")
 						ESX.ShowNotification('~r~Traka je nekako zaustavila curenje')
 						quality = quality - 3
 						pause = false
+						TriggerEvent("NeKickaj", true)
 					end
 					if selection == 2 then
 						print("Opcija 2")
@@ -399,12 +401,14 @@ Citizen.CreateThread(function()
 						displayed = false
 						ApplyDamageToPed(GetPlayerPed(-1), 10, false)
 						print('Zaustavljena proizvodnja metha')
+						TriggerEvent("NeKickaj", false)
 					end
 					if selection == 3 then
 						print("Opcija 3")
 						ESX.ShowNotification('~r~Dobar posao, cijev nije bila u dobrom stanju')
 						pause = false
 						quality = quality + 5
+						TriggerEvent("NeKickaj", true)
 					end
 				end
 				--
@@ -418,24 +422,28 @@ Citizen.CreateThread(function()
 						ESX.ShowNotification('~o~2. Necete nista uraditi')
 						ESX.ShowNotification('~o~3. Stavite masku sa filterom za vazduh')
 						ESX.ShowNotification('~c~Pritisnite broj opcije koju zelite uciniti')
+						TriggerEvent("NeKickaj", false)
 					end
 					if selection == 1 then
 						print("Opcija 1")
 						ESX.ShowNotification('~r~Otvorili ste prozore da biste se rijesili mirisa')
 						quality = quality - 1
 						pause = false
+						TriggerEvent("NeKickaj", true)
 					end
 					if selection == 2 then
 						print("Opcija 2")
 						ESX.ShowNotification('~r~Osjecate se lose od previse udisanja acetona')
 						pause = false
 						TriggerEvent('esx_methcar:drugged')
+						TriggerEvent("NeKickaj", true)
 					end
 					if selection == 3 then
 						print("Opcija 3")
 						ESX.ShowNotification('~r~To je jednostavan nacin da se problem rijesi .. pretpostavljam')
 						SetPedPropIndex(playerPed, 1, 26, 7, true)
 						pause = false
+						TriggerEvent("NeKickaj", true)
 					end
 				end
 				--
@@ -449,23 +457,27 @@ Citizen.CreateThread(function()
 						ESX.ShowNotification('~o~2. Podignite temperaturu')
 						ESX.ShowNotification('~o~3. Smanjite pritisak')
 						ESX.ShowNotification('~c~Pritisnite broj opcije koju zelite uciniti')
+						TriggerEvent("NeKickaj", false)
 					end
 					if selection == 1 then
 						print("Opcija 1")
 						ESX.ShowNotification('~r~Podigli ste pritisak i propan je poceo izlaziti, spustili ste ga i zasad je u redu')
 						pause = false
+						TriggerEvent("NeKickaj", true)
 					end
 					if selection == 2 then
 						print("Opcija 2")
 						ESX.ShowNotification('~r~Podizanje temperature je pomoglo...')
 						quality = quality + 5
 						pause = false
+						TriggerEvent("NeKickaj", true)
 					end
 					if selection == 3 then
 						print("Opcija 3")
 						ESX.ShowNotification('~r~Snizavanje pritiska samo ga je pogorsalo...')
 						pause = false
 						quality = quality -4
+						TriggerEvent("NeKickaj", true)
 					end
 				end
 				--
@@ -479,24 +491,28 @@ Citizen.CreateThread(function()
 						ESX.ShowNotification('~o~2. Pokusajte ga isisati pomocu sprica')
 						ESX.ShowNotification('~o~3. Dodajte jos litijuma da to uravnotezite')
 						ESX.ShowNotification('~c~Pritisnite broj opcije koju zelite uciniti')
+						TriggerEvent("NeKickaj", false)
 					end
 					if selection == 1 then
 						print("Opcija 1")
 						ESX.ShowNotification('~r~Vas meth se osjeti na aceton, sto nije dobro')
 						quality = quality - 3
 						pause = false
+						TriggerEvent("NeKickaj", true)
 					end
 					if selection == 2 then
 						print("Opcija 2")
 						ESX.ShowNotification('~r~To je nekako uspjelo, ali jos uvijek je previse')
 						pause = false
 						quality = quality - 1
+						TriggerEvent("NeKickaj", true)
 					end
 					if selection == 3 then
 						print("Opcija 3")
-						ESX.ShowNotification('~r~Uspjesno ste uravnotezili i kemikalije i one su opet dobre')
+						ESX.ShowNotification('~r~Uspjesno ste uravnotezili kemikalije i one su opet dobre')
 						pause = false
 						quality = quality + 3
+						TriggerEvent("NeKickaj", true)
 					end
 				end
 				--
@@ -510,22 +526,26 @@ Citizen.CreateThread(function()
 						ESX.ShowNotification('~o~2. Ostavite ga')
 						ESX.ShowNotification('~o~3. Popijte ga')
 						ESX.ShowNotification('~c~Pritisnite broj opcije koju zelite uciniti')
+						TriggerEvent("NeKickaj", false)
 					end
 					if selection == 1 then
 						print("Opcija 1")
 						ESX.ShowNotification('~r~Odlicna ideja, kofein poboljsava jacinu vaseg proizvoda')
 						quality = quality + 4
 						pause = false
+						TriggerEvent("NeKickaj", true)
 					end
 					if selection == 2 then
 						print("Opcija 2")
 						ESX.ShowNotification('~r~Da, to bi moglo unistiti kvalitet metha')
 						pause = false
+						TriggerEvent("NeKickaj", true)
 					end
 					if selection == 3 then
 						print("Opcija 3")
 						ESX.ShowNotification('~r~Pomalo ste cudni i vrti vam se u glavi, ali sve je u redu')
 						pause = false
+						TriggerEvent("NeKickaj", true)
 					end
 				end
 				--
@@ -539,24 +559,28 @@ Citizen.CreateThread(function()
 						ESX.ShowNotification('~o~2. Zamijenite filter')
 						ESX.ShowNotification('~o~3. Ocistite ga cetkicom za zube')
 						ESX.ShowNotification('~c~Pritisnite broj opcije koju zelite uciniti')
+						TriggerEvent("NeKickaj", false)
 					end
 					if selection == 1 then
 						print("Opcija 1")
 						ESX.ShowNotification('~r~Komprimirani zrak rasprsio je tekuci meth po vama')
 						quality = quality - 2
 						pause = false
+						TriggerEvent("NeKickaj", true)
 					end
 					if selection == 2 then
 						print("Opcija 2")
 						ESX.ShowNotification('~r~Zamjena je vjerojatno najbolja opcija')
 						pause = false
 						quality = quality + 3
+						TriggerEvent("NeKickaj", true)
 					end
 					if selection == 3 then
 						print("Opcija 3")
 						ESX.ShowNotification('~r~Ovo je djelovalo prilicno dobro, ali jos uvijek je nekako prljavo')
 						pause = false
 						quality = quality - 1
+						TriggerEvent("NeKickaj", true)
 					end
 				end
 				--
@@ -570,24 +594,28 @@ Citizen.CreateThread(function()
 						ESX.ShowNotification('~o~2. Necete nista uraditi')
 						ESX.ShowNotification('~o~3. Stavite masku sa filterom za vazduh')
 						ESX.ShowNotification('~c~Pritisnite broj opcije koju zelite uciniti')
+						TriggerEvent("NeKickaj", false)
 					end
 					if selection == 1 then
 						print("Opcija 1")
 						ESX.ShowNotification('~r~Otvorili ste prozore da biste se rijesili mirisa')
 						quality = quality - 1
 						pause = false
+						TriggerEvent("NeKickaj", true)
 					end
 					if selection == 2 then
 						print("Opcija 2")
 						ESX.ShowNotification('~r~Osjecate se lose od previse udisanja acetona')
 						pause = false
 						TriggerEvent('esx_methcar:drugged')
+						TriggerEvent("NeKickaj", true)
 					end
 					if selection == 3 then
 						print("Opcija3")
 						ESX.ShowNotification('~r~To je jednostavan nacin da se problem rijesi .. pretpostavljam')
 						SetPedPropIndex(playerPed, 1, 26, 7, true)
 						pause = false
+						TriggerEvent("NeKickaj", true)
 					end
 				end
 				--
@@ -601,12 +629,14 @@ Citizen.CreateThread(function()
 						ESX.ShowNotification('~o~2. Ne dirajte nista')
 						ESX.ShowNotification('~o~3. Zamijenite ga')
 						ESX.ShowNotification('~c~Pritisnite broj opcije koju zelite uciniti')
+						TriggerEvent("NeKickaj", false)
 					end
 					if selection == 1 then
 						print("Opcija 1")
 						ESX.ShowNotification('~r~Traka je nekako zaustavila curenje')
 						quality = quality - 3
 						pause = false
+						TriggerEvent("NeKickaj", true)
 					end
 					if selection == 2 then
 						print("Opcija 2")
@@ -618,12 +648,14 @@ Citizen.CreateThread(function()
 						displayed = false
 						ApplyDamageToPed(GetPlayerPed(-1), 10, false)
 						print('Prestali ste kuhati meth')
+						TriggerEvent("NeKickaj", false)
 					end
 					if selection == 3 then
 						print("Opcija 3")
 						ESX.ShowNotification('~r~Dobar posao, cijev nije bila u dobrom stanju')
 						pause = false
 						quality = quality + 5
+						TriggerEvent("NeKickaj", true)
 					end
 				end
 				--
@@ -637,24 +669,28 @@ Citizen.CreateThread(function()
 						ESX.ShowNotification('~o~2. Zamijenite filter')
 						ESX.ShowNotification('~o~3. Ocistite ga cetkicom za zube')
 						ESX.ShowNotification('~c~Pritisnite broj opcije koju zelite uciniti')
+						TriggerEvent("NeKickaj", false)
 					end
 					if selection == 1 then
 						print("Opcija 1")
 						ESX.ShowNotification('~r~Komprimirani zrak rasprsio je tekuci meth po vama')
 						quality = quality - 2
 						pause = false
+						TriggerEvent("NeKickaj", true)
 					end
 					if selection == 2 then
 						print("Opcija 2")
 						ESX.ShowNotification('~r~Zamjena je vjerojatno najbolja opcija')
 						pause = false
 						quality = quality + 3
+						TriggerEvent("NeKickaj", true)
 					end
 					if selection == 3 then
 						print("Opcija 3")
 						ESX.ShowNotification('~r~Ovo je djelovalo prilično dobro, ali jos uvijek je nekako prljavo')
 						pause = false
 						quality = quality - 1
+						TriggerEvent("NeKickaj", true)
 					end
 				end
 				--
@@ -668,24 +704,28 @@ Citizen.CreateThread(function()
 						ESX.ShowNotification('~o~2. Pokusajte ga isisati pomocu sprica')
 						ESX.ShowNotification('~o~3. Dodajte jos litijuma da to uravnotezite')
 						ESX.ShowNotification('~c~Pritisnite broj opcije koju zelite uciniti')
+						TriggerEvent("NeKickaj", false)
 					end
 					if selection == 1 then
 						print("Opcija 1")
 						ESX.ShowNotification('~r~Vas meth se osjeti na aceton, sto nije dobro')
 						quality = quality - 3
 						pause = false
+						TriggerEvent("NeKickaj", true)
 					end
 					if selection == 2 then
 						print("Opcija 2")
 						ESX.ShowNotification('~r~To je nekako uspjelo, ali jos uvijek je previse')
 						pause = false
 						quality = quality - 1
+						TriggerEvent("NeKickaj", true)
 					end
 					if selection == 3 then
 						print("Opcija 3")
-						ESX.ShowNotification('~r~Uspjesno ste uravnotezili i kemikalije i one su opet dobre')
+						ESX.ShowNotification('~r~Uspjesno ste uravnotezili kemikalije i one su opet dobre')
 						pause = false
 						quality = quality + 3
+						TriggerEvent("NeKickaj", true)
 					end
 				end
 				--
@@ -699,24 +739,28 @@ Citizen.CreateThread(function()
 						ESX.ShowNotification('~o~2. Izadite van i poserite se iza gume')
 						ESX.ShowNotification('~o~3. Poserite se unutra')
 						ESX.ShowNotification('~c~Pritisnite broj opcije koju zelite uciniti')
+						TriggerEvent("NeKickaj", false)
 					end
 					if selection == 1 then
 						print("Opcija 1")
 						ESX.ShowNotification('~r~Dobar posao, prvo treba raditi, sranje kasnije')
 						quality = quality + 1
 						pause = false
+						TriggerEvent("NeKickaj", true)
 					end
 					if selection == 2 then
 						print("Opcija 2")
 						ESX.ShowNotification('~r~Dok ste bili vani, casa je pala sa stola i prosula se po podu ...')
 						pause = false
 						quality = quality - 2
+						TriggerEvent("NeKickaj", true)
 					end
 					if selection == 3 then
 						print("Opcija 3")
 						ESX.ShowNotification('~r~Zrak sada smrdi na sranje, meth se osjeti na vasa govna')
 						pause = false
 						quality = quality - 1
+						TriggerEvent("NeKickaj", true)
 					end
 				end
 				--
@@ -730,24 +774,28 @@ Citizen.CreateThread(function()
 						ESX.ShowNotification('~o~2. Ne')
 						ESX.ShowNotification('~o~3. Sta ce se desiti ako dodam dvije kese stakla u meth?')
 						ESX.ShowNotification('~c~Pritisnite broj opcije koju zelite uciniti')
+						TriggerEvent("NeKickaj", false)
 					end
 					if selection == 1 then
 						print("Opcija 1")
 						ESX.ShowNotification('~r~Sad ste izvukli jos nekoliko vrecica')
 						quality = quality + 1
 						pause = false
+						TriggerEvent("NeKickaj", true)
 					end
 					if selection == 2 then
 						print("Opcija 2")
 						ESX.ShowNotification('~r~Dobar ste proizvodac lijekova, vas je proizvod visoke kvalitete')
 						pause = false
 						quality = quality + 1
+						TriggerEvent("NeKickaj", true)
 					end
 					if selection == 3 then
 						print("Opcija 3")
 						ESX.ShowNotification('~r~To je malo previse, vise je stakla od metha, ali ok')
 						pause = false
 						quality = quality - 1
+						TriggerEvent("NeKickaj", true)
 					end
 				end
 				

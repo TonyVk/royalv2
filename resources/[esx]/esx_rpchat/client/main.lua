@@ -78,7 +78,7 @@ AddEventHandler('rpchat:SaljiOglas', function(name, message, broj)
 end)
 
 RegisterNetEvent('sendProximityMessage')
-AddEventHandler('sendProximityMessage', function(id, name, message)
+AddEventHandler('sendProximityMessage', function(id, name, message, koord)
 	if Minute <= 0 then
 	  local myId = PlayerId()
 	  local pid = GetPlayerFromServerId(id)
@@ -87,7 +87,7 @@ AddEventHandler('sendProximityMessage', function(id, name, message)
 					template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(41, 41, 41, 0.6); border-radius: 3px;"><i class="fas fa-globe"></i> {0}:<br> {1}</div>',
 					args = { name, message }
 		})
-	  elseif GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(myId)), GetEntityCoords(GetPlayerPed(pid)), true) < 19.999 then
+	  elseif GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(myId)), koord, true) < 19.999 then
 		TriggerEvent('chat:addMessage', {
 					template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(41, 41, 41, 0.6); border-radius: 3px;"><i class="fas fa-globe"></i> {0}:<br> {1}</div>',
 					args = { name, message }
@@ -99,7 +99,7 @@ AddEventHandler('sendProximityMessage', function(id, name, message)
 end)
 
 RegisterNetEvent('sendProximityMessageMe')
-AddEventHandler('sendProximityMessageMe', function(id, name, message)
+AddEventHandler('sendProximityMessageMe', function(id, name, message, koord)
 		local myId = PlayerId()
 		local pid = GetPlayerFromServerId(id)
 		if pid == myId then
@@ -108,7 +108,7 @@ AddEventHandler('sendProximityMessageMe', function(id, name, message)
 					template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(0, 153, 204, 0.6); border-radius: 3px;"><i class="fas fa-user-circle"></i> **{0} (/me):<br> {1}</div>',
 					args = { name, message }
 			})
-		elseif GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(myId)), GetEntityCoords(GetPlayerPed(pid)), true) < 19.999 then
+		elseif GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(myId)), koord, true) < 19.999 then
 			--TriggerEvent('chatMessage', "^4" .. name .. "", {0, 153, 204}, "^7 " .. message)
 			TriggerEvent('chat:addMessage', {
 					template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(0, 153, 204, 0.6); border-radius: 3px;"><i class="fas fa-user-circle"></i> **{0} (/me):<br> {1}</div>',
@@ -118,7 +118,7 @@ AddEventHandler('sendProximityMessageMe', function(id, name, message)
 end)
 
 RegisterNetEvent('sendProximityMessageDo')
-AddEventHandler('sendProximityMessageDo', function(id, name, message)
+AddEventHandler('sendProximityMessageDo', function(id, name, message, koord)
   local myId = PlayerId()
   local pid = GetPlayerFromServerId(id)
   if pid == myId then
@@ -127,7 +127,7 @@ AddEventHandler('sendProximityMessageDo', function(id, name, message)
             template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(255, 0, 0, 0.6); border-radius: 3px;"><i class="fas fa-user-circle"></i> (({0})) (/do):<br> {1}</div>',
             args = { name, message }
 	})
-  elseif GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(myId)), GetEntityCoords(GetPlayerPed(pid)), true) < 19.999 then
+  elseif GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(myId)), koord, true) < 19.999 then
     --TriggerEvent('chatMessage', "", {255, 0, 0}, " ^0* " .. name .."  ".."^0  " .. message)
 	TriggerEvent('chat:addMessage', {
             template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(255, 0, 0, 0.6); border-radius: 3px;"><i class="fas fa-user-circle"></i> (({0})) (/do):<br> {1}</div>',
