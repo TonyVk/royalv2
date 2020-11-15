@@ -21,6 +21,11 @@ ESX.RegisterServerCallback("esx_marker:fetchUserRank", function(source, cb)
     end
 end)
 
+--discord
+ESX.RegisterServerCallback("discord:DohvatiIgrace", function(source, cb)
+	cb(#GetPlayers())
+end)
+
 RegisterServerEvent("kickForBeingAnAFKDouchebag")
 AddEventHandler("kickForBeingAnAFKDouchebag", function()
 	DropPlayer(source, "Bili ste AFK predugo.")

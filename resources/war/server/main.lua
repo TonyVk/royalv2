@@ -27,22 +27,26 @@ end)
 ESX.RegisterServerCallback('War:DohvatiLidera', function(source, cb, id, id2)
 	local targetXPlayer = ESX.GetPlayerFromId(id)
 	local targetXPlayer2 = ESX.GetPlayerFromId(id2)
-	local result = MySQL.Sync.fetchAll('SELECT job,job_grade FROM users WHERE identifier = @identifier', {
-		['@identifier'] = targetXPlayer.identifier
-	})
-	local result2 = MySQL.Sync.fetchAll('SELECT job,job_grade FROM users WHERE identifier = @identifier', {
-		['@identifier'] = targetXPlayer2.identifier
-	})
-	local result3 = MySQL.Sync.fetchAll('SELECT name FROM job_grades WHERE grade = @gra AND job_name = @jname', {
-		['@gra'] = result[1].job_grade,
-		['@jname'] = result[1].job
-	})
-	local result4 = MySQL.Sync.fetchAll('SELECT name FROM job_grades WHERE grade = @gra AND job_name = @jname', {
-		['@gra'] = result2[1].job_grade,
-		['@jname'] = result2[1].job
-	})
-	if (result3[1].name == 'boss' or result3[1].name == 'vlasnik') and (result4[1].name == 'boss' or result4[1].name == 'vlasnik') then
-		cb(1)
+	if targetXPlayer ~= nil and targetXPlayer2 ~= nil then
+		local result = MySQL.Sync.fetchAll('SELECT job,job_grade FROM users WHERE identifier = @identifier', {
+			['@identifier'] = targetXPlayer.identifier
+		})
+		local result2 = MySQL.Sync.fetchAll('SELECT job,job_grade FROM users WHERE identifier = @identifier', {
+			['@identifier'] = targetXPlayer2.identifier
+		})
+		local result3 = MySQL.Sync.fetchAll('SELECT name FROM job_grades WHERE grade = @gra AND job_name = @jname', {
+			['@gra'] = result[1].job_grade,
+			['@jname'] = result[1].job
+		})
+		local result4 = MySQL.Sync.fetchAll('SELECT name FROM job_grades WHERE grade = @gra AND job_name = @jname', {
+			['@gra'] = result2[1].job_grade,
+			['@jname'] = result2[1].job
+		})
+		if (result3[1].name == 'boss' or result3[1].name == 'vlasnik') and (result4[1].name == 'boss' or result4[1].name == 'vlasnik') then
+			cb(1)
+		else
+			cb(0)
+		end
 	else
 		cb(0)
 	end
@@ -56,8 +60,12 @@ end)
 ESX.RegisterServerCallback('War:DohvatiIgraca', function(source, cb, id)
 	local targetXPlayer = ESX.GetPlayerFromId(id)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	if targetXPlayer.job.name == xPlayer.job.name then
-		cb(1)
+	if targetXPlayer ~= nil then
+		if targetXPlayer.job.name == xPlayer.job.name then
+			cb(1)
+		else
+			cb(0)
+		end
 	else
 		cb(0)
 	end

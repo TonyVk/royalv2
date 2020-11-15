@@ -142,9 +142,14 @@ Citizen.CreateThread(function()
 		SetDiscordRichPresenceAsset('hugologo')
         
         --(11-11-2018) New Natives:
-
+		
         --Here you can add hover text for the "large" icon.
         SetDiscordRichPresenceAssetText('https://discord.gg/rAWxYmp')
+		
+		ESX.TriggerServerCallback('discord:DohvatiIgrace', function(br)
+			local str = "Igraci: "..br.."/64"
+			SetRichPresence(str)
+		end)
 
         --It updates every one minute just in case.
 		Citizen.Wait(60000)

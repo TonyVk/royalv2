@@ -10,6 +10,8 @@ Citizen.CreateThread(function()
 
         --Here you can add hover text for the "large" icon.
         SetDiscordRichPresenceAssetText('https://discord.gg/rAWxYmp')
+		
+		SetRichPresence("Test 123")
 
         --It updates every one minute just in case.
 		Citizen.Wait(60000)

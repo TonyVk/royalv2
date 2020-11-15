@@ -426,11 +426,11 @@ end)
 
 RegisterCommand("warpozovi", function(source, args, rawCommandString)
 	local igrac = args[1]
-	local playerIdx = GetPlayerFromServerId(tonumber(igrac))
+	--local playerIdx = GetPlayerFromServerId(tonumber(igrac))
 	if PoceoWar == 1 and UWaru == true then
 		ESX.TriggerServerCallback('War:DohvatiMiLidera', function(br)
 			if br == 1 then
-				if playerIdx ~= -1 then
+				--if playerIdx ~= -1 then
 					ESX.TriggerServerCallback('War:DohvatiIgraca', function(br)
 						if br == 1 then
 							local brojic = 0
@@ -445,18 +445,18 @@ RegisterCommand("warpozovi", function(source, args, rawCommandString)
 								ESX.ShowNotification("Vec imate max broj igraca u waru!")
 							end
 						else
-							ESX.ShowNotification("Igrac nije u vasoj mafiji!")
+							ESX.ShowNotification("Igrac nije u vasoj mafiji ili nije online!")
 							name = "Admin"..":"
 							message = "/warpozovi [ID igraca]"
 							TriggerEvent('chat:addMessage', { args = { name, message }, color = r,g,b })
 						end
 					end, igrac)
-				else
-					ESX.ShowNotification("Igrac nije online!")
-					name = "Admin"..":"
-					message = "/warpozovi [ID igraca]"
-					TriggerEvent('chat:addMessage', { args = { name, message }, color = r,g,b })
-				end
+				--else
+					--ESX.ShowNotification("Igrac nije online!")
+					--name = "Admin"..":"
+					--message = "/warpozovi [ID igraca]"
+					--TriggerEvent('chat:addMessage', { args = { name, message }, color = r,g,b })
+				--end
 			else
 				ESX.ShowNotification("Niste lider!")
 			end
@@ -468,27 +468,27 @@ end, false)
 
 RegisterCommand("warizbaci", function(source, args, rawCommandString)
 	local igrac = args[1]
-	local playerIdx = GetPlayerFromServerId(tonumber(igrac))
+	--local playerIdx = GetPlayerFromServerId(tonumber(igrac))
 	if PoceoWar == 1 and UWaru == true then
 		ESX.TriggerServerCallback('War:DohvatiMiLidera', function(br)
 			if br == 1 then
-				if playerIdx ~= -1 then
+				--if playerIdx ~= -1 then
 					ESX.TriggerServerCallback('War:DohvatiIgraca', function(br)
 						if br == 1 then
 							TriggerServerEvent("War:ZaustaviIgracu", tonumber(igrac))
 						else
-							ESX.ShowNotification("Igrac nije u vasoj mafiji!")
+							ESX.ShowNotification("Igrac nije u vasoj mafiji ili nije online!")
 							name = "Admin"..":"
 							message = "/warizbaci [ID igraca]"
 							TriggerEvent('chat:addMessage', { args = { name, message }, color = r,g,b })
 						end
 					end, igrac)
-				else
-					ESX.ShowNotification("Igrac nije online")
-					name = "Admin"..":"
-					message = "/warizbaci [ID igraca]"
-					TriggerEvent('chat:addMessage', { args = { name, message }, color = r,g,b })
-				end
+				--else
+					--ESX.ShowNotification("Igrac nije online")
+					--name = "Admin"..":"
+					--message = "/warizbaci [ID igraca]"
+					--TriggerEvent('chat:addMessage', { args = { name, message }, color = r,g,b })
+				--end
 			else
 				ESX.ShowNotification("Niste lider!")
 			end
@@ -525,10 +525,10 @@ RegisterCommand("pokreniwar", function(source, args, rawCommandString)
 			local igrac2 = args[2]
 			local broj = args[3]
 			local vrijeme  = args[4]
-			local playerIdx = GetPlayerFromServerId(tonumber(igrac))
-			local playerIdx2 = GetPlayerFromServerId(tonumber(igrac2))
+			--local playerIdx = GetPlayerFromServerId(tonumber(igrac))
+			--local playerIdx2 = GetPlayerFromServerId(tonumber(igrac2))
 			if PoceoWar == 0 then
-				if playerIdx ~= -1 and playerIdx2 ~= -1 then
+				--if playerIdx ~= -1 and playerIdx2 ~= -1 then
 					ESX.TriggerServerCallback('War:DohvatiLidera', function(br)
 						if br == 1 then
 							if broj ~= nil and tonumber(broj) > 0 then
@@ -560,18 +560,18 @@ RegisterCommand("pokreniwar", function(source, args, rawCommandString)
 								TriggerEvent('chat:addMessage', { args = { name, message }, color = r,g,b })
 							end
 						else
-							ESX.ShowNotification("Netko od igraca nije lider")
+							ESX.ShowNotification("Netko od igraca nije lider ili nije online!")
 							name = "Admin"..":"
 							message = "/pokreniwar [ID lidera 1][ID lidera 2][Broj u waru(3 za 3v3, 5 za 5v5...)][Vrijeme]"
 							TriggerEvent('chat:addMessage', { args = { name, message }, color = r,g,b })
 						end
 					end, igrac, igrac2)
-				else
-					ESX.ShowNotification("Netko od lidera nije online")
-					name = "Admin"..":"
-					message = "/pokreniwar [ID lidera 1][ID lidera 2][Broj u waru(3 za 3v3, 5 za 5v5...)][Vrijeme]"
-					TriggerEvent('chat:addMessage', { args = { name, message }, color = r,g,b })
-				end
+				--else
+					--ESX.ShowNotification("Netko od lidera nije online")
+					--name = "Admin"..":"
+					--message = "/pokreniwar [ID lidera 1][ID lidera 2][Broj u waru(3 za 3v3, 5 za 5v5...)][Vrijeme]"
+					--TriggerEvent('chat:addMessage', { args = { name, message }, color = r,g,b })
+				--end
 			else
 				ESX.ShowNotification("Vec traje jedan war!")
 			end
