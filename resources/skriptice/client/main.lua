@@ -145,7 +145,9 @@ Citizen.CreateThread(function()
 		
         --Here you can add hover text for the "large" icon.
         SetDiscordRichPresenceAssetText('https://discord.gg/rAWxYmp')
-		
+		while ESX == nil do
+			Wait(0)
+		end
 		ESX.TriggerServerCallback('discord:DohvatiIgrace', function(br)
 			local str = "Igraci: "..br.."/64"
 			SetRichPresence(str)
@@ -811,29 +813,6 @@ Citizen.CreateThread(function()
 				Valja = false
 			end
 		end
-	end
-end)
-
-AddEventHandler('onClientResourceStart', function (resourceName)
-	if(GetCurrentResourceName() == resourceName) then
-		NetworkSetFriendlyFireOption(true)
-		SetCanAttackFriendly(PlayerPedId(), true, true)
-		--TriggerServerEvent("esx_getout:DajAdmina")
-		if not prvispawn then
-			SendNUIMessage({
-				prikazi = true,
-				id = GetPlayerServerId(PlayerId())
-			})
-			while ESX == nil do
-				Wait(500)
-			end
-			ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-				perm = br
-			end)
-			TriggerServerEvent("skriptice:SpremiLogin")
-			prvispawn = true
-		end
-		isDead = false
 	end
 end)
 

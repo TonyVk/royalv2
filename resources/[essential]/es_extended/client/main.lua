@@ -341,8 +341,7 @@ end)
 
 RegisterNetEvent('esx:pickup')
 AddEventHandler('esx:pickup', function(id, label, player, koords)
-	local coords = (koords * 2.0)
-
+	local coords = vector3(koords.x, koords.y, koords.z)
 	ESX.Game.SpawnLocalObject('prop_money_bag_01', coords, function(obj)
 		SetEntityAsMissionEntity(obj, true, false)
 		PlaceObjectOnGroundProperly(obj)
