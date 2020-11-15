@@ -519,12 +519,11 @@ end
 -- PARAMETERS :
 --      - coords : world coordinates to where you want to draw the text
 --      - text : the text to display
-local function Display(ped, text)
+local function Display(ped, text, koord)
 
     local playerPed = PlayerPedId()
     local playerCoords = GetEntityCoords(playerPed)
-    local pedCoords = GetEntityCoords(ped)
-    local dist = #(playerCoords - pedCoords)
+    local dist = #(playerCoords - koord)
 
     if dist <= distToDraw then
 
@@ -559,9 +558,9 @@ end
 -- --------------------------------------------
 
 RegisterNetEvent('3dme:shareDisplay')
-AddEventHandler('3dme:shareDisplay', function(text, serverId)
+AddEventHandler('3dme:shareDisplay', function(text, serverId, koord)
     local ped = GetPlayerPed(GetPlayerFromServerId(serverId))
-    Display(ped, text)
+    Display(ped, text, koord)
 end)
 
 function DrawText3D(x,y,z, text) 

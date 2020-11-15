@@ -91,17 +91,14 @@ end
 function getPlayersList()
 	ESX.TriggerServerCallback('esx_spectate:DohvatiIgrace', function(igraci)
 		local data = {}
-
-		for i=1, #igraci, 1 do
-
+		for i,igrac in ipairs(igraci) do
 			local _data = {
-				id = igraci[i].ID,
-				name = igraci[i].Ime,
-				kord = igraci[i].Koord
+				id = igrac.ID,
+				name = igrac.Ime,
+				kord = igrac.Koord
 			}
 			table.insert(data, _data)
 		end
-
 		SendNUIMessage({
 			type = 'show',
 			data = data,

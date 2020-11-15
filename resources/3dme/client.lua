@@ -101,5 +101,5 @@ end
 RegisterNetEvent('3dme:shareDisplay')
 AddEventHandler('3dme:shareDisplay', function(text, serverId, koord)
     local ped = GetPlayerPed(GetPlayerFromServerId(serverId))
-    Display(ped, text)
+    Display(ped, text, koord)
 end)

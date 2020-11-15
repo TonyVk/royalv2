@@ -58,16 +58,8 @@
 
 function populate(data){
 	$('.spectate .users').html('');
-
-	data.sort(function(a, b) {
-		let idA = a.id;
-		let idB = b.id;
-		if (idA < idB)
-	        return -1 
-	    if (idA > idB)
-	        return 1
-	    return 0
-	});
+	
+	data.sort(function(a, b){return a.id-b.id});
 
 	for (var i = 0; i < data.length; i++) {
 		let id = data[i].id;

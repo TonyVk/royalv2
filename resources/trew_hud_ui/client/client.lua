@@ -843,30 +843,31 @@ end)
 
 RegisterNetEvent('trew_hud_ui:syncCarLights')
 AddEventHandler('trew_hud_ui:syncCarLights', function(driver, status)
+	if GetPlayerFromServerId(driver) ~= -1 then
+		if GetPlayerFromServerId(driver) ~= PlayerId() then
+			local driver = GetVehiclePedIsIn(GetPlayerPed(GetPlayerFromServerId(driver)), false)
 
-	if GetPlayerFromServerId(driver) ~= PlayerId() then
-		local driver = GetVehiclePedIsIn(GetPlayerPed(GetPlayerFromServerId(driver)), false)
+			if status == 'left' then
+				leftLight = false
+				rightLight = true
 
-		if status == 'left' then
-			leftLight = false
-			rightLight = true
+			elseif status == 'right' then
+				leftLight = true
+				rightLight = false
 
-		elseif status == 'right' then
-			leftLight = true
-			rightLight = false
+			elseif status == 'both' then
+				leftLight = true
+				rightLight = true
 
-		elseif status == 'both' then
-			leftLight = true
-			rightLight = true
+			else
+				leftLight = false
+				rightLight = false
+			end
 
-		else
-			leftLight = false
-			rightLight = false
+			SetVehicleIndicatorLights(driver, 0, leftLight)
+			SetVehicleIndicatorLights(driver, 1, rightLight)
+
 		end
-
-		SetVehicleIndicatorLights(driver, 0, leftLight)
-		SetVehicleIndicatorLights(driver, 1, rightLight)
-
 	end
 end)
 
