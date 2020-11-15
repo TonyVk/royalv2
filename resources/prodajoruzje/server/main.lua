@@ -246,7 +246,8 @@ AddEventHandler('prodajoruzje:PosaljiRadio2Server', function(arg, ime)
 end) 
 
 RegisterNetEvent('prodajoruzje:SaljiInfoSvima')
-AddEventHandler('prodajoruzje:SaljiInfoSvima', function(arg, ime, ime2)
+AddEventHandler('prodajoruzje:SaljiInfoSvima', function(arg, ime, id)
+	local ime2 = GetPlayerName(id)
 	TriggerClientEvent("prodajoruzje:VratiInfoSvima", -1, arg, ime, ime2)
 end) 
 

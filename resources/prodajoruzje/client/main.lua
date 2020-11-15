@@ -275,9 +275,7 @@ RegisterCommand("aodg", function(source, args, rawCommandString)
 					local razlog = table.concat(args, " ", 2)
 					TriggerServerEvent("prodajoruzje:PosaljiAdmOdgovor", args[1], razlog)
 					local playerName = GetPlayerName(PlayerId())
-					local retval = GetPlayerFromServerId(args[1])
-					local playerName2 = GetPlayerName(playerIdx)
-					TriggerServerEvent("prodajoruzje:SaljiInfoSvima", razlog, playerName, playerName2)
+					TriggerServerEvent("prodajoruzje:SaljiInfoSvima", razlog, playerName, args[1])
 				else
 					name = "Admin"..":"
 					message = "/aodg [ID igraca][Odgovor]"
