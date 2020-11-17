@@ -19,7 +19,7 @@ function notifyAlertSMS (number, alert, listSrc)
   if PhoneNumbers[number] ~= nil then
 	local mess = alert.message
 	if alert.coords ~= nil then
-		mess = mess .. ' ' .. alert.coords.x .. ', ' .. alert.coords.y 
+		mess = mess .. ' ' .. alert.coords.x .. ', ' .. alert.coords.y..' #'..alert.numero
 	end
     for k, _ in pairs(listSrc) do
       getPhoneNumber(tonumber(k), function (n)

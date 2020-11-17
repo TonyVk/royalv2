@@ -1963,6 +1963,65 @@ AddEventHandler('esx_property:ProsljediVozilo', function(voz, bl)
 	Vblip = bl
 end)
 
+function OpenUpitProdajeMenu(cardata)
+		local elements = {}
+		table.insert(elements, {
+			label = 'Da ($'..ESX.Math.GroupDigits(cardata.price)..')',
+			value = 'da'
+		})
+		
+		table.insert(elements, {
+			label = 'Ne',
+			value = 'ne'
+		})
+
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'upit_prodaja_menu', {
+			title    = "Jeste li sigurni da zelite prodati vase vozilo?",
+			align    = 'top-left',
+			elements = elements
+		}, function(data, menu)
+			if data.current.value == "da" then
+				local koord = GetEntityCoords(PlayerPedId())
+				if GetDistanceBetweenCoords(koord, -44.569271087646, -1081.7122802734, 25.685205459595, true) <= 3.0 or GetDistanceBetweenCoords(koord, -731.54217529297, -1334.6604003906, 0.28573158383369, true) <= 3.0 then
+					if cardata.kategorija ~= "donatorski" then
+						ESX.TriggerServerCallback('esx_vehicleshop:resellVehicle', function(vehicleSold)
+							if vehicleSold then
+								if GarazaV ~= nil then
+									TriggerServerEvent("garaza:ObrisiVozilo", GarazaV)
+									GarazaV = nil
+									if Vblip ~= nil then
+										RemoveBlip(Vblip)
+										Vblip = nil
+									end
+								else
+									local veh = GetVehiclePedIsIn(PlayerPedId())
+									local prop = ESX.Game.GetVehicleProperties(veh)
+									local pla = prop.plate:gsub("^%s*(.-)%s*$", "%1")
+									ESX.Game.DeleteVehicle(veh)
+									TriggerServerEvent("garaza:SpremiModel", pla, nil)
+									GarazaV = nil
+									TriggerEvent("esx_property:ProsljediVozilo", nil, nil)
+									if Vblip ~= nil then
+										RemoveBlip(Vblip)
+										Vblip = nil
+									end
+								end
+								ESX.ShowNotification(_U('vehicle_sold_for', cardata.label, ESX.Math.GroupDigits(cardata.price)))
+							else
+								ESX.ShowNotification(_U('not_yours'))
+							end
+						end, cardata.plate, cardata.model)
+					else
+						ESX.ShowNotification("Ne smijete prodati donatorsko vozilo!")
+					end
+				end
+			end
+			menu.close()
+		end, function(data, menu)
+			menu.close()
+		end)
+end
+
 -- Key controls
 Citizen.CreateThread(function()
 	while true do
@@ -2028,44 +2087,7 @@ Citizen.CreateThread(function()
 						end
 					end, ESX.Math.Trim(GetVehicleNumberPlateText(CurrentActionData.vehicle)))
 				elseif CurrentAction == 'resell_vehicle' then
-					local koord = GetEntityCoords(PlayerPedId())
-					if GetDistanceBetweenCoords(koord, -44.569271087646, -1081.7122802734, 25.685205459595, true) <= 3.0 or GetDistanceBetweenCoords(koord, -731.54217529297, -1334.6604003906, 0.28573158383369, true) <= 3.0 then
-						if CurrentActionData.kategorija ~= "donatorski" then
-							ESX.TriggerServerCallback('esx_vehicleshop:resellVehicle', function(vehicleSold)
-								if vehicleSold then
-									if GarazaV ~= nil then
-										TriggerServerEvent("garaza:ObrisiVozilo", GarazaV)
-										GarazaV = nil
-										if Vblip ~= nil then
-											RemoveBlip(Vblip)
-											Vblip = nil
-										end
-									else
-										local veh = GetVehiclePedIsIn(PlayerPedId())
-										local prop = ESX.Game.GetVehicleProperties(veh)
-										local pla = prop.plate:gsub("^%s*(.-)%s*$", "%1")
-										ESX.Game.DeleteVehicle(veh)
-										TriggerServerEvent("garaza:SpremiModel", pla, nil)
-										GarazaV = nil
-										TriggerEvent("esx_property:ProsljediVozilo", nil, nil)
-										if Vblip ~= nil then
-											RemoveBlip(Vblip)
-											Vblip = nil
-										end
-									end
-									ESX.ShowNotification(_U('vehicle_sold_for', CurrentActionData.label, ESX.Math.GroupDigits(CurrentActionData.price)))
-									CurrentAction = nil
-									CurrentActionData = {}
-								else
-									ESX.ShowNotification(_U('not_yours'))
-								end
-							end, CurrentActionData.plate, CurrentActionData.model)
-						else
-							ESX.ShowNotification("Ne smijete prodati donatorsko vozilo!")
-						end
-					else
-						CurrentAction = nil
-					end
+					OpenUpitProdajeMenu(CurrentActionData)
 				elseif CurrentAction == 'boss_actions_menu' then
 					OpenBossActionsMenu()
 				end

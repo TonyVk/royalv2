@@ -66,9 +66,8 @@ function spectate(target)
 			SetCamActive(cam, true)
 			RenderScriptCams(true, false, 0, true, true)
 
-			InSpectatorMode = true
 			TargetSpectate  = target
-
+			InSpectatorMode = true
 		end)
 	end, target)
 
@@ -294,7 +293,6 @@ Citizen.CreateThread(function()
 		Wait(0)
 
 		if InSpectatorMode then
-
 			local targetPlayerId = GetPlayerFromServerId(TargetSpectate)
 			local playerPed	  = GetPlayerPed(-1)
 			local targetPed	  = GetPlayerPed(targetPlayerId)

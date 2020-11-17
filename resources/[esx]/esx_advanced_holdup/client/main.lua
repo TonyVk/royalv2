@@ -506,8 +506,10 @@ end)
 
 -- Display markers
 Citizen.CreateThread(function()
+	local waitara = 500
 	while true do
-		Citizen.Wait(8)
+		local naso = 0
+		Citizen.Wait(waitara)
 
 		local playerPed = PlayerPedId()
 		local coords 		= GetEntityCoords(playerPed)
@@ -515,11 +517,14 @@ Citizen.CreateThread(function()
 		if isPedArmed then
 			for _, v in pairs(Config.Zones) do
 				if v.PoliceRequired <= copsConnected and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance then
+					naso = 1
+					waitara = 1
 					DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, false, 2, false, false, false, false)
 				end
 			end
-		else
-			Citizen.Wait(500)
+		end
+		if naso == 0 then
+			waitara = 500
 		end
 	end
 

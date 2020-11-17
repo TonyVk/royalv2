@@ -282,7 +282,7 @@ function DisableViolentActions()
 		DisableAllControlActions(0)
 	end
 
-	RemoveAllPedWeapons(playerPed, true)
+	--RemoveAllPedWeapons(playerPed, true)
 
 	DisableControlAction(2, 37, true) -- disable weapon wheel (Tab)
 	DisablePlayerFiring(playerPed,true) -- Disables firing all together if they somehow bypass inzone Mouse Disable
