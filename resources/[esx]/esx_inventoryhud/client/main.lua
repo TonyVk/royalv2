@@ -229,6 +229,9 @@ RegisterNUICallback(
 					local kor = GetEntityCoords(PlayerPedId())
 					TriggerServerEvent("DiscordBot:Inventory", GetPlayerName(PlayerId()).." je bacio na pod $"..data.number..". Coord: "..kor.x.." "..kor.y.." "..kor.z)
 				end
+				if data.item.name == "acetone" then
+					TriggerServerEvent("DiscordBot:Inventory", GetPlayerName(PlayerId()).." je bacio na pod "..data.number.." acetona. Coord: "..kor.x.." "..kor.y.." "..kor.z)
+				end
 			else
 				ESX.ShowNotification("Ne mozete bacati taj predmet!")
 			end
