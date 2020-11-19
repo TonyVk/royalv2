@@ -32,7 +32,7 @@ ESX.RegisterServerCallback('esx_spectate:DohvatiIgrace', function(source, cb)
 	local igraci = {}
 	for _, playerId in ipairs(GetPlayers()) do
 		local name = GetPlayerName(playerId)
-		table.insert(igraci, {ID = playerId, Ime = name, Koord = GetEntityCoords(GetPlayerPed(playerId))})
+		table.insert(igraci, {ID = playerId, Ime = name})
 	end
 	cb(igraci)
 end)

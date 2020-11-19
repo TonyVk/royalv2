@@ -276,6 +276,8 @@ RegisterCommand("aodg", function(source, args, rawCommandString)
 					TriggerServerEvent("prodajoruzje:PosaljiAdmOdgovor", args[1], razlog)
 					local playerName = GetPlayerName(PlayerId())
 					TriggerServerEvent("prodajoruzje:SaljiInfoSvima", razlog, playerName, args[1])
+					local komando = "/aodg "..args[1].." "..razlog
+					TriggerServerEvent("DiscordBot:RegCmd", GetPlayerServerId(PlayerId()), komando)
 				else
 					name = "Admin"..":"
 					message = "/aodg [ID igraca][Odgovor]"

@@ -63,6 +63,7 @@ function spectate(target)
 				cam = CreateCam('DEFAULT_SCRIPTED_CAMERA', true)
 			end
 
+			SetCamCoord(cam,  xa, ya, za)
 			SetCamActive(cam, true)
 			RenderScriptCams(true, false, 0, true, true)
 
@@ -93,8 +94,7 @@ function getPlayersList()
 		for i,igrac in ipairs(igraci) do
 			local _data = {
 				id = igrac.ID,
-				name = igrac.Ime,
-				kord = igrac.Koord
+				name = igrac.Ime
 			}
 			table.insert(data, _data)
 		end

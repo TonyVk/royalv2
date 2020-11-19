@@ -1,5 +1,5 @@
 {
-  "reseau": "Royal",
+  "reseau": "Hugo",
   "warningMessageCount": 250,
   "themeColor": "#303f9f",
   "colors": [
@@ -39,11 +39,11 @@
   "fileUploadService_Field": "files[]",
 
   "background": {
-    "ROYAL": "back001.jpg",
+    "HUGO": "back001.jpg",
     "Custom URL": "URL"
   },
   "background_default": {
-    "label": "ROYAL",
+    "label": "HUGO",
     "value": "back001.jpg"
   },
 
