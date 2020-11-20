@@ -209,8 +209,9 @@ function MenuVehicleSpawner()
 				ESX.Game.DeleteVehicle(Vozilo2)
 				Vozilo2 = nil
 			end
-             local pozicija = math.random(1, #Config.Zones.VehicleSpawnPoint.Pos)
-			 ESX.Game.SpawnVehicle(data.current.value, Config.Zones.VehicleSpawnPoint.Pos[pozicija].coords, Config.Zones.VehicleSpawnPoint.Pos[pozicija].heading, function(vehicle)
+			ZavrsiPosao()
+            local pozicija = math.random(1, #Config.Zones.VehicleSpawnPoint.Pos)
+			ESX.Game.SpawnVehicle(data.current.value, Config.Zones.VehicleSpawnPoint.Pos[pozicija].coords, Config.Zones.VehicleSpawnPoint.Pos[pozicija].heading, function(vehicle)
 				platenum = math.random(10000, 99999)
 				SetVehicleNumberPlateText(vehicle, "WAL"..platenum)             
 				plaquevehicule = "WAL"..platenum			
@@ -226,6 +227,7 @@ function MenuVehicleSpawner()
 			Radis = true
 			SpawnObjekte()
 		elseif data.current.value == "krave" then
+			ZavrsiPosao()
 			SpawnKrave()
 		end
 
@@ -636,7 +638,7 @@ Citizen.CreateThread(function()
 								if DoesBlipExist(Blipara[i]) then
 									RemoveBlip(Blipara[i])
 								end
-								ESX.ShowNotification("Pomuzli ste kravu i dobili 36$!")
+								ESX.ShowNotification("Pomuzli ste kravu!")
 								TriggerServerEvent("seljacina:platituljanu2")
 								table.remove(Krave2, i)
 							end
