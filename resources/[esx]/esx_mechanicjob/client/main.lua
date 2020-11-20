@@ -205,7 +205,8 @@ function OpenMechanicActionsMenu()
 
 				local elements = {
 					{label = _U('flat_bed'),  value = 'flatbed'},
-					{label = _U('tow_truck'), value = 'towtruck2'}
+					{label = _U('tow_truck'), value = 'towtruck2'},
+					{label = "Nissan Titan", value = 'nissantitan17'}
 				}
 
 				if Config.EnablePlayerManagement and ESX.PlayerData.job and (ESX.PlayerData.job.grade_name == 'boss' or ESX.PlayerData.job.grade_name == 'chief' or ESX.PlayerData.job.grade_name == 'vlasnik' or ESX.PlayerData.job.grade_name == 'experimente') then
@@ -223,6 +224,9 @@ function OpenMechanicActionsMenu()
 						ESX.Game.SpawnVehicle(data.current.value, Config.Zones.VehicleSpawnPoint.Pos, 90.0, function(vehicle)
 							local playerPed = PlayerPedId()
 							TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
+							if data.current.value == "nissantitan17" then
+								SetVehicleExtra(vehicle, 1, true)
+							end
 						end)
 					else
 						ESX.TriggerServerCallback('esx_service:enableService', function(canTakeService, maxInService, inServiceCount)

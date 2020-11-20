@@ -5,6 +5,14 @@ RegisterServerEvent('seljacina:platituljanu')
 AddEventHandler('seljacina:platituljanu', function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
-	xPlayer.addMoney(15)
-	TriggerEvent("biznis:StaviUSef", "farmer", math.ceil(15*0.30))
+	xPlayer.addMoney(35)
+	TriggerEvent("biznis:StaviUSef", "farmer", math.ceil(35*0.30))
+end)
+
+RegisterServerEvent('seljacina:platituljanu2')
+AddEventHandler('seljacina:platituljanu2', function()
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	xPlayer.addMoney(36)
+	TriggerEvent("biznis:StaviUSef", "farmer", math.ceil(36*0.30))
 end)

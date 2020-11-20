@@ -334,6 +334,18 @@ RegisterCommand("unmute", function(source, args, rawCommandString)
 	end)
 end, false)
 
+RegisterCommand("testanim", function(source, args, rawCommandString)
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if br == 1 then
+			TaskStartScenarioInPlace(PlayerPedId(), args[1], 0, true)
+		else
+			name = "System"..":"
+			message = " Nemate pristup ovoj komandi"
+			TriggerEvent('chat:addMessage', { args = { name, message }, color = r,g,b })	
+		end
+	end)
+end, false)
+
 RegisterCommand("dajmuskin", function(source, args, rawCommandString)
 	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		if br == 1 then

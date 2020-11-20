@@ -7,7 +7,10 @@
 --------------------------------------------------------------------------------
 ESX = nil
 local Objekti = {}
+local Krave = {}
+local Krave2 = {}
 local Spawno = false
+local Spawno2 = false
 local Broj = 0
 local Radis = false
 local Farma = 0
@@ -65,6 +68,7 @@ function MenuCloakRoom()
 					ESX.Game.DeleteVehicle(Vozilo2)
 					Vozilo2 = nil
 				end
+				ZavrsiPosao()
 				isInService = false
 				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
 	    			TriggerEvent('skinchanger:loadSkin', skin)
@@ -79,6 +83,7 @@ function MenuCloakRoom()
 					ESX.Game.DeleteVehicle(Vozilo2)
 					Vozilo2 = nil
 				end
+				ZavrsiPosao()
 				isInService = true
 				setUniform(PlayerPedId())
 				--[[ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
@@ -185,7 +190,7 @@ function MenuVehicleSpawner()
 		table.insert(elements, {label = GetLabelText(GetDisplayNameFromVehicleModel(Config.Trucks[i])), value = Config.Trucks[i]})
 	end
 
-
+	table.insert(elements, {label = "Muznja krava", value = "krave"})
 	ESX.UI.Menu.CloseAll()
 
 	ESX.UI.Menu.Open(
@@ -220,6 +225,8 @@ function MenuVehicleSpawner()
 			Vozilo2 = trailer
 			Radis = true
 			SpawnObjekte()
+		elseif data.current.value == "krave" then
+			SpawnKrave()
 		end
 
 			menu.close()
@@ -228,6 +235,27 @@ function MenuVehicleSpawner()
 			menu.close()
 		end
 	)
+end
+
+function SpawnKrave()
+		local model = RequestModel("a_c_cow")
+		while not HasModelLoaded("a_c_cow") do
+			Wait(1)
+		end
+		for i=1, #Config.Krave, 1 do
+			local krava = CreatePed(4, model, Config.Krave[i].x, Config.Krave[i].y, Config.Krave[i].z-1.0, Config.Krave[i].h, false, true)
+			FreezeEntityPosition(krava, true)
+			--PlaceObjectOnGroundProperly(obj)
+			Krave[i] = krava
+			Krave2[i] = krava
+			Blipara[i] = AddBlipForCoord(Config.Krave[i].x,  Config.Krave[i].y,  Config.Krave[i].z)
+			SetBlipSprite (Blipara[i], 1)
+			SetBlipDisplay(Blipara[i], 8)
+			SetBlipColour (Blipara[i], 2)
+			SetBlipScale  (Blipara[i], 1.4)
+		end
+		Spawno2 = true
+		ESX.ShowNotification("Pomuzite krave!")
 end
 
 function SpawnObjekte()
@@ -386,6 +414,17 @@ function ZavrsiPosao()
 			end
 		end
 	end
+	if Spawno2 then
+		for i=1, #Config.Krave, 1 do
+			if Krave[i] ~= nil then
+				DeletePed(Krave[i])
+				if DoesBlipExist(Blipara[i]) then
+					RemoveBlip(Blipara[i])
+				end
+			end
+		end
+		Spawno2 = false
+	end
 	if DoesBlipExist(Blip) then
 		RemoveBlip(Blip)
 	end
@@ -426,10 +465,14 @@ end
 
 -- Key Controls
 Citizen.CreateThread(function()
+	local waitara = 500
     while true do
-        Citizen.Wait(20)
+		local naso = 0
+        Citizen.Wait(waitara)
 		if IsJobKosac() then
 			if Spawno == true and Broj > 0 then
+				waitara = 20
+				naso = 1
 				local tablica = GetVehicleNumberPlateText(GetVehiclePedIsIn(GetPlayerPed(-1), false))
 				if tablica == plaquevehicule then
 					local NewBin, NewBinDistance = ESX.Game.GetClosestObject("prop_grass_dry_02")
@@ -562,7 +605,51 @@ Citizen.CreateThread(function()
 					end
 				end
 			end
+			if Spawno2 == true then
+				waitara = 1
+				naso = 1
+				if #Krave2 > 0 then
+					for i=1, #Krave2, 1 do
+						if IsEntityDead(Krave2[i]) then
+							table.remove(Krave2, i)
+						else
+							local krava = GetEntityCoords(Krave2[i])
+							local koord = GetEntityCoords(PlayerPedId())
+							if GetDistanceBetweenCoords(krava, koord, true) <= 5.0 then
+								DrawMarker(1, krava.x, krava.y, krava.z - 0.8, 0.0, 0.0, 0.0, 0.0, 180.0, 0.0, 1.0, 1.0, 1.0, 0, 0, 0, 100, false, true, 2, nil, nil, false)
+							end
+							if GetDistanceBetweenCoords(krava, koord, true) <= 1.0 then
+								local kantaModel = "prop_bucket_01a"
+								RequestModel(kantaModel)
+								while not HasModelLoaded(kantaModel) do
+									Wait(1)
+								end
+								local retval = GetOffsetFromEntityInWorldCoords(Krave2[i], 0.0, -0.4, -1.0)
+								local kanta = CreateObjectNoOffset(GetHashKey(kantaModel), retval.x, retval.y, retval.z, false, false, false)
+								FreezeEntityPosition(PlayerPedId(), true)
+								TaskStartScenarioInPlace(PlayerPedId(), "PROP_HUMAN_BUM_BIN", 0, true)
+								ESX.ShowNotification("Muzete kravu..")
+								Wait(10000)
+								FreezeEntityPosition(PlayerPedId(), false)
+								DeleteObject(kanta)
+								ClearPedTasksImmediately(PlayerPedId())
+								if DoesBlipExist(Blipara[i]) then
+									RemoveBlip(Blipara[i])
+								end
+								ESX.ShowNotification("Pomuzli ste kravu i dobili 36$!")
+								TriggerServerEvent("seljacina:platituljanu2")
+								table.remove(Krave2, i)
+							end
+						end
+					end
+				else
+					ESX.ShowNotification("Zavrsili ste sa poslom!")
+					ZavrsiPosao()
+				end
+			end
 			if CurrentAction ~= nil then
+				waitara = 1
+				naso = 1
 				SetTextComponentFormat('STRING')
 				AddTextComponentString(CurrentActionMsg)
 				DisplayHelpTextFromStringLabel(0, 0, 1, -1)
@@ -574,6 +661,9 @@ Citizen.CreateThread(function()
 					CurrentAction = nil
 				end
 			end
+		end
+		if naso == 0 then
+			waitara = 500
 		end
     end
 end)
