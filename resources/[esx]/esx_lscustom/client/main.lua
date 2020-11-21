@@ -202,8 +202,6 @@ function UpdateMods(data)
 			ESX.Game.SetVehicleProperties(vehicle, props)
 			props = {}
 		end
-		print(data.modType)
-		print(data.modNum)
 		props[data.modType] = data.modNum
 		ESX.Game.SetVehicleProperties(vehicle, props)
 	end

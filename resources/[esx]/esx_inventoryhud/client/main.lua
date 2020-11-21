@@ -225,13 +225,6 @@ RegisterNUICallback(
         if type(data.number) == "number" and math.floor(data.number) == data.number then
 			if data.item.name ~= "medikit" and data.item.name ~= "net_cracker" and data.item.name ~= "thermite" then
 				TriggerServerEvent("esx:removeInventoryItem", data.item.type, data.item.name, data.number)
-				if data.item.type == "item_money" then
-					local kor = GetEntityCoords(PlayerPedId())
-					TriggerServerEvent("DiscordBot:Inventory", GetPlayerName(PlayerId()).." je bacio na pod $"..data.number..". Coord: "..kor.x.." "..kor.y.." "..kor.z)
-				end
-				if data.item.name == "acetone" then
-					TriggerServerEvent("DiscordBot:Inventory", GetPlayerName(PlayerId()).." je bacio na pod "..data.number.." acetona. Coord: "..kor.x.." "..kor.y.." "..kor.z)
-				end
 			else
 				ESX.ShowNotification("Ne mozete bacati taj predmet!")
 			end
@@ -278,9 +271,6 @@ RegisterNUICallback(
                 count = GetAmmoInPedWeapon(PlayerPedId(), GetHashKey(data.item.name))
             end
 			TriggerServerEvent("esx:DajItemTuljanu", data.player, data.item.type, data.item.name, count)
-			if data.item.type == "item_money" then
-				TriggerServerEvent("DiscordBot:Inventory", GetPlayerName(PlayerId()).." je dao igracu "..GetPlayerName(GetPlayerFromServerId(data.player)).." $"..count)
-			end
             Wait(250)
             loadPlayerInventory()
         else

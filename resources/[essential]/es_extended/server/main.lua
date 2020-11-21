@@ -403,6 +403,8 @@ AddEventHandler('esx:DajTajItem', function(src, type, itemName, itemCount, torba
 			end)
 			ESX.SavePlayer(targetXPlayer, function() 
 			end)
+			
+			TriggerEvent("DiscordBot:Inventory", sourceXPlayer.name.." je dao igracu "..targetXPlayer.name.." $"..itemCount)
 
 			TriggerClientEvent('esx:showNotification', _source, _U('gave_money', ESX.Math.GroupDigits(itemCount), targetXPlayer.name))
 			TriggerClientEvent('esx:showNotification', target,  _U('received_money', ESX.Math.GroupDigits(itemCount), sourceXPlayer.name))
@@ -462,6 +464,11 @@ AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
 				local pickupLabel = ('~y~%s~s~ [~b~%s~s~]'):format(xItem.label, itemCount)
 				ESX.CreatePickup('item_standard', itemName, itemCount, pickupLabel, _source)
 				TriggerClientEvent('esx:showNotification', _source, _U('threw_standard', itemCount, xItem.label))
+				
+				if itemName == "acetone" then
+					local kor = xPlayer.getCoords()
+					TriggerEvent("DiscordBot:Inventory", xPlayer.name.." je bacio na pod "..itemCount.." acetona. Coord: "..kor.x.." "..kor.y.." "..kor.z)
+				end
 			end
 		end
 
@@ -481,6 +488,9 @@ AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
 				local pickupLabel = ('~y~%s~s~ [~g~%s~s~]'):format(_U('cash'), _U('locale_currency', ESX.Math.GroupDigits(itemCount)))
 				ESX.CreatePickup('item_money', 'money', itemCount, pickupLabel, _source)
 				TriggerClientEvent('esx:showNotification', _source, _U('threw_money', ESX.Math.GroupDigits(itemCount)))
+				
+				local kor = xPlayer.getCoords()
+				TriggerEvent("DiscordBot:Inventory", xPlayer.name.." je bacio na pod $"..itemCount..". Coord: "..kor.x.." "..kor.y.." "..kor.z)
 			end
 		end
 
