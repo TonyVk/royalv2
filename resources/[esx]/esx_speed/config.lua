@@ -15,5 +15,5 @@ Config.Locale = 'en'
 
 Config.Zones = {
 	Speed =	{x = 722.72796875, y = 4190.204296875, z = 40.594129981995,	name = _U('apanha_de_frutos'),		sprite = 0,	color = 0},
-	VendaDeBitcon =		{x = 3243.86986953, y = -193.414052734, z = 0.963854217529,	name = _U('venda_dos_sacos'),		sprite = 500,	color = 25}
+	VendaDeBitcon =		{x = 149.17854309082, y = -2205.3649902344, z = 4.6880235671998, name = _U('venda_dos_sacos'),		sprite = 500,	color = 25}
 }

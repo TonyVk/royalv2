@@ -376,6 +376,7 @@ function OpenCloakroomMenu()
 							}
 
 							TriggerServerEvent('esx_service:notifyAllInService', notification, 'police')
+							UpaliBlip()
 							TriggerEvent('esx_policejob:updateBlip')
 							ESX.ShowNotification(_U('service_in'))
 						end
@@ -434,6 +435,15 @@ function OpenCloakroomMenu()
 		CurrentAction     = 'menu_cloakroom'
 		CurrentActionMsg  = _U('open_cloackroom')
 		CurrentActionData = {}
+	end)
+end
+
+function UpaliBlip()
+	Citizen.CreateThread(function()
+		while playerInService do
+			Citizen.Wait(5000)
+			TriggerEvent('esx_policejob:updateBlip')
+		end
 	end)
 end
 
