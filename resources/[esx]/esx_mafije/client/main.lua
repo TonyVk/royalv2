@@ -1484,7 +1484,11 @@ function OpenVehicleSpawnerMenu()
 			BVozilo = nil
 		end
 		ESX.Streaming.RequestModel(model)
-		BVozilo = CreateVehicle(model, x,y,z,h, true, false)
+		if model == "seashark" then
+			BVozilo = CreateVehicle(model, 1537.4366455078, -2773.9877929688, 0.82165724039078, 180.80, true, false)
+		else
+			BVozilo = CreateVehicle(model, x,y,z,h, true, false)
+		end
         TaskWarpPedIntoVehicle(playerPed,  BVozilo,  -1)
         SetVehicleMaxMods(BVozilo)
 		SetEntityAsMissionEntity(BVozilo,true,true)
@@ -2935,6 +2939,22 @@ Citizen.CreateThread(function()
 				end
 			end
 			if Koord[i].Ime == "DeleteV" then
+				local x,y,z = table.unpack(Koord[i].Coord)
+				if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+					if GetDistanceBetweenCoords(coords, x, y, z, true) < 100.0 then
+						waitara = 0
+						naso = 1
+						DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 255, 0, 0, 100, false, true, 2, false, false, false, false)
+					end
+					if GetDistanceBetweenCoords(coords, x, y, z, true) < 1.5 then
+						isInMarker     = true
+						currentStation = 4
+						currentPart    = 'VehicleDeleter'
+						currentPartNum = i
+					end
+				end
+			end
+			if Koord[i].Ime == "DeleteV2" then
 				local x,y,z = table.unpack(Koord[i].Coord)
 				if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
 					if GetDistanceBetweenCoords(coords, x, y, z, true) < 100.0 then

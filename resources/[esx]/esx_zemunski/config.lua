@@ -39,7 +39,11 @@ Config.ZemunskiStations = {
 	  AuthorizedVehicles = {
 		 { name = 'cls2015',  label = 'Mercedes CLS 2015' },
 		 { name = '18velar',  label = 'Range Rover Vogue' },
-		 { name = 'rmodgt63',	label = 'Mercedes GT63s' }
+		 { name = 'rmodgt63',	label = 'Mercedes GT63s' },
+		 { name = 'x6m',	label = 'Bmw X6' },
+		 { name = '911turbos',	label = 'Porsche 911 Turbo S' },
+		 { name = 'ktmrally',	label = 'KTM Rally' },
+		 { name = 'towtruck2',	label = 'Tow truck' }
 	  },
     Armories = {
       { x = -2619.2275390625, y = 1714.4197998047, z = 141.37280273438 },
