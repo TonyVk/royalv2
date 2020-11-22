@@ -1,7 +1,8 @@
 ESX = nil
 local Objekti = {}
+local Spawno = false
 local Radis = false
-local ObjBr = 1
+local Broj = 0
 local UzmiCiglu = false
 local OstaviCiglu = false
 local ZadnjaCigla = nil
@@ -9,6 +10,13 @@ local PrvaCigla = nil
 local OstaviKoord = nil
 local prop = nil
 local RandomPosao = 0
+local Vozilo = nil
+local Prikolica = nil
+local Valjak = nil
+local Blipic = nil
+local SpawnMarker = false
+local ObjBr = 1
+local Blipara				  = {}
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -61,7 +69,7 @@ function MenuCloakRoom()
 				if not Radis then
 					isInService = true
 					setUniform(PlayerPedId())
-					PokreniPosao()
+					--PokreniPosao()
 				else
 					ESX.ShowNotification("Vec imas uniformu na sebi!")
 				end
@@ -79,6 +87,29 @@ function MenuCloakRoom()
 			menu.close()
 		end
 	)
+end
+
+function SpawnObjekte()
+	for i,p in ipairs(Config.Objekti) do
+		ESX.Game.SpawnLocalObject('gravel_stone_small', {
+				x = p.x,
+				y = p.y,
+				z = p.z
+			}, function(obj)
+			SetEntityRotation(obj, -0, -0, -19.00465, 2, true)
+			FreezeEntityPosition(obj, true)
+			--PlaceObjectOnGroundProperly(obj)
+			Objekti[i] = obj
+		end)
+		Blipara[i] = AddBlipForCoord(p.x,  p.y,  p.z)
+		SetBlipSprite (Blipara[i], 1)
+		SetBlipDisplay(Blipara[i], 8)
+		SetBlipColour (Blipara[i], 2)
+		SetBlipScale  (Blipara[i], 1.4)
+	end
+	Broj = #Config.Objekti
+	Spawno = true
+	ESX.ShowNotification("Poravnajte asfalt!")
 end
 
 function PokreniPosao()
@@ -187,9 +218,149 @@ function IsJobGradjevinar()
 	end
 end
 
+function MenuVehicleSpawner()
+	local elements = {}
+
+	table.insert(elements, {label = "Gradjenje zida", value = "zid"})
+	table.insert(elements, {label = "Ravnanje asfalta", value = "asfalt"})
+
+
+	ESX.UI.Menu.CloseAll()
+
+	ESX.UI.Menu.Open(
+		'default', GetCurrentResourceName(), 'vehiclespawner',
+		{
+			title    = _U('vehiclespawner'),
+			elements = elements
+		},
+		function(data, menu)
+		if data.current.value == "zid" then
+			PokreniPosao()
+		elseif data.current.value == "asfalt" then
+			if ESX.Game.IsSpawnPointClear({
+					x = 1373.7517089844,
+					y = -739.28570556641,
+					z = 67.23291015625
+				}, 5.0) then
+				if Vozilo ~= nil then
+					ESX.Game.DeleteVehicle(Vozilo)
+					Vozilo = nil
+				end
+				if Prikolica ~= nil then
+					ESX.Game.DeleteVehicle(Prikolica)
+					Prikolica = nil
+				end
+				if Valjak ~= nil then
+					ESX.Game.DeleteVehicle(Valjak)
+					Valjak = nil
+				end
+				DoScreenFadeOut(100)
+				while not IsScreenFadedOut() do
+					Wait(1)
+				end
+				ESX.Game.SpawnVehicle("bobcat3", {
+					x = 1373.7517089844,
+					y = -739.28570556641,
+					z = 67.23291015625
+				}, 74.24, function(callback_vehicle)
+					Vozilo = callback_vehicle
+					TaskWarpPedIntoVehicle(PlayerPedId(), callback_vehicle, -1)
+				end)
+				while Vozilo == nil do
+					Wait(1)
+				end
+				--Wait(200)
+				ESX.Game.SpawnVehicle("cartrailer", {
+					x = 1373.7517089844,
+					y = -739.28570556641,
+					z = 67.23291015625
+				}, 74.24, function(callback_vehicle)
+					local retval = GetVehiclePedIsIn(PlayerPedId(), false)
+					AttachVehicleToTrailer(retval, callback_vehicle, 5)
+					Prikolica = callback_vehicle
+				end)
+				while Prikolica == nil do
+					Wait(1)
+				end
+				--Wait(200)
+				ESX.Game.SpawnVehicle("worktruck", {
+					x = 1373.7517089844,
+					y = -739.28570556641,
+					z = 67.23291015625
+				}, 74.24, function(callback_vehicle)
+					AttachVehicleOnToTrailer(callback_vehicle, Prikolica, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5)
+					AttachEntityToEntity(callback_vehicle, Prikolica, -1, 0, -2.0, 0.3, 0, 0, 0, false, false, false, false, 0, true)
+					Valjak = callback_vehicle
+					--FreezeEntityPosition(callback_vehicle, true)
+				end)
+				Radis = true
+				Blipic = AddBlipForCoord(132.90596008301, -997.96264648438, 29.332862854004)
+				SetBlipRoute(Blipic, true)
+				SpawnMarker = true
+				DoScreenFadeIn(100)
+				while not IsScreenFadedIn() do
+					Wait(1)
+				end
+				TriggerEvent("dpemotes:Radim", true)
+				ESX.ShowNotification("Odite na lokaciju i poravnajte asfalt!")
+			else
+				ESX.ShowNotification("Trenutno nemamo slobodnih valjaka!")
+			end
+		end
+
+			menu.close()
+		end,
+		function(data, menu)
+			menu.close()
+		end
+	)
+end
+
 AddEventHandler('esx_gradjevinar:hasEnteredMarker', function(zone)
 	if zone == 'CloakRoom' then
 		MenuCloakRoom()
+	end
+	
+	if zone == 'VehicleSpawner' then
+		if isInService and IsJobGradjevinar() and Radis == false then
+			MenuVehicleSpawner()
+		end
+	end
+	
+	if zone == 'VehicleDeletePoint' then
+		if isInService and IsJobGradjevinar() then
+			CurrentAction     = 'Obrisi'
+            CurrentActionMsg  = "Pritisnite E da vratite vozilo!"
+			--ZavrsiPosao()
+		end
+	end
+	
+	if zone == 'ulica' then
+		DoScreenFadeOut(100)
+		while not IsScreenFadedOut() do
+			Wait(1)
+		end
+		SpawnObjekte()
+		ESX.Game.DeleteVehicle(Vozilo)
+		ESX.Game.DeleteVehicle(Prikolica)
+		ESX.Game.DeleteVehicle(Valjak)
+		Vozilo = nil
+		Prikolica = nil
+		Valjak = nil
+		RemoveBlip(Blipic)
+		Blipic = nil
+		SpawnMarker = false
+		ESX.Streaming.RequestModel("worktruck")
+		Valjak = CreateVehicle("worktruck", 118.11275482178, -1015.9954223633, 29.291589736938, 247.9, true, false)
+		platenum = math.random(10000, 99999)
+		SetModelAsNoLongerNeeded("worktruck")
+		ObjBr = 1
+		SetVehicleNumberPlateText(Valjak, "SIK"..platenum)             
+		plaquevehicule = "SIK"..platenum			
+		TaskWarpPedIntoVehicle(GetPlayerPed(-1), Valjak, -1)
+		Wait(500)
+		DoScreenFadeIn(100)
+		TriggerEvent("baseevents:enteredVehicle", GetVehiclePedIsIn(PlayerPedId()), -1, 69, 69)
 	end
 	
 	if zone == 'Uzmiciglu' then
@@ -344,6 +515,28 @@ AddEventHandler('esx_gradjevinar:hasEnteredMarker', function(zone)
 end)
 
 function ZavrsiPosao()
+	if Valjak ~= nil then
+		ESX.Game.DeleteVehicle(Vozilo)
+		ESX.Game.DeleteVehicle(Prikolica)
+		ESX.Game.DeleteVehicle(Valjak)
+		RemoveBlip(Blipic)
+		for i=1, #Objekti, 1 do
+			if Objekti[i] ~= nil then
+				ESX.Game.DeleteObject(Objekti[i])
+				if DoesBlipExist(Blipara[i]) then
+					RemoveBlip(Blipara[i])
+				end
+			end
+		end
+		Broj = 0
+		Vozilo = nil
+		Prikolica = nil
+		Valjak = nil
+		Spawno = false
+		Radis = false
+		SpawnMarker = false
+		TriggerEvent("dpemotes:Radim", false)
+	end
 	if Radis == true then
 		for i=1, #Objekti, 1 do
 			if Objekti[i] ~= nil then
@@ -358,6 +551,93 @@ function ZavrsiPosao()
 		OstaviKoord = nil
 	end
 end
+
+-- Key Controls
+Citizen.CreateThread(function()
+    while true do
+        Citizen.Wait(20)
+		if IsJobGradjevinar() then
+			if Spawno == true and Broj > 0 then
+				local tablica = GetVehicleNumberPlateText(GetVehiclePedIsIn(GetPlayerPed(-1), false))
+				if tablica == plaquevehicule then
+					--local NewBin, NewBinDistance = ESX.Game.GetClosestObject("prop_veg_grass_02_a")
+					--local koord = GetEntityCoords(PlayerPedId())
+					--for i=1, #Config.Objekti3, 1 do
+						if Objekti[ObjBr] ~= nil then
+							local koord = GetEntityCoords(PlayerPedId())
+							if GetDistanceBetweenCoords(koord, Config.Objekti[ObjBr].x, Config.Objekti[ObjBr].y, Config.Objekti[ObjBr].z, false) <= 1 then
+								--if NewBinDistance <= 2 then
+									Wait(100)
+									ESX.Game.DeleteObject(Objekti[ObjBr])
+									Objekti[ObjBr] = nil
+									if DoesBlipExist(Blipara[ObjBr]) then
+										RemoveBlip(Blipara[ObjBr])
+									end
+									Broj = Broj-1
+									ObjBr = ObjBr+1
+									TriggerServerEvent("gradjevinar:tuljaniplivaju2")
+									TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.job.name)
+									if Broj == 0 then
+										DoScreenFadeOut(100)
+										while not IsScreenFadedOut() do
+											Wait(1)
+										end
+										ObjBr = 1
+										local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
+										ESX.Game.DeleteVehicle(vehicle)
+										Spawno = false
+										Radis = false
+										Blipic = AddBlipForCoord(1384.1656494141, -741.45233154297, 66.193939208984)
+										SetBlipRoute(Blipic, true)
+										Broj = 0
+										local novacor = GetEntityCoords(PlayerPedId())
+										local x,y,z = table.unpack(novacor)
+										local retval, outPosition, outHeading = GetClosestVehicleNodeWithHeading(x, y, z, 1, 3.0, 0)
+										ESX.Game.SpawnVehicle("bobcat3", outPosition, outHeading, function(callback_vehicle)
+											Vozilo = callback_vehicle
+											TaskWarpPedIntoVehicle(PlayerPedId(), callback_vehicle, -1)
+										end)
+										while Vozilo == nil do
+											Wait(1)
+										end
+										--Wait(200)
+										ESX.Game.SpawnVehicle("cartrailer", outPosition, outHeading, function(callback_vehicle)
+											local retval = GetVehiclePedIsIn(PlayerPedId(), false)
+											AttachVehicleToTrailer(retval, callback_vehicle, 5)
+											Prikolica = callback_vehicle
+										end)
+										while Prikolica == nil do
+											Wait(1)
+										end
+										--Wait(200)
+										ESX.Game.SpawnVehicle("worktruck", outPosition, outHeading, function(callback_vehicle)
+											AttachVehicleOnToTrailer(callback_vehicle, Prikolica, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5)
+											AttachEntityToEntity(callback_vehicle, Prikolica, -1, 0, -2.0, 0.3, 0, 0, 0, false, false, false, false, 0, true)
+											Valjak = callback_vehicle
+											--FreezeEntityPosition(callback_vehicle, true)
+										end)
+										DoScreenFadeIn(100)
+										while not IsScreenFadedIn() do
+											Wait(1)
+										end
+										TriggerEvent("baseevents:enteredVehicle", GetVehiclePedIsIn(PlayerPedId()), -1, 69, 69)
+										ESX.ShowNotification("Uspjesno zavrsen posao, sada vratite valjak do sjedista!")
+										TriggerEvent("dpemotes:Radim", false)
+									end
+									--break
+								--end
+							else
+								Wait(100)
+							end
+						end
+					--end
+				end
+			end
+		else
+			Citizen.Wait(500)
+		end
+    end
+end)
 
 AddEventHandler('esx_gradjevinar:hasExitedMarker', function(zone)
 	ESX.UI.Menu.CloseAll()    
@@ -381,6 +661,13 @@ Citizen.CreateThread(function()
 			local isInMarker  = false
 			local currentZone = nil
 			
+			for k,v in pairs(Config.Zones) do
+				if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
+					isInMarker  = true
+					currentZone = k
+				end
+			end
+			
 			for k,v in pairs(Config.Cloakroom) do
 				if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
 					isInMarker  = true
@@ -396,6 +683,14 @@ Citizen.CreateThread(function()
 			if Radis and OstaviCiglu and (GetDistanceBetweenCoords(coords, OstaviKoord, false) < 0.5) then
 				isInMarker  = true
 				currentZone = "Ostaviciglu"
+			end
+			
+			if Radis == true and SpawnMarker == true and (GetDistanceBetweenCoords(coords, 132.90596008301, -997.96264648438, 29.332862854004, true) < 3.0) then
+				local cordara = GetEntityCoords(Prikolica)
+				if GetDistanceBetweenCoords(cordara, 132.90596008301, -997.96264648438, 29.332862854004, true) < 6.0 then
+					isInMarker  = true
+					currentZone = "ulica"
+				end
 			end
 			
 			if isInMarker and not hasAlreadyEnteredMarker then
@@ -421,6 +716,22 @@ Citizen.CreateThread(function()
 				naso = 1
 				DrawMarker(0, OstaviKoord, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 1.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
 			end
+			
+			if SpawnMarker and GetDistanceBetweenCoords(coords, 132.90596008301, -997.96264648438, 29.332862854004, true) < Config.DrawDistance then
+				waitara = 0
+				naso = 1
+				DrawMarker(1, 132.90596008301, -997.96264648438, 28.332862854004, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
+			end
+			
+			for k,v in pairs(Config.Zones) do
+
+				if isInService and (v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+					waitara = 0
+					naso = 1
+					DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
+				end
+
+			end
 
 			for k,v in pairs(Config.Cloakroom) do
 
@@ -430,6 +741,21 @@ Citizen.CreateThread(function()
 					DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 				end
 
+			end
+			
+			if CurrentAction ~= nil then
+				waitara = 0
+				naso = 1
+				SetTextComponentFormat('STRING')
+				AddTextComponentString(CurrentActionMsg)
+				DisplayHelpTextFromStringLabel(0, 0, 1, -1)
+				if IsControlJustPressed(0, 38) and IsJobGradjevinar() then
+
+					if CurrentAction == 'Obrisi' then
+						ZavrsiPosao()
+					end
+					CurrentAction = nil
+				end
 			end
 		end
 		if naso == 0 then

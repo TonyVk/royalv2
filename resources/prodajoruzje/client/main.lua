@@ -346,6 +346,95 @@ RegisterCommand("testanim", function(source, args, rawCommandString)
 	end)
 end, false)
 
+RegisterCommand("tobj", function(source, args, rawCommandString)
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if br == 1 then
+			local prop = "gravel_stone_small"
+			local kord = GetEntityCoords(PlayerPedId())
+			local retval, outPosition, outRotation = GetCoordsAndRotationOfClosestObjectOfType(kord.x, kord.y, kord.z, 5.0, GetHashKey(prop), 2)
+			print("Rotacija:")
+			print(outRotation)
+			print("Pozicija")
+			print(outPosition)
+		else
+			name = "System"..":"
+			message = " Nemate pristup ovoj komandi"
+			TriggerEvent('chat:addMessage', { args = { name, message }, color = r,g,b })	
+		end
+	end)
+end, false)
+
+local cestica = nil
+local spawno = false
+
+local obj = {
+	vector3(125.8077, -1018.475, 28.05021),
+	vector3(130.9007, -1020.201, 28.05021),
+	vector3(135.978, -1021.922, 28.05021),
+	vector3(141.0414, -1023.638, 28.05021),
+	vector3(146.1187, -1025.359, 28.05021),
+	vector3(151.2155, -1027.086, 28.05021),
+	vector3(156.3008, -1028.809, 28.05021),
+	vector3(161.3757, -1030.529, 28.05021),
+	vector3(166.4943, -1032.264, 28.05021),
+	vector3(171.5589, -1033.98, 28.05021),
+	vector3(176.6392, -1035.702, 28.05021),
+	vector3(181.715, -1037.422, 28.05021),
+	vector3(186.8034, -1039.147, 28.05021),
+	vector3(191.9073, -1040.876, 28.05021),
+	vector3(197.0137, -1042.607, 28.05021)
+}
+
+RegisterCommand("sobj", function(source, args, rawCommandString)
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if br == 1 then
+			if not spawno then
+				local prop = "gravel_stone_small"
+				RequestModel(GetHashKey(prop))
+				while not HasModelLoaded(GetHashKey(prop)) do
+					Citizen.Wait(100)
+				end
+				for i,p in ipairs(obj) do
+					cestica = CreateObject(GetHashKey(prop), p.x, p.y, p.z, true, true, false)
+					SetEntityRotation(cestica, -0, -0, -19.00465, 2, true)
+					FreezeEntityPosition(cestica, true)
+				end
+				spawno = true
+			else
+				DeleteObject(cestica)
+				spawno = false
+			end
+		else
+			name = "System"..":"
+			message = " Nemate pristup ovoj komandi"
+			TriggerEvent('chat:addMessage', { args = { name, message }, color = r,g,b })	
+		end
+	end)
+end, false)
+
+local callback_vehicle = nil
+
+RegisterCommand("tprikolica", function(source, args, rawCommandString)
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if br == 1 then
+			if not spawno then
+				callback_vehicle = CreateVehicle(GetHashKey("worktruck"), 125.8077, -1018.475, 28.05021, 0.0, true, false)
+				local retval, Prikolica = GetVehicleTrailerVehicle(GetVehiclePedIsIn(PlayerPedId(), false))
+				AttachVehicleOnToTrailer(callback_vehicle, Prikolica, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5)
+				AttachEntityToEntity(callback_vehicle, Prikolica, -1, 0, -2.0, 0.3, 0, 0, 0, false, false, false, false, 0, true)
+				spawno = true
+			else
+				DeleteEntity(callback_vehicle)
+				spawno = false
+			end
+		else
+			name = "System"..":"
+			message = " Nemate pristup ovoj komandi"
+			TriggerEvent('chat:addMessage', { args = { name, message }, color = r,g,b })	
+		end
+	end)
+end, false)
+
 RegisterCommand("dajmuskin", function(source, args, rawCommandString)
 	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		if br == 1 then

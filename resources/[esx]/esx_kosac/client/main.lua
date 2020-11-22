@@ -417,6 +417,7 @@ AddEventHandler('esx_kosac:hasEnteredMarker', function(zone)
 		TaskWarpPedIntoVehicle(GetPlayerPed(-1), Mower, -1)
 		Wait(500)
 		DoScreenFadeIn(100)
+		TriggerEvent("baseevents:enteredVehicle", GetVehiclePedIsIn(PlayerPedId()), -1, 69, 69)
 	end
 
 	if zone == 'VehicleSpawner' then
@@ -602,6 +603,7 @@ Citizen.CreateThread(function()
 											while not IsScreenFadedIn() do
 												Wait(1)
 											end
+											TriggerEvent("baseevents:enteredVehicle", GetVehiclePedIsIn(PlayerPedId()), -1, 69, 69)
 											ESX.ShowNotification("Uspjesno zavrsen posao, sada vratite kosilicu do sjedista!")
 											TriggerEvent("dpemotes:Radim", false)
 										end
