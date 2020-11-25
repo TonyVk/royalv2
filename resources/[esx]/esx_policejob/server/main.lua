@@ -128,7 +128,7 @@ AddEventHandler('esx_dowod:pokaznacke', function()
 		job.grade_label = "~r~Nema dostupnih podataka"
 		czy_wazna = "~r~NE"
 	end
-	if job.name == "police" or job.name == "sipa" then
+	if job.name == "police" or job.name == "sipa" or job.name == "zastitar" or job.name == "Gradonacelnik" then
 		TriggerClientEvent("gln:plateanim", _source)
 		Citizen.Wait(3000)
 		--TriggerClientEvent('esx:dowod_pokazOdznake', -1,_source, '~h~'..name.firstname..' '..name.lastname, 'Znacka LSPD' , 'Stopień ~b~'..job.grade_label..'~s~~n~Znacka jest ważna '..czy_wazna)

@@ -502,10 +502,11 @@ TriggerEvent('es:addGroupCommand', 'ban', Config.permission, function (source, a
 	local target    = tonumber(args[1])
 	local duree     = tonumber(args[2])
 	local reason    = table.concat(args, " ",3)
+	reason 	= reason.." ("..GetPlayerName(source)..")"
 	local permanent = 0
 		
 		if reason == "" then
-			reason = _U('no_reason')
+			reason = _U('no_reason').." ("..GetPlayerName(source)..")"
 		end
 		if target ~= nil and target > 0 then
 			local ping = GetPlayerPing(target)
@@ -574,6 +575,7 @@ TriggerEvent('es:addGroupCommand', 'reason', Config.permission, function (source
 	local duree            = lastduree
 	local name             = lasttarget
 	local reason           = table.concat(args, " ",1)
+	reason 	= reason.." ("..GetPlayerName(source)..")"
 	local permanent        = 0
 	local playerip         = "0.0.0.0"
 	local liveid           = "no info"
@@ -584,7 +586,7 @@ TriggerEvent('es:addGroupCommand', 'reason', Config.permission, function (source
 	if name ~= "" then
 		if duree ~= nil and duree < 365 then
 			if reason == "" then
-				reason = _U('no_reason')
+				reason = _U('no_reason').." ("..GetPlayerName(source)..")"
 			end
 
 			MySQL.Async.fetchAll('SELECT * FROM baninfo WHERE playername = @playername', 

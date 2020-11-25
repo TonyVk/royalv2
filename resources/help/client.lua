@@ -35,6 +35,6 @@ end )
 RegisterCommand("discord", function(source, args, rawCommandString)
 	TriggerEvent('chat:addMessage', {
             template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(0, 153, 204, 0.6); border-radius: 3px;"><i class="fas fa-user-circle"></i> {0}:<br> {1}</div>',
-            args = { "Discord", "https://discord.gg/5xGGzfY" }
+            args = { "Discord", "https://discord.gg/rAWxYmp" }
 	})
 end, false)
