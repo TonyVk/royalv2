@@ -88,24 +88,127 @@ AddEventHandler('esx_markeras:inCommunityService', function(actions_remaining)
 	isSentenced = true
 	communityServiceFinished = false
 
-	while actionsRemaining > 0 and communityServiceFinished ~= true do
-		Citizen.Wait(10000)
-		if actionsRemaining > 0 then
-			local playerPed = PlayerPedId()
-			if IsPedInAnyVehicle(playerPed, false) then
-				ClearPedTasksImmediately(playerPed)
-			end
-			local kord = GetEntityCoords(playerPed)
-			if GetDistanceBetweenCoords(kord, Config.ServiceLocation.x, Config.ServiceLocation.y, Config.ServiceLocation.z, true) > 45 then
-				ESX.Game.Teleport(playerPed, Config.ServiceLocation)
-				TriggerEvent('chat:addMessage', { args = { _U('judge'), _U('escape_attempt') }, color = { 147, 196, 109 } })
-				TriggerServerEvent('esx_markeras:extendService')
-				actionsRemaining = actionsRemaining + Config.ServiceExtensionOnEscape
+	Citizen.CreateThread(function()
+		while actionsRemaining > 0 and communityServiceFinished ~= true do
+			Citizen.Wait(10000)
+			if actionsRemaining > 0 then
+				local playerPed = PlayerPedId()
+				if IsPedInAnyVehicle(playerPed, false) then
+					ClearPedTasksImmediately(playerPed)
+				end
+				local kord = GetEntityCoords(playerPed)
+				if GetDistanceBetweenCoords(kord, Config.ServiceLocation.x, Config.ServiceLocation.y, Config.ServiceLocation.z, true) > 45 then
+					ESX.Game.Teleport(playerPed, Config.ServiceLocation)
+					TriggerEvent('chat:addMessage', { args = { _U('judge'), _U('escape_attempt') }, color = { 147, 196, 109 } })
+				end
 			end
 		end
-	end
+	end)
+	PokreniPetlju()
 end)
 
+function PokreniPetlju()
+	Citizen.CreateThread(function()
+		while true do
+			Citizen.Wait(1)
+
+			if actionsRemaining > 0 and isSentenced then
+				draw2dText( _U('remaining_msg', ESX.Math.Round(actionsRemaining)), { 0.175, 0.955 } )
+				DrawAvailableActions()
+				DisableViolentActions()
+
+				local pCoords    = GetEntityCoords(PlayerPedId())
+
+				for i = 1, #availableActions do
+					if availableActions[i] ~= nil then
+						local distance = GetDistanceBetweenCoords(pCoords, availableActions[i].coords, true)
+
+						if distance < 1.5 then
+							DisplayHelpText(_U('press_to_start'))
+
+
+							if(IsControlJustReleased(1, 38))then
+								tmp_action = availableActions[i]
+								RemoveAction(tmp_action)
+								FillActionTable(tmp_action)
+								disable_actions = true
+
+								TriggerServerEvent('esx_markeras:completeService')
+								actionsRemaining = actionsRemaining - 1
+
+								if (tmp_action.type == "cleaning") then
+									local cSCoords = GetOffsetFromEntityInWorldCoords(GetPlayerPed(PlayerId()), 0.0, 0.0, -5.0)
+									local vassouspawn = CreateObject(GetHashKey(vassoumodel), cSCoords.x, cSCoords.y, cSCoords.z, true, false, false)
+									while not DoesEntityExist(vassouspawn) do
+										Wait(50)
+									end
+									local netid = ObjToNet(vassouspawn)
+									TriggerServerEvent("ciscenje:DodajObjekt", netid)
+									ESX.Streaming.RequestAnimDict("amb@world_human_janitor@male@idle_a", function()
+											TaskPlayAnim(PlayerPedId(), "amb@world_human_janitor@male@idle_a", "idle_a", 8.0, -8.0, -1, 0, 0, false, false, false)
+											AttachEntityToEntity(vassouspawn,GetPlayerPed(PlayerId()),GetPedBoneIndex(GetPlayerPed(PlayerId()), 28422),-0.005,0.0,0.0,360.0,360.0,0.0,1,1,0,1,0,1)
+											vassour_net = netid
+										end)
+
+										ESX.SetTimeout(10000, function()
+											disable_actions = false
+											DetachEntity(NetToObj(vassour_net), 1, 1)
+											DeleteEntity(NetToObj(vassour_net))
+											ESX.Game.DeleteObject(vassouspawn)
+											TriggerServerEvent("ciscenje:MakniObjekt", netid)
+											vassour_net = nil
+											ClearPedTasks(PlayerPedId())
+											if actionsRemaining == 0 then
+												TriggerServerEvent("esx_markeras:finishCommunityService")
+											end
+										end)
+
+								end
+
+								if (tmp_action.type == "gardening") then
+									local cSCoords = GetOffsetFromEntityInWorldCoords(GetPlayerPed(PlayerId()), 0.0, 0.0, -5.0)
+									local spatulaspawn = CreateObject(GetHashKey(spatulamodel), cSCoords.x, cSCoords.y, cSCoords.z, true, false, false)
+									while not DoesEntityExist(spatulaspawn) do
+										Wait(50)
+									end
+									local netid = ObjToNet(spatulaspawn)
+									TriggerServerEvent("ciscenje:DodajObjekt", netid)
+									TaskStartScenarioInPlace(PlayerPedId(), "world_human_gardener_plant", 0, false)
+									AttachEntityToEntity(spatulaspawn,GetPlayerPed(PlayerId()),GetPedBoneIndex(GetPlayerPed(PlayerId()), 28422),-0.005,0.0,0.0,190.0,190.0,-50.0,1,1,0,1,0,1)
+									spatula_net = netid
+
+									ESX.SetTimeout(14000, function()
+										disable_actions = false
+										DetachEntity(NetToObj(spatula_net), 1, 1)
+										DeleteEntity(NetToObj(spatula_net))
+										ESX.Game.DeleteObject(spatulaspawn)
+										TriggerServerEvent("ciscenje:MakniObjekt", netid)
+										spatula_net = nil
+										ClearPedTasks(PlayerPedId())
+										if actionsRemaining == 0 then
+											TriggerServerEvent("esx_markeras:finishCommunityService")
+										end
+									end)
+								end
+							end
+						end
+					end
+				end
+			else
+				if communityServiceFinished then
+					communityServiceFinished = false
+					ESX.Game.Teleport(PlayerPedId(), Config.ReleaseLocation)
+					isSentenced = false
+					actionsRemaining = 0
+					ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
+						TriggerEvent('skinchanger:loadSkin', skin)
+					end)
+				end
+				Citizen.Wait(1000)
+			end
+		end
+	end)
+end
 
 
 RegisterNetEvent('esx_markeras:finishCommunityService')
@@ -113,112 +216,6 @@ AddEventHandler('esx_markeras:finishCommunityService', function(source)
 	communityServiceFinished = true
 	isSentenced = false
 	actionsRemaining = 0
-end)
-
-
-
-Citizen.CreateThread(function()
-	while true do
-		:: start_over ::
-		Citizen.Wait(1)
-
-		if actionsRemaining > 0 and isSentenced then
-			draw2dText( _U('remaining_msg', ESX.Math.Round(actionsRemaining)), { 0.175, 0.955 } )
-			DrawAvailableActions()
-			DisableViolentActions()
-
-			local pCoords    = GetEntityCoords(PlayerPedId())
-
-			for i = 1, #availableActions do
-				if availableActions[i] ~= nil then
-					local distance = GetDistanceBetweenCoords(pCoords, availableActions[i].coords, true)
-
-					if distance < 1.5 then
-						DisplayHelpText(_U('press_to_start'))
-
-
-						if(IsControlJustReleased(1, 38))then
-							tmp_action = availableActions[i]
-							RemoveAction(tmp_action)
-							FillActionTable(tmp_action)
-							disable_actions = true
-
-							TriggerServerEvent('esx_markeras:completeService')
-							actionsRemaining = actionsRemaining - 1
-
-							if (tmp_action.type == "cleaning") then
-								local cSCoords = GetOffsetFromEntityInWorldCoords(GetPlayerPed(PlayerId()), 0.0, 0.0, -5.0)
-								local vassouspawn = CreateObject(GetHashKey(vassoumodel), cSCoords.x, cSCoords.y, cSCoords.z, true, false, false)
-								while not DoesEntityExist(vassouspawn) do
-									Wait(50)
-								end
-								local netid = ObjToNet(vassouspawn)
-								TriggerServerEvent("ciscenje:DodajObjekt", netid)
-								ESX.Streaming.RequestAnimDict("amb@world_human_janitor@male@idle_a", function()
-										TaskPlayAnim(PlayerPedId(), "amb@world_human_janitor@male@idle_a", "idle_a", 8.0, -8.0, -1, 0, 0, false, false, false)
-										AttachEntityToEntity(vassouspawn,GetPlayerPed(PlayerId()),GetPedBoneIndex(GetPlayerPed(PlayerId()), 28422),-0.005,0.0,0.0,360.0,360.0,0.0,1,1,0,1,0,1)
-										vassour_net = netid
-									end)
-
-									ESX.SetTimeout(10000, function()
-										disable_actions = false
-										DetachEntity(NetToObj(vassour_net), 1, 1)
-										DeleteEntity(NetToObj(vassour_net))
-										ESX.Game.DeleteObject(vassouspawn)
-										TriggerServerEvent("ciscenje:MakniObjekt", netid)
-										vassour_net = nil
-										ClearPedTasks(PlayerPedId())
-										if actionsRemaining == 0 then
-											TriggerServerEvent("esx_markeras:finishCommunityService")
-										end
-									end)
-
-							end
-
-							if (tmp_action.type == "gardening") then
-								local cSCoords = GetOffsetFromEntityInWorldCoords(GetPlayerPed(PlayerId()), 0.0, 0.0, -5.0)
-								local spatulaspawn = CreateObject(GetHashKey(spatulamodel), cSCoords.x, cSCoords.y, cSCoords.z, true, false, false)
-								while not DoesEntityExist(spatulaspawn) do
-									Wait(50)
-								end
-								local netid = ObjToNet(spatulaspawn)
-								TriggerServerEvent("ciscenje:DodajObjekt", netid)
-								TaskStartScenarioInPlace(PlayerPedId(), "world_human_gardener_plant", 0, false)
-								AttachEntityToEntity(spatulaspawn,GetPlayerPed(PlayerId()),GetPedBoneIndex(GetPlayerPed(PlayerId()), 28422),-0.005,0.0,0.0,190.0,190.0,-50.0,1,1,0,1,0,1)
-								spatula_net = netid
-
-								ESX.SetTimeout(14000, function()
-									disable_actions = false
-									DetachEntity(NetToObj(spatula_net), 1, 1)
-									DeleteEntity(NetToObj(spatula_net))
-									ESX.Game.DeleteObject(spatulaspawn)
-									TriggerServerEvent("ciscenje:MakniObjekt", netid)
-									spatula_net = nil
-									ClearPedTasks(PlayerPedId())
-									if actionsRemaining == 0 then
-										TriggerServerEvent("esx_markeras:finishCommunityService")
-									end
-								end)
-							end
-
-							goto start_over
-						end
-					end
-				end
-			end
-		else
-			if communityServiceFinished then
-				communityServiceFinished = false
-				ESX.Game.Teleport(PlayerPedId(), Config.ReleaseLocation)
-				isSentenced = false
-				actionsRemaining = 0
-				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
-					TriggerEvent('skinchanger:loadSkin', skin)
-				end)
-			end
-			Citizen.Wait(1000)
-		end
-	end
 end)
 
 

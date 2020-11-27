@@ -1,6 +1,6 @@
 Locales ['en'] = {
 	['judge']              	= 'SUDAC',
-	['escape_attempt']     	= 'Ne mozete pobjeci od kazne. Vasa kazna je produzena.',
+	['escape_attempt']     	= 'Ne mozete pobjeci od kazne.',
 	['remaining_msg']      	= 'Imate jos ~b~%s~s~ markera da zavrsite svoju kaznu.',
 	['comserv_msg']       	= '%s je osuden na %s markera kazne.',
 	['comserv_finished']  	= '%s je zavrsio svoju kaznu!',
