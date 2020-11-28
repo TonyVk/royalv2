@@ -182,6 +182,7 @@ function MenuVehicleSpawner()
 					local retval = GetVehiclePedIsIn(PlayerPedId(), false)
 					AttachVehicleToTrailer(retval, callback_vehicle, 5)
 					Prikolica = callback_vehicle
+					SetVehicleExtra(callback_vehicle, 1, true)
 				end)
 				while Prikolica == nil do
 					Wait(1)
@@ -588,6 +589,7 @@ Citizen.CreateThread(function()
 												local retval = GetVehiclePedIsIn(PlayerPedId(), false)
 												AttachVehicleToTrailer(retval, callback_vehicle, 5)
 												Prikolica = callback_vehicle
+												SetVehicleExtra(callback_vehicle, 1, true)
 											end)
 											while Prikolica == nil do
 												Wait(1)

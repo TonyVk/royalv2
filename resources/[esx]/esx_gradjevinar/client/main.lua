@@ -278,6 +278,7 @@ function MenuVehicleSpawner()
 					local retval = GetVehiclePedIsIn(PlayerPedId(), false)
 					AttachVehicleToTrailer(retval, callback_vehicle, 5)
 					Prikolica = callback_vehicle
+					SetVehicleExtra(callback_vehicle, 1, true)
 				end)
 				while Prikolica == nil do
 					Wait(1)
@@ -592,8 +593,9 @@ Citizen.CreateThread(function()
 										Broj = 0
 										local novacor = GetEntityCoords(PlayerPedId())
 										local x,y,z = table.unpack(novacor)
-										local retval, outPosition, outHeading = GetClosestVehicleNodeWithHeading(x, y, z, 1, 3.0, 0)
-										ESX.Game.SpawnVehicle("bobcat3", outPosition, outHeading, function(callback_vehicle)
+										--local retval, outPosition, outHeading = GetClosestVehicleNodeWithHeading(x, y, z, 1, 3.0, 0)
+										local kord1 = vector3(198.33883666992, -1037.0025634766, 28.142356872559)
+										ESX.Game.SpawnVehicle("bobcat3", kord1, 249.80, function(callback_vehicle)
 											Vozilo = callback_vehicle
 											TaskWarpPedIntoVehicle(PlayerPedId(), callback_vehicle, -1)
 										end)
@@ -601,16 +603,19 @@ Citizen.CreateThread(function()
 											Wait(1)
 										end
 										--Wait(200)
-										ESX.Game.SpawnVehicle("cartrailer", outPosition, outHeading, function(callback_vehicle)
+										local kord2 = vector3(191.92486572266, -1034.5772705078, 28.13547706604)
+										ESX.Game.SpawnVehicle("cartrailer", kord2, 252.15, function(callback_vehicle)
 											local retval = GetVehiclePedIsIn(PlayerPedId(), false)
 											AttachVehicleToTrailer(retval, callback_vehicle, 5)
 											Prikolica = callback_vehicle
+											SetVehicleExtra(callback_vehicle, 1, true)
 										end)
 										while Prikolica == nil do
 											Wait(1)
 										end
 										--Wait(200)
-										ESX.Game.SpawnVehicle("worktruck", outPosition, outHeading, function(callback_vehicle)
+										local kord3 = vector3(184.1916809082, -1032.0869140625, 28.130422592163)
+										ESX.Game.SpawnVehicle("worktruck", kord3, 252.14, function(callback_vehicle)
 											AttachVehicleOnToTrailer(callback_vehicle, Prikolica, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5)
 											AttachEntityToEntity(callback_vehicle, Prikolica, -1, 0, -2.0, 0.3, 0, 0, 0, false, false, false, false, 0, true)
 											Valjak = callback_vehicle

@@ -480,7 +480,15 @@ function OpenMobileMechanicActionsMenu()
 					if targetVehicle ~= 0 then
 						if not IsPedInAnyVehicle(playerPed, true) then
 							if vehicle ~= targetVehicle then
-								AttachEntityToEntity(targetVehicle, vehicle, 20, -0.5, -5.0, 1.0, 0.0, 0.0, 0.0, false, false, false, false, 20, true)
+								
+								local towPos = GetOffsetFromEntityInWorldCoords(vehicle, 0.0, -1.9, 3.5)
+								SetEntityCoords(targetVehicle, towPos, false, false, false, false)
+								Citizen.Wait(2000)
+								local targetPos = GetEntityCoords(targetVehicle, true)
+								local attachPos = GetOffsetFromEntityGivenWorldCoords(vehicle, targetPos.x, targetPos.y, targetPos.z)
+								AttachEntityToEntity(targetVehicle, vehicle, -1, attachPos.x, attachPos.y, attachPos.z, 0.0, 0.0, 0.0, false, false, false, false, 0, true)
+							
+								--AttachEntityToEntity(targetVehicle, vehicle, 20, -0.5, -5.0, 1.0, 0.0, 0.0, 0.0, false, false, false, false, 0, true)
 								CurrentlyTowedVehicle = targetVehicle
 								ESX.ShowNotification(_U('vehicle_success_attached'))
 
@@ -506,8 +514,14 @@ function OpenMobileMechanicActionsMenu()
 						ESX.ShowNotification(_U('no_veh_att'))
 					end
 				else
-					AttachEntityToEntity(CurrentlyTowedVehicle, vehicle, 20, -0.5, -12.0, 1.0, 0.0, 0.0, 0.0, false, false, false, false, 20, true)
 					DetachEntity(CurrentlyTowedVehicle, true, true)
+					local coords = GetOffsetFromEntityInWorldCoords(vehicle, 0.0, -10.0, 0.0)
+					
+					SetEntityCoords(CurrentlyTowedVehicle, coords, false, false, false, false)
+					SetVehicleOnGroundProperly(CurrentlyTowedVehicle)
+				
+					--AttachEntityToEntity(CurrentlyTowedVehicle, vehicle, 20, -0.5, -12.0, 1.0, 0.0, 0.0, 0.0, false, false, false, false, 20, true)
+					--DetachEntity(CurrentlyTowedVehicle, true, true)
 
 					if NPCOnJob then
 						if NPCTargetDeleterZone then

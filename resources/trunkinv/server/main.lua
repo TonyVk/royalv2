@@ -1,6 +1,7 @@
 ESX = nil
 local arrayWeight = Config.localWeight
 local VehicleList = {}
+local Tablice = {}
 
 TriggerEvent('esx:getSharedObject', function(obj)
     ESX = obj
@@ -40,16 +41,35 @@ RegisterServerEvent('gepeke:getInventory')
 AddEventHandler('gepeke:getInventory', function(plate)
     local inventory_ = {}
     local _source = source
-    MySQL.Async.fetchAll(
-        'SELECT * FROM `truck_inventory` WHERE `plate` = @plate',
-        {
-            ['@plate'] = plate
-        },
-        function(inventory)
-            if inventory ~= nil and #inventory > 0 then
-                for i = 1, #inventory, 1 do
-					if inventory[i].itemt ~= "item_weapon" then
-						if inventory[i].count > 0 then
+	local moze = true
+	for a = 1, #Tablice, 1 do
+        if Tablice[a].plate == plate then
+			if Tablice[a].id ~= _source then
+				if GetGameTimer()-Tablice[a].vrijeme < 1000 then
+					moze = false
+				end
+			end
+		end
+	end
+	if moze then
+		MySQL.Async.fetchAll(
+			'SELECT * FROM `truck_inventory` WHERE `plate` = @plate',
+			{
+				['@plate'] = plate
+			},
+			function(inventory)
+				if inventory ~= nil and #inventory > 0 then
+					for i = 1, #inventory, 1 do
+						if inventory[i].itemt ~= "item_weapon" then
+							if inventory[i].count > 0 then
+								table.insert(inventory_, {
+									label = inventory[i].name,
+									name = inventory[i].item,
+									count = inventory[i].count,
+									type = inventory[i].itemt
+								})
+							end
+						else
 							table.insert(inventory_, {
 								label = inventory[i].name,
 								name = inventory[i].item,
@@ -57,20 +77,13 @@ AddEventHandler('gepeke:getInventory', function(plate)
 								type = inventory[i].itemt
 							})
 						end
-					else
-						table.insert(inventory_, {
-							label = inventory[i].name,
-							name = inventory[i].item,
-							count = inventory[i].count,
-							type = inventory[i].itemt
-						})
 					end
-                end
-            end
-            local weight = (getInventoryWeight(inventory_))
-            local xPlayer = ESX.GetPlayerFromId(_source)
-            TriggerClientEvent('gepeke:getInventoryLoaded', xPlayer.source, inventory_, weight)
-        end)
+				end
+				local weight = (getInventoryWeight(inventory_))
+				local xPlayer = ESX.GetPlayerFromId(_source)
+				TriggerClientEvent('gepeke:getInventoryLoaded', xPlayer.source, inventory_, weight)
+			end)
+	end
 end)
 
 RegisterServerEvent('gepeke:removeInventoryItem')
@@ -197,6 +210,7 @@ AddEventHandler('gepeke:AddVehicleList', function(plate)
         if not plateisfound then
             table.insert(VehicleList, {vehicleplate = plate, id = _source})
         end
+		table.insert(Tablice, {plate = plate, id = _source, vrijeme = GetGameTimer()})
     end
 end)
 
@@ -210,6 +224,11 @@ AddEventHandler('gepeke:RemoveVehicleList', function(plate)
             end
         end
     end
+	for a = 1, #Tablice, 1 do
+        if Tablice[a].plate == plate then
+			table.remove(Tablice, a)
+		end
+	end
 end)
 
 AddEventHandler('onMySQLReady', function()
