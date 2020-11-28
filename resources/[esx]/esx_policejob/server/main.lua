@@ -65,6 +65,11 @@ AddEventHandler('popo:zapljeni9', function(target, itemType, itemName, amount)
     end
 end)
 
+RegisterServerEvent('heli:spotlight')
+AddEventHandler('heli:spotlight', function(state, nid)
+	TriggerClientEvent('heli:spotlight', -1, nid, state)
+end)
+
 RegisterNetEvent('policija:UpaliSirenu')
 AddEventHandler('policija:UpaliSirenu', function(nid, sir, mut)
 	TriggerClientEvent("policija:VratiSirenu", -1, nid, sir, mut)
