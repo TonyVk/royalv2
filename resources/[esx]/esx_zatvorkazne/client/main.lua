@@ -158,9 +158,14 @@ function PokreniPetlju()
 											TriggerServerEvent("ciscenje:MakniObjekt", netid)
 											vassour_net = nil
 											ClearPedTasks(PlayerPedId())
-											if actionsRemaining == 0 then
-												TriggerServerEvent("esx_markeras:finishCommunityService")
-											end
+											ESX.TriggerServerCallback('esx_markeras:DohvatiMarkere', function(br)
+												if br ~= nil then
+													actionsRemaining = tonumber(br)
+													if actionsRemaining == 0 then
+														TriggerServerEvent("esx_markeras:finishCommunityService")
+													end
+												end
+											end)
 										end)
 
 								end
@@ -185,9 +190,14 @@ function PokreniPetlju()
 										TriggerServerEvent("ciscenje:MakniObjekt", netid)
 										spatula_net = nil
 										ClearPedTasks(PlayerPedId())
-										if actionsRemaining == 0 then
-											TriggerServerEvent("esx_markeras:finishCommunityService")
-										end
+										ESX.TriggerServerCallback('esx_markeras:DohvatiMarkere', function(br)
+											if br ~= nil then
+												actionsRemaining = tonumber(br)
+												if actionsRemaining == 0 then
+													TriggerServerEvent("esx_markeras:finishCommunityService")
+												end
+											end
+										end)
 									end)
 								end
 							end

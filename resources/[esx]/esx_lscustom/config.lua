@@ -560,8 +560,13 @@ Config.Menus = {
 	},
 	dodaci = {
 		label			= "Dodaci",
-		parent			= 'upgrades',
+		parent			= 'cosmetics',
 		modType 		= 'dodaci'
+	},
+	swap = {
+		label			= "Zamjena motora",
+		parent			= 'upgrades',
+		modType 		= 'swap'
 	},
 	upgrades = {
 		label			= _U('upgrades'),
@@ -572,7 +577,8 @@ Config.Menus = {
 		modSuspension	= _U('suspension'),
 		modArmor		= _U('armor'),
 		modTurbo		= _U('turbo'),
-		mjenjac 		= "Zamjena mjenjaca"
+		mjenjac 		= "Zamjena mjenjaca",
+		swap 			= "Zamjena motora"
 	},
 	modEngine = {
 		label = _U('engine'),

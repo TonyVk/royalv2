@@ -21,6 +21,7 @@ Citizen.CreateThread(function()
 	local GUI      = {}
 	GUI.Time       = 0
 	local MenuType = 'default'
+	local vrijeme = GetGameTimer()
 
 	local openMenu = function(namespace, name, data)
 		SendNUIMessage({
@@ -46,7 +47,10 @@ Citizen.CreateThread(function()
 		local menu = ESX.UI.Menu.GetOpened(MenuType, data._namespace, data._name)
 		
 		if menu.submit ~= nil then
-			menu.submit(data, menu)
+			if GetGameTimer()-vrijeme > 1000 then
+				vrijeme = GetGameTimer()
+				menu.submit(data, menu)
+			end
 		end
 
 		cb('OK')

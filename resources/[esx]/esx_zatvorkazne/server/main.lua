@@ -120,7 +120,7 @@ AddEventHandler('esx_markeras:extendService', function()
 		if result[1] then
 			MySQL.Async.execute('UPDATE communityservice SET actions_remaining = actions_remaining + @extension_value WHERE identifier = @identifier', {
 				['@identifier'] = identifier,
-				['@extension_value'] = Config.ServiceExtensionOnEscape
+				['@extension_value'] = 500
 			})
 		else
 			print ("esx_markeras :: Problem matching player identifier in database to reduce actions.")
@@ -209,7 +209,20 @@ ESX.RegisterServerCallback('esx_markeras:ProvjeriMarkere', function(source, cb)
 	end)
 end)
 
+ESX.RegisterServerCallback('esx_markeras:DohvatiMarkere', function(source, cb)
+	local _source = source -- cannot parse source to client trigger for some weird reason
+	local identifier = GetPlayerIdentifiers(_source)[1] -- get steam identifier
 
+	MySQL.Async.fetchAll('SELECT actions_remaining FROM communityservice WHERE identifier = @identifier', {
+		['@identifier'] = identifier
+	}, function(result)
+		if result[1] ~= nil then
+			cb(result[1].actions_remaining)
+		else
+			cb(nil)
+		end
+	end)
+end)
 
 function releaseFromCommunityService(target)
 

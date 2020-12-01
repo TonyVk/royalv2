@@ -71,7 +71,7 @@ function OpenLSMenu(elems, menuName, menuTitle, parent)
 		align    = 'top-left',
 		elements = elems
 	}, function(data, menu)
-		local isRimMod, found, isMjenjac, isSvijetla, isDodaci = false, false, false, false, false
+		local isRimMod, found, isMjenjac, isSvijetla, isDodaci, isSwap = false, false, false, false, false, false
 		local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
 		local vehicleProps = ESX.Game.GetVehicleProperties(vehicle)
 		local tablica = vehicleProps.plate
@@ -84,6 +84,10 @@ function OpenLSMenu(elems, menuName, menuTitle, parent)
 			isMjenjac = true
 		end
 		
+		if data.current.modType == "swap" then
+			isSwap = true
+		end
+		
 		if data.current.modType == "dodaci" then
 			isDodaci = true
 		end
@@ -94,7 +98,7 @@ function OpenLSMenu(elems, menuName, menuTitle, parent)
 
 		for k,v in pairs(Config.Menus) do
 
-			if k == data.current.modType or isRimMod or isMjenjac or isSvijetla or isDodaci then
+			if k == data.current.modType or isRimMod or isMjenjac or isSvijetla or isDodaci or isSwap then
 
 				if data.current.label == _U('by_default') or string.match(data.current.label, _U('installed')) then
 					ESX.ShowNotification(_U('already_own', data.current.label))
@@ -138,6 +142,21 @@ function OpenLSMenu(elems, menuName, menuTitle, parent)
 						end
 						local globalplate = GetVehicleNumberPlateText(vehicle)
 						TriggerServerEvent("meh:PromjeniMjenjac", data.current.modNum, globalplate)
+					elseif isSwap then
+						price = 5000
+						TriggerServerEvent("lscs:kupiPeraje", GetEntityModel(vehicle), price, tablica)
+						TriggerServerEvent("DiscordBot:Mehanicari", GetPlayerName(PlayerId()).." je kupio dio za $"..price)
+						if data.current.modNum == 1 then
+							ESX.ShowNotification("Kupio si v10 motor!")
+							SetVehicleHandlingFloat(vehicle, "CHandlingData", "fInitialDriveForce", 1.800000)
+							SetVehicleHandlingInt(vehicle, "CHandlingData", "nInitialDriveGears", 6)
+							SetVehicleHandlingFloat(vehicle, "CHandlingData", "fInitialDriveMaxFlatVel", 230.000000)
+							SetVehicleHandlingFloat(vehicle, "CHandlingData", "fClutchChangeRateScaleUpShift", 6.000000)
+							SetVehicleHandlingFloat(vehicle, "CHandlingData", "fDriveInertia", 1.000000)
+							SetVehicleMaxSpeed(vehicle, 230.0)
+							ForceVehicleEngineAudio(vehicle, "BANSHEE2")
+							SetVehRadioStation(vehicle, "OFF")
+						end
 					elseif isDodaci then
 						price = 50
 						TriggerServerEvent("lscs:kupiPeraje", GetEntityModel(vehicle), price, tablica)
@@ -319,6 +338,14 @@ function GetAction(data)
 						price = math.floor((vehiclePrice * v.price / 800)*1.30)
 						_label = colors[j].label .. ' - <span style="color:green;">$' .. price .. ' </span>'
 						table.insert(elements, {label = _label, modType = k, modNum = colors[j].index})
+					end
+				elseif v.modType == 'swap' then
+					local globalplate  = GetVehicleNumberPlateText(vehicle)
+					local _label = ''
+					price = 5000*1.30
+					if globalplate ~= nil or globalplate ~= "" or globalplate ~= " " then
+						_label = 'v10 motor - <span style="color:green;">$' .. price .. ' </span>'
+						table.insert(elements, {label = _label, modType = k, modNum = 1})
 					end
 				elseif v.modType == 'mjenjac' then
 					local globalplate  = GetVehicleNumberPlateText(vehicle)
