@@ -235,21 +235,6 @@ RegisterCommand("obrisikontenjer", function(source, args, rawCommandString)
 	end)
 end, false)
 
-RegisterCommand("obrisikontenjer", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
-			local NewBin, NewBinDistance = ESX.Game.GetClosestObject("prop_contr_03b_ld")
-			if NewBinDistance <= 3 then
-				ESX.Game.DeleteObject(NewBin)
-				DeleteEntity(NewBin)
-				SetEntityCoords(NewBin, 0, 0, 0, 1, 0, 0, 1)
-			end
-		else
-			ESX.ShowNotification("Nemate pristup ovoj komandi!")
-		end
-	end)
-end, false)
-
 RegisterCommand("obrisikutiju", function(source, args, rawCommandString)
 	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		if br == 1 then
@@ -967,18 +952,6 @@ AddEventHandler('prodajoruzje:PosaljiRadio', function(odg, ime, posao)
 					})
 				end
 			end
-		end
-	end
-end)
-
-RegisterNetEvent("prodajoruzje:PosaljiMafia")
-AddEventHandler('prodajoruzje:PosaljiMafia', function(odg, ime, posao)
-	if ESX.PlayerData.job ~= nil then
-		if ESX.PlayerData.job.name == posao then
-			TriggerEvent('chat:addMessage', {
-						template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(255, 204, 0, 0.6); border-radius: 3px;"><i class="fas fa-info-circle"></i>[F CHAT] {0}:<br> {1}</div>',
-						args = { ime, odg }
-			})
 		end
 	end
 end)

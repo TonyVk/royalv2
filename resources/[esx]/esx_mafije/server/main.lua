@@ -121,11 +121,11 @@ RegisterCommand("f", function(source, args, rawCommandString)
 			break
 		end
 	end
-	if naso == 1 or targetXPlayer.job.name == "ballas" then
+	if naso == 1 or targetXPlayer.job.name == "ballas" or targetXPlayer.job.name == "zemunski" then
 		if args[1] ~= nil then
 			local name = getIdentity(_source)
 		 	local fal = name.firstname .. " " .. name.lastname
-			TriggerClientEvent("prodajoruzje:PosaljiMafia", -1, table.concat(args, " "), fal, targetXPlayer.job.name)
+			TriggerClientEvent("esx_mafije:PosaljiMafia", -1, table.concat(args, " "), fal, targetXPlayer.job.name)
 		else
 			name = "System"..": "
 			message = "/f [Poruka]"

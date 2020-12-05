@@ -47,7 +47,7 @@ Citizen.CreateThread(function()
 		local menu = ESX.UI.Menu.GetOpened(MenuType, data._namespace, data._name)
 		
 		if menu.submit ~= nil then
-			if GetGameTimer()-vrijeme > 1000 then
+			if GetGameTimer()-vrijeme > 200 then
 				vrijeme = GetGameTimer()
 				menu.submit(data, menu)
 			end

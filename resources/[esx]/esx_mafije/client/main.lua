@@ -182,6 +182,18 @@ function SetVehicleMaxMods(vehicle)
 
 end
 
+RegisterNetEvent("esx_mafije:PosaljiMafia")
+AddEventHandler('esx_mafije:PosaljiMafia', function(odg, ime, posao)
+	if ESX.PlayerData.job ~= nil then
+		if ESX.PlayerData.job.name == posao then
+			TriggerEvent('chat:addMessage', {
+						template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(255, 204, 0, 0.6); border-radius: 3px;"><i class="fas fa-info-circle"></i>[F CHAT] {0}:<br> {1}</div>',
+						args = { ime, odg }
+			})
+		end
+	end
+end)
+
 RegisterCommand("uredimafiju", function(source, args, raw)
 	ESX.TriggerServerCallback('DajMiPermLevelCall', function(perm)
 		if perm == 69 then
