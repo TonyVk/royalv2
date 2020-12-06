@@ -9,7 +9,7 @@ Config.DoorList = {
 	
 	{
 		textCoords = vector3(-1195.27, -897.07, 14.2),
-		authorizedJobs = { 'hermanos' },
+		authorizedJobs = { 'midnight' },
 		locked = true,
 		distance = 2.5,
 		doors = {
@@ -23,7 +23,7 @@ Config.DoorList = {
 	
 	{
 		textCoords = vector3(-1194.13, -899.87, 14.2),
-		authorizedJobs = { 'hermanos' },
+		authorizedJobs = { 'midnight' },
 		locked = true,
 		distance = 2.5,
 		doors = {
@@ -37,7 +37,7 @@ Config.DoorList = {
 	
 	{
 		textCoords = vector3(-1200.60, -892.01, 14.2),
-		authorizedJobs = { 'hermanos' },
+		authorizedJobs = { 'midnight' },
 		locked = true,
 		distance = 2.5,
 		doors = {
@@ -53,7 +53,7 @@ Config.DoorList = {
 	-- vanjska vrata
 	{
 		textCoords = vector3(-1178.65, -891.73, 14.2),
-		authorizedJobs = { 'hermanos' },
+		authorizedJobs = { 'midnight' },
 		locked = true,
 		distance = 2.5,
 		doors = {
@@ -181,7 +181,7 @@ Config.DoorList = {
 		objYaw = -90.0,
 		objCoords  = vector3(462.3, -993.6, 24.9),
 		textCoords = vector3(461.8, -993.3, 25.0),
-		authorizedJobs = { 'police' },
+		authorizedJobs = { 'police', 'sipa' },
 		locked = true
 	},
 
@@ -191,7 +191,7 @@ Config.DoorList = {
 		objYaw = 90.0,
 		objCoords  = vector3(462.3, -998.1, 24.9),
 		textCoords = vector3(461.8, -998.8, 25.0),
-		authorizedJobs = { 'police' },
+		authorizedJobs = { 'police', 'sipa' },
 		locked = true
 	},
 
@@ -201,7 +201,7 @@ Config.DoorList = {
 		objYaw = 90.0,
 		objCoords  = vector3(462.7, -1001.9, 24.9),
 		textCoords = vector3(461.8, -1002.4, 25.0),
-		authorizedJobs = { 'police' },
+		authorizedJobs = { 'police', 'sipa' },
 		locked = true
 	},
 
@@ -211,7 +211,7 @@ Config.DoorList = {
 		objYaw = 0.0,
 		objCoords  = vector3(463.4, -1003.5, 25.0),
 		textCoords = vector3(464.0, -1003.5, 25.5),
-		authorizedJobs = { 'police' },
+		authorizedJobs = { 'police', 'sipa' },
 		locked = true
 	},
 	
@@ -247,7 +247,7 @@ Config.DoorList = {
 	-- Back (double doors)
 	{
 		textCoords = vector3(468.6, -1014.4, 27.1),
-		authorizedJobs = { 'police' },
+		authorizedJobs = { 'police', 'sipa' },
 		locked = true,
 		distance = 4,
 		doors = {
@@ -271,7 +271,7 @@ Config.DoorList = {
 		objYaw = 90.0,
 		objCoords  = vector3(488.8, -1017.2, 27.1),
 		textCoords = vector3(488.8, -1020.2, 30.0),
-		authorizedJobs = { 'police' },
+		authorizedJobs = { 'police', 'sipa' },
 		locked = true,
 		distance = 14,
 		size = 2
