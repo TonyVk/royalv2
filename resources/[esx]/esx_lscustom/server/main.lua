@@ -49,12 +49,26 @@ AddEventHandler('meh:PromjeniMjenjac', function(br, plate)
 end)
 
 RegisterServerEvent('esx_lscustom:refreshOwnedVehicle')
-AddEventHandler('esx_lscustom:refreshOwnedVehicle', function(myCar)
-	MySQL.Async.execute('UPDATE `owned_vehicles` SET `vehicle` = @vehicle WHERE `plate` = @plate',
-	{
-		['@plate']   = myCar.plate,
-		['@vehicle'] = json.encode(myCar)
-	})
+AddEventHandler('esx_lscustom:refreshOwnedVehicle', function(vehicleProps)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+
+	MySQL.Async.fetchAll('SELECT vehicle FROM owned_vehicles WHERE plate = @plate', {
+		['@plate'] = vehicleProps.plate
+	}, function(result)
+		if result[1] then
+			local vehicle = json.decode(result[1].vehicle)
+
+			if vehicleProps.model == vehicle.model then
+				MySQL.Async.execute('UPDATE owned_vehicles SET vehicle = @vehicle WHERE plate = @plate', {
+					['@plate'] = vehicleProps.plate,
+					['@vehicle'] = json.encode(vehicleProps)
+				})
+			else
+				TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."(".._source..") je pokusao zamjeniti model vozila!")
+			end
+		end
+	end)
 end)
 
 ESX.RegisterServerCallback('esx_lscustom:getVehiclesPrices', function(source, cb)
