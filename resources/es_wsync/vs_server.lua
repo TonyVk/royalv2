@@ -19,7 +19,7 @@ AvailableWeatherTypes = {
 	'XMAS', 
 	'HALLOWEEN',
 }
-CurrentWeather = "xmas"
+CurrentWeather = "SNOWLIGHT"
 local baseTime = 0
 local timeOffset = 0
 local freezeTime = false
