@@ -71,7 +71,7 @@ local ExplosionTypes = {
 local BlockedExplosions = {1, 2, 4, 5, 18, 25, 29, 32, 33, 35, 36, 37}
 
 AddEventHandler('explosionEvent', function(sender, ev)
-	if ev.explosionType ~= 0 and ev.explosionType ~= 13 and ev.explosionType ~= 30 and ev.explosionType ~= 12 and ev.explosionType ~= 34 and ev.explosionType ~= 22 and ev.explosionType ~= 39 and ev.explosionType ~= 61 then
+	if ev.explosionType ~= 0 and ev.explosionType ~= 13 and ev.explosionType ~= 30 and ev.explosionType ~= 12 and ev.explosionType ~= 34 and ev.explosionType ~= 22 and ev.explosionType ~= 38 and ev.explosionType ~= 39 and ev.explosionType ~= 61 then
 		if ExplosionTypes[ev.explosionType+1] ~= nil then
 			TriggerEvent("DiscordBot:Anticheat", GetPlayerName(sender).."("..sender..") je napravio eksploziju (Tip eksplozije: "..ExplosionTypes[ev.explosionType+1].."["..ev.explosionType.."])")
 		else

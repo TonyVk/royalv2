@@ -157,7 +157,7 @@ function OnPlayerDeath()
 				if LastDamagedBone == 31086 then
 					TriggerServerEvent('DiscordBot:playerDied', GetPlayerName(PlayerId()) .. ' je dobio metak u glavu')
 					TriggerEvent('chat:addMessage', { args = { '[HITNA]', 'Pogođeni ste u glavu i nije vam bilo spasa!' } })
-					TriggerEvent("esx_hitna:umrisine")
+					RemoveItemsAfterRPDeath()
 					return
 				end
 			end
