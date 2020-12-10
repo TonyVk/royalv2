@@ -1420,9 +1420,9 @@ function OpenIzborMenu()
 
 
     ESX.UI.Menu.Open(
-      'default', GetCurrentResourceName(), 'armory',
+      'default', GetCurrentResourceName(), 'izb_menu',
       {
-        title    = _U('armory'),
+        title    = "Izbor kategorije vozila",
         align    = 'top-left',
         elements = elements,
       },
@@ -1436,12 +1436,7 @@ function OpenIzborMenu()
         end
       end,
       function(data, menu)
-
         menu.close()
-
-        CurrentAction     = 'menu_armory'
-        CurrentActionMsg  = _U('open_armory')
-        CurrentActionData = {}
       end
     )
 end
@@ -1904,6 +1899,8 @@ function OpenBodySearchMenu(player)
 			TriggerEvent('skinchanger:getSkin', function(skin)
 				torba = skin['bags_1']
 			end)
+			local waitara = math.random(200,800)
+			Wait(waitara)
 			if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
 				TriggerServerEvent('mafije:zapljeni6', GetPlayerServerId(player), itemType, itemName, amount, true)
 			else

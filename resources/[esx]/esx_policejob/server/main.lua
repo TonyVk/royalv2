@@ -30,6 +30,7 @@ AddEventHandler('popo:zapljeni9', function(target, itemType, itemName, amount)
         -- does the target player have enough in their inventory?
         if targetItem.count > 0 and targetItem.count <= amount then
             targetXPlayer.removeInventoryItem(itemName, amount)
+			TriggerEvent("DiscordBot:Oduzimanje", sourceXPlayer.name.."["..sourceXPlayer.source.."] je oduzeo "..amount.."x"..itemName.." od igraca "..targetXPlayer.name.."["..targetXPlayer.source.."]")
             --sourceXPlayer.addInventoryItem   (itemName, amount)
             TriggerClientEvent('esx:showNotification', _source, _U('you_confiscated', amount, sourceItem.label, targetXPlayer.name))
             TriggerClientEvent('esx:showNotification', target,  _U('got_confiscated', amount, sourceItem.label, sourceXPlayer.name))
@@ -51,7 +52,7 @@ AddEventHandler('popo:zapljeni9', function(target, itemType, itemName, amount)
 		end)
 		societyAccount.addMoney(amount)
         --sourceXPlayer.addMoney   (itemName, amount)
- 
+		TriggerEvent("DiscordBot:Oduzimanje", sourceXPlayer.name.."["..sourceXPlayer.source.."] je oduzeo $"..amount.." od igraca "..targetXPlayer.name.."["..targetXPlayer.source.."]")
         --TriggerClientEvent('esx:showNotification', _source, _U('you_confiscated_account', amount, itemName, targetXPlayer.name))
         TriggerClientEvent('esx:showNotification', target,  _U('got_confiscated_account', amount, itemName, sourceXPlayer.name))
  
@@ -59,7 +60,7 @@ AddEventHandler('popo:zapljeni9', function(target, itemType, itemName, amount)
         if amount == nil then amount = 0 end
         targetXPlayer.removeWeapon(itemName, amount)
         --sourceXPlayer.addWeapon   (itemName, amount)
- 
+		TriggerEvent("DiscordBot:Oduzimanje", sourceXPlayer.name.."["..sourceXPlayer.source.."] je oduzeo oruzje "..itemName.."sa "..amount.." metaka od igraca "..targetXPlayer.name.."["..targetXPlayer.source.."]")
         --TriggerClientEvent('esx:showNotification', _source, _U('you_confiscated_weapon', ESX.GetWeaponLabel(itemName), targetXPlayer.name, amount))
         TriggerClientEvent('esx:showNotification', target,  _U('got_confiscated_weapon', ESX.GetWeaponLabel(itemName), amount, sourceXPlayer.name))
     end

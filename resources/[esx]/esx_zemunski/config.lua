@@ -11,6 +11,7 @@ Config.EnableSocietyOwnedVehicles = false
 Config.EnableLicenses             = false
 Config.MaxInService               = -1
 Config.Locale                     = 'hr'
+Config.Price 					  = 1500
 
 Config.ZemunskiStations = {
 
@@ -57,7 +58,7 @@ Config.ZemunskiStations = {
       { 
         Spawner    = { x = -2610.6298828125, y = 1676.5515136719, z = 140.86642456055 },
         SpawnPoint = { x = -2604.4438476563, y = 1678.1696777344, z = 140.30039978027 },
-        Heading    = 226.78,
+        Heading    = 270.0,
       }
     },
 	

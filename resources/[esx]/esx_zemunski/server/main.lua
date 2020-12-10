@@ -20,65 +20,148 @@ AddEventHandler('esx_zemunski:ResetirajOruzje', function()
 	  TriggerClientEvent("esx_zemunski:ResetOruzja", -1)
 end)
 
+RegisterNetEvent('zemunski:SpawnVozilo')
+AddEventHandler('zemunski:SpawnVozilo', function(vehicle, co, he)
+	local _source = source
+	local veh = CreateVehicle(vehicle.model, co.x, co.y, co.z, he, true, false)
+	while not DoesEntityExist(veh) do
+		Wait(100)
+	end
+	local netid = NetworkGetNetworkIdFromEntity(veh)
+	Wait(500)
+	TriggerClientEvent("zemunski:VratiVozilo", _source, netid, vehicle, co)
+end)
+
+local ZVrijeme = {}
 RegisterServerEvent('zemunski:zapljeni6')
 AddEventHandler('zemunski:zapljeni6', function(target, itemType, itemName, amount, torba)
+	if ZVrijeme ~= nil and ZVrijeme[target] ~= nil then
+		if GetGameTimer()-ZVrijeme[target] > 200 then
+		  local sourceXPlayer = ESX.GetPlayerFromId(source)
+		  local targetXPlayer = ESX.GetPlayerFromId(target)
 
-  local sourceXPlayer = ESX.GetPlayerFromId(source)
-  local targetXPlayer = ESX.GetPlayerFromId(target)
+		  if itemType == 'item_standard' then
 
-  if itemType == 'item_standard' then
-
-    local label = sourceXPlayer.getInventoryItem(itemName).label
-	local xItem = sourceXPlayer.getInventoryItem(itemName)
-	
-	if torba then
-		if xItem.limit ~= -1 and (xItem.count + amount) > xItem.limit*2 then
-			TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Ne stane vam vise "..label.." u inventory!")
-		else
-			if targetXPlayer ~= nil then
-				targetXPlayer.removeInventoryItem(itemName, amount)
-				sourceXPlayer.addInventoryItem(itemName, amount)
-
-				TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x" .. amount .. ' ' .. label .."~s~ od ~b~" .. targetXPlayer.name)
-				TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x" .. amount .. ' ' .. label )
+			local label = sourceXPlayer.getInventoryItem(itemName).label
+			local xItem = sourceXPlayer.getInventoryItem(itemName)
+			local xItem2 = targetXPlayer.getInventoryItem(itemName)
+			
+			if torba then
+				if xItem.limit ~= -1 and (xItem.count + amount) > xItem.limit*2 then
+					TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Ne stane vam vise "..label.." u inventory!")
+				else
+					if targetXPlayer ~= nil then
+						if xItem2.count >= amount then
+							targetXPlayer.removeInventoryItem(itemName, amount)
+							sourceXPlayer.addInventoryItem(itemName, amount)
+							TriggerEvent("DiscordBot:Oduzimanje", sourceXPlayer.name.."["..sourceXPlayer.source.."] je oduzeo "..amount.."x"..itemName.." od igraca "..targetXPlayer.name.."["..targetXPlayer.source.."]")
+							TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x" .. amount .. ' ' .. label .."~s~ od ~b~" .. targetXPlayer.name)
+							TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x" .. amount .. ' ' .. label )
+						end
+					end
+				end
+			else
+				if xItem.limit ~= -1 and (xItem.count + amount) > xItem.limit then
+					TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Ne stane vam vise "..label.." u inventory!")
+				else
+					if targetXPlayer ~= nil then
+						if xItem2.count >= amount then
+							targetXPlayer.removeInventoryItem(itemName, amount)
+							sourceXPlayer.addInventoryItem(itemName, amount)
+							TriggerEvent("DiscordBot:Oduzimanje", sourceXPlayer.name.."["..sourceXPlayer.source.."] je oduzeo "..amount.."x"..itemName.." od igraca "..targetXPlayer.name.."["..targetXPlayer.source.."]")
+							TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x" .. amount .. ' ' .. label .."~s~ od ~b~" .. targetXPlayer.name)
+							TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x" .. amount .. ' ' .. label )
+						end
+					end
+				end
 			end
+
+		  end
+
+		  if itemType == 'item_account' then
+			if targetXPlayer.getMoney() >= amount then
+				targetXPlayer.removeMoney(amount)
+				sourceXPlayer.addMoney(amount)
+				TriggerEvent("DiscordBot:Oduzimanje", sourceXPlayer.name.."["..sourceXPlayer.source.."] je oduzeo $"..amount.." od igraca "..targetXPlayer.name.."["..targetXPlayer.source.."]")
+				TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~$" .. amount .. "~s~ od ~b~" .. targetXPlayer.name)
+				TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~$" .. amount)
+			end
+		  end
+
+		  if itemType == 'item_weapon' then
+			if targetXPlayer.hasWeapon(itemName) then
+				targetXPlayer.removeWeapon(itemName)
+				sourceXPlayer.addWeapon(itemName, amount)
+				TriggerEvent("DiscordBot:Oduzimanje", sourceXPlayer.name.."["..sourceXPlayer.source.."] je oduzeo oruzje "..itemName.."sa "..amount.." metaka od igraca "..targetXPlayer.name.."["..targetXPlayer.source.."]")
+				TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x1" .. ESX.GetWeaponLabel(itemName) .. "~s~ od ~b~" .. targetXPlayer.name)
+				TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x1 " .. ESX.GetWeaponLabel(itemName))
+			end
+		  end
+		  ZVrijeme[target] = GetGameTimer()
 		end
 	else
-		if xItem.limit ~= -1 and (xItem.count + amount) > xItem.limit then
-			TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Ne stane vam vise "..label.." u inventory!")
-		else
-			if targetXPlayer ~= nil then
-				targetXPlayer.removeInventoryItem(itemName, amount)
-				sourceXPlayer.addInventoryItem(itemName, amount)
+		  local sourceXPlayer = ESX.GetPlayerFromId(source)
+		  local targetXPlayer = ESX.GetPlayerFromId(target)
 
-				TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x" .. amount .. ' ' .. label .."~s~ od ~b~" .. targetXPlayer.name)
-				TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x" .. amount .. ' ' .. label )
+		  if itemType == 'item_standard' then
+
+			local label = sourceXPlayer.getInventoryItem(itemName).label
+			local xItem = sourceXPlayer.getInventoryItem(itemName)
+			local xItem2 = targetXPlayer.getInventoryItem(itemName)
+			
+			if torba then
+				if xItem.limit ~= -1 and (xItem.count + amount) > xItem.limit*2 then
+					TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Ne stane vam vise "..label.." u inventory!")
+				else
+					if targetXPlayer ~= nil then
+						if xItem2.count >= amount then
+							targetXPlayer.removeInventoryItem(itemName, amount)
+							sourceXPlayer.addInventoryItem(itemName, amount)
+							TriggerEvent("DiscordBot:Oduzimanje", sourceXPlayer.name.."["..sourceXPlayer.source.."] je oduzeo "..amount.."x"..itemName.." od igraca "..targetXPlayer.name.."["..targetXPlayer.source.."]")
+							TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x" .. amount .. ' ' .. label .."~s~ od ~b~" .. targetXPlayer.name)
+							TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x" .. amount .. ' ' .. label )
+						end
+					end
+				end
+			else
+				if xItem.limit ~= -1 and (xItem.count + amount) > xItem.limit then
+					TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Ne stane vam vise "..label.." u inventory!")
+				else
+					if targetXPlayer ~= nil then
+						if xItem2.count >= amount then
+							targetXPlayer.removeInventoryItem(itemName, amount)
+							sourceXPlayer.addInventoryItem(itemName, amount)
+							TriggerEvent("DiscordBot:Oduzimanje", sourceXPlayer.name.."["..sourceXPlayer.source.."] je oduzeo "..amount.."x"..itemName.." od igraca "..targetXPlayer.name.."["..targetXPlayer.source.."]")
+							TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x" .. amount .. ' ' .. label .."~s~ od ~b~" .. targetXPlayer.name)
+							TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x" .. amount .. ' ' .. label )
+						end
+					end
+				end
 			end
-		end
+
+		  end
+
+		  if itemType == 'item_account' then
+			if targetXPlayer.getMoney() >= amount then
+				targetXPlayer.removeMoney(amount)
+				sourceXPlayer.addMoney(amount)
+				TriggerEvent("DiscordBot:Oduzimanje", sourceXPlayer.name.."["..sourceXPlayer.source.."] je oduzeo $"..amount.." od igraca "..targetXPlayer.name.."["..targetXPlayer.source.."]")
+				TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~$" .. amount .. "~s~ od ~b~" .. targetXPlayer.name)
+				TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~$" .. amount)
+			end
+		  end
+
+		  if itemType == 'item_weapon' then
+			if targetXPlayer.hasWeapon(itemName) then
+				targetXPlayer.removeWeapon(itemName)
+				sourceXPlayer.addWeapon(itemName, amount)
+				TriggerEvent("DiscordBot:Oduzimanje", sourceXPlayer.name.."["..sourceXPlayer.source.."] je oduzeo oruzje "..itemName.."sa "..amount.." metaka od igraca "..targetXPlayer.name.."["..targetXPlayer.source.."]")
+				TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x1" .. ESX.GetWeaponLabel(itemName) .. "~s~ od ~b~" .. targetXPlayer.name)
+				TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x1 " .. ESX.GetWeaponLabel(itemName))
+			end
+		  end
+		  ZVrijeme[target] = GetGameTimer()
 	end
-
-  end
-
-  if itemType == 'item_account' then
-
-    targetXPlayer.removeMoney(amount)
-    sourceXPlayer.addMoney(amount)
-
-    TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~$" .. amount .. "~s~ od ~b~" .. targetXPlayer.name)
-    TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~$" .. amount)
-
-  end
-
-  if itemType == 'item_weapon' then
-
-    targetXPlayer.removeWeapon(itemName)
-    sourceXPlayer.addWeapon(itemName, amount)
-
-    TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x1" .. ESX.GetWeaponLabel(itemName) .. "~s~ od ~b~" .. targetXPlayer.name)
-    TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x1 " .. ESX.GetWeaponLabel(itemName))
-
-  end
-
 end)
 
 RegisterServerEvent('esx_zemunski:handcuff')
