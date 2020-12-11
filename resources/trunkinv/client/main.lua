@@ -658,17 +658,8 @@ AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
 
 				if quantity > 0 and quantity <= tonumber(data.current.count) and vehFront > 0 then
 					if not max then
-						local brojic = tonumber(PlayerId())
-						if brojic >= 1 and brojic <= 4 then
-							brojic = brojic*100
-						elseif brojic > 4 and brojic < 10 then
-							brojic = brojic*50
-						elseif brojic >= 10 and brojic <= 50 then
-							brojic = brojic*10
-						elseif brojic > 50 and brojic < 100 then
-							brojic = brojic*5
-						end
-						Wait(brojic)
+						local waitara = math.random(200,800)
+						Wait(waitara)
 						TriggerServerEvent('gepeke:removeInventoryItem', GetVehicleNumberPlateText(vehFront), data.current.value, data.current.type, quantity)
 						local typeVeh = GetVehicleClass(vehFront)
 						local MaxVh =(tonumber(Config.VehicleLimit[typeVeh])/1000)
@@ -728,17 +719,8 @@ AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
 
 							if quantity >= 0 and quantity <= tonumber(data.current.count) and vehFront > 0 then
 							if not max then
-								local brojic = tonumber(PlayerId())
-								if brojic >= 1 and brojic <= 4 then
-									brojic = brojic*100
-								elseif brojic > 4 and brojic < 10 then
-									brojic = brojic*50
-								elseif brojic >= 10 and brojic <= 50 then
-									brojic = brojic*10
-								elseif brojic > 50 and brojic < 100 then
-									brojic = brojic*5
-								end
-								Wait(brojic)
+								local waitara = math.random(200,800)
+								Wait(waitara)
 								TriggerServerEvent('gepeke:removeInventoryItem', GetVehicleNumberPlateText(vehFront), data.current.value, data.current.type, quantity)
 								local typeVeh = GetVehicleClass(vehFront)
 								local MaxVh =(tonumber(Config.VehicleLimit[typeVeh])/1000)

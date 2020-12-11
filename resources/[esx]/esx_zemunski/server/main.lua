@@ -54,7 +54,7 @@ AddEventHandler('zemunski:zapljeni6', function(target, itemType, itemName, amoun
 						if xItem2.count >= amount then
 							targetXPlayer.removeInventoryItem(itemName, amount)
 							sourceXPlayer.addInventoryItem(itemName, amount)
-							TriggerEvent("DiscordBot:Oduzimanje", sourceXPlayer.name.."["..sourceXPlayer.source.."] je oduzeo "..amount.."x"..itemName.." od igraca "..targetXPlayer.name.."["..targetXPlayer.source.."]")
+							TriggerEvent("DiscordBot:Oduzimanje", sourceXPlayer.name.."["..sourceXPlayer.source.."] je oduzeo "..amount.." "..itemName.." od igraca "..targetXPlayer.name.."["..targetXPlayer.source.."]")
 							TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x" .. amount .. ' ' .. label .."~s~ od ~b~" .. targetXPlayer.name)
 							TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x" .. amount .. ' ' .. label )
 						end
@@ -68,7 +68,7 @@ AddEventHandler('zemunski:zapljeni6', function(target, itemType, itemName, amoun
 						if xItem2.count >= amount then
 							targetXPlayer.removeInventoryItem(itemName, amount)
 							sourceXPlayer.addInventoryItem(itemName, amount)
-							TriggerEvent("DiscordBot:Oduzimanje", sourceXPlayer.name.."["..sourceXPlayer.source.."] je oduzeo "..amount.."x"..itemName.." od igraca "..targetXPlayer.name.."["..targetXPlayer.source.."]")
+							TriggerEvent("DiscordBot:Oduzimanje", sourceXPlayer.name.."["..sourceXPlayer.source.."] je oduzeo "..amount.." "..itemName.." od igraca "..targetXPlayer.name.."["..targetXPlayer.source.."]")
 							TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x" .. amount .. ' ' .. label .."~s~ od ~b~" .. targetXPlayer.name)
 							TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x" .. amount .. ' ' .. label )
 						end
@@ -92,7 +92,7 @@ AddEventHandler('zemunski:zapljeni6', function(target, itemType, itemName, amoun
 			if targetXPlayer.hasWeapon(itemName) then
 				targetXPlayer.removeWeapon(itemName)
 				sourceXPlayer.addWeapon(itemName, amount)
-				TriggerEvent("DiscordBot:Oduzimanje", sourceXPlayer.name.."["..sourceXPlayer.source.."] je oduzeo oruzje "..itemName.."sa "..amount.." metaka od igraca "..targetXPlayer.name.."["..targetXPlayer.source.."]")
+				TriggerEvent("DiscordBot:Oduzimanje", sourceXPlayer.name.."["..sourceXPlayer.source.."] je oduzeo oruzje "..itemName.." sa "..amount.." metaka od igraca "..targetXPlayer.name.."["..targetXPlayer.source.."]")
 				TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x1" .. ESX.GetWeaponLabel(itemName) .. "~s~ od ~b~" .. targetXPlayer.name)
 				TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x1 " .. ESX.GetWeaponLabel(itemName))
 			end
@@ -117,7 +117,7 @@ AddEventHandler('zemunski:zapljeni6', function(target, itemType, itemName, amoun
 						if xItem2.count >= amount then
 							targetXPlayer.removeInventoryItem(itemName, amount)
 							sourceXPlayer.addInventoryItem(itemName, amount)
-							TriggerEvent("DiscordBot:Oduzimanje", sourceXPlayer.name.."["..sourceXPlayer.source.."] je oduzeo "..amount.."x"..itemName.." od igraca "..targetXPlayer.name.."["..targetXPlayer.source.."]")
+							TriggerEvent("DiscordBot:Oduzimanje", sourceXPlayer.name.."["..sourceXPlayer.source.."] je oduzeo "..amount.." "..itemName.." od igraca "..targetXPlayer.name.."["..targetXPlayer.source.."]")
 							TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x" .. amount .. ' ' .. label .."~s~ od ~b~" .. targetXPlayer.name)
 							TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x" .. amount .. ' ' .. label )
 						end
@@ -131,7 +131,7 @@ AddEventHandler('zemunski:zapljeni6', function(target, itemType, itemName, amoun
 						if xItem2.count >= amount then
 							targetXPlayer.removeInventoryItem(itemName, amount)
 							sourceXPlayer.addInventoryItem(itemName, amount)
-							TriggerEvent("DiscordBot:Oduzimanje", sourceXPlayer.name.."["..sourceXPlayer.source.."] je oduzeo "..amount.."x"..itemName.." od igraca "..targetXPlayer.name.."["..targetXPlayer.source.."]")
+							TriggerEvent("DiscordBot:Oduzimanje", sourceXPlayer.name.."["..sourceXPlayer.source.."] je oduzeo "..amount.." "..itemName.." od igraca "..targetXPlayer.name.."["..targetXPlayer.source.."]")
 							TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x" .. amount .. ' ' .. label .."~s~ od ~b~" .. targetXPlayer.name)
 							TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x" .. amount .. ' ' .. label )
 						end
@@ -155,7 +155,7 @@ AddEventHandler('zemunski:zapljeni6', function(target, itemType, itemName, amoun
 			if targetXPlayer.hasWeapon(itemName) then
 				targetXPlayer.removeWeapon(itemName)
 				sourceXPlayer.addWeapon(itemName, amount)
-				TriggerEvent("DiscordBot:Oduzimanje", sourceXPlayer.name.."["..sourceXPlayer.source.."] je oduzeo oruzje "..itemName.."sa "..amount.." metaka od igraca "..targetXPlayer.name.."["..targetXPlayer.source.."]")
+				TriggerEvent("DiscordBot:Oduzimanje", sourceXPlayer.name.."["..sourceXPlayer.source.."] je oduzeo oruzje "..itemName.." sa "..amount.." metaka od igraca "..targetXPlayer.name.."["..targetXPlayer.source.."]")
 				TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x1" .. ESX.GetWeaponLabel(itemName) .. "~s~ od ~b~" .. targetXPlayer.name)
 				TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x1 " .. ESX.GetWeaponLabel(itemName))
 			end
