@@ -55,6 +55,7 @@ div.separator { display: block; clear: both; width: 100%; }
 .info.server #server img { max-width: 100%; opacity: 0.75; }
 
 .info.player {
+	position: absolute;
 	top: 25px;
     right: 25px;
     text-align: right;

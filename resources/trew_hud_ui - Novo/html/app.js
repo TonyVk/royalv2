@@ -58,7 +58,40 @@ Object.prototype.addMultiListener = function(eventNames, listener) {
 
 
 window.onload = function () {
+		var mousePosition;
+		var offset = [0,0];
+		var div;
+		var isDown = false;
+		
+		div = document.getElementById("infodiv");
+		
+		div.addEventListener('mousedown', function(e) {
+			isDown = true;
+			offset = [
+				div.offsetLeft - e.clientX,
+				div.offsetTop - e.clientY
+			];
+		}, true);
 
+		document.addEventListener('mouseup', function() {
+			isDown = false;
+		}, true);
+
+		document.addEventListener('mousemove', function(event) {
+			event.preventDefault();
+			if (isDown) {
+				mousePosition = {
+			
+					x : event.clientX,
+					y : event.clientY
+			
+				};
+				div.style.left = Math.max(0,Math.min(window.innerWidth-div.offsetWidth,mousePosition.x + offset[0]))+"px";
+				div.style.top  = Math.max(0,Math.min(window.innerHeight-div.offsetHeight,mousePosition.y + offset[1]))+"px";;
+				div.style.right = 'auto';
+			}
+		}, true);
+		
 		var eventCallback = {
 			ui: function(data) {
 				var config = data.config;

@@ -1041,13 +1041,15 @@ function OpenBodySearchMenu(player)
     local elements = {}
 
     local blackMoney = data.novac
-
-    table.insert(elements, {
-      label          = _U('confiscate_dirty') .. blackMoney,
-      value          = 'black_money',
-      itemType       = 'item_account',
-      amount         = blackMoney
-    })
+	
+	if blackMoney > 0 then
+		table.insert(elements, {
+		  label          = _U('confiscate_dirty') .. blackMoney,
+		  value          = 'black_money',
+		  itemType       = 'item_account',
+		  amount         = blackMoney
+		})
+	end
 
     table.insert(elements, {label = '--- Oruzja ---', value = nil})
 

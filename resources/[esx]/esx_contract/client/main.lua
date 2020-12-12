@@ -55,6 +55,7 @@ end)
 
 RegisterCommand("prihvativozilo", function(source, args, rawCommandString)
 	if Ima == 1 then
+		Ima = 0
 		TriggerServerEvent('ugovor:prodajtuljanu', vlasnik, tablica, cijena)
 		TriggerEvent("garaza:ObrisiProslo")
 		TriggerEvent("esx_property:ProsljediVozilo", nil, nil)
