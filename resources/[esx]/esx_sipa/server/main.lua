@@ -343,35 +343,38 @@ ESX.RegisterServerCallback('esx_sipa:addArmoryWeapon', function(source, cb, weap
 
 	if removeWeapon then
 		xPlayer.removeWeapon(weaponName)
+		cb()
 	end
 
-	TriggerEvent('esx_datastore:getSharedDataStore', 'society_sipa', function(store)
-		local weapons = store.get('weapons')
+	if not removeWeapon then
+		TriggerEvent('esx_datastore:getSharedDataStore', 'society_sipa', function(store)
+			local weapons = store.get('weapons')
 
-		if weapons == nil then
-			weapons = {}
-		end
-
-		local foundWeapon = false
-
-		for i=1, #weapons, 1 do
-			if weapons[i].name == weaponName then
-				weapons[i].count = weapons[i].count + 1
-				foundWeapon = true
-				break
+			if weapons == nil then
+				weapons = {}
 			end
-		end
 
-		if not foundWeapon then
-			table.insert(weapons, {
-				name  = weaponName,
-				count = 1
-			})
-		end
+			local foundWeapon = false
 
-		store.set('weapons', weapons)
-		cb()
-	end)
+			for i=1, #weapons, 1 do
+				if weapons[i].name == weaponName then
+					weapons[i].count = weapons[i].count + 1
+					foundWeapon = true
+					break
+				end
+			end
+
+			if not foundWeapon then
+				table.insert(weapons, {
+					name  = weaponName,
+					count = 1
+				})
+			end
+
+			store.set('weapons', weapons)
+			cb()
+		end)
+	end
 end)
 
 ESX.RegisterServerCallback('esx_sipa:removeArmoryWeapon', function(source, cb, weaponName)

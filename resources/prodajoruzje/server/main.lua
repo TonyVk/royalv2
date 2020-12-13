@@ -140,6 +140,10 @@ ESX.RegisterUsableItem('ronjenje', function(source)
 	end
 end)
 
+RegisterCommand("btest", function(source, args, rawCommandString)
+	print(GetPlayerRoutingBucket(source))
+end, false)
+
 RegisterCommand("ispisip", function(source, args, rawCommandString)
 		local elements = {}
 		MySQL.Async.fetchAll('SELECT identifier FROM priority', {}, function(result)

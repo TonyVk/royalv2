@@ -23,6 +23,7 @@ local CloseToVehicle = false
 local entityWorld = nil
 local globalplate = nil
 local GPSID 	  = 1
+local inTrunk = false
 
 usingKeyPress = false -- Allow use of a key press combo (default Ctrl + E) to open trunk/hood from outside
 togKey = 38 -- E
@@ -320,8 +321,56 @@ local count = 0
 -- Key controls
 Citizen.CreateThread(function()
   while true do
-
     Wait(0)
+	if CloseToVehicle then
+		local pos = GetEntityCoords(GetPlayerPed(-1))
+		local vehicle = GetClosestVehicle(pos['x'], pos['y'], pos['z'], 2.0, 0, 70)
+		if DoesEntityExist(vehicle) then
+			CloseToVehicle = true
+		else
+			TriggerServerEvent('gepeke:RemoveVehicleList', globalplate)
+			CloseToVehicle = false
+			lastOpen = false
+			ESX.UI.Menu.CloseAll()
+			--SetVehicleDoorShut(lastVehicle, 5, false)
+		end
+	end
+	if inTrunk then
+        local vehicle = GetEntityAttachedTo(PlayerPedId())
+        if DoesEntityExist(vehicle) or not IsPedDeadOrDying(PlayerPedId()) or not IsPedFatallyInjured(PlayerPedId()) then
+            local coords = GetWorldPositionOfEntityBone(vehicle, GetEntityBoneIndexByName(vehicle, 'boot'))
+            SetEntityCollision(PlayerPedId(), false, false)
+
+            if GetVehicleDoorAngleRatio(vehicle, 5) < 0.9 then
+				SetEntityVisible(PlayerPedId(), false, false)
+            else
+                if not IsEntityPlayingAnim(PlayerPedId(), 'timetable@floyd@cryingonbed@base', 3) then
+                    loadDict('timetable@floyd@cryingonbed@base')
+                    TaskPlayAnim(PlayerPedId(), 'timetable@floyd@cryingonbed@base', 'base', 8.0, -8.0, -1, 1, 0, false, false, false)
+
+                    SetEntityVisible(PlayerPedId(), true, false)
+                end
+            end
+            if IsControlJustReleased(0, 38) and inTrunk then
+                SetCarBootOpen(vehicle)
+                SetEntityCollision(PlayerPedId(), true, true)
+                Wait(750)
+                inTrunk = false
+                DetachEntity(PlayerPedId(), true, true)
+                SetEntityVisible(PlayerPedId(), true, false)
+                ClearPedTasks(PlayerPedId())
+                SetEntityCoords(PlayerPedId(), GetOffsetFromEntityInWorldCoords(PlayerPedId(), 0.0, -0.5, -0.75))
+                Wait(250)
+                SetVehicleDoorShut(vehicle, 5)
+            end
+        else
+            SetEntityCollision(PlayerPedId(), true, true)
+            DetachEntity(PlayerPedId(), true, true)
+            SetEntityVisible(PlayerPedId(), true, false)
+            ClearPedTasks(PlayerPedId())
+            SetEntityCoords(PlayerPedId(), GetOffsetFromEntityInWorldCoords(PlayerPedId(), 0.0, -0.5, -0.75))
+        end
+    end
     if lastOpen and IsControlPressed(0, Keys["BACKSPACE"]) and (GetGameTimer() - GUI.Time) > 150 then
 	  CloseToVehicle = false
       lastOpen = false
@@ -336,28 +385,9 @@ Citizen.CreateThread(function()
   end
 end)
 
--- CloseToVehicle
-Citizen.CreateThread(function()
-  while true do
-
-    Wait(0)
-	local pos = GetEntityCoords(GetPlayerPed(-1))
-	if CloseToVehicle then
-		local vehicle = GetClosestVehicle(pos['x'], pos['y'], pos['z'], 2.0, 0, 70)
-		if DoesEntityExist(vehicle) then
-			CloseToVehicle = true
-		else
-			TriggerServerEvent('gepeke:RemoveVehicleList', globalplate)
-			CloseToVehicle = false
-			lastOpen = false
-			ESX.UI.Menu.CloseAll()
-			--SetVehicleDoorShut(lastVehicle, 5, false)
-		end
-	end
-  end
-end)
-
-
+loadDict = function(dict)
+    while not HasAnimDictLoaded(dict) do Wait(0) RequestAnimDict(dict) end
+end
 
 RegisterNetEvent('gepeke:getInventoryLoaded')
 AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
@@ -369,6 +399,12 @@ AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
       label     = 'Ostavi u gepek',
       count     = 0,
       value     = 'deposit',
+    })
+	
+	table.insert(elements, {
+      label     = 'Sakrij se u gepek',
+      count     = 0,
+      value     = 'skrivanje',
     })
 
 	if inventory ~= nil and #inventory > 0 then
@@ -408,7 +444,27 @@ AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
 	    elements = elements,
 	  },
 	  function(data, menu)
-	  	if data.current.value == 'deposit' then
+		if data.current.value == 'skrivanje' then
+			local player = ESX.Game.GetClosestPlayer()
+            local playerPed = GetPlayerPed(player)
+			if DoesEntityExist(playerPed) then
+				if not IsEntityAttached(playerPed) or GetDistanceBetweenCoords(GetEntityCoords(playerPed), GetEntityCoords(PlayerPedId()), true) >= 5.0 then
+					menu.close()
+					SetCarBootOpen(vehFrontBack)
+					Wait(350)
+					AttachEntityToEntity(PlayerPedId(), vehFrontBack, -1, 0.0, -2.2, 0.5, 0.0, 0.0, 0.0, false, false, false, false, 20, true)	
+					loadDict('timetable@floyd@cryingonbed@base')
+					TaskPlayAnim(PlayerPedId(), 'timetable@floyd@cryingonbed@base', 'base', 8.0, -8.0, -1, 1, 0, false, false, false)
+					Wait(50)
+					inTrunk = true
+					Wait(1500)
+					SetVehicleDoorShut(vehFrontBack, 5)
+					ESX.ShowNotification("Pritisnite E kako bih ste izasli iz gepeka!")
+				else
+					ESX.ShowNotification('Netko je vec u gepeku vozila!')
+				end
+			end
+	  	elseif data.current.value == 'deposit' then
 	  		local elem = {}
 			-- xPlayer.getAccount('black_money').money
 			-- table.insert(elements, {label = 'Argent sale: ' .. inventory.blackMoney, type = 'item_account', value = 'black_money'})

@@ -293,6 +293,7 @@ end
 function OpenArmoryMenu(station)
 	local elements = {
 		{label = _U('buy_weapons'), value = 'buy_weapons'},
+		{label = _U('put_weapon'), value = 'put_weapon'},
 		{label = "Uzmi dron", value = 'uzmi_dron'}
 	}
 

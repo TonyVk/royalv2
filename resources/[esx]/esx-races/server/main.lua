@@ -44,14 +44,28 @@ end)
 
 RegisterNetEvent("DajMiPermLevel")
 AddEventHandler('DajMiPermLevel', function(id)
-	local xPlayer = ESX.GetPlayerFromId(id)
-	local result = MySQL.Sync.fetchAll('SELECT permission_level FROM users WHERE identifier = @identifier', {
-		['@identifier'] = xPlayer.identifier
-	})
-	SetTimeout(500, function()
-		local vr = result[1].permission_level
-		TriggerEvent('VratiPermLevel', vr)
-	end)
+	if id == 0 then
+		TriggerEvent('VratiPermLevel', 69)
+	else
+		local xPlayer = ESX.GetPlayerFromId(id)
+		local result = MySQL.Sync.fetchAll('SELECT permission_level FROM users WHERE identifier = @identifier', {
+			['@identifier'] = xPlayer.identifier
+		})
+		SetTimeout(500, function()
+			local vr = result[1].permission_level
+			TriggerEvent('VratiPermLevel', vr)
+		end)
+	end
+end)
+
+RegisterNetEvent("utrke:BucketajGa")
+AddEventHandler('utrke:BucketajGa', function(br)
+	local src = source
+	if br then
+		SetPlayerRoutingBucket(src, 1)
+	else
+		SetPlayerRoutingBucket(src, 0)
+	end
 end)
 
 RegisterNetEvent("DajMiPermLevel2")

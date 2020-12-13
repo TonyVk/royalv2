@@ -134,6 +134,7 @@ function StartRace(currentRace)
 					end
                     TriggerServerEvent('esx-qalle-races:addTime', currentTime, currentRace)
                     DeleteEntity(RaceVehicle)
+					TriggerServerEvent("utrke:BucketajGa", false)
 					USudjeluje = 0
 					TriggerEvent("radarce:NemojGa", 0)
 					TriggerEvent("NPC:MakniNPC", 0)
@@ -186,6 +187,7 @@ function StartRace(currentRace)
             end
 			if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()), Config.CheckPoints[currentRace][currentCheckPoint].x,  Config.CheckPoints[currentRace][currentCheckPoint].y,  Config.CheckPoints[currentRace][currentCheckPoint].z, true) >= 650.0 and USudjeluje == 1 then
                 ESX.Game.DeleteVehicle(RaceVehicle)
+				TriggerServerEvent("utrke:BucketajGa", false)
                 ESX.ShowNotification("Otisli ste predaleko od utrke.")
                 DeleteCheckpoint(CheckPoint)
                 RemoveBlip(Blip)
@@ -222,6 +224,7 @@ function StartRace(currentRace)
             end
 			if not IsPedInAnyVehicle(PlayerPedId(), false) and USudjeluje == 1 then
                 ESX.Game.DeleteVehicle(RaceVehicle)
+				TriggerServerEvent("utrke:BucketajGa", false)
                 ESX.ShowNotification("Napustili ste vozilo te ste izbaceni iz utrke!")
                 DeleteCheckpoint(CheckPoint)
                 RemoveBlip(Blip)
@@ -263,6 +266,7 @@ end
 RegisterCommand("napustiutrku", function(source, args, rawCommandString)
 	if USudjeluje == 1 then
 	ESX.Game.DeleteVehicle(RaceVehicle)
+	TriggerServerEvent("utrke:BucketajGa", false)
     ESX.ShowNotification("Napustili ste utrku!")
     DeleteCheckpoint(CheckPoint)
 	TriggerEvent("NPC:MakniNPC", 0)
@@ -477,17 +481,9 @@ function SpawnajGa(race)
 	local model = GetHashKey(raceInfo['Vehicle'])
 
     LoadModel(model)
-	local brojic = tonumber(PlayerId())
-	if brojic >= 1 and brojic <= 4 then
-		brojic = brojic*100
-	elseif brojic > 4 and brojic < 10 then
-		brojic = brojic*50
-	elseif brojic >= 10 and brojic <= 50 then
-		brojic = brojic*10
-	elseif brojic > 50 and brojic < 100 then
-		brojic = brojic*5
-	end
-	Wait(brojic)
+	TriggerServerEvent("utrke:BucketajGa", true)
+	local waitara = math.random(300, 800)
+	Wait(waitara)
 	if ucitao == 0 then
 		Lokacija = 1
 		ucitao = 1
@@ -590,6 +586,7 @@ function Zaustavi()
 		PrikazoUI = false
 		Prvi = 0
 		ESX.Game.DeleteVehicle(RaceVehicle)
+		TriggerServerEvent("utrke:BucketajGa", false)
 		ESX.ShowNotification("Utrka je zavrsila!")
 		DeleteCheckpoint(CheckPoint)
 		SetPlayerCanDoDriveBy(PlayerId(), true)
