@@ -78,6 +78,7 @@ AddEventHandler('playerSpawned', function(spawn)
 	ESX.TriggerServerCallback('pijaca:DohvatiVozila', function(vehicles)
 		Vozila = vehicles
 	end)
+	TriggerServerEvent("pijaca:ProvjeriProdane")
 end)
 
 RegisterNetEvent('esx_vehicleshop:sendVehicles')
@@ -220,6 +221,11 @@ AddEventHandler('pijaca:OdmrzniGa', function(nid)
 	FreezeEntityPosition(NetworkGetEntityFromNetworkId(nid), false)
 end)
 
+RegisterNetEvent('pijaca:OdradiTuning')
+AddEventHandler('pijaca:OdradiTuning', function()
+	OdradiTuning()
+end)
+
 AddEventHandler('esx_apijaca:hasEnteredMarker', function(station, part, partNum)
 
   if part == 'StaviProdat' then
@@ -311,8 +317,8 @@ Citizen.CreateThread(function()
 		waitara = 0
 		naso = 1
         DrawMarker(Config.MarkerType, 890.08746337891, -72.900863647461, 77.723815917969, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
-		if #Vozila ~= 0 and OdradioTo == false then
-			OdradiTuning()
+		if OdradioTo == false then
+			TriggerServerEvent("pijaca:SpawnVozila")
 			OdradioTo = true
 		end
 	else

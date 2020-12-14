@@ -33,30 +33,58 @@ local Lokacije = {
 	{x = 886.11840820313, y = -67.078979492188, z = 78.223770141602, h = 239.32939147949} --mjesto26
 }
 
-function StaviProdavat()
-	print("Tu sam")
-	MySQL.Async.fetchAll('SELECT * FROM vehicles_for_sale WHERE prodan = 0', {}, function(result)
-		for i=1, #result, 1 do
-			table.insert(Vozila, { Vlasnik = result[i].seller, NetID = 0, Tablica = result[i].plate, Props = json.decode(result[i].vehicleProps), Cijena = result[i].price })
-			SpawnVozilo(json.decode(result[i].vehicleProps), i)
-		end
-	end)
-end
-
-MySQL.ready(function()
-	StaviProdavat()
-end)
+local Spawnana = false
 
 function SpawnVozilo(vehicle, i)
 	local veh = CreateVehicle(vehicle.model, Lokacije[i].x, Lokacije[i].y, Lokacije[i].z, Lokacije[i].h, true, false)
+	print(veh)
 	while not DoesEntityExist(veh) do
 		Wait(100)
 	end
+	print("proso petlja")
 	local netid = NetworkGetNetworkIdFromEntity(veh)
 	Wait(500)
 	Vozila[i].NetID = netid
 	SetVehicleNumberPlateText(veh, vehicle.plate)
+	print("proso ovo")
 end
+
+RegisterServerEvent('pijaca:ProvjeriProdane')
+AddEventHandler('pijaca:ProvjeriProdane', function()
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	MySQL.Async.fetchAll('SELECT * FROM vehicles_for_sale WHERE seller = @id AND prodan = 1', 
+	{
+		['@id'] = xPlayer.identifier
+	}, function(result)
+		for i=1, #result, 1 do
+			xPlayer.showNotification("Prodali ste vozilo na pijaci za $"..result[i].price.."!")
+			xPlayer.addMoney(result[i].price)
+			MySQL.Async.execute('DELETE from vehicles_for_sale WHERE id = @id', 
+			{
+				['@id'] = result[i].id
+			}, function(rowsChanged)
+			end)
+		end
+	end)
+end)
+
+RegisterServerEvent('pijaca:SpawnVozila')
+AddEventHandler('pijaca:SpawnVozila', function()
+	local src = source
+	if Spawnana == false then
+		MySQL.Async.fetchAll('SELECT * FROM vehicles_for_sale WHERE prodan = 0', {}, function(result)
+			for i=1, #result, 1 do
+				print(i)
+				table.insert(Vozila, { Vlasnik = result[i].seller, NetID = 0, Tablica = result[i].plate, Props = json.decode(result[i].vehicleProps), Cijena = result[i].price })
+				SpawnVozilo(json.decode(result[i].vehicleProps), i)
+			end
+			TriggerClientEvent("pijaca:EoTiVozila", -1, Vozila)
+			TriggerClientEvent("pijaca:OdradiTuning", src)
+		end)
+		Spawnana = true
+	end
+end)
 
 RegisterServerEvent('pijaca:StaviNaProdaju')
 AddEventHandler('pijaca:StaviNaProdaju', function(vehicle, cijena, mj, br)
@@ -89,33 +117,45 @@ AddEventHandler('pijaca:Tuljani', function(plate, netid)
 
 	for i=1, #Vozila, 1 do
 		if Vozila[i].Tablica == plate then
-			if xPlayer.getMoney() >= Vozila[i].Cijena then
-				xPlayer.removeMoney(Vozila[i].Cijena)
-				local tPlayer = ESX.GetPlayerFromIdentifier(Vozila[i].Vlasnik)
-				if tPlayer then
-					tPlayer.addMoney(Vozila[i].Cijena)
-					tPlayer.showNotification('Prodali ste vozilo za $'..Vozila[i].Cijena)
-					MySQL.Async.execute('DELETE from vehicles_for_sale WHERE plate = @pl', {
-						['@pl'] = Vozila[i].Tablica
-					}, function(rowsChanged)
-					end)
-				else
-					MySQL.Async.execute('UPDATE vehicles_for_sale SET prodan = @br WHERE plate = @pl', {
-						['@br'] = 1,
+			if Vozila[i].Vlasnik ~= xPlayer.identifier then
+				if xPlayer.getMoney() >= Vozila[i].Cijena then
+					xPlayer.removeMoney(Vozila[i].Cijena)
+					local tPlayer = ESX.GetPlayerFromIdentifier(Vozila[i].Vlasnik)
+					if tPlayer then
+						tPlayer.addMoney(Vozila[i].Cijena)
+						tPlayer.showNotification('Prodali ste vozilo za $'..Vozila[i].Cijena)
+						MySQL.Async.execute('DELETE from vehicles_for_sale WHERE plate = @pl', {
+							['@pl'] = Vozila[i].Tablica
+						}, function(rowsChanged)
+						end)
+					else
+						MySQL.Async.execute('UPDATE vehicles_for_sale SET prodan = @br WHERE plate = @pl', {
+							['@br'] = 1,
+							['@pl'] = Vozila[i].Tablica
+						})
+					end
+					MySQL.Async.execute('UPDATE owned_vehicles SET owner = @ow WHERE plate = @pl', {
+						['@ow'] = xPlayer.identifier,
 						['@pl'] = Vozila[i].Tablica
 					})
+					xPlayer.showNotification("Kupili ste vozilo za $"..Vozila[i].Cijena)
+					TriggerClientEvent("pijaca:OdmrzniGa", _source, netid)
+					table.remove(Vozila, i)
+					TriggerClientEvent("pijaca:EoTiVozila", -1, Vozila)
+					break
+				else
+					xPlayer.showNotification("Nemate dovoljno novca!")
 				end
-				MySQL.Async.execute('UPDATE owned_vehicles SET owner = @ow WHERE plate = @pl', {
-					['@ow'] = xPlayer.identifier,
+			else
+				xPlayer.showNotification('Maknuli ste vozilo sa pijace!')
+				MySQL.Async.execute('DELETE from vehicles_for_sale WHERE plate = @pl', {
 					['@pl'] = Vozila[i].Tablica
-				})
-				xPlayer.showNotification("Kupili ste vozilo za $"..Vozila[i].Cijena)
+				}, function(rowsChanged)
+				end)
 				TriggerClientEvent("pijaca:OdmrzniGa", _source, netid)
 				table.remove(Vozila, i)
 				TriggerClientEvent("pijaca:EoTiVozila", -1, Vozila)
 				break
-			else
-				xPlayer.showNotification("Nemate dovoljno novca!")
 			end
 		end
 	end
@@ -123,4 +163,17 @@ end)
 
 ESX.RegisterServerCallback('pijaca:DohvatiVozila', function(source, cb)
     cb(Vozila)
+end)
+
+ESX.RegisterServerCallback('pijaca:JelNaProdaju', function(source, cb, tablica)
+	MySQL.Async.fetchAll('SELECT 1 FROM vehicles_for_sale WHERE plate = @pl', 
+	{
+		['@pl'] = tablica
+	}, function(result)
+		if result[1] ~= nil then
+			cb(true)
+		else
+			cb(false)
+		end
+	end)
 end)
