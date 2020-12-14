@@ -37,16 +37,15 @@ local Spawnana = false
 
 function SpawnVozilo(vehicle, i)
 	local veh = CreateVehicle(vehicle.model, Lokacije[i].x, Lokacije[i].y, Lokacije[i].z, Lokacije[i].h, true, false)
-	print(veh)
 	while not DoesEntityExist(veh) do
 		Wait(100)
 	end
-	print("proso petlja")
 	local netid = NetworkGetNetworkIdFromEntity(veh)
 	Wait(500)
 	Vozila[i].NetID = netid
 	SetVehicleNumberPlateText(veh, vehicle.plate)
-	print("proso ovo")
+	TriggerClientEvent("pijaca:EoTiVozila", -1, Vozila)
+	TriggerClientEvent("pijaca:OdradiTuning", -1)
 end
 
 RegisterServerEvent('pijaca:ProvjeriProdane')
@@ -75,12 +74,9 @@ AddEventHandler('pijaca:SpawnVozila', function()
 	if Spawnana == false then
 		MySQL.Async.fetchAll('SELECT * FROM vehicles_for_sale WHERE prodan = 0', {}, function(result)
 			for i=1, #result, 1 do
-				print(i)
 				table.insert(Vozila, { Vlasnik = result[i].seller, NetID = 0, Tablica = result[i].plate, Props = json.decode(result[i].vehicleProps), Cijena = result[i].price })
 				SpawnVozilo(json.decode(result[i].vehicleProps), i)
 			end
-			TriggerClientEvent("pijaca:EoTiVozila", -1, Vozila)
-			TriggerClientEvent("pijaca:OdradiTuning", src)
 		end)
 		Spawnana = true
 	end
@@ -108,6 +104,7 @@ AddEventHandler('pijaca:StaviNaProdaju', function(vehicle, cijena, mj, br)
 	end)
 	table.insert(Vozila, { Vlasnik = xPlayer.identifier, NetID = netid, Tablica = vehicle.plate, Props = vehicle, Cijena = cijena })
 	TriggerClientEvent("pijaca:EoTiVozila", -1, Vozila)
+	TriggerClientEvent("pijaca:OdradiTuning", -1)
 end)
 
 RegisterServerEvent('pijaca:Tuljani')

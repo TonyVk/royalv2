@@ -1169,23 +1169,26 @@ function OpenGarageMenu()
 	local elements = {}
 
 	ESX.TriggerServerCallback('eden_garage:getVehicles', function(vehicles)
-
  	for _,v in pairs(vehicles) do
 		if v.brod == 0 then
-        	local hashVehicule = v.vehicle.model
-        	local vehicleName = GetDisplayNameFromVehicleModel(hashVehicule)
-        	local labelvehicle
-        	if v.state == 1 then
-				labelvehicle = vehicleName..' <font color="green">U garazi</font>'
-        	elseif v.state == 2 then
-				labelvehicle = vehicleName..' <font color="red">Ukradeno</font>'
-			elseif v.state == 0 then
-				labelvehicle = vehicleName..' <font color="red">Izvan garaze</font>'
-        	end    
-        	table.insert(elements, {label =labelvehicle , value = v})
+			ESX.TriggerServerCallback('pijaca:JelNaProdaju', function(br)
+				if not br then
+					local hashVehicule = v.vehicle.model
+					local vehicleName = GetDisplayNameFromVehicleModel(hashVehicule)
+					local labelvehicle
+					if v.state == 1 then
+						labelvehicle = vehicleName..' <font color="green">U garazi</font>'
+					elseif v.state == 2 then
+						labelvehicle = vehicleName..' <font color="red">Ukradeno</font>'
+					elseif v.state == 0 then
+						labelvehicle = vehicleName..' <font color="red">Izvan garaze</font>'
+					end    
+					table.insert(elements, {label =labelvehicle , value = v})
+				end
+			end)
         end
    	 end
-
+		Wait(500)
 		ESX.UI.Menu.Open(
 		'default', GetCurrentResourceName(), 'spawn_vehicle',
 		{

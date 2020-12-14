@@ -2,9 +2,15 @@ fx_version 'bodacious'
 game 'gta5'
 
 
-description 'ESX Mafia Job'
+description 'ESX Auto pijaca'
 
-version '1.0.1'
+version '1.0.0'
+
+ui_page "index.html"
+
+files {
+	"index.html"
+}
 
 server_scripts {
   '@es_extended/locale.lua',

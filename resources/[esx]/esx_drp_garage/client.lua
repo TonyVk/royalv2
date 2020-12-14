@@ -174,7 +174,6 @@ function ListVehiclesMenu()
 	local elements = {}
 
 	ESX.TriggerServerCallback('eden_garage:getVehicles', function(vehicles)
-
  	for _,v in pairs(vehicles) do
 		if this_Garage.Brod == nil then
 			if v.brod == 0 then

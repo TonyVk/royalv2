@@ -106,23 +106,94 @@ AddEventHandler('baseevents:enteredVehicle', function(currentVehicle, currentSea
 					label = 'Ne',
 					value = 'ne'
 				})
-				ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'upit_kupnja_menu', {
-					title    = "Zelite li kupiti vozilo za $"..Vozila[i].Cijena.."?",
-					align    = 'top-left',
-					elements = elements
-				}, function(data, menu)
-					if data.current.value == "da" then
-						TriggerServerEvent("pijaca:Tuljani", Vozila[i].Tablica, netId)
-					elseif data.current.value == "ne" then
+				local turbo = "Ne"
+				if IsToggleModOn(currentVehicle, 18) then
+					turbo = "Da"
+				end
+				local mjenjac2 = "Automatik"
+				ESX.TriggerServerCallback('mjenjac:ProvjeriVozilo',function(mj)
+					if mj == 2 then
+						mjenjac2 = "Rucni"
+					end
+					local armor
+					local kocnice
+					local mjenjac
+					local motor
+					local suspenzija
+					if GetVehicleMod(currentVehicle, 16) == -1 then
+						armor = "Default"
+					else
+						armor = "Level "..GetVehicleMod(currentVehicle, 16)
+					end
+					if GetVehicleMod(currentVehicle, 12) == -1 then
+						kocnice = "Default"
+					else
+						kocnice = "Level "..GetVehicleMod(currentVehicle, 12)
+					end
+					if GetVehicleMod(currentVehicle, 13) == -1 then
+						mjenjac = "Default"
+					else
+						mjenjac = "Level "..GetVehicleMod(currentVehicle, 13)
+					end
+					if GetVehicleMod(currentVehicle, 11) == -1 then
+						motor = "Default"
+					else
+						motor = "Level "..GetVehicleMod(currentVehicle, 11)
+					end
+					if GetVehicleMod(currentVehicle, 15) == -1 then
+						suspenzija = "Default"
+					else
+						suspenzija = "Level "..GetVehicleMod(currentVehicle, 15)
+					end
+					SendNUIMessage({
+						postavisve = true,
+						armor = armor,
+						kocnice = kocnice,
+						mjenjac = mjenjac,
+						vmjenjac = mjenjac2,
+						motor = motor,
+						suspenzija = suspenzija,
+						turbo = turbo
+					})
+					SendNUIMessage({
+						prikazi = true
+					})
+					ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'upit_kupnja_menu', {
+						title    = "Zelite li kupiti vozilo za $"..Vozila[i].Cijena.."?",
+						align    = 'top-left',
+						elements = elements
+					}, function(data, menu)
+						if data.current.value == "da" then
+							SendNUIMessage({
+								prikazi = true
+							})
+							TriggerServerEvent("pijaca:Tuljani", Vozila[i].Tablica, netId)
+						elseif data.current.value == "ne" then
+							TaskLeaveVehicle(PlayerPedId(), NetworkGetEntityFromNetworkId(Vozila[i].NetID), 1)
+							SendNUIMessage({
+								prikazi = true
+							})
+						end
+						menu.close()
+					end, function(data, menu)
+						menu.close()
 						TaskLeaveVehicle(PlayerPedId(), NetworkGetEntityFromNetworkId(Vozila[i].NetID), 1)
- 					end
-					menu.close()
-				end, function(data, menu)
-					menu.close()
-				end)
+						SendNUIMessage({
+							prikazi = true
+						})
+					end)
+				end, ESX.Math.Trim(GetVehicleNumberPlateText(currentVehicle)))
 			end
 		end
 	end
+	--[[
+		modEngine         = GetVehicleMod(vehicle, 11),
+		modBrakes         = GetVehicleMod(vehicle, 12),
+		modTransmission   = GetVehicleMod(vehicle, 13),
+		modSuspension     = GetVehicleMod(vehicle, 15),
+		modArmor          = GetVehicleMod(vehicle, 16),
+		modTurbo          = IsToggleModOn(vehicle, 18),
+	]]
 end)
 
 function KreirajBlip()
@@ -138,8 +209,7 @@ function KreirajBlip()
 	EndTextCommandSetBlipName(Blip)
 end
 
-function OpenCloakroomMenu()
-	print("I ovdje")
+function OpenPijacaMenu()
 	if IsPedInAnyVehicle(PlayerPedId(), false) then
 		ESX.UI.Menu.CloseAll()
 		local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
@@ -258,8 +328,7 @@ Citizen.CreateThread(function()
       if IsControlPressed(0,  Keys['E']) then
 
         if CurrentAction == 'menu_staviprodat' then
-		  print("Tu sam")
-          OpenCloakroomMenu()
+          OpenPijacaMenu()
         end
 
         CurrentAction = nil
@@ -333,7 +402,9 @@ end)
 
 function OdradiTuning()
 	for i=1, #Vozila, 1 do
-		ESX.Game.SetVehicleProperties(NetworkGetEntityFromNetworkId(Vozila[i].NetID), Vozila[i].Props)
-		FreezeEntityPosition(NetworkGetEntityFromNetworkId(Vozila[i].NetID), true)
+		if NetworkDoesEntityExistWithNetworkId(Vozila[i].NetID) then
+			ESX.Game.SetVehicleProperties(NetworkGetEntityFromNetworkId(Vozila[i].NetID), Vozila[i].Props)
+			FreezeEntityPosition(NetworkGetEntityFromNetworkId(Vozila[i].NetID), true)
+		end
 	end
 end
