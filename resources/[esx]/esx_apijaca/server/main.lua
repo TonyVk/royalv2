@@ -136,6 +136,7 @@ AddEventHandler('pijaca:Tuljani', function(plate, netid)
 						['@pl'] = Vozila[i].Tablica
 					})
 					xPlayer.showNotification("Kupili ste vozilo za $"..Vozila[i].Cijena)
+					TriggerEvent("DiscordBot:Vozila", GetPlayerName(_source).." je kupio vozilo["..plate.."] na pijaci za $"..Vozila[i].Cijena)
 					TriggerClientEvent("pijaca:OdmrzniGa", _source, netid)
 					table.remove(Vozila, i)
 					TriggerClientEvent("pijaca:EoTiVozila", -1, Vozila)

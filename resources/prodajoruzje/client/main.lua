@@ -160,6 +160,22 @@ AddEventHandler('ronjenje:PocniRonit', function()
 		ESX.ShowNotification("Skinuli ste opremu za ronjenje!")
 	end
 end)
+	
+RegisterCommand("htest", function(source, args, rawCommandString)
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if br == 1 then
+			TriggerEvent("utk_fingerprint:Start", 4, 2, 2, function(outcome, reason)
+				if outcome == true then
+					ESX.ShowNotification("Uspjesno hakirano!")
+				else
+					ESX.ShowNotification("Jebiga, zovem policiju!")
+				end
+			end)
+		else
+			ESX.ShowNotification("Nemate pristup ovoj komandi!")
+		end
+	end)
+end, false)
 
 RegisterCommand("psate", function(source, args, rawCommandString)
 	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
