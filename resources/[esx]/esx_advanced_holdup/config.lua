@@ -182,7 +182,7 @@ Config.Zones = {
 		CurrentMoney			= 10000,
 		MaxMoney 					= 60000,
 		MoneyRegeneration	= math.random(5000,9900),
-		BankToDeliver 		= "Fleeca Bank 2",
+		BankToDeliver 		= "Blaine County Bank",
 		Robbed						= 0, -- DO NOT CHANGE
 		TimeToRob					= 420,
 		TimeBeforeNewRob 	= 3600,
@@ -233,7 +233,7 @@ Config.Zones = {
 		CurrentMoney			= 10000,
 		MaxMoney 					= 60000,
 		MoneyRegeneration	= math.random(5000,9900),
-		BankToDeliver 		= "Fleeca Bank 3",
+		BankToDeliver 		= "Blaine County Bank",
 		Robbed						= 0, -- DO NOT CHANGE
 		TimeToRob					= 400,
 		TimeBeforeNewRob 	= 3600,
@@ -250,7 +250,7 @@ Config.Zones = {
 		CurrentMoney			= 10000,
 		MaxMoney 					= 60000,
 		MoneyRegeneration	= math.random(5000,9900),
-		BankToDeliver 		= "Fleeca Bank 3",
+		BankToDeliver 		= "Blaine County Bank",
 		Robbed						= 0, -- DO NOT CHANGE
 		TimeToRob					= 400,
 		TimeBeforeNewRob 	= 3600,
@@ -344,6 +344,29 @@ Config.Zones = {
             ["z"] = 15.835,
             ["hStart"] = 0.0,
             ["hEnd"] = -79.5
+        }
+	},
+	["Blaine County Bank"] = {
+		Pos			= { x = -103.59, y = 6477.89, z = 30.62 },
+		Size  		= { x = 1.5, y = 1.5, z = 1.0 },
+		Color 		= { r = 220, g = 110, b = 0 },
+		Type  		= 1,
+		AreaSize 	= 15,
+		CurrentMoney			= 120000,
+		MaxMoney 					= 450000,
+		Robbed						= 7,
+		TimeToRob					= 480,
+		TimeBeforeNewRob 	= 7200,
+		PoliceRequired		= 0, --7
+		Tip = 2,
+		Hack = vector3(-102.81394195557, 6471.6577148438, 31.62670135498),
+		["Bank_Vault"] = {
+            ["model"] = GetHashKey("v_ilev_cbankvauldoor01"),
+            ["x"] = -104.91988372803,
+            ["y"] = 6472.5854492188,
+            ["z"] = 31.626726150513,
+            ["hStart"] = 45.0,
+            ["hEnd"] = 140.0
         }
 	},
 }

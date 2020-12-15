@@ -96,8 +96,8 @@ Citizen.CreateThread(function()
 							end
 							if IsControlJustPressed(0,38)then
 								local naso = 0
-								for i=1, #Mafije, 1 do
-									if Mafije[i] ~= nil and Mafije[i].Ime == PlayerData.job.name then
+								for a=1, #Mafije, 1 do
+									if Mafije[a] ~= nil and Mafije[a].Ime == PlayerData.job.name then
 										naso = 1
 										break
 									end
@@ -151,9 +151,17 @@ TryHackingDevice3=function(d)
 	ESX.TriggerServerCallback("BrojPolicajacaDuznost",function(e)
 		local f=Config.Zones[d]
 		if e >= f.PoliceRequired then
-			StartHackingDevice3(d)
+			ESX.TriggerServerCallback("banke:JelImasLaptop",function(a)
+				if a then
+					StartHackingDevice3(d)
+				else
+					ESX.ShowNotification("Nemate laptop!")
+					Hakira[d] = false
+				end
+			end)
 		else 
 			ESX.ShowNotification("Nema dovoljno policije.")
+			Hakira[d] = false
 		end 
 	end)
 end;
@@ -190,8 +198,15 @@ StartHackingDevice3=function(d)
 		NetworkAddEntityToSynchronisedScene(cachedData["bag"],cachedData["scene"],"anim@heists@ornate_bank@hack_heels","hack_loop_suit_bag",4.0,-8.0,1)
 		NetworkAddEntityToSynchronisedScene(cachedData["laptop"],cachedData["scene"],"anim@heists@ornate_bank@hack_heels","hack_loop_laptop",4.0,-8.0,1)
 		NetworkStartSynchronisedScene(cachedData["scene"])
-		TriggerEvent("mhacking:show")
-		TriggerEvent("mhacking:start",Config.PhoneHackDifficulty,Config.PhoneHackTime,phonehack)
+		--TriggerEvent("mhacking:show")
+		--TriggerEvent("mhacking:start",Config.PhoneHackDifficulty,Config.PhoneHackTime,phonehack)
+		TriggerEvent("utk_fingerprint:Start", 4, 2, 2, function(outcome, reason)
+			if outcome == true then
+				phonehack(true, 5)
+			else
+				phonehack(false, 5)
+			end
+		end)
 	end)
 end;
 
@@ -224,7 +239,7 @@ AddEventHandler("esx:playerLoaded",function(g)
 end)
 
 function phonehack(x,y)
-	TriggerEvent('mhacking:hide')
+	--TriggerEvent('mhacking:hide')
 	local f=Config.Zones[Banka]
 	local i=GetClosestObjectOfType(f.Hack,5.0,-160937700,false)
 	if not DoesEntityExist(i)then return end;
@@ -243,14 +258,10 @@ function phonehack(x,y)
 	DeleteObject(cachedData["card"])
 	DeleteObject(cachedData["laptop"])
 	if x then 
-		print('Success with '..y..'s remaining.')
-		--TriggerEvent('mhacking:hide')
 		OpenDoor(Banka)
 		Hakira[Banka] = false
 		TriggerServerEvent("esx_pljacke:Hakiro", Banka, false)
 	else 
-		print('Failure')
-		--TriggerEvent('mhacking:hide')
 		Hakira[Banka] = false
 		TriggerServerEvent("esx_pljacke:Hakiro", Banka, false)
 	end 
@@ -284,13 +295,24 @@ function OpenDoor(bankId)
 		local NeDiraj = true
 		Citizen.CreateThread(function()
 			FreezeEntityPosition(door, false)
+			print(rotation)
+			print(Bank["Bank_Vault"]["hEnd"])
+			if Bank["Bank_Vault"]["hEnd"] < 0 then
+				while rotation >= Bank["Bank_Vault"]["hEnd"] do
+					Citizen.Wait(1)
 
-			while rotation >= Bank["Bank_Vault"]["hEnd"] do
-				Citizen.Wait(1)
+					rotation = rotation - 0.25
 
-				rotation = rotation - 0.25
+					SetEntityRotation(door, 0.0, 0.0, rotation)
+				end
+			else
+				while rotation <= Bank["Bank_Vault"]["hEnd"] do
+					Citizen.Wait(1)
 
-				SetEntityRotation(door, 0.0, 0.0, rotation)
+					rotation = rotation + 0.25
+
+					SetEntityRotation(door, 0.0, 0.0, rotation)
+				end
 			end
 			NeDiraj = false
 			FreezeEntityPosition(door, true)

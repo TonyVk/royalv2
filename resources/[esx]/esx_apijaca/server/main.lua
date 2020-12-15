@@ -164,7 +164,7 @@ ESX.RegisterServerCallback('pijaca:DohvatiVozila', function(source, cb)
 end)
 
 ESX.RegisterServerCallback('pijaca:JelNaProdaju', function(source, cb, tablica)
-	MySQL.Async.fetchAll('SELECT 1 FROM vehicles_for_sale WHERE plate = @pl', 
+	MySQL.Async.fetchAll('SELECT 1 FROM vehicles_for_sale WHERE plate = @pl AND prodan = 0', 
 	{
 		['@pl'] = tablica
 	}, function(result)

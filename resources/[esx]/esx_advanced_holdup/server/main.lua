@@ -23,6 +23,16 @@ ESX.RegisterServerCallback("BrojPolicajacaDuznost",function(source,cb)
 	cb(copsConnected)
 end)
 
+ESX.RegisterServerCallback("banke:JelImasLaptop",function(source,cb)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local laptop = xPlayer.getInventoryItem("net_cracker").count
+	if laptop > 0 then
+		cb(true)
+	else
+		cb(false)
+	end
+end)
+
 ESX.RegisterServerCallback("JelTrajePljacka",function(source,cb)
 	local Kurac = {}
 	if PljackaID ~= nil then

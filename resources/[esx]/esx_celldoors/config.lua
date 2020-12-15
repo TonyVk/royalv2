@@ -385,6 +385,14 @@ Config.DoorList = {
 		Banka = true,
 		locked = true
 	},
+	{
+		objName = 'v_ilev_cbankvauldoor01',
+		objCoords  = vector3(-104.91988372803, 6472.5854492188, 31.626726150513),
+		textCoords = vector3(0.0, 0.0, -1000.0), 
+		authorizedJobs = { 'police' },
+		Banka = true,
+		locked = true
+	},
 
 	--[[
 	-- Entrance Gate (Mission Row mod) https://www.gta5-mods.com/maps/mission-row-pd-ymap-fivem-v1
