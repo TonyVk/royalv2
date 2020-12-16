@@ -587,8 +587,7 @@ function SpawnPoundedVehicle(vehicle)
 			for i=1, #Vehicles, 1 do
 				if vehicle.model == GetHashKey(Vehicles[i].model) then
 					vehiclePrice = Vehicles[i].price
-					print(vehiclePrice*0.3)
-					TriggerServerEvent("mafija:OdeJedan", vehicle.plate, math.ceil(vehiclePrice*0.3))
+					TriggerServerEvent("mafija:OdeJedan", vehicle.plate, math.ceil(vehiclePrice*0.15))
 					break
 				end
 			end
@@ -648,7 +647,6 @@ function ReturnVehicleMenu()
 						table.insert(elements, {label =labelvehicle.."-"..v.vlasnik.."(<font color='red'>Isteklo</font>)", value = v.vehicle})
 					end
 					brojac = brojac+1
-					print(brojac)
 				end, v.tablica)
 			end
 			while brojac ~= #vehicles do
