@@ -22,6 +22,7 @@ local Vblip 					= nil
 local PlayerData                = {}
 local Blipara = nil
 local Blip = nil
+local Vehicles 					= {}
 
 local this_Garage = {}
 
@@ -36,6 +37,10 @@ Citizen.CreateThread(function()
 	end
 	ProvjeriPosao()
 	refreshBlips()
+	Wait(1000)
+	ESX.TriggerServerCallback('esx_lscustom:getVehiclesPrices', function(vehicles)
+		Vehicles = vehicles
+	end)
 end)
 
 function ProvjeriPosao()
@@ -48,6 +53,9 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
     PlayerData = xPlayer
     --TriggerServerEvent('esx_jobs:giveBackCautionInCaseOfDrop')
     refreshBlips()
+	ESX.TriggerServerCallback('esx_lscustom:getVehiclesPrices', function(vehicles)
+		Vehicles = vehicles
+	end)
 end)
 
 RegisterNetEvent('esx:setJob')
@@ -568,8 +576,24 @@ end)
 
 --Function for spawning vehicle
 function SpawnPoundedVehicle(vehicle)
-	local korde = vector3(this_Garage.SpawnMunicipalPoundPoint.Pos.x, this_Garage.SpawnMunicipalPoundPoint.Pos.y, this_Garage.SpawnMunicipalPoundPoint.Pos.z+1)
-	TriggerServerEvent("garaza:SpawnVozilo", vehicle, korde, 226.78, 2)
+	ESX.TriggerServerCallback('mafija:DofatiDatum', function(br)
+		if br then
+			local korde = vector3(this_Garage.SpawnMunicipalPoundPoint.Pos.x, this_Garage.SpawnMunicipalPoundPoint.Pos.y, this_Garage.SpawnMunicipalPoundPoint.Pos.z+1)
+			TriggerServerEvent("garaza:SpawnVozilo", vehicle, korde, 226.78, 2)
+			TriggerServerEvent("mafija:MakniUkraden", vehicle.plate)
+			ESX.ShowNotification("Vozilo dostavljeno iz garaze!")
+		else
+			local vehiclePrice = 50000
+			for i=1, #Vehicles, 1 do
+				if vehicle.model == GetHashKey(Vehicles[i].model) then
+					vehiclePrice = Vehicles[i].price
+					print(vehiclePrice*0.3)
+					TriggerServerEvent("mafija:OdeJedan", vehicle.plate, math.ceil(vehiclePrice*0.3))
+					break
+				end
+			end
+		end
+	end, vehicle.plate)
 end
 
 -- Marker actions
@@ -631,7 +655,6 @@ function ReturnVehicleMenu()
 			function(data, menu)
 				menu.close()
 				SpawnPoundedVehicle(data.current.value)
-				ESX.ShowNotification("Vozilo dostavljeno iz garaze!")
 			end,
 			function(data, menu)
 				menu.close()

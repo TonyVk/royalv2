@@ -108,21 +108,12 @@ Config.PoliceStations = {
 			},
 		},
 
-		Helicopters = {
-			{
-				Spawner = vector3(461.1, -981.5, 43.6),
-				InsideShop = vector3(477.0, -1106.4, 43.0),
-				SpawnPoints = {
-					{ coords = vector3(449.5, -981.2, 43.6), heading = 92.6, radius = 10.0 }
-				}
-			}
-		},
-
 		BossActions = {
 			vector3(-440.98263549805, 6001.3413085938, 31.716176986694)
 		}
 
 	}
+
 }
 
 Config.AuthorizedWeapons = {
@@ -167,6 +158,17 @@ Config.AuthorizedWeapons = {
 		{ weapon = 'WEAPON_STUNGUN', price = 0 },
 		{ weapon = 'WEAPON_FLASHLIGHT', price = 0 }
 	},
+	
+	interventna = {
+		{ weapon = 'WEAPON_APPISTOL', components = { 0, 0, 0, 0, nil }, price = 0 },
+		{ weapon = 'WEAPON_ADVANCEDRIFLE', components = { 0, 0, 0, 0, 0, nil }, price = 0 },
+		{ weapon = 'WEAPON_PUMPSHOTGUN', components = { 0, 0, nil }, price = 0 },
+		{ weapon = 'WEAPON_NIGHTSTICK', price = 0 },
+		{ weapon = 'WEAPON_SMG' , components = { 0, 0, 0, 0, nil }, price = 0},
+		{ weapon = 'WEAPON_STUNGUN', price = 0 },
+		{ weapon = 'WEAPON_SNIPERRIFLE', price = 0 },
+		{ weapon = 'WEAPON_FLASHLIGHT', price = 0 }
+	},
 
 	chef = {
 		{ weapon = 'WEAPON_APPISTOL', components = { 0, 0, 0, 0, nil }, price = 0 },
@@ -196,6 +198,7 @@ Config.AuthorizedVehicles = {
 	Shared = {
 		{ model = 'police3', label = 'Novi Auto', price = 0 },
 		{ model = 'poctavia', label = 'Skoda Octavia', price = 0},
+		{ model = 'g63amg6x6cop', label = 'Mercedes 6x6', price = 0},
 	},
 
 	recruit = {
@@ -220,12 +223,22 @@ Config.AuthorizedVehicles = {
 		{ model = 'pranger', label = 'Ranger', price = 0},
 		{ model = 'sheriff', label = 'Sheriff', price = 0},
 	},
-
+	
 	lieutenant = {
 		{ model = 'Rumpo3', label = 'Vojni Kombi', price = 0},
 		{ model = 'police4', label = 'BMW 520d', price = 0 },
 		{ model = 'riot2', label = 'Neko vozilo', price = 0},
 		{ model = 'Sheriff2', label = 'Mercedes G', price = 0},
+		{ model = 'scout', label = 'Jeep', price = 0},
+	},
+	
+	interventna = {
+		{ model = 'Rumpo3', label = 'Vojni Kombi', price = 0},
+		{ model = 'police4', label = 'BMW 520d', price = 0 },
+		{ model = 'riot2', label = 'Neko vozilo', price = 0},
+		{ model = 'Sheriff2', label = 'Mercedes G', price = 0},
+		{ model = 'scout', label = 'Jeep', price = 0},
+		
 	},
 
 	chef = {
@@ -233,6 +246,7 @@ Config.AuthorizedVehicles = {
 		{ model = 'police4', label = 'BMW 520d', price = 0 },
 		{ model = 'riot2', label = 'Neko vozilo', price = 0},
 		{ model = 'Sheriff2', label = 'Mercedes G', price = 0},
+		{ model = 'scout', label = 'Jeep', price = 0},
 		
 	},
 
@@ -245,7 +259,8 @@ Config.AuthorizedVehicles = {
 		{ model = 'police4', label = 'BMW 520d', price = 0 },
 		{ model = 'Rumpo3', label = 'Vojni Kombi', price = 0},
 		{ model = 'Sheriff2', label = 'Mercedes G', price = 0},
-		{ model = 'fbi2', label = 'VW Touareg', price = 0}
+		{ model = 'fbi2', label = 'VW Touareg', price = 0},
+		{ model = 'scout', label = 'Jeep', price = 0}
 	}
 }
 
@@ -259,6 +274,8 @@ Config.AuthorizedHelicopters = {
 	intendent = {},
 
 	lieutenant = {},
+	
+	interventna = {},
 
 	chef = {},
 
@@ -619,7 +636,78 @@ Config.Uniforms = {
 			}
 		}
 	},
-	chef_wear = { -- INFECTED
+	interventna_wear = {
+		EUP = true,
+		male = {
+			['tshirt_1'] = 130,  ['tshirt_2'] = 0,
+			['torso_1'] = 139,   ['torso_2'] = 3,
+			['decals_1'] = 0,   ['decals_2'] = 0,
+			['arms'] = 17,
+			['pants_1'] = 59,   ['pants_2'] = 9,
+			['shoes_1'] = 24,   ['shoes_2'] = 0,
+			['helmet_1'] = 106,  ['helmet_2'] = 20,
+			['chain_1'] = 125,    ['chain_2'] = 0,
+			['ears_1'] = 2,     ['ears_2'] = 0,
+			['glasses_1'] = 15,     ['glasses_2'] = 6,
+			['mask_1'] = 35,		['mask_2'] = 0
+		},
+		female = {
+			['tshirt_1'] = 35,  ['tshirt_2'] = 0,
+			['torso_1'] = 48,   ['torso_2'] = 0,
+			['decals_1'] = 7,   ['decals_2'] = 2,
+			['arms'] = 44,
+			['pants_1'] = 34,   ['pants_2'] = 0,
+			['shoes_1'] = 24,   ['shoes_2'] = 0,
+			['helmet_1'] = -1,  ['helmet_2'] = 0,
+			['chain_1'] = 0,    ['chain_2'] = 0,
+			['ears_1'] = 2,     ['ears_2'] = 0
+		}
+	},
+	EUPinterventna_wear = {
+		male = {
+			ped = 'mp_m_freemode_01',
+			props = {
+				{ 0, 0, 0 },
+				{ 1, 0, 0 },
+				{ 2, 0, 0 },
+				{ 6, 0, 0 },
+			},
+			components = {
+				{ 1, 1, 1 },
+				{ 11, 37, 2 },
+				{ 3, 13, 1 },
+				{ 10, 1, 1 },
+				{ 8, 12, 1 },
+				{ 4, 11, 5 },
+				{ 6, 11, 1 },
+				{ 7, 7, 1 },
+				{ 9, 25, 1 },
+				{ 5, 49, 1 },
+			}
+		},
+		female = {
+			ped = 'mp_f_freemode_01',
+			props = {
+				{ 0, 0, 0 },
+				{ 1, 0, 0 },
+				{ 2, 0, 0 },
+				{ 6, 0, 0 },
+			},
+			components = {
+				{ 1, 1, 1 },
+				{ 11, 169, 2 },
+				{ 3, 8, 1 },
+				{ 10, 1, 1 },
+				{ 8, 40, 4 },
+				{ 4, 4, 4 },
+				{ 6, 30, 1 },
+				{ 7, 7, 1 },
+				{ 9, 10, 1 },
+				{ 5, 60, 1 },
+			}
+		}
+	},
+	chef_wear = {
 		EUP = true,
 		male = {
 			['tshirt_1'] = 130,  ['tshirt_2'] = 0,
@@ -646,7 +734,7 @@ Config.Uniforms = {
 			['ears_1'] = 2,     ['ears_2'] = 0
 		}
 	},
-	EUPchef_wear = { -- INFECTED
+	EUPchef_wear = {
 		male = {
 			ped = 'mp_m_freemode_01',
 			props = {

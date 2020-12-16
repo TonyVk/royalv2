@@ -59,6 +59,21 @@ function mTOh(mins)
     return {sat = math.floor(mins/60), minuta = (mins%60)}
 end
 
+RegisterCommand("htest", function(source, args, rawCommandString)
+	local tablica = os.date('*t')
+	print(tablica.year)
+	print(tablica.month)
+	print(tablica.day)
+	RacunajDane(8, 12, 2020)
+end, false)
+
+function RacunajDane(d, m, y)
+	reference = os.time{day=d, year=y, month=m}
+	daysfrom = os.difftime(os.time(), reference) / (24 * 60 * 60) -- seconds in a day
+	wholedays = math.floor(daysfrom)
+	print(wholedays) -- today it prints "1"
+end
+
 ESX.RegisterServerCallback('minute:DohvatiSate', function(source, cb)
 	local elements = {}
 	MySQL.Async.fetchAll('SELECT identifier, minute FROM minute ORDER BY minute DESC', {}, function(result)

@@ -32,6 +32,30 @@ AddEventHandler('zemunski:SpawnVozilo', function(vehicle, co, he)
 	TriggerClientEvent("zemunski:VratiVozilo", _source, netid, vehicle, co)
 end)
 
+RegisterNetEvent('mafija:OdeJedan')
+AddEventHandler('mafija:OdeJedan', function(plate, pr)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	MySQL.Async.execute('DELETE from ukradeni WHERE tablica = @pl', {
+		['@pl'] = plate
+	}, function(rowsChanged)
+	end)
+	MySQL.Async.execute('DELETE from owned_vehicles WHERE plate = @pl', {
+		['@pl'] = plate
+	}, function(rowsChanged)
+	end)
+	xPlayer.addMoney(pr)
+	xPlayer.showNotification("Vozilo je 7 ili vise dana kod vas i dobili ste od njega $"..pr..".")
+end)
+
+RegisterNetEvent('mafija:MakniUkraden')
+AddEventHandler('mafija:MakniUkraden', function(plate)
+	MySQL.Async.execute('DELETE from ukradeni WHERE tablica = @pl', {
+		['@pl'] = plate
+	}, function(rowsChanged)
+	end)
+end)
+
 local ZVrijeme = {}
 RegisterServerEvent('zemunski:zapljeni6')
 AddEventHandler('zemunski:zapljeni6', function(target, itemType, itemName, amount, torba)
@@ -258,6 +282,28 @@ AddEventHandler('esx_zemunski:putStockItems', function(itemName, count)
   end)
 
 end)
+
+ESX.RegisterServerCallback('mafija:DofatiDatum', function(source, cb, plate)
+	local xPlayer = ESX.GetPlayerFromId(source)
+
+	MySQL.Async.fetchAll('SELECT * FROM ukradeni WHERE tablica = @plate', {
+		['@plate'] = plate
+	}, function(result)
+		local d, m, y = string.match(result[1].datum, "(%d+)/(%d+)/(%d+)")
+		if RacunajDane(d, m, y) >= 7 then
+			cb(false)
+		else
+			cb(true)
+		end
+	end)
+end)
+
+function RacunajDane(d, m, y)
+	reference = os.time{day=d, year=y, month=m}
+	daysfrom = os.difftime(os.time(), reference) / (24 * 60 * 60) -- seconds in a day
+	wholedays = math.floor(daysfrom)
+	return wholedays;
+end
 
 ESX.RegisterServerCallback('esx_zemunski:OsobnoVozilo', function(source, cb, plate)
 	local xPlayer = ESX.GetPlayerFromId(source)

@@ -129,6 +129,13 @@ AddEventHandler('eden_garage:modifystate2', function(vehicle, state)
 	end
 	MySQL.Sync.execute("UPDATE owned_vehicles SET state =@state WHERE plate=@plate",{['@state'] = state , ['@plate'] = plate})
 	print('STATE UPDATED...')
+	if state == 2 then
+		MySQL.Async.execute('INSERT INTO ukradeni (tablica, datum) VALUES (@plate, @dat)', {
+			['@plate']   = vehicle.plate,
+			['@dat']   = os.date("%d/%m/%Y")
+		}, function(rowsChanged)
+		end)
+	end
 end)
 
 function GetRPName(ident, data)
