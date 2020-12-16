@@ -633,18 +633,27 @@ function ReturnVehicleMenu()
 	if PlayerData.job.name == 'zemunski' then
 		ESX.TriggerServerCallback('eden_garage:getOutVehicles', function(vehicles)
 			local elements = {}
-
+			local brojac = 0
 			for _,v in pairs(vehicles) do
-			local hashVehicule = v.vehicle.model
-			local vehicleName = GetDisplayNameFromVehicleModel(hashVehicule)
-			local labelvehicle
+				local hashVehicule = v.vehicle.model
+				local vehicleName = GetDisplayNameFromVehicleModel(hashVehicule)
+				local labelvehicle
 
-			labelvehicle = vehicleName _U('impound_list', GetLabelText(vehicleName))
-		
-			table.insert(elements, {label =labelvehicle.."-"..v.vlasnik.."("..v.tablica..")", value = v.vehicle})
-			
+				labelvehicle = vehicleName _U('impound_list', GetLabelText(vehicleName))
+				
+				ESX.TriggerServerCallback('mafija:DofatiDatum', function(br)
+					if br then
+						table.insert(elements, {label =labelvehicle.."-"..v.vlasnik.."("..v.tablica..")", value = v.vehicle})
+					else
+						table.insert(elements, {label =labelvehicle.."-"..v.vlasnik.."(<font color='red'>Isteklo</font>)", value = v.vehicle})
+					end
+					brojac = brojac+1
+					print(brojac)
+				end, v.tablica)
 			end
-
+			while brojac ~= #vehicles do
+				Wait(1)
+			end
 			ESX.UI.Menu.Open(
 			'default', GetCurrentResourceName(), 'return_vehicle',
 			{
@@ -659,7 +668,7 @@ function ReturnVehicleMenu()
 			function(data, menu)
 				menu.close()
 				--CurrentAction = 'open_garage_action'
-			end)	
+			end)
 		end)
 	end
 end
