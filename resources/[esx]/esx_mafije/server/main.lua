@@ -391,36 +391,110 @@ AddEventHandler('mafije:DodajBoju', function(maf, br, bojaid, r, g, b)
 end)
 
 RegisterNetEvent('mafije:PromjeniIme')
-AddEventHandler('mafije:PromjeniIme', function(maf, ime)
+AddEventHandler('mafije:PromjeniIme', function(maf, ime, label)
+	local src = source
 	for i=1, #Mafije, 1 do
 		if Mafije[i] ~= nil and Mafije[i].Ime == maf then
-			Mafije[i].Label = ime
+			Mafije[i].Label = label
+			Mafije[i].Ime = ime
 		end
 	end
-	MySQL.Async.execute('UPDATE mafije SET Label = @lab WHERE Ime = @im', {
-		['@lab'] = ime,
+	MySQL.Async.execute('UPDATE mafije SET Ime = @ime, Label = @lab WHERE Ime = @im', {
+		['@ime'] = ime,
+		['@lab'] = label,
 		['@im'] = maf
 	})
-	MySQL.Async.execute('UPDATE jobs SET label = @lab WHERE name = @im', {
-		['@lab'] = ime,
+	MySQL.Async.execute('UPDATE jobs SET name = @ime, label = @lab WHERE name = @im', {
+		['@ime'] = ime,
+		['@lab'] = label,
 		['@im'] = maf
 	})
-	TriggerClientEvent("mafije:UpdateMafije", -1, Mafije)
+	local soc = "society_"..maf
+	local soc2 = "society_"..ime
+	MySQL.Async.execute('UPDATE addon_account SET name = @ime, label = @lab WHERE name = @im', {
+		['@ime'] = soc2,
+		['@lab'] = label,
+		['@im'] = soc
+	})
+	MySQL.Async.execute('UPDATE addon_account_data SET account_name = @ime WHERE account_name = @im', {
+		['@ime'] = soc2,
+		['@im'] = soc
+	})
+	MySQL.Async.execute('UPDATE addon_inventory SET name = @ime, label = @lab WHERE name = @im', {
+		['@ime'] = soc2,
+		['@lab'] = label,
+		['@im'] = soc
+	})
+	MySQL.Async.execute('UPDATE addon_inventory_items SET inventory_name = @ime WHERE inventory_name = @im', {
+		['@ime'] = soc2,
+		['@im'] = soc
+	})
+	MySQL.Async.execute('UPDATE datastore SET name = @ime, label = @lab WHERE name = @im', {
+		['@ime'] = soc2,
+		['@lab'] = label,
+		['@im'] = soc
+	})
+	MySQL.Async.execute('UPDATE datastore_data SET name = @ime WHERE name = @im', {
+		['@ime'] = soc2,
+		['@im'] = soc
+	})
+	MySQL.Async.execute('UPDATE job_grades SET job_name = @ime WHERE job_name = @im', {
+		['@ime'] = ime,
+		['@im'] = maf
+	})
 	if Config.Blipovi == true then
 		TriggerClientEvent("mafije:UpdateImeBlipa", -1, maf, ime)
 	end
-	TriggerEvent("RefreshPoslove")
-	TriggerClientEvent('esx:showNotification', source, 'Uspjesno promjenjeno ime(label) mafiji '..maf..' u '..ime..'!')
-	local xPlayers 	= ESX.GetPlayers()
-	
-	for i=1, #xPlayers, 1 do
-		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
-		if xPlayer.job.name == maf then
-			SetTimeout(1000, function()
-				xPlayer.setJob(xPlayer.job.name, xPlayer.job.grade)
-			end)
+	for i=1, #Vozila, 1 do
+		if Vozila[i] ~= nil and Vozila[i].Mafija == maf then
+			Vozila[i].Mafija = ime
 		end
 	end
+	for i=1, #Rankovi, 1 do
+		if Rankovi[i] ~= nil and Rankovi[i].Mafija == maf then
+			Rankovi[i].Mafija = ime
+		end
+	end
+	for i=1, #Oruzja, 1 do
+		if Oruzja[i] ~= nil and Oruzja[i].Mafija == maf then
+			Oruzja[i].Mafija = ime
+		end
+	end
+	for i=1, #Koord, 1 do
+		if Koord[i] ~= nil and Koord[i].Mafija == maf then
+			Koord[i].Mafija = ime
+		end
+	end
+	for i=1, #Boje, 1 do
+		if Boje[i] ~= nil and Boje[i].Mafija == maf then
+			Boje[i].Mafija = ime
+		end
+	end
+	SetTimeout(2000, function()
+		TriggerEvent("RefreshAddone")
+		TriggerEvent("RefreshSociety")
+		TriggerEvent('esx_society:registerSociety', ime, label, soc2, soc2, soc2, {type = 'public'})
+		TriggerEvent("RefreshDatastore")
+		TriggerEvent("RefreshInventory")
+		TriggerEvent("RefreshPoslove")
+				
+		TriggerClientEvent("mafije:PosaljiVozila", -1, maf, Vozila)
+		TriggerClientEvent("mafije:PosaljiOruzja", -1, maf, Oruzja)
+		TriggerClientEvent("mafije:UpdateKoord", -1, Koord)
+		TriggerClientEvent("mafije:UpdateBoje", -1, 3, maf, Boje)
+		TriggerClientEvent("mafije:UpdateRankove", -1, Rankovi)
+		TriggerClientEvent("mafije:UpdateMafije", -1, Mafije)
+		local xPlayers 	= ESX.GetPlayers()
+		for i=1, #xPlayers, 1 do
+			local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+			if xPlayer.job.name == maf then
+				SetTimeout(1000, function()
+					xPlayer.setJob(ime, xPlayer.job.grade)
+				end)
+			end
+		end
+	end)
+	TriggerClientEvent('esx:showNotification', src, 'Uspjesno promjenjeno ime(label) mafiji '..maf..' u '..label..'!')
 end)
 
 RegisterNetEvent('mafije:DodajOruzje')

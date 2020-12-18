@@ -252,7 +252,7 @@ RegisterCommand("uredimafiju", function(source, args, raw)
 						table.insert(elements, {label = "Oruzja", value = "oruzja"})
 						table.insert(elements, {label = "Koordinate", value = "koord"})
 						table.insert(elements, {label = "Boje", value = "boje"})
-						--table.insert(elements, {label = "Promjeni ime", value = "ime"})
+						table.insert(elements, {label = "Promjeni ime", value = "ime"})
 						table.insert(elements, {label = "Obrisi mafiju", value = "obrisi"})
 						ESX.UI.Menu.Open(
 							'default', GetCurrentResourceName(), 'umafiju2',
@@ -715,17 +715,30 @@ RegisterCommand("uredimafiju", function(source, args, raw)
 									  end
 									)
 								elseif data2.current.value == "ime" then
-									ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'rankid', {
-										title = "Upisite label ime mafije",
+									local mafIme
+									ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'mafime', {
+										title = "Upisite novo ime(setjob) mafije",
 									}, function (datar, menur)
-										local mafIme = datar.value
+										mafIme = datar.value
 										if mafIme == nil then
 											ESX.ShowNotification('Greska.')
 										else
 											menur.close()
-											menu2.close()
-											menu.close()
-											TriggerServerEvent("mafije:PromjeniIme", ImeMafije, mafIme)
+											ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'maflabel', {
+												title = "Upisite novi label mafije",
+											}, function (datal, menul)
+												local mafLabel = datar.value
+												if mafLabel == nil then
+													ESX.ShowNotification('Greska.')
+												else
+													menul.close()
+													menu2.close()
+													menu.close()
+													TriggerServerEvent("mafije:PromjeniIme", ImeMafije, mafIme, mafLabel)
+												end
+											end, function (datar, menur)
+												menul.close()
+											end)
 										end
 									end, function (datar, menur)
 										menur.close()
@@ -2196,7 +2209,7 @@ end)
 
 RegisterNetEvent('mafije:VratiCrate')
 AddEventHandler('mafije:VratiCrate', function(par, job)
-	if PlayerData.job.name == job then
+	if PlayerData.job ~= nil and PlayerData.job.name == job then
 		parachute = par
 		CrateDrop2(parachute)
 	end
@@ -2206,7 +2219,7 @@ RegisterNetEvent('mafije:ObrisiCrate')
 AddEventHandler('mafije:ObrisiCrate', function(id, job)
 	local ida = GetPlayerServerId(PlayerId())
 	if ida ~= id then
-		if PlayerData.job.name == job then
+		if PlayerData.job ~= nil and PlayerData.job.name == job then
 			if DoesEntityExist(crate) then
 				DeleteEntity(crate)
 				StopSound(soundID)
@@ -2229,7 +2242,7 @@ end)
 
 RegisterNetEvent('mafije:VratiIme')
 AddEventHandler('mafije:VratiIme', function(maf, ime, br)
-	if PlayerData.job.name == maf then
+	if PlayerData.job ~= nil and PlayerData.job.name == maf then
 		ZatrazioOruzje = ime
 		ZOBr = br
 	end
