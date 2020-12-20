@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="assets/plugins/jquery/jquery-3.2.1.min.js"></script>
+	<link rel="stylesheet" href="assets/plugins/bootstrap-3.3.7-dist/css/bootstrap.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Auto pijaca</title>
 	<style>
 		html {
@@ -13,11 +16,6 @@
 		  html {
 			font-size: 16px;
 		  }
-		}
-		.container { 
-		  height: 200px;
-		  position: relative;
-		  border: 3px solid green; 
 		}
 
 		.vertical-center {
@@ -30,7 +28,6 @@
 		}
 		#unutarnji{	
 			background-color: #969696b3;
-			height: 235px;
 			width: 220px;
 			border-radius: 0px 0px 15px 15px;
 			padding: 15px;
@@ -42,8 +39,73 @@
 			font-weight: bold;
 			font-size: 20px;
 		}
-		#tijelo{
+		
+		.container2 {
+			width: 340px;
+			background-color: #c3c3c3;
+			padding: 15px;
+			border-radius: 15px;
+		}
+
+		.pricing-header {
+		  max-width: 700px;
+		}
+
+		.card-deck .card {
+			margin-right: 0px;
+			margin-top: 11px;
+			margin-bottom: 11px;
+			background-color: #00000017;
+		}
+		
+		#tijelo {
+			background-color: transparent;
 			display:none;
+		}
+
+		.border-top { border-top: 1px solid #e5e5e5; }
+		.border-bottom { border-bottom: 1px solid #e5e5e5; }
+
+		.box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
+		
+		.btn-danger {
+			float: right;
+			position: absolute;
+			top: 0;
+			right: 0;
+			border-radius: 0px 15px 0px 0px;
+		}
+
+		::-webkit-scrollbar {
+			width: 12px;
+		}
+		::-webkit-scrollbar-track {
+			-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+			-webkit-border-radius: 10px;
+			border-radius: 10px;
+		}
+		::-webkit-scrollbar-thumb {
+			-webkit-border-radius: 10px;
+			border-radius: 10px;
+			background: rgba(51,122,183,0.8); 
+			-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+		}
+		::-webkit-scrollbar-thumb:window-inactive {
+			background: rgba(51,122,183,0.8);
+		}
+		#bdodaj{
+			margin-top: 10px;
+		}
+		#glavni
+		{
+			position: absolute;
+			bottom: 20px;
+			left: 50%;
+			transform: translate(-50%,0);
+		}
+		html, 
+		body {
+			height: 100%;
 		}
 	</style>
 </head>
@@ -51,6 +113,7 @@
 		<div class="vertical-center">
 			<div id="naslov">
 				Tuning vozila
+				<button type="button" class="btn btn-danger" onclick="Zatvori()">X</button>
 			</div>
 			<div id="unutarnji">
 				<b>Armor</b><br> <font id="alvl">Level 5</font><br>
@@ -61,6 +124,28 @@
 				<b>Turbo</b><br> <font id="tlvl">Da</font>
 			</div>
 		</div>
+		<div id="glavni">
+				<div class="container2" style="border-bottom-left-radius: 0px;border-bottom-right-radius: 0px;margin-bottom: -12px;">
+				  <div class="card-deck mb-3 text-center">
+					<button type="button" id="bdodaj" class="btn btn-primary" style="width: 65px;float: left; margin-top:0px;" onclick="Pogled()"><i class="fa fa-eye" style=" font-size: 20px;"></i></button>
+					<button type="button" id="bdodaj" class="btn btn-primary" style="width: 155px; margin-top:0px;" onclick="Zamjeni()"><i id="slicica" class="fa fa-toggle-off" style=" font-size: 20px; "></i></button>
+					<button type="button" id="bdodaj" class="btn btn-primary" style="width: 70px;float: right; margin-top:0px;" onclick="Svijetla()"><i class="fa fa-lightbulb-o" style=" font-size: 20px; "></i></button>
+				  </div>
+				</div>
+				<div class="container2" style="border-radius: 0px;">
+				  <div class="card-deck mb-3 text-center">
+					<button type="button" id="bdodaj" class="btn btn-primary" style="width: 65px;float: left; margin-top:0px;" onclick="Lijevo()"><i class="fa fa-toggle-left" style=" font-size: 20px; "></i></button>
+					<button type="button" id="bdodaj" class="btn btn-primary" style="width: 155px; margin-top:0px;font-size: 16px;" onclick="Kupi()">Kupi vozilo</button>
+					<button type="button" id="bdodaj" class="btn btn-primary" style="width: 70px;float: right; margin-top:0px;" onclick="Desno()"><i class="fa fa-toggle-right" style=" font-size: 20px; "></i></button>
+				  </div>
+				</div>
+				<div class="container2" style="border-top-left-radius: 0px;border-top-right-radius: 0px;margin-top: -24px;">
+				  <div class="card-deck mb-3 text-center">
+					<font id="imevozila" style="font-size: 16px;">BMW M5 e60</font><br><font id="cijenavozila" style="font-size: 16px;">600000$</font>
+				  </div>
+				</div>
+		</div>
+		<script src="assets/plugins/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
 		<script>
 			var Prikazan = false;
 			var Zabrani = false;
@@ -77,10 +162,35 @@
 					{
 						x.style.display = "none";
 						Prikazan = false;
+						$("#maindivic").empty();
 					}
 				}
 				if (item.zabrani) {
-					
+					var x = document.getElementById("tijelo");
+					if(Zabrani == false)
+					{
+						var x = document.getElementsByClassName("btn");
+						var i;
+						for (i = 0; i < x.length; i++) {
+						  x[i].disabled = true;
+						}
+						Zabrani = true;
+					}
+					else
+					{
+						var x = document.getElementsByClassName("btn");
+						var i;
+						for (i = 0; i < x.length; i++) {
+						  x[i].disabled = false;
+						}
+						Zabrani = false;
+					}
+				}
+				if (item.postaviime) {
+					var naziv = item.imevozila;
+					var cijena = item.cijenavozila;
+					document.getElementById("imevozila").innerHTML = naziv;
+					document.getElementById("cijenavozila").innerHTML = cijena;
 				}
 				if (item.postavisve) {
 					var armor = item.armor;
@@ -99,6 +209,90 @@
 					document.getElementById("tlvl").innerHTML = turbo;
 				}
 			});
+			
+			var svij = false;
+			function Svijetla()
+			{
+				if(svij == false)
+				{
+					$.post("http://esx_apijaca/svijetla", JSON.stringify({
+						svijetla: true
+					}));
+					svij = true;
+				}
+				else
+				{
+					$.post("http://esx_apijaca/svijetla", JSON.stringify({
+						svijetla: false
+					}));
+					svij = false;
+				}
+			}
+			function Pogled()
+			{
+				$.post("http://esx_apijaca/pogled", JSON.stringify({
+					pogled: true
+				}));
+			}
+			var Jeste = false;
+			function Zamjeni()
+			{
+				if(Jeste == false)
+				{
+					document.getElementById("slicica").className = "fa fa-toggle-on";
+					$.post("http://esx_apijaca/vrata", JSON.stringify({
+						otvori: true
+					}));
+					
+					Jeste = true;
+				}
+				else
+				{
+					document.getElementById("slicica").className = "fa fa-toggle-off";
+					$.post("http://esx_apijaca/vrata", JSON.stringify({
+						otvori: false
+					}));
+					Jeste = false;
+				}
+			}
+			function PostaviAuto(ime)
+			{
+				Jeste = false;
+				document.getElementById("slicica").className = "fa fa-toggle-off";
+				svij = false;
+				$.post("http://esx_apijaca/spawnauto", JSON.stringify({
+					naziv: ime
+				}));
+			}
+			function Kupi()
+			{
+				$.post("http://esx_apijaca/kupi", JSON.stringify({}));
+			}
+			function Lijevo()
+			{
+				Jeste = false;
+				document.getElementById("slicica").className = "fa fa-toggle-off";
+				svij = false;
+				$.post("http://esx_apijaca/lijevo", JSON.stringify({}));
+			}
+			function Desno()
+			{
+				Jeste = false;
+				document.getElementById("slicica").className = "fa fa-toggle-off";
+				svij = false;
+				$.post("http://esx_apijaca/desno", JSON.stringify({}));
+			}
+			function Zatvori()
+			{
+				$.post("http://esx_apijaca/zatvori", JSON.stringify({}));
+				var x = document.getElementById("tijelo");
+				x.style.display = "none";
+				Prikazan = false;
+				$("#maindivic").empty();
+				Jeste = false;
+				document.getElementById("slicica").className = "fa fa-toggle-off";
+				svij = false;
+			}
 		</script>
 	</body>
 </html>

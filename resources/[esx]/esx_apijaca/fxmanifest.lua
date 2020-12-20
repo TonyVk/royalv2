@@ -9,7 +9,10 @@ version '1.0.0'
 ui_page "index.html"
 
 files {
-	"index.html"
+	"index.html",
+	"assets/plugins/bootstrap-3.3.7-dist/css/bootstrap.css",
+	"assets/plugins/jquery/jquery-3.2.1.min.js",
+	"assets/plugins/bootstrap-3.3.7-dist/js/bootstrap.min.js"
 }
 
 server_scripts {

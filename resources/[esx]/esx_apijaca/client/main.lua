@@ -20,39 +20,13 @@ local CurrentActionMsg          = ''
 local CurrentActionData         = {}
 local Blip 						= nil
 local Vehicles 					= {}
-local OdradioTo					= false
 local Vozila 					= {}
+local IsInShopMenu 				= false
+local Mjenjac 					= nil
+local GarazaV 				  = nil
+local Vblip 				  = nil
 
 ESX                             = nil
-
-local Lokacije = {
-	{x = 897.39471435547, y = -73.840759277344, z = 78.223876953125, h = 57.113529205322}, --mjesto1
-	{x = 899.37408447266, y = -70.670104980469, z = 78.223770141602, h = 57.697650909424}, --mjesto2
-	{x = 901.20269775391, y = -67.738151550293, z = 78.223793029785, h = 58.33179473877}, --mjesto3
-	{x = 902.96380615234, y = -64.748306274414, z = 78.223808288574, h = 57.740776062012}, --mjesto4
-	{x = 904.80084228516, y = -61.831848144531, z = 78.223846435547, h = 57.39688873291}, --mjesto5
-	{x = 906.63806152344, y = -58.716709136963, z = 78.223976135254, h = 58.452045440674}, --mjesto6
-	{x = 908.40502929688, y = -55.989116668701, z = 78.223686218262, h = 58.20686340332}, --mjesto7
-	{x = 910.41711425781, y = -53.19612121582, z = 78.223808288574, h = 56.633651733398}, --mjesto8
-	{x = 912.07922363281, y = -50.140312194824, z = 78.223823547363, h = 58.322368621826}, --mjesto9
-	{x = 913.84106445313, y = -47.288665771484, z = 78.223770141602, h = 57.286602020264}, --mjesto10
-	{x = 915.79498291016, y = -44.492713928223, z = 78.223823547363, h = 58.228252410889}, --mjesto11
-	{x = 917.61340332031, y = -41.570022583008, z = 78.223747253418, h = 56.527641296387}, --mjesto12
-	{x = 919.67987060547, y = -38.454807281494, z = 78.223648071289, h = 58.487590789795}, --mjesto13
-	{x = 908.11291503906, y = -31.545877456665, z = 78.223701477051, h = 237.83882141113}, --mjesto14
-	{x = 906.27215576172, y = -34.905948638916, z = 78.223754882813, h = 238.55699157715}, --mjesto15
-	{x = 904.48736572266, y = -37.782585144043, z = 78.223693847656, h = 237.47985839844}, --mjesto16
-	{x = 902.45263671875, y = -40.606674194336, z = 78.223770141602, h = 237.82391357422}, --mjesto17
-	{x = 900.70947265625, y = -43.644153594971, z = 78.223777770996, h = 237.19450378418}, --mjesto18
-	{x = 898.93103027344, y = -46.556648254395, z = 78.223731994629, h = 237.77868652344}, --mjesto19
-	{x = 897.11517333984, y = -49.507202148438, z = 78.223762512207, h = 237.70567321777}, --mjesto20
-	{x = 895.29998779297, y = -52.395126342773, z = 78.223648071289, h = 239.08903503418}, --mjesto21
-	{x = 893.41979980469, y = -55.320140838623, z = 78.223861694336, h = 237.78500366211}, --mjesto22
-	{x = 891.66394042969, y = -58.307960510254, z = 78.223709106445, h = 238.35643005371}, --mjesto23
-	{x = 889.72900390625, y = -61.109397888184, z = 78.223976135254, h = 239.26565551758}, --mjesto24
-	{x = 887.90374755859, y = -64.03946685791, z = 78.224235534668, h = 237.68322753906}, --mjesto25
-	{x = 886.11840820313, y = -67.078979492188, z = 78.223770141602, h = 239.32939147949} --mjesto26
-}
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -72,14 +46,55 @@ Citizen.CreateThread(function()
 	ESX.TriggerServerCallback('pijaca:DohvatiVozila', function(vehicles)
 		Vozila = vehicles
 	end)
+	ESX.TriggerServerCallback('esx_vehicleshop:getVehicles', function(vozila)
+		Vehicles = vozila
+	end)
 end)
+
+function StartShopRestriction()
+	Citizen.CreateThread(function()
+		while IsInShopMenu do
+			Citizen.Wait(0)
+
+			DisableControlAction(0, 75,  true) -- Disable exit vehicle
+			DisableControlAction(27, 75, true) -- Disable exit vehicle
+		end
+	end)
+end
 
 AddEventHandler('playerSpawned', function(spawn)
 	ESX.TriggerServerCallback('pijaca:DohvatiVozila', function(vehicles)
 		Vozila = vehicles
 	end)
+	ESX.TriggerServerCallback('esx_vehicleshop:getVehicles', function(vozila)
+		Vehicles = vozila
+	end)
+	Wait(10000)
 	TriggerServerEvent("pijaca:ProvjeriProdane")
 end)
+
+function WaitForVehicleToLoad(modelHash)
+	modelHash = (type(modelHash) == 'number' and modelHash or GetHashKey(modelHash))
+
+	if not HasModelLoaded(modelHash) then
+		RequestModel(modelHash)
+
+		BeginTextCommandBusyspinnerOn('STRING')
+		AddTextComponentSubstringPlayerName(_U('shop_awaiting_model'))
+		EndTextCommandBusyspinnerOn(4)
+		SendNUIMessage({
+			zabrani = true
+		})
+		while not HasModelLoaded(modelHash) do
+			Citizen.Wait(0)
+			DisableAllControlActions(0)
+		end
+		BusyspinnerOff()
+		SendNUIMessage({
+			zabrani = true
+		})
+	end
+end
 
 RegisterNetEvent('esx_vehicleshop:sendVehicles')
 AddEventHandler('esx_vehicleshop:sendVehicles', function(vehicles)
@@ -91,113 +106,8 @@ AddEventHandler('pijaca:EoTiVozila', function(vehicles)
 	Vozila = vehicles
 end)
 
-RegisterNetEvent('baseevents:enteredVehicle')
-AddEventHandler('baseevents:enteredVehicle', function(currentVehicle, currentSeat, modelName, netId)
-	if OdradioTo then
-		for i=1, #Vozila, 1 do
-			if netId == Vozila[i].NetID then
-				local elements = {}
-				table.insert(elements, {
-					label = 'Da $'..Vozila[i].Cijena,
-					value = 'da'
-				})
-				
-				table.insert(elements, {
-					label = 'Ne',
-					value = 'ne'
-				})
-				local turbo = "Ne"
-				if IsToggleModOn(currentVehicle, 18) then
-					turbo = "Da"
-				end
-				local mjenjac2 = "Automatik"
-				ESX.TriggerServerCallback('mjenjac:ProvjeriVozilo',function(mj)
-					if mj == 2 then
-						mjenjac2 = "Rucni"
-					end
-					local armor
-					local kocnice
-					local mjenjac
-					local motor
-					local suspenzija
-					if GetVehicleMod(currentVehicle, 16) == -1 then
-						armor = "Default"
-					else
-						armor = "Level "..GetVehicleMod(currentVehicle, 16)
-					end
-					if GetVehicleMod(currentVehicle, 12) == -1 then
-						kocnice = "Default"
-					else
-						kocnice = "Level "..GetVehicleMod(currentVehicle, 12)
-					end
-					if GetVehicleMod(currentVehicle, 13) == -1 then
-						mjenjac = "Default"
-					else
-						mjenjac = "Level "..GetVehicleMod(currentVehicle, 13)
-					end
-					if GetVehicleMod(currentVehicle, 11) == -1 then
-						motor = "Default"
-					else
-						motor = "Level "..GetVehicleMod(currentVehicle, 11)
-					end
-					if GetVehicleMod(currentVehicle, 15) == -1 then
-						suspenzija = "Default"
-					else
-						suspenzija = "Level "..GetVehicleMod(currentVehicle, 15)
-					end
-					SendNUIMessage({
-						postavisve = true,
-						armor = armor,
-						kocnice = kocnice,
-						mjenjac = mjenjac,
-						vmjenjac = mjenjac2,
-						motor = motor,
-						suspenzija = suspenzija,
-						turbo = turbo
-					})
-					SendNUIMessage({
-						prikazi = true
-					})
-					ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'upit_kupnja_menu', {
-						title    = "Zelite li kupiti vozilo za $"..Vozila[i].Cijena.."?",
-						align    = 'top-left',
-						elements = elements
-					}, function(data, menu)
-						if data.current.value == "da" then
-							SendNUIMessage({
-								prikazi = true
-							})
-							TriggerServerEvent("pijaca:Tuljani", Vozila[i].Tablica, netId)
-						elseif data.current.value == "ne" then
-							TaskLeaveVehicle(PlayerPedId(), NetworkGetEntityFromNetworkId(Vozila[i].NetID), 1)
-							SendNUIMessage({
-								prikazi = true
-							})
-						end
-						menu.close()
-					end, function(data, menu)
-						menu.close()
-						TaskLeaveVehicle(PlayerPedId(), NetworkGetEntityFromNetworkId(Vozila[i].NetID), 1)
-						SendNUIMessage({
-							prikazi = true
-						})
-					end)
-				end, ESX.Math.Trim(GetVehicleNumberPlateText(currentVehicle)))
-			end
-		end
-	end
-	--[[
-		modEngine         = GetVehicleMod(vehicle, 11),
-		modBrakes         = GetVehicleMod(vehicle, 12),
-		modTransmission   = GetVehicleMod(vehicle, 13),
-		modSuspension     = GetVehicleMod(vehicle, 15),
-		modArmor          = GetVehicleMod(vehicle, 16),
-		modTurbo          = IsToggleModOn(vehicle, 18),
-	]]
-end)
-
 function KreirajBlip()
-	Blip = AddBlipForCoord(890.08746337891, -72.900863647461, 78.223815917969)
+	Blip = AddBlipForCoord(-19.916135787964, -1676.4862060547, 29.491720199585)
 	SetBlipSprite (Blip, 147)
 	SetBlipDisplay(Blip, 2)
 	SetBlipScale  (Blip, 1.2)
@@ -208,6 +118,479 @@ function KreirajBlip()
 	AddTextComponentString("Auto pijaca")
 	EndTextCommandSetBlipName(Blip)
 end
+
+local Pozicija = 1
+local currentDisplayVehicle = nil
+
+function OpenKupiMenu()
+	IsInShopMenu = true
+
+	StartShopRestriction()
+	ESX.UI.Menu.CloseAll()
+	local playerPed = PlayerPedId()
+	FreezeEntityPosition(playerPed, true)
+	SetEntityVisible(playerPed, false)
+	SetEntityCoords(playerPed, -50.966648101807, -1685.2100830078, 28.785751342773)
+	local vehicleData = Vozila[Pozicija].Props
+	WaitForVehicleToLoad(vehicleData.model)
+	if currentDisplayVehicle ~= nil then
+		ESX.Game.DeleteVehicle(currentDisplayVehicle)
+		currentDisplayVehicle = nil
+	end
+	local Ime = nil
+	local posa = vector3(-50.966648101807, -1685.2100830078, 28.785751342773)
+	ESX.Game.SpawnLocalVehicle(vehicleData.model, posa, 313.19, function(vehicle)
+		currentDisplayVehicle = vehicle
+		TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
+		FreezeEntityPosition(vehicle, true)
+		SetModelAsNoLongerNeeded(GetHashKey(vehicleData.model))
+		SetVehicleDirtLevel(vehicle, 0)
+		for k,v in ipairs(Vehicles) do
+			if GetHashKey(v.model) == vehicleData.model then
+				Ime = v.name
+				break
+			end
+		end
+		ESX.Game.SetVehicleProperties(vehicle, vehicleData)
+	end)
+	while Ime == nil do
+		Wait(1)
+	end
+	while currentDisplayVehicle == nil do
+		Wait(1)
+	end
+	SendNUIMessage({
+		postaviime = true,
+		imevozila = Ime,
+		cijenavozila = Vozila[Pozicija].Cijena.."$"
+	})
+	SendNUIMessage({
+		prikazi = true
+	})
+	local turbo = "Ne"
+	if IsToggleModOn(currentDisplayVehicle, 18) then
+		turbo = "Da"
+	end
+	local mjenjac2 = "Automatik"
+	ESX.TriggerServerCallback('mjenjac:ProvjeriVozilo',function(mj)
+		Mjenjac = mj
+		if mj == 2 then
+			mjenjac2 = "Rucni"
+		end
+		local armor
+		local kocnice
+		local mjenjac
+		local motor
+		local suspenzija
+		if GetVehicleMod(currentDisplayVehicle, 16) == -1 then
+			armor = "Default"
+		else
+			armor = "Level "..GetVehicleMod(currentDisplayVehicle, 16)
+		end
+		if GetVehicleMod(currentDisplayVehicle, 12) == -1 then
+			kocnice = "Default"
+		else
+			kocnice = "Level "..GetVehicleMod(currentDisplayVehicle, 12)
+		end
+		if GetVehicleMod(currentDisplayVehicle, 13) == -1 then
+			mjenjac = "Default"
+		else
+			mjenjac = "Level "..GetVehicleMod(currentDisplayVehicle, 13)
+		end
+		if GetVehicleMod(currentDisplayVehicle, 11) == -1 then
+			motor = "Default"
+		else
+			motor = "Level "..GetVehicleMod(currentDisplayVehicle, 11)
+		end
+		if GetVehicleMod(currentDisplayVehicle, 15) == -1 then
+			suspenzija = "Default"
+		else
+			suspenzija = "Level "..GetVehicleMod(currentDisplayVehicle, 15)
+		end
+		SendNUIMessage({
+			postavisve = true,
+			armor = armor,
+			kocnice = kocnice,
+			mjenjac = mjenjac,
+			vmjenjac = mjenjac2,
+			motor = motor,
+			suspenzija = suspenzija,
+			turbo = turbo
+		})
+	end, ESX.Math.Trim(GetVehicleNumberPlateText(currentDisplayVehicle)))
+	SetNuiFocus(true, true)
+end
+
+function DeleteDisplayVehicleInsideShop()
+	if currentDisplayVehicle and DoesEntityExist(currentDisplayVehicle) then
+		ESX.Game.DeleteVehicle(currentDisplayVehicle)
+		currentDisplayVehicle = nil
+	end
+end
+
+RegisterNetEvent('esx_property:ProsljediVozilo')
+AddEventHandler('esx_property:ProsljediVozilo', function(voz, bl)
+	if bl == nil then
+		if DoesEntityExist(Vblip) then
+			RemoveBlip(Vblip)
+		end
+	end
+	GarazaV = voz
+	Vblip = bl
+end)
+
+RegisterNetEvent('pijaca:VratiVozilo')
+AddEventHandler('pijaca:VratiVozilo', function(nid, vehicle, plate, mj, co)
+	local attempt = 0
+	while not NetworkDoesEntityExistWithNetworkId(nid) and attempt < 100 do
+		Wait(1)
+		attempt = attempt+1
+	end
+	if attempt < 100 then
+		local callback_vehicle = NetworkGetEntityFromNetworkId(nid)
+		while not DoesEntityExist(callback_vehicle) do
+			Wait(1)
+			callback_vehicle = NetworkGetEntityFromNetworkId(nid)
+		end
+		local playerPed = PlayerPedId()
+		--SetEntityHeading(callback_vehicle, he)
+		TaskWarpPedIntoVehicle(playerPed, callback_vehicle, -1)
+		ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
+		Wait(100)
+		SetVehicleNumberPlateText(callback_vehicle, plate)
+		SetVehicleDirtLevel(callback_vehicle, 0)
+		FreezeEntityPosition(playerPed, false)
+		SetEntityVisible(playerPed, true)
+		TriggerEvent("EoTiIzSalona", mj)
+		
+		GarazaV = nid
+		local propse = ESX.Game.GetVehicleProperties(callback_vehicle)
+		local pla = propse.plate:gsub("^%s*(.-)%s*$", "%1")
+		TriggerServerEvent("garaza:SpremiModel", pla, propse.model)
+		
+		Vblip = AddBlipForEntity(callback_vehicle)
+		SetBlipSprite (Vblip, 225)
+		SetBlipDisplay(Vblip, 4)
+		SetBlipScale  (Vblip, 1.0)
+		SetBlipColour (Vblip, 30)
+		SetBlipAsShortRange(Vblip, true)
+		BeginTextCommandSetBlipName("STRING")
+		AddTextComponentString("Vase vozilo")
+		EndTextCommandSetBlipName(Vblip)
+		TriggerEvent("esx_property:ProsljediVozilo", GarazaV, Vblip)
+	else
+		print("Greska prilikom kreiranja vozila. NetID: "..nid)
+		local ped = GetPlayerPed(-1)
+		SetEntityCoords(ped, co)
+		local coords = GetEntityCoords(ped)
+		local veh = GetClosestVehicle(coords.x, coords.y, coords.z, 3.000, 0, 70)
+		local callback_vehicle = veh
+		local playerPed = ped
+		--SetEntityHeading(callback_vehicle, he)
+		TaskWarpPedIntoVehicle(playerPed, callback_vehicle, -1)
+		ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
+		Wait(100)
+		SetVehicleNumberPlateText(callback_vehicle, plate)
+		SetVehicleDirtLevel(callback_vehicle, 0)
+		FreezeEntityPosition(playerPed, false)
+		SetEntityVisible(playerPed, true)
+		TriggerEvent("EoTiIzSalona", mj)
+		
+		GarazaV = nid
+		local propse = ESX.Game.GetVehicleProperties(callback_vehicle)
+		local pla = propse.plate:gsub("^%s*(.-)%s*$", "%1")
+		TriggerServerEvent("garaza:SpremiModel", pla, propse.model)
+		
+		Vblip = AddBlipForEntity(callback_vehicle)
+		SetBlipSprite (Vblip, 225)
+		SetBlipDisplay(Vblip, 4)
+		SetBlipScale  (Vblip, 1.0)
+		SetBlipColour (Vblip, 30)
+		SetBlipAsShortRange(Vblip, true)
+		BeginTextCommandSetBlipName("STRING")
+		AddTextComponentString("Vase vozilo")
+		EndTextCommandSetBlipName(Vblip)
+		TriggerEvent("esx_property:ProsljediVozilo", GarazaV, Vblip)
+	end
+end)
+
+RegisterNUICallback(
+    "kupi",
+    function()
+		SetNuiFocus(false)
+		SendNUIMessage({
+			prikazi = true
+		})
+		IsInShopMenu = false
+		if GarazaV ~= nil then
+			TriggerServerEvent("garaza:ObrisiVozilo", GarazaV)
+			GarazaV = nil
+			if Vblip ~= nil then
+				RemoveBlip(Vblip)
+				Vblip = nil
+			end
+		end
+		DeleteDisplayVehicleInsideShop()
+		local waitara = math.random(200, 800)
+		Wait(waitara)
+		TriggerServerEvent("pijaca:Tuljani", Vozila[Pozicija].Tablica, Vozila[Pozicija].Props, Mjenjac)
+		Mjenjac = nil
+		Pozicija = 1
+	end
+)
+
+RegisterNUICallback(
+    "svijetla",
+    function(data, cb)
+		if data.svijetla == true then
+			SetVehicleLights(currentDisplayVehicle, 2)
+		else
+			SetVehicleLights(currentDisplayVehicle, 0)
+		end
+    end
+)
+
+RegisterNUICallback(
+    "vrata",
+    function(data, cb)
+		if data.otvori == true then
+			SetVehicleDoorOpen(currentDisplayVehicle, 0, false, false) --vrata
+			SetVehicleDoorOpen(currentDisplayVehicle, 1, false, false) --vrata
+			SetVehicleDoorOpen(currentDisplayVehicle, 2, false, false) --vrata
+			SetVehicleDoorOpen(currentDisplayVehicle, 3, false, false) --vrata
+			SetVehicleDoorOpen(currentDisplayVehicle, 4, false, false) --hauba
+			SetVehicleDoorOpen(currentDisplayVehicle, 5, false, false) --gepek
+		else
+			SetVehicleDoorsShut(currentDisplayVehicle, false)
+		end
+    end
+)
+
+RegisterNUICallback(
+    "pogled",
+    function(data, cb)
+		if data.pogled == true then
+			SetNuiFocus(false)
+			SendNUIMessage({
+				prikazi = true
+			})
+			CurrentAction     = 'shop_pregled'
+			CurrentActionMsg  = "Pritisnite ~INPUT_FRONTEND_RRIGHT~ da izadjete iz pregleda vozila!"
+			CurrentActionData = {}
+		end
+    end
+)
+
+RegisterNUICallback(
+    "zatvori",
+    function()
+		SetNuiFocus(false)
+		local playerPed = PlayerPedId()
+		Pozicija = 1
+		
+		DeleteDisplayVehicleInsideShop()
+
+		CurrentAction     = 'menu_kupi'
+		CurrentActionMsg  = "Pritisnite E da vidite listu vozila!"
+		CurrentActionData = {}
+
+		FreezeEntityPosition(playerPed, false)
+		SetEntityVisible(playerPed, true)
+		SetEntityCoords(playerPed, -41.069328308105, -1675.1540527344, 28.443593978882)
+
+		IsInShopMenu = false
+    end
+)
+
+RegisterNUICallback(
+    "lijevo",
+    function()
+		if Pozicija-1 ~= 0 then
+			Pozicija = Pozicija-1
+			local vehicleData = Vozila[Pozicija].Props
+			local playerPed   = PlayerPedId()
+			DeleteDisplayVehicleInsideShop()
+			WaitForVehicleToLoad(vehicleData.model)
+			if currentDisplayVehicle ~= nil then
+				ESX.Game.DeleteVehicle(currentDisplayVehicle)
+				currentDisplayVehicle = nil
+			end
+			local Ime = nil
+			local posa = vector3(-50.966648101807, -1685.2100830078, 28.785751342773)
+			ESX.Game.SpawnLocalVehicle(vehicleData.model, posa, 313.19, function(vehicle)
+				currentDisplayVehicle = vehicle
+				TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
+				FreezeEntityPosition(vehicle, true)
+				SetModelAsNoLongerNeeded(GetHashKey(vehicleData.model))
+				SetVehicleDirtLevel(vehicle, 0)
+				for k,v in ipairs(Vehicles) do
+					if GetHashKey(v.model) == vehicleData.model then
+						Ime = v.name
+						break
+					end
+				end
+				ESX.Game.SetVehicleProperties(vehicle, vehicleData)
+			end)
+			while Ime == nil do
+				Wait(1)
+			end
+			while currentDisplayVehicle == nil do
+				Wait(1)
+			end
+			SendNUIMessage({
+				postaviime = true,
+				imevozila = Ime,
+				cijenavozila = Vozila[Pozicija].Cijena.."$"
+			})
+			local turbo = "Ne"
+			if IsToggleModOn(currentDisplayVehicle, 18) then
+				turbo = "Da"
+			end
+			local mjenjac2 = "Automatik"
+			ESX.TriggerServerCallback('mjenjac:ProvjeriVozilo',function(mj)
+				Mjenjac = mj
+				if mj == 2 then
+					mjenjac2 = "Rucni"
+				end
+				local armor
+				local kocnice
+				local mjenjac
+				local motor
+				local suspenzija
+				if GetVehicleMod(currentDisplayVehicle, 16) == -1 then
+					armor = "Default"
+				else
+					armor = "Level "..GetVehicleMod(currentDisplayVehicle, 16)
+				end
+				if GetVehicleMod(currentDisplayVehicle, 12) == -1 then
+					kocnice = "Default"
+				else
+					kocnice = "Level "..GetVehicleMod(currentDisplayVehicle, 12)
+				end
+				if GetVehicleMod(currentDisplayVehicle, 13) == -1 then
+					mjenjac = "Default"
+				else
+					mjenjac = "Level "..GetVehicleMod(currentDisplayVehicle, 13)
+				end
+				if GetVehicleMod(currentDisplayVehicle, 11) == -1 then
+					motor = "Default"
+				else
+					motor = "Level "..GetVehicleMod(currentDisplayVehicle, 11)
+				end
+				if GetVehicleMod(currentDisplayVehicle, 15) == -1 then
+					suspenzija = "Default"
+				else
+					suspenzija = "Level "..GetVehicleMod(currentDisplayVehicle, 15)
+				end
+				SendNUIMessage({
+					postavisve = true,
+					armor = armor,
+					kocnice = kocnice,
+					mjenjac = mjenjac,
+					vmjenjac = mjenjac2,
+					motor = motor,
+					suspenzija = suspenzija,
+					turbo = turbo
+				})
+			end, ESX.Math.Trim(GetVehicleNumberPlateText(currentDisplayVehicle)))
+		end
+    end
+)
+
+RegisterNUICallback(
+    "desno",
+    function()
+		if Pozicija+1 <= #Vozila then
+			Pozicija = Pozicija+1
+			local vehicleData = Vozila[Pozicija].Props
+			local playerPed   = PlayerPedId()
+			DeleteDisplayVehicleInsideShop()
+			WaitForVehicleToLoad(vehicleData.model)
+			if currentDisplayVehicle ~= nil then
+				ESX.Game.DeleteVehicle(currentDisplayVehicle)
+				currentDisplayVehicle = nil
+			end
+			local Ime = nil
+			local posa = vector3(-50.966648101807, -1685.2100830078, 28.785751342773)
+			ESX.Game.SpawnLocalVehicle(vehicleData.model, posa, 313.19, function(vehicle)
+				currentDisplayVehicle = vehicle
+				TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
+				FreezeEntityPosition(vehicle, true)
+				SetModelAsNoLongerNeeded(GetHashKey(vehicleData.model))
+				SetVehicleDirtLevel(vehicle, 0)
+				for k,v in ipairs(Vehicles) do
+					if GetHashKey(v.model) == vehicleData.model then
+						Ime = v.name
+						break
+					end
+				end
+				ESX.Game.SetVehicleProperties(vehicle, vehicleData)
+			end)
+			while Ime == nil do
+				Wait(1)
+			end
+			while currentDisplayVehicle == nil do
+				Wait(1)
+			end
+			SendNUIMessage({
+				postaviime = true,
+				imevozila = Ime,
+				cijenavozila = Vozila[Pozicija].Cijena.."$"
+			})
+			local turbo = "Ne"
+			if IsToggleModOn(currentDisplayVehicle, 18) then
+				turbo = "Da"
+			end
+			local mjenjac2 = "Automatik"
+			ESX.TriggerServerCallback('mjenjac:ProvjeriVozilo',function(mj)
+				Mjenjac = mj
+				if mj == 2 then
+					mjenjac2 = "Rucni"
+				end
+				local armor
+				local kocnice
+				local mjenjac
+				local motor
+				local suspenzija
+				if GetVehicleMod(currentDisplayVehicle, 16) == -1 then
+					armor = "Default"
+				else
+					armor = "Level "..GetVehicleMod(currentDisplayVehicle, 16)
+				end
+				if GetVehicleMod(currentDisplayVehicle, 12) == -1 then
+					kocnice = "Default"
+				else
+					kocnice = "Level "..GetVehicleMod(currentDisplayVehicle, 12)
+				end
+				if GetVehicleMod(currentDisplayVehicle, 13) == -1 then
+					mjenjac = "Default"
+				else
+					mjenjac = "Level "..GetVehicleMod(currentDisplayVehicle, 13)
+				end
+				if GetVehicleMod(currentDisplayVehicle, 11) == -1 then
+					motor = "Default"
+				else
+					motor = "Level "..GetVehicleMod(currentDisplayVehicle, 11)
+				end
+				if GetVehicleMod(currentDisplayVehicle, 15) == -1 then
+					suspenzija = "Default"
+				else
+					suspenzija = "Level "..GetVehicleMod(currentDisplayVehicle, 15)
+				end
+				SendNUIMessage({
+					postavisve = true,
+					armor = armor,
+					kocnice = kocnice,
+					mjenjac = mjenjac,
+					vmjenjac = mjenjac2,
+					motor = motor,
+					suspenzija = suspenzija,
+					turbo = turbo
+				})
+			end, ESX.Math.Trim(GetVehicleNumberPlateText(currentDisplayVehicle)))
+		end
+    end
+)
 
 function OpenPijacaMenu()
 	if IsPedInAnyVehicle(PlayerPedId(), false) then
@@ -236,24 +619,10 @@ function OpenPijacaMenu()
 							else
 								menu.close()
 								local vehProps = ESX.Game.GetVehicleProperties(vehicle)
-								local naso = 0
-								for i=1, #Lokacije, 1 do
-									if ESX.Game.IsSpawnPointClear({
-										x = Lokacije[i].x,
-										y = Lokacije[i].y,
-										z = Lokacije[i].z
-									}, 3.0) then
-										ESX.TriggerServerCallback('mjenjac:ProvjeriVozilo',function(mj)
-											ESX.Game.DeleteVehicle(vehicle)
-											TriggerServerEvent('pijaca:StaviNaProdaju', vehProps, amount, mj, i)
-										end, ESX.Math.Trim(GetVehicleNumberPlateText(vehicle)))
-										naso = 1
-										break
-									end
-								end
-								if naso == 0 then
-									ESX.ShowNotification("Nema mjesta na pijaci!")
-								end
+								ESX.TriggerServerCallback('mjenjac:ProvjeriVozilo',function(mj)
+									ESX.Game.DeleteVehicle(vehicle)
+									TriggerServerEvent('pijaca:StaviNaProdaju', vehProps, amount, mj, i)
+								end, ESX.Math.Trim(GetVehicleNumberPlateText(vehicle)))
 							end
 						end, function(data, menu)
 						menu.close()
@@ -270,37 +639,17 @@ function OpenPijacaMenu()
 	end
 end
 
-RegisterNetEvent('pijaca:VratiGa')
-AddEventHandler('pijaca:VratiGa', function(nid, vehicle)
-	local attempt = 0
-	while not NetworkDoesEntityExistWithNetworkId(nid) and attempt < 100 do
-		Wait(1)
-		attempt = attempt+1
-	end
-	local callback_vehicle = NetworkGetEntityFromNetworkId(nid)
-	while not DoesEntityExist(callback_vehicle) do
-		Wait(1)
-		callback_vehicle = NetworkGetEntityFromNetworkId(nid)
-	end
-	ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
-	FreezeEntityPosition(callback_vehicle, true)
-end)
-
-RegisterNetEvent('pijaca:OdmrzniGa')
-AddEventHandler('pijaca:OdmrzniGa', function(nid)
-	FreezeEntityPosition(NetworkGetEntityFromNetworkId(nid), false)
-end)
-
-RegisterNetEvent('pijaca:OdradiTuning')
-AddEventHandler('pijaca:OdradiTuning', function()
-	OdradiTuning()
-end)
-
 AddEventHandler('esx_apijaca:hasEnteredMarker', function(station, part, partNum)
 
   if part == 'StaviProdat' then
     CurrentAction     = 'menu_staviprodat'
     CurrentActionMsg  = "Pritisnite E da stavite vozilo na prodaju!"
+    CurrentActionData = {}
+  end
+  
+  if part == 'Kupi' then
+    CurrentAction     = 'menu_kupi'
+    CurrentActionMsg  = "Pritisnite E da vidite listu vozila!"
     CurrentActionData = {}
   end
   
@@ -324,14 +673,34 @@ Citizen.CreateThread(function()
       SetTextComponentFormat('STRING')
       AddTextComponentString(CurrentActionMsg)
       DisplayHelpTextFromStringLabel(0, 0, 1, -1)
+	  
+		if IsControlJustReleased(0, 202) then
+			if CurrentAction == 'shop_pregled' then
+				SendNUIMessage({
+					prikazi = true
+				})
+				SetNuiFocus(true, true)
+				CurrentAction = nil
+			end
+		end
 
       if IsControlPressed(0,  Keys['E']) then
 
         if CurrentAction == 'menu_staviprodat' then
           OpenPijacaMenu()
         end
+		
+		if CurrentAction == 'menu_kupi' then
+			if #Vozila ~= 0 then
+				OpenKupiMenu()
+			else
+				ESX.ShowNotification("Nema vozila na pijaci!")
+			end
+        end
 
-        CurrentAction = nil
+		if CurrentAction ~= "shop_pregled" then
+			CurrentAction = nil
+		end
 
       end
 
@@ -344,12 +713,21 @@ Citizen.CreateThread(function()
     local currentPart    = nil
     local currentPartNum = nil
 	  
-	if GetDistanceBetweenCoords(coords, 890.08746337891, -72.900863647461, 77.223815917969,  true) < 1.5 then
+	if GetDistanceBetweenCoords(coords, -19.916135787964, -1676.4862060547, 29.491720199585,  true) < 1.5 then
 		waitara = 0
 		naso = 1
 		isInMarker     = true
 		currentStation = 1
 		currentPart    = 'StaviProdat'
+		CurrentPartNum = 1
+	end
+	
+	if GetDistanceBetweenCoords(coords, -41.069328308105, -1675.1540527344, 29.443593978882,  true) < 1.5 then
+		waitara = 0
+		naso = 1
+		isInMarker     = true
+		currentStation = 1
+		currentPart    = 'Kupi'
 		CurrentPartNum = 1
 	end
 
@@ -382,16 +760,16 @@ Citizen.CreateThread(function()
         TriggerEvent('esx_apijaca:hasExitedMarker', LastStation, LastPart, LastPartNum)
     end
 
-    if GetDistanceBetweenCoords(coords, 890.08746337891, -72.900863647461, 77.223815917969,  true) < Config.DrawDistance then
+    if GetDistanceBetweenCoords(coords, -19.916135787964, -1676.4862060547, 29.491720199585,  true) < Config.DrawDistance then
 		waitara = 0
 		naso = 1
-        DrawMarker(Config.MarkerType, 890.08746337891, -72.900863647461, 77.723815917969, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
-		if OdradioTo == false then
-			TriggerServerEvent("pijaca:SpawnVozila")
-			OdradioTo = true
-		end
-	else
-		OdradioTo = false
+        DrawMarker(Config.MarkerType, -19.916135787964, -1676.4862060547, 28.491720199585, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
+	end
+	
+	if GetDistanceBetweenCoords(coords, -41.069328308105, -1675.1540527344, 29.443593978882,  true) < Config.DrawDistance then
+		waitara = 0
+		naso = 1
+        DrawMarker(Config.MarkerType, -41.069328308105, -1675.1540527344, 28.443593978882, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
 	end
 	
 	if naso == 0 then
@@ -399,12 +777,3 @@ Citizen.CreateThread(function()
 	end
   end
 end)
-
-function OdradiTuning()
-	for i=1, #Vozila, 1 do
-		if NetworkDoesEntityExistWithNetworkId(Vozila[i].NetID) then
-			ESX.Game.SetVehicleProperties(NetworkGetEntityFromNetworkId(Vozila[i].NetID), Vozila[i].Props)
-			FreezeEntityPosition(NetworkGetEntityFromNetworkId(Vozila[i].NetID), true)
-		end
-	end
-end
