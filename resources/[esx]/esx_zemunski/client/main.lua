@@ -2078,7 +2078,7 @@ Citizen.CreateThread(function()
 					end
 					ESX.ShowNotification("Vozilo spremljeno u garazu!")
 				else
-					ESX.ShowNotification("Ovo nije osobno vozilo!")
+					ESX.ShowNotification("Ovo nije osobno vozilo ili se desio bug dupliciranog vozila!")
 				end
 			end, ESX.Math.Trim(GetVehicleNumberPlateText(veh)))
         end

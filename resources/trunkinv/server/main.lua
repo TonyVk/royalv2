@@ -45,7 +45,7 @@ AddEventHandler('gepeke:getInventory', function(plate)
 	for a = 1, #Tablice, 1 do
         if Tablice[a].plate == plate then
 			if Tablice[a].id ~= _source then
-				if GetGameTimer()-Tablice[a].vrijeme < 1000 then
+				if GetGameTimer()-Tablice[a].vrijeme < 2000 then
 					moze = false
 				end
 			end
@@ -183,16 +183,30 @@ ESX.RegisterServerCallback('esx_truck:checkvehicle', function(source, cb, vehicl
     local isFound = false
     local _source = source
     local plate = vehicleplate
-    if plate ~= " " or plate ~= nil or plate ~= "" then
-        for _, v in pairs(VehicleList) do
-            if (plate == v.vehicleplate) then
-                isFound = true
-                break
-            end
-        end
-    else
-        isFound = true
-    end
+	local moze = true
+	for a = 1, #Tablice, 1 do
+        if Tablice[a].plate == plate then
+			if Tablice[a].id ~= _source then
+				if GetGameTimer()-Tablice[a].vrijeme < 2000 then
+					moze = false
+				end
+			end
+		end
+	end
+	if moze then
+		if plate ~= " " or plate ~= nil or plate ~= "" then
+			for _, v in pairs(VehicleList) do
+				if (plate == v.vehicleplate) then
+					isFound = true
+					break
+				end
+			end
+		else
+			isFound = true
+		end
+	else
+		isFound = true
+	end
     cb(isFound)
 end)
 

@@ -279,6 +279,8 @@ function openmenuvehicle(vehid)
 		local coords    = GetEntityCoords(playerPed)
 		globalplate  = GetVehicleNumberPlateText(vehid)
 		if globalplate ~= nil or globalplate ~= "" or globalplate ~= " " then
+			local waitara = math.random(200, 800)
+			Wait(waitara)
 			ESX.TriggerServerCallback('esx_truck:checkvehicle',function(valid)
 				if (not valid) then
 					-- CloseToVehicle = true

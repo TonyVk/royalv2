@@ -308,7 +308,7 @@ end
 ESX.RegisterServerCallback('esx_zemunski:OsobnoVozilo', function(source, cb, plate)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	MySQL.Async.fetchAll('SELECT 1 FROM owned_vehicles WHERE plate = @plate', {
+	MySQL.Async.fetchAll('SELECT 1 FROM owned_vehicles WHERE plate = @plate AND state = 0', {
 		['@plate'] = plate
 	}, function(result)
 		cb(result[1] ~= nil)

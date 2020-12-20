@@ -77,7 +77,8 @@ RegisterCommand("prihvativozilo", function(source, args, rawCommandString)
 			local props = ESX.Game.GetVehicleProperties(vehicle)
 			local pla = props.plate:gsub("^%s*(.-)%s*$", "%1")
 			TriggerServerEvent("garaza:SpremiModel", pla, props.model)
-			TriggerEvent("esx_property:ProsljediVozilo", vehicle, Vblip)
+			local nid = NetworkGetNetworkIdFromEntity(vehicle)
+			TriggerEvent("esx_property:ProsljediVozilo", nid, Vblip)
 		end
 	else
 		ESX.ShowNotification("Nemate ponudu za vozilo!")
