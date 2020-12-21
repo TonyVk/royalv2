@@ -107,7 +107,7 @@ AddEventHandler('pijaca:EoTiVozila', function(vehicles)
 end)
 
 function KreirajBlip()
-	Blip = AddBlipForCoord(-19.916135787964, -1676.4862060547, 29.491720199585)
+	Blip = AddBlipForCoord(Config.Prodaja)
 	SetBlipSprite (Blip, 147)
 	SetBlipDisplay(Blip, 2)
 	SetBlipScale  (Blip, 1.2)
@@ -713,7 +713,7 @@ Citizen.CreateThread(function()
     local currentPart    = nil
     local currentPartNum = nil
 	  
-	if GetDistanceBetweenCoords(coords, -19.916135787964, -1676.4862060547, 29.491720199585,  true) < 1.5 then
+	if #(coords-Config.Prodaja) < 1.5 then
 		waitara = 0
 		naso = 1
 		isInMarker     = true
@@ -722,7 +722,7 @@ Citizen.CreateThread(function()
 		CurrentPartNum = 1
 	end
 	
-	if GetDistanceBetweenCoords(coords, -41.069328308105, -1675.1540527344, 29.443593978882,  true) < 1.5 then
+	if #(coords-Config.Kupovina) < 1.5 then
 		waitara = 0
 		naso = 1
 		isInMarker     = true
@@ -760,20 +760,20 @@ Citizen.CreateThread(function()
         TriggerEvent('esx_apijaca:hasExitedMarker', LastStation, LastPart, LastPartNum)
     end
 
-    if GetDistanceBetweenCoords(coords, -19.916135787964, -1676.4862060547, 29.491720199585,  true) < Config.DrawDistance then
+    if #(coords-Config.Prodaja) < Config.DrawDistance then
 		waitara = 0
 		naso = 1
-        DrawMarker(Config.MarkerType, -19.916135787964, -1676.4862060547, 28.491720199585, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
+        DrawMarker(Config.MarkerType, Config.Prodaja, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
 	end
 	
-	if GetDistanceBetweenCoords(coords, -41.069328308105, -1675.1540527344, 29.443593978882,  true) < Config.DrawDistance then
+	if #(coords-Config.Kupovina) < Config.DrawDistance then
 		waitara = 0
 		naso = 1
-        DrawMarker(Config.MarkerType, -41.069328308105, -1675.1540527344, 28.443593978882, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
+        DrawMarker(Config.MarkerType, Config.Kupovina, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
 	end
 	
 	if naso == 0 then
-		waitara = 500
+		waitara = 2000
 	end
   end
 end)

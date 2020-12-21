@@ -180,10 +180,10 @@ Citizen.CreateThread(function()
 		local coords = GetEntityCoords(PlayerPedId())
 
 		for k,v in pairs(Config.Zones) do
-			if(v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+			if(v.Type ~= -1 and #(coords-v.Pos) < Config.DrawDistance) then
 				waitara = 0
 				nasosta = 1
-				DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
+				DrawMarker(v.Type, v.Pos, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 			end
 		end
 		
@@ -191,7 +191,7 @@ Citizen.CreateThread(function()
 		local currentZone = nil
 
 		for k,v in pairs(Config.Zones) do
-			if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
+			if #(coords-v.Pos) < v.Size.x then
 				isInMarker  = true
 				currentZone = k
 				TriggerEvent("dpc:EquipLast")

@@ -122,7 +122,8 @@ Citizen.CreateThread( function()
 	Citizen.Wait(10000)
 	while true do
 	Citizen.Wait(1000)
-		if GetDistanceBetweenCoords(Config.PickupBlip.x,Config.PickupBlip.y,Config.PickupBlip.z, GetEntityCoords(GetPlayerPed(-1))) <= 200 then
+		if #(GetEntityCoords(PlayerPedId())-Config.PickupBlip) <= 200 then
+		--if GetDistanceBetweenCoords(Config.PickupBlip.x,Config.PickupBlip.y,Config.PickupBlip.z, GetEntityCoords(GetPlayerPed(-1))) <= 200 then
 			if spawned == false then
 				if ESX.PlayerData.job ~= nil then
 						TriggerEvent('LSD:start')
@@ -171,22 +172,24 @@ AddEventHandler('LSD:hasExitedMarker', function(zone)
 end)
 
 local process = true
+local prodaja = vector3(-1452.6787109375, -842.34112548828, 1.1501929759979)
 Citizen.CreateThread(function()
 	local waitara = 500
     while true do
 			Citizen.Wait(waitara)
 			local naso2 = 0
 			local kordic = GetEntityCoords(PlayerPedId())
-			if (GetDistanceBetweenCoords(-1452.6787109375, -842.34112548828, 2.1501929759979,  kordic.x,  kordic.y,  kordic.z,  true) <= 50.0) then
+			if #(kordic-prodaja) <= 50.0 then
+			--if (GetDistanceBetweenCoords(-1452.6787109375, -842.34112548828, 2.1501929759979,  kordic.x,  kordic.y,  kordic.z,  true) <= 50.0) then
 				waitara = 0
 				naso2 = 1
-				DrawMarker(27, -1452.6787109375, -842.34112548828, 1.1501929759979, 0, 0, 0, 0, 0, 0, 2.25, 2.25, 1.0001, 0, 128, 0, 200, 0, 0, 0, 0)
+				DrawMarker(27, prodaja, 0, 0, 0, 0, 0, 0, 2.25, 2.25, 1.0001, 0, 128, 0, 200, 0, 0, 0, 0)
 			end
 			
 			local isInMarker  = false
 			local currentZone = nil
 
-			if(GetDistanceBetweenCoords(kordic, -1452.6787109375, -842.34112548828, 2.1501929759979, true) < 2.25) then
+			if #(kordic-prodaja) <= 50.0 then
 				isInMarker  = true
 				currentZone = "prodaja"
 			end
@@ -203,12 +206,14 @@ Citizen.CreateThread(function()
 			if ESX ~= nil then
 				if ESX.PlayerData.job ~= nil then
 						for k in pairs(locations) do
-							if GetDistanceBetweenCoords(locations[k].x, locations[k].y, locations[k].z, GetEntityCoords(GetPlayerPed(-1))) < 150 then
+							--if GetDistanceBetweenCoords(locations[k].x, locations[k].y, locations[k].z, GetEntityCoords(GetPlayerPed(-1))) < 150 then
+							if #(kordic-locations[k]) < 150 then
 								waitara = 0
 								naso2 = 1
-								DrawMarker(3, locations[k].x, locations[k].y, locations[k].z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0, 200, 0, 110, 0, 1, 0, 0)	
+								DrawMarker(3, locations[k], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0, 200, 0, 110, 0, 1, 0, 0)	
 								
-								if GetDistanceBetweenCoords(locations[k].x, locations[k].y, locations[k].z, GetEntityCoords(GetPlayerPed(-1)), false) < 1.0 then
+								--if GetDistanceBetweenCoords(locations[k].x, locations[k].y, locations[k].z, GetEntityCoords(GetPlayerPed(-1)), false) < 1.0 then
+								if #(kordic-locations[k]) < 1.0 then
 									TriggerEvent('LSD:new', k)
 									TaskStartScenarioInPlace(PlayerPedId(), 'world_human_gardener_plant', 0, false)
 									FreezeEntityPosition(PlayerPedId(), true)
@@ -230,12 +235,15 @@ Citizen.CreateThread(function()
 							end
 						end
 						
-						if GetDistanceBetweenCoords(Config.Processing.x, Config.Processing.y, Config.Processing.z, GetEntityCoords(GetPlayerPed(-1))) < 150 then
+						if #(kordic-Config.Processing) < 150 then
+						--if GetDistanceBetweenCoords(Config.Processing.x, Config.Processing.y, Config.Processing.z, GetEntityCoords(GetPlayerPed(-1))) < 150 then
 								waitara = 0
 								naso2 = 1
-								DrawMarker(1, Config.Processing.x, Config.Processing.y, Config.Processing.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.3, 1.3, 1.0, 0, 200, 0, 110, 0, 1, 0, 0)	
-								if GetDistanceBetweenCoords(Config.Processing.x, Config.Processing.y, Config.Processing.z, GetEntityCoords(GetPlayerPed(-1)), true) < 2 then			
-									Draw3DText( Config.Processing.x, Config.Processing.y, Config.Processing.z-1.0 , "~w~Proizvodnja LSDa~y~\nPritisnite [~b~E~y~] da krenete sa proizvodnjom LSDa",4,0.15,0.1)
+								DrawMarker(1, Config.Processing, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.3, 1.3, 1.0, 0, 200, 0, 110, 0, 1, 0, 0)	
+								if #(kordic-Config.Processing) < 2 then
+								--if GetDistanceBetweenCoords(Config.Processing.x, Config.Processing.y, Config.Processing.z, GetEntityCoords(GetPlayerPed(-1)), true) < 2 then		
+									local x,y,z = table.unpack(Config.Processing)
+									Draw3DText( x, y, z-1.0 , "~w~Proizvodnja LSDa~y~\nPritisnite [~b~E~y~] da krenete sa proizvodnjom LSDa",4,0.15,0.1)
 									if IsControlJustReleased(0, Keys['E']) then
 										Citizen.CreateThread(function()
 											Process()
@@ -243,7 +251,8 @@ Citizen.CreateThread(function()
 									end
 								end
 								
-								if GetDistanceBetweenCoords(Config.Processing.x, Config.Processing.y, Config.Processing.z, GetEntityCoords(GetPlayerPed(-1)), true) < 5 and GetDistanceBetweenCoords(Config.Processing.x, Config.Processing.y, Config.Processing.z, GetEntityCoords(GetPlayerPed(-1)), true) > 3 then
+								if (#(kordic-Config.Processing) < 5) and (#(kordic-Config.Processing) > 3) then
+								--if GetDistanceBetweenCoords(Config.Processing.x, Config.Processing.y, Config.Processing.z, GetEntityCoords(GetPlayerPed(-1)), true) < 5 and GetDistanceBetweenCoords(Config.Processing.x, Config.Processing.y, Config.Processing.z, GetEntityCoords(GetPlayerPed(-1)), true) > 3 then
 									process = false
 								end
 						end
@@ -314,15 +323,17 @@ AddEventHandler('LSD:start', function()
 	local set = false
 	Citizen.Wait(10)
 	
-	local rnX = Config.PickupBlip.x + math.random(-20, 20)
-	local rnY = Config.PickupBlip.y + math.random(-20, 20)
+	local x, y, z = table.unpack(Config.PickupBlip)
+	
+	local rnX = x + math.random(-20, 20)
+	local rnY = y + math.random(-20, 20)
 	
 	local u, Z = GetGroundZFor_3dCoord(rnX ,rnY ,300.0,0)
 	
 	
 
-	
-	table.insert(locations,{x=rnX, y=rnY, z=Z + 0.3});
+	local vekta = vector3(rnX, rnY, Z+0.3)
+	table.insert(locations, vekta);
 
 	
 
@@ -334,15 +345,15 @@ AddEventHandler('LSD:new', function(id)
 	local set = false
 	Citizen.Wait(10)
 	
+	local x,y,z = table.unpack(Config.PickupBlip)
 	
-	local rnX = Config.PickupBlip.x + math.random(-20, 20)
-	local rnY = Config.PickupBlip.y + math.random(-20, 20)
+	local rnX = x + math.random(-20, 20)
+	local rnY = y + math.random(-20, 20)
 	
 	local u, Z = GetGroundZFor_3dCoord(rnX ,rnY ,300.0,0)
 	
-	locations[id].x = rnX
-	locations[id].y = rnY
-	locations[id].z = Z + 0.3
+	local vekta = vector3(rnX, rnY, Z+0.3)
+	locations[id] = vekta
 	ClearPedTasks(PlayerPedId())
 end)
 

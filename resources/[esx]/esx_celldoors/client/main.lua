@@ -102,7 +102,7 @@ Citizen.CreateThread(function()
 		local playerCoords = GetEntityCoords(PlayerPedId())
 		for _,doorID in ipairs(Config.DoorList) do
 			if doorID.doors then
-				local udalj = GetDistanceBetweenCoords(doorID.doors[1].objCoords, playerCoords, false)
+				local udalj = #(doorID.doors[1].objCoords-playerCoords)
 				if udalj < 5.0 then
 					for k,v in ipairs(doorID.doors) do
 						if not v.object or not DoesEntityExist(v.object) then
@@ -111,7 +111,7 @@ Citizen.CreateThread(function()
 					end
 				end
 			else
-				local udalj = GetDistanceBetweenCoords(doorID.objCoords, playerCoords, false)
+				local udalj = #(doorID.objCoords-playerCoords)
 				if udalj < 30.0 then
 					if not doorID.object or not DoesEntityExist(doorID.object) then
 						doorID.object = GetClosestObjectOfType(doorID.objCoords, 30.0, GetHashKey(doorID.objName), false, false, false)

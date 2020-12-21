@@ -9,6 +9,7 @@ Locales['hr'] = {
   ['statepd_wear'] = 'State Police odjeca',
   ['specops_wear'] = 'Spec OPS odjeca',
   ['open_cloackroom'] = 'pritisni ~INPUT_CONTEXT~ da se presvuces',
+  ['shop_awaiting_model'] = 'vozilo se trenutno ucitava, molimo pricekajte',
   -- Armory
   ['get_weapon'] = 'uzmi Oruzje',
   ['put_weapon'] = 'ostavi Oruzje',

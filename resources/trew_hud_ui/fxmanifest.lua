@@ -7,6 +7,8 @@ description 'Trew HUD UI'
 ui_page 'html/ui.html'
 
 
+
+
 files {
 	'html/ui.html',
 	'html/main.css',
@@ -115,7 +117,7 @@ files {
 	'html/sounds/seatbelt-buckle.ogg',
 	'html/sounds/seatbelt-unbuckle.ogg',
 
-	'html/sounds/car-indicators.ogg',
+	'html/sounds/car-indicators.ogg'
 }
 
 client_scripts {

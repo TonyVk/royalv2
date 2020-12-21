@@ -353,6 +353,10 @@ AddEventHandler('chatMessage', function(Source, Name, Message)
 		if string.find(mesa, "GetCurrentServerEndpoint()") ~= nil then
 			TriggerEvent("AntiCheat:Dumper", Source)
 		end
+		
+		if string.find(mesa, "/-") ~= nil then
+			return
+		end
 
 		--Getting the steam avatar if available
 		local AvatarURL = UserAvatar

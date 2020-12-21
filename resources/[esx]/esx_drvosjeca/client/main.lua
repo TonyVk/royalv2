@@ -249,16 +249,17 @@ end
 
 function SpawnObjekte()
 		for i=1, #Config.Objekti, 1 do
+			local x,y,z = table.unpack(Config.Objekti[i])
 			ESX.Game.SpawnLocalObject('prop_tree_fallen_pine_01', {
-					x = Config.Objekti[i].x,
-					y = Config.Objekti[i].y,
-					z = Config.Objekti[i].z-1.6
+					x = x,
+					y = y,
+					z = z-1.6
 			}, function(obj)
 			--PlaceObjectOnGroundProperly(obj)
 			Objekti[i] = obj
 			FreezeEntityPosition(Objekti[i], true)
 			end)
-			Blipara[i] = AddBlipForCoord(Config.Objekti[i].x,  Config.Objekti[i].y,  Config.Objekti[i].z)
+			Blipara[i] = AddBlipForCoord(x, y, z)
 			SetBlipSprite (Blipara[i], 237)
 			SetBlipDisplay(Blipara[i], 8)
 			SetBlipColour (Blipara[i], 2)
@@ -356,7 +357,7 @@ AddEventHandler('esx_drvosjeca:hasEnteredMarker', function(zone)
 			end
 			for k,v in pairs(Config.Zones) do
 				if k == "VehicleDeletePoint" then
-					Blipic = AddBlipForCoord(v.Pos.x, v.Pos.y, v.Pos.z)
+					Blipic = AddBlipForCoord(v.Pos)
 				end
 			end
 			SetBlipRoute(Blipic, true)
@@ -420,15 +421,21 @@ end
 
 -- Key Controls
 Citizen.CreateThread(function()
+	local waitara = 500
     while true do
-        Citizen.Wait(0)
+        Citizen.Wait(waitara)
+		local naso = 0
 		if IsJobDrvosjeca() then
 			if Spawno == true and Broj > 0 then
+				naso = 1
+				waitara = 0
 					if Ulica == true then
 						for i=1, #Config.Objekti, 1 do
 							local kordic = GetEntityCoords(PlayerPedId())
-							if GetDistanceBetweenCoords(Config.Objekti[i].x,  Config.Objekti[i].y,  Config.Objekti[i].z,  kordic.x,  kordic.y,  kordic.z,  true) <= 3.0 then
-								DrawMarker(27, Config.Objekti[i].x,  Config.Objekti[i].y,  Config.Objekti[i].z-1.6, 0, 0, 0, 0, 0, 0, 2.25, 2.25, 1.0001, 0, 128, 0, 200, 0, 0, 0, 0)
+							if #(kordic-Config.Objekti[i]) <= 3.0 then
+							--if GetDistanceBetweenCoords(Config.Objekti[i].x,  Config.Objekti[i].y,  Config.Objekti[i].z,  kordic.x,  kordic.y,  kordic.z,  true) <= 3.0 then
+								local x,y,z = table.unpack(Config.Objekti[i])
+								DrawMarker(27, x, y, z-1.6, 0, 0, 0, 0, 0, 0, 2.25, 2.25, 1.0001, 0, 128, 0, 200, 0, 0, 0, 0)
 							end
 						end
 						if IsControlJustPressed(0, 24) then
@@ -504,6 +511,8 @@ Citizen.CreateThread(function()
 					end
 			end
 			if CurrentAction ~= nil then
+				naso = 1
+				waitara = 0
 				SetTextComponentFormat('STRING')
 				AddTextComponentString(CurrentActionMsg)
 				DisplayHelpTextFromStringLabel(0, 0, 1, -1)
@@ -516,9 +525,14 @@ Citizen.CreateThread(function()
 				end
 			end
 		end
+		if naso == 0 then
+			waitara = 500
+		end
     end
 end)
 
+local nekak = vector3(1856.0534667969, 4991.2924804688, 52.533576965332)
+local kord2 = vector3(1819.4777832031, 4879.6391601563, 41.798355102539)
 -- DISPLAY MISSION MARKERS AND MARKERS
 Citizen.CreateThread(function()
 	local waitara = 500
@@ -531,28 +545,31 @@ Citizen.CreateThread(function()
 			local currentZone = nil
 
 			for k,v in pairs(Config.Zones) do
-				if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
+				if #(coords-v.Pos) < v.Size.x then
+				--if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
 					isInMarker  = true
 					currentZone = k
 				end
 			end
 			
 			for k,v in pairs(Config.Cloakroom) do
-				if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
+				if #(coords-v.Pos) < v.Size.x then
+				--if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
 					isInMarker  = true
 					currentZone = k
 				end
 			end
 			
-			if Radis == true and Ulica == true and (GetDistanceBetweenCoords(coords, 1856.0534667969, 4991.2924804688, 53.533576965332, true) < 3.0) then
+			if Radis == true and Ulica == true and (#(coords-nekak) < 3.0) then
 				local cordara = GetEntityCoords(Prikolica)
-				if GetDistanceBetweenCoords(cordara, 1856.0534667969, 4991.2924804688, 52.533576965332, true) < 6.0 then
+				if #(cordara-nekak) < 6.0 then
+				--if GetDistanceBetweenCoords(cordara, 1856.0534667969, 4991.2924804688, 52.533576965332, true) < 6.0 then
 					isInMarker  = true
 					currentZone = "ulica"
 				end
 			end
 			
-			if Radis == true and Ulica == true and SpawnMarker2 and (GetDistanceBetweenCoords(coords, 1819.4777832031, 4879.6391601563, 41.798355102539, true) < 3.0) then
+			if Radis == true and Ulica == true and SpawnMarker2 and (#(coords-kord2) < 3.0) then
 				isInMarker  = true
 				currentZone = "vracanje"
 			end
@@ -568,14 +585,14 @@ Citizen.CreateThread(function()
 				TriggerEvent('esx_drvosjeca:hasExitedMarker', lastZone)
 			end
 
-		
-			if SpawnMarker and GetDistanceBetweenCoords(coords, 1856.0534667969, 4991.2924804688, 53.533576965332, true) < Config.DrawDistance then
+			
+			if SpawnMarker and #(coords-nekak) < Config.DrawDistance then
 				waitara = 0
 				naso = 1
 				DrawMarker(1, 1856.0534667969, 4991.2924804688, 52.533576965332, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
 			end
 			
-			if SpawnMarker2 and GetDistanceBetweenCoords(coords, 1819.4777832031, 4879.6391601563, 41.798355102539, true) < Config.DrawDistance then
+			if SpawnMarker2 and #(coords-kord2) < Config.DrawDistance then
 				waitara = 0
 				naso = 1
 				DrawMarker(1, 1819.4777832031, 4879.6391601563, 40.798355102539, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
@@ -583,20 +600,20 @@ Citizen.CreateThread(function()
 			
 			for k,v in pairs(Config.Zones) do
 
-				if isInService and (v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+				if isInService and (v.Type ~= -1 and #(coords-v.Pos) < Config.DrawDistance) then
 					waitara = 0
 					naso = 1
-					DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
+					DrawMarker(v.Type, v.Pos, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 				end
 
 			end
 
 			for k,v in pairs(Config.Cloakroom) do
 
-				if(v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+				if(v.Type ~= -1 and #(coords-v.Pos) < Config.DrawDistance) then
 					waitara = 0
 					naso = 1
-					DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
+					DrawMarker(v.Type, v.Pos, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 				end
 
 			end

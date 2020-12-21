@@ -93,7 +93,7 @@ function MenuVehicleSpawner()
 end
 
 function PokreniPosao()
-	Blipara[Odradio] = AddBlipForCoord(Config.Stanice[Odradio].x,  Config.Stanice[Odradio].y,  Config.Stanice[Odradio].z)
+	Blipara[Odradio] = AddBlipForCoord(Config.Stanice[Odradio])
 	SetBlipSprite (Blipara[Odradio], 1)
 	SetBlipDisplay(Blipara[Odradio], 8)
 	SetBlipColour (Blipara[Odradio], 2)
@@ -162,7 +162,7 @@ Citizen.CreateThread(function()
 					TriggerServerEvent("esx_vlak:platiTuljanu")
 					TriggerServerEvent("biznis:DodajTuru", PlayerData.job.name)
 					if Config.Stanice[Odradio] ~= nil then
-						Blipara[Odradio] = AddBlipForCoord(Config.Stanice[Odradio].x,  Config.Stanice[Odradio].y,  Config.Stanice[Odradio].z)
+						Blipara[Odradio] = AddBlipForCoord(Config.Stanice[Odradio])
 						SetBlipSprite (Blipara[Odradio], 1)
 						SetBlipDisplay(Blipara[Odradio], 8)
 						SetBlipColour (Blipara[Odradio], 2)
@@ -194,7 +194,8 @@ Citizen.CreateThread(function()
 			local currentZone = nil
 
 			for k,v in pairs(Config.Zones) do
-				if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
+				if #(coords-v.Pos) < v.Size.x then
+				--if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
 					waitara = 0
 					naso = 1
 					isInMarker  = true
@@ -203,7 +204,8 @@ Citizen.CreateThread(function()
 			end
 			
 			for k,v in pairs(Config.Cloakroom) do
-				if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
+				if #(coords-v.Pos) < v.Size.x then
+				--if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
 					waitara = 0
 					naso = 1
 					isInMarker  = true
@@ -211,7 +213,8 @@ Citizen.CreateThread(function()
 				end
 			end
 			
-			if(GetDistanceBetweenCoords(coords, Config.Stanice[Odradio].x,  Config.Stanice[Odradio].y,  Config.Stanice[Odradio].z, true) < 3.0) then
+			if #(coords-Config.Stanice[Odradio]) < 3.0 then
+			--if(GetDistanceBetweenCoords(coords, Config.Stanice[Odradio].x,  Config.Stanice[Odradio].y,  Config.Stanice[Odradio].z, true) < 3.0) then
 				waitara = 0
 				naso = 1
 				isInMarker  = true
@@ -231,28 +234,28 @@ Citizen.CreateThread(function()
 
 		end
 		
-		if isInService and Radis and IsJobVlak() and Config.Stanice[Odradio] ~= nil and GetDistanceBetweenCoords(coords, Config.Stanice[Odradio].x,  Config.Stanice[Odradio].y,  Config.Stanice[Odradio].z, true) < Config.DrawDistance then
+		if isInService and Radis and IsJobVlak() and Config.Stanice[Odradio] ~= nil and #(coords-Config.Stanice[Odradio]) < Config.DrawDistance then
 			waitara = 0
 			naso = 1
-			DrawMarker(1, Config.Stanice[Odradio].x,  Config.Stanice[Odradio].y,  Config.Stanice[Odradio].z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
+			DrawMarker(1, Config.Stanice[Odradio], 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
 		end
 		
 		for k,v in pairs(Config.Zones) do
 
-			if isInService and (IsJobVlak() and v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+			if isInService and (IsJobVlak() and v.Type ~= -1 and #(coords-v.Pos) < Config.DrawDistance) then
 				waitara = 0
 				naso = 1
-				DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
+				DrawMarker(v.Type, v.Pos, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 			end
 
 		end
 
 		for k,v in pairs(Config.Cloakroom) do
 
-			if(IsJobVlak() and v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+			if(IsJobVlak() and v.Type ~= -1 and #(coords-v.Pos) < Config.DrawDistance) then
 				waitara = 0
 				naso = 1
-				DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
+				DrawMarker(v.Type, v.Pos, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 			end
 
 		end
@@ -285,10 +288,12 @@ if (Config.Debug) then
 				for i=1, #Config.TrainLocations, 1 do
 					local coords = GetEntityCoords(GetPlayerPed(-1))
 					local trainLocation = Config.TrainLocations[i]
-					if(GetDistanceBetweenCoords(coords, trainLocation.x, trainLocation.y, trainLocation.z, true) < Config.DrawDistance) then
-						DrawMarker(Config.MarkerType, trainLocation.x, trainLocation.y, trainLocation.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z-2.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
+					if #(coords-trainLocation.koord) < Config.DrawDistance then
+					--if(GetDistanceBetweenCoords(coords, trainLocation.x, trainLocation.y, trainLocation.z, true) < Config.DrawDistance) then
+						DrawMarker(Config.MarkerType, trainLocation.koord, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z-2.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
 					end
-					if(GetDistanceBetweenCoords(coords, trainLocation.x, trainLocation.y, trainLocation.z, true) < Config.MarkerSize.x / 2) then
+					if #(coords-trainLocation.koord) < Config.MarkerSize.x / 2 then
+					--if(GetDistanceBetweenCoords(coords, trainLocation.x, trainLocation.y, trainLocation.z, true) < Config.MarkerSize.x / 2) then
 						if(IsControlPressed(0,58) and(GetGameTimer() - Config.EnterExitDelay) > Config.EnterExitDelayMax) then -- G
 							Config.EnterExitDelay = 0
 							Wait(60)
@@ -380,7 +385,7 @@ Citizen.CreateThread(function()
 	if (Config.Debug) then
 		Log("Loading Train Blips.")
 		for i=1, #Config.TrainLocations, 1 do
-			local blip = AddBlipForCoord(Config.TrainLocations[i].x, Config.TrainLocations[i].y, Config.TrainLocations[i].z)      
+			local blip = AddBlipForCoord(Config.TrainLocations[i])      
 			SetBlipSprite (blip, Config.BlipSprite)
 			SetBlipDisplay(blip, 4)
 			SetBlipScale  (blip, 0.9)

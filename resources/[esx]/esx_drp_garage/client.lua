@@ -78,7 +78,7 @@ function refreshBlips()
 	end
 	for zoneKey,zoneValues in pairs(Config.Garages)do
 		if zoneValues.PrikaziBlip == 1 then
-			Blip = AddBlipForCoord(zoneValues.Pos.x, zoneValues.Pos.y, zoneValues.Pos.z)
+			Blip = AddBlipForCoord(zoneValues.Pos)
 			SetBlipSprite (Blip, Config.BlipInfos.Sprite)
 			SetBlipDisplay(Blip, 4)
 			SetBlipScale  (Blip, 1.2)
@@ -90,7 +90,7 @@ function refreshBlips()
 			
 			if zoneValues.MunicipalPoundPoint ~= nil then
 				if PlayerData.job.name == "zemunski" then
-					Blipara = AddBlipForCoord(zoneValues.MunicipalPoundPoint.Pos.x, zoneValues.MunicipalPoundPoint.Pos.y, zoneValues.MunicipalPoundPoint.Pos.z)
+					Blipara = AddBlipForCoord(zoneValues.MunicipalPoundPoint.Pos)
 					SetBlipSprite (Blipara, Config.BlipPound.Sprite)
 					SetBlipDisplay(Blipara, 4)
 					SetBlipScale  (Blipara, 1.2)
@@ -352,7 +352,7 @@ AddEventHandler('eden_garage:deletevehicle_cl', function(plate)
 			end
 			if this_Garage.Brod ~= nil then
 				SetEntityCoords(PlayerPedId(), this_Garage.Vracanje)
-				this_Garage.Brod = nil
+				this_Garage = {}
 			end
 		end
 	end
@@ -456,8 +456,7 @@ function SpawnVehicle(vehicle)
 	if vehicle.model == GetHashKey("DUBSTA") then
 		vehicle.model = GetHashKey("G65")
 	end
-	local korde = vector3(this_Garage.SpawnPoint.Pos.x, this_Garage.SpawnPoint.Pos.y, this_Garage.SpawnPoint.Pos.z)
-	TriggerServerEvent("garaza:SpawnVozilo", vehicle, korde, this_Garage.SpawnPoint.Heading, 1)
+	TriggerServerEvent("garaza:SpawnVozilo", vehicle, this_Garage.SpawnPoint.Pos, this_Garage.SpawnPoint.Heading, 1)
 end
 
 RegisterNetEvent('garaza:VratiVozilo')
@@ -575,8 +574,7 @@ end)
 function SpawnPoundedVehicle(vehicle)
 	ESX.TriggerServerCallback('mafija:DofatiDatum', function(br)
 		if br then
-			local korde = vector3(this_Garage.SpawnMunicipalPoundPoint.Pos.x, this_Garage.SpawnMunicipalPoundPoint.Pos.y, this_Garage.SpawnMunicipalPoundPoint.Pos.z+1)
-			TriggerServerEvent("garaza:SpawnVozilo", vehicle, korde, 226.78, 2)
+			TriggerServerEvent("garaza:SpawnVozilo", vehicle, this_Garage.SpawnMunicipalPoundPoint.Pos, 226.78, 2)
 			TriggerServerEvent("mafija:MakniUkraden", vehicle.plate)
 			ESX.ShowNotification("Vozilo dostavljeno iz garaze!")
 		else
@@ -677,22 +675,22 @@ Citizen.CreateThread(function()
 		local coords = GetEntityCoords(GetPlayerPed(-1))			
 
 		for k,v in pairs(Config.Garages) do
-			if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+			if #(coords-v.Pos) < Config.DrawDistance then
 				waitara = 0
 				nasosta = 1
 				if v.Brod == nil then
-					DrawMarker(v.SpawnPoint.Marker, v.SpawnPoint.Pos.x, v.SpawnPoint.Pos.y, v.SpawnPoint.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.SpawnPoint.Size.x, v.SpawnPoint.Size.y, v.SpawnPoint.Size.z, v.SpawnPoint.Color.r, v.SpawnPoint.Color.g, v.SpawnPoint.Color.b, 100, false, true, 2, false, false, false, false)	
+					DrawMarker(v.SpawnPoint.Marker, v.SpawnPoint.Pos, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.SpawnPoint.Size.x, v.SpawnPoint.Size.y, v.SpawnPoint.Size.z, v.SpawnPoint.Color.r, v.SpawnPoint.Color.g, v.SpawnPoint.Color.b, 100, false, true, 2, false, false, false, false)	
 				else
-					DrawMarker(v.SpawnMarker.Marker, v.SpawnMarker.Pos.x, v.SpawnMarker.Pos.y, v.SpawnMarker.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.SpawnMarker.Size.x, v.SpawnMarker.Size.y, v.SpawnMarker.Size.z, v.SpawnMarker.Color.r, v.SpawnMarker.Color.g, v.SpawnMarker.Color.b, 100, false, true, 2, false, false, false, false)
+					DrawMarker(v.SpawnMarker.Marker, v.SpawnMarker.Pos, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.SpawnMarker.Size.x, v.SpawnMarker.Size.y, v.SpawnMarker.Size.z, v.SpawnMarker.Color.r, v.SpawnMarker.Color.g, v.SpawnMarker.Color.b, 100, false, true, 2, false, false, false, false)
 				end
-				DrawMarker(v.DeletePoint.Marker, v.DeletePoint.Pos.x, v.DeletePoint.Pos.y, v.DeletePoint.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.DeletePoint.Size.x, v.DeletePoint.Size.y, v.DeletePoint.Size.z, v.DeletePoint.Color.r, v.DeletePoint.Color.g, v.DeletePoint.Color.b, 100, false, true, 2, false, false, false, false)	
+				DrawMarker(v.DeletePoint.Marker, v.DeletePoint.Pos, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.DeletePoint.Size.x, v.DeletePoint.Size.y, v.DeletePoint.Size.z, v.DeletePoint.Color.r, v.DeletePoint.Color.g, v.DeletePoint.Color.b, 100, false, true, 2, false, false, false, false)	
 			end
 			if v.MunicipalPoundPoint ~= nil then
-				if(GetDistanceBetweenCoords(coords, v.MunicipalPoundPoint.Pos.x, v.MunicipalPoundPoint.Pos.y, v.MunicipalPoundPoint.Pos.z, true) < Config.DrawDistance) then
+				if #(coords-v.MunicipalPoundPoint.Pos) < Config.DrawDistance then
 					waitara = 0
 					nasosta = 1
-					DrawMarker(v.MunicipalPoundPoint.Marker, v.MunicipalPoundPoint.Pos.x, v.MunicipalPoundPoint.Pos.y, v.MunicipalPoundPoint.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.MunicipalPoundPoint.Size.x, v.MunicipalPoundPoint.Size.y, v.MunicipalPoundPoint.Size.z, v.MunicipalPoundPoint.Color.r, v.MunicipalPoundPoint.Color.g, v.MunicipalPoundPoint.Color.b, 100, false, true, 2, false, false, false, false)	
-					DrawMarker(v.SpawnMunicipalPoundPoint.Marker, v.SpawnMunicipalPoundPoint.Pos.x, v.SpawnMunicipalPoundPoint.Pos.y, v.SpawnMunicipalPoundPoint.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.SpawnMunicipalPoundPoint.Size.x, v.SpawnMunicipalPoundPoint.Size.y, v.SpawnMunicipalPoundPoint.Size.z, v.SpawnMunicipalPoundPoint.Color.r, v.SpawnMunicipalPoundPoint.Color.g, v.SpawnMunicipalPoundPoint.Color.b, 100, false, true, 2, false, false, false, false)
+					DrawMarker(v.MunicipalPoundPoint.Marker, v.MunicipalPoundPoint.Pos, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.MunicipalPoundPoint.Size.x, v.MunicipalPoundPoint.Size.y, v.MunicipalPoundPoint.Size.z, v.MunicipalPoundPoint.Color.r, v.MunicipalPoundPoint.Color.g, v.MunicipalPoundPoint.Color.b, 100, false, true, 2, false, false, false, false)	
+					DrawMarker(v.SpawnMunicipalPoundPoint.Marker, v.SpawnMunicipalPoundPoint.Pos, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.SpawnMunicipalPoundPoint.Size.x, v.SpawnMunicipalPoundPoint.Size.y, v.SpawnMunicipalPoundPoint.Size.z, v.SpawnMunicipalPoundPoint.Color.r, v.SpawnMunicipalPoundPoint.Color.g, v.SpawnMunicipalPoundPoint.Color.b, 100, false, true, 2, false, false, false, false)
 				end		
 			end
 		end	
@@ -701,26 +699,26 @@ Citizen.CreateThread(function()
 
 		for _,v in pairs(Config.Garages) do
 			if v.Brod == nil then
-				if(GetDistanceBetweenCoords(coords, v.SpawnPoint.Pos.x, v.SpawnPoint.Pos.y, v.SpawnPoint.Pos.z, true) < v.Size.x) then
+				if #(coords-v.SpawnPoint.Pos) < v.Size.x then
 					isInMarker  = true
 					this_Garage = v
 					currentZone = 'spawn'
 				end
 			else
-				if(GetDistanceBetweenCoords(coords, v.SpawnMarker.Pos.x, v.SpawnMarker.Pos.y, v.SpawnMarker.Pos.z, true) < v.Size.x) then
+				if #(coords-v.SpawnMarker.Pos) < v.Size.x then
 					isInMarker  = true
 					this_Garage = v
 					currentZone = 'spawn'
 				end
 			end
 
-			if(GetDistanceBetweenCoords(coords, v.DeletePoint.Pos.x, v.DeletePoint.Pos.y, v.DeletePoint.Pos.z, true) < v.Size.x) then
+			if #(coords-v.DeletePoint.Pos) < v.Size.x then
 				isInMarker  = true
 				this_Garage = v
 				currentZone = 'delete'
 			end
 			if v.MunicipalPoundPoint ~= nil then
-				if(GetDistanceBetweenCoords(coords, v.MunicipalPoundPoint.Pos.x, v.MunicipalPoundPoint.Pos.y, v.MunicipalPoundPoint.Pos.z, true) < v.MunicipalPoundPoint.Size.x) then
+				if #(coords-v.MunicipalPoundPoint.Pos) < v.MunicipalPoundPoint.Size.x then
 					isInMarker  = true
 					this_Garage = v
 					currentZone = 'pound'

@@ -287,8 +287,71 @@ Citizen.CreateThread(function()
 	end
 end)
 
+RegisterCommand('+pojas', function()
+    local vehicle = Vozilo
+	local vehicleClass = Klasa
+	if GetIsVehicleEngineRunning(vehicle) then
+		if has_value(vehiclesCars, vehicleClass) == true and vehicleClass ~= 8 then
+			seatbeltIsOn = not seatbeltIsOn
+		end
+	end
+end, false)
+RegisterKeyMapping('+pojas', 'Pojas', 'keyboard', 'g')
 
+RegisterCommand('+zlijevi', function()
+	local vehicleClass = Klasa
+    local vozac = Sjedalo
+	-- Vehicle Signal Lights
+	if has_value(vehiclesCars, vehicleClass) == true and vozac == -1 then
+		local menui = #ESX.UI.Menu.GetOpenedMenus()
+		if menui == nil or menui == 0 then
+			if vehicleSignalIndicator == 'off' then
+				vehicleSignalIndicator = 'left'
+			else
+				vehicleSignalIndicator = 'off'
+			end
 
+			TriggerEvent('trew_hud_ui:setCarSignalLights', vehicleSignalIndicator)
+		end
+	end
+end, false)
+RegisterKeyMapping('+zlijevi', 'Lijevi zmigavac', 'keyboard', 'left')
+
+RegisterCommand('+zdesni', function()
+	local vehicleClass = Klasa
+    local vozac = Sjedalo
+	if has_value(vehiclesCars, vehicleClass) == true and vozac == -1 then
+		local menui = #ESX.UI.Menu.GetOpenedMenus()
+		if menui == nil or menui == 0 then
+			if vehicleSignalIndicator == 'off' then
+				vehicleSignalIndicator = 'right'
+			else
+				vehicleSignalIndicator = 'off'
+			end
+
+			TriggerEvent('trew_hud_ui:setCarSignalLights', vehicleSignalIndicator)
+		end
+	end
+end, false)
+RegisterKeyMapping('+zdesni', 'Desni zmigavac', 'keyboard', 'right')
+
+RegisterCommand('+zsvi', function()
+	local vehicleClass = Klasa
+    local vozac = Sjedalo
+	if has_value(vehiclesCars, vehicleClass) == true and vozac == -1 then
+		local menui = #ESX.UI.Menu.GetOpenedMenus()
+		if menui == nil or menui == 0 then
+			if vehicleSignalIndicator == 'off' then
+				vehicleSignalIndicator = 'both'
+			else
+				vehicleSignalIndicator = 'off'
+			end
+
+			TriggerEvent('trew_hud_ui:setCarSignalLights', vehicleSignalIndicator)
+		end
+	end
+end, false)
+RegisterKeyMapping('+zsvi', 'Sva 4 zmigavca', 'keyboard', 'down')
 
 -- Player status
 Citizen.CreateThread(function()
@@ -642,10 +705,6 @@ AddEventHandler('baseevents:leftVehicle', function(currentVehicle, currentSeat, 
 end)
 
 
-
-
-
-
 -- Everything that neededs to be at WAIT 0
 Citizen.CreateThread(function()
 	local isPauseMenu = false
@@ -693,59 +752,6 @@ Citizen.CreateThread(function()
 				end
 
 				SendNUIMessage({ action = 'setVoiceDistance', value = voiceDistance })
-			end
-			
-		end
-
-		local player = GetPlayerPed(-1)
-
-		if UVozilu then
-			local vehicle = Vozilo
-			local vehicleClass = Klasa
-			if GetIsVehicleEngineRunning(vehicle) then
-				if IsControlJustReleased(0, Keys[Config.vehicle.keys.seatbelt]) and (has_value(vehiclesCars, vehicleClass) == true and vehicleClass ~= 8) then
-					seatbeltIsOn = not seatbeltIsOn
-				end
-			end
-			local vozac = Sjedalo
-			-- Vehicle Signal Lights
-			if IsControlJustPressed(1, Keys[Config.vehicle.keys.signalLeft]) and (has_value(vehiclesCars, vehicleClass) == true) and vozac == -1 then
-				local menui = #ESX.UI.Menu.GetOpenedMenus()
-				if menui == nil or menui == 0 then
-					if vehicleSignalIndicator == 'off' then
-						vehicleSignalIndicator = 'left'
-					else
-						vehicleSignalIndicator = 'off'
-					end
-
-					TriggerEvent('trew_hud_ui:setCarSignalLights', vehicleSignalIndicator)
-				end
-			end
-
-			if IsControlJustPressed(1, Keys[Config.vehicle.keys.signalRight]) and (has_value(vehiclesCars, vehicleClass) == true) and vozac == -1 then
-				local menui = #ESX.UI.Menu.GetOpenedMenus()
-				if menui == nil or menui == 0 then
-					if vehicleSignalIndicator == 'off' then
-						vehicleSignalIndicator = 'right'
-					else
-						vehicleSignalIndicator = 'off'
-					end
-
-					TriggerEvent('trew_hud_ui:setCarSignalLights', vehicleSignalIndicator)
-				end
-			end
-
-			if IsControlJustPressed(1, Keys[Config.vehicle.keys.signalBoth]) and (has_value(vehiclesCars, vehicleClass) == true) and vozac == -1 then
-				local menui = #ESX.UI.Menu.GetOpenedMenus()
-				if menui == nil or menui == 0 then
-					if vehicleSignalIndicator == 'off' then
-						vehicleSignalIndicator = 'both'
-					else
-						vehicleSignalIndicator = 'off'
-					end
-
-					TriggerEvent('trew_hud_ui:setCarSignalLights', vehicleSignalIndicator)
-				end
 			end
 		end
 	end

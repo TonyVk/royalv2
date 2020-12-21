@@ -226,7 +226,7 @@ function ReloadBlip()
 			ESX.TriggerServerCallback('esx_shops:DalJeVlasnik', function(jelje2)
 				if jelje2 == 1 then
 					RemoveBlip(blip[st])
-					blip[st] = AddBlipForCoord(v.Pos[i].x, v.Pos[i].y, v.Pos[i].z)
+					blip[st] = AddBlipForCoord(v.Pos[i])
 					if k == "Bar" then
 						SetBlipSprite (blip[st], 93)
 					else
@@ -245,7 +245,7 @@ function ReloadBlip()
 					EndTextCommandSetBlipName(blip[st])
 				else
 					RemoveBlip(blip[st])
-					blip[st] = AddBlipForCoord(v.Pos[i].x, v.Pos[i].y, v.Pos[i].z)
+					blip[st] = AddBlipForCoord(v.Pos[i])
 					if k == "Bar" then
 						SetBlipSprite (blip[st], 93)
 					else
@@ -286,17 +286,17 @@ Citizen.CreateThread(function()
 		
 		for k,v in pairs(Config.Zones) do
 			for i = 1, #v.Pos, 1 do
-				if(Config.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos[i].x, v.Pos[i].y, v.Pos[i].z, true) < Config.DrawDistance) then
+				if(Config.Type ~= -1 and #(coords-v.Pos[i]) < Config.DrawDistance) then
 					waitara = 0
 					nasosta = 1
-					DrawMarker(Config.Type, v.Pos[i].x, v.Pos[i].y, v.Pos[i].z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.Size.x, Config.Size.y, Config.Size.z, Config.Color.r, Config.Color.g, Config.Color.b, 100, false, true, 2, false, false, false, false)
+					DrawMarker(Config.Type, v.Pos[i], 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.Size.x, Config.Size.y, Config.Size.z, Config.Color.r, Config.Color.g, Config.Color.b, 100, false, true, 2, false, false, false, false)
 				end
 			end
 		end
 
 		for k,v in pairs(Config.Zones) do
 			for i = 1, #v.Pos, 1 do
-				if(GetDistanceBetweenCoords(coords, v.Pos[i].x, v.Pos[i].y, v.Pos[i].z, true) < Config.Size.x) then
+				if #(coords-v.Pos[i]) < Config.Size.x then
 					isInMarker  = true
 					ShopItems   = v.Items
 					currentZone = k

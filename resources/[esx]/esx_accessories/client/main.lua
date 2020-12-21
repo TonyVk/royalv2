@@ -156,7 +156,7 @@ Citizen.CreateThread(function()
 	for k,v in pairs(Config.ShopsBlips) do
 		if v.Pos ~= nil then
 			for i=1, #v.Pos, 1 do
-				local blip = AddBlipForCoord(v.Pos[i].x, v.Pos[i].y, v.Pos[i].z)
+				local blip = AddBlipForCoord(v.Pos[i])
 
 				SetBlipSprite (blip, v.Blip.sprite)
 				SetBlipDisplay(blip, 4)
@@ -181,10 +181,10 @@ Citizen.CreateThread(function()
 		local coords = GetEntityCoords(PlayerPedId())
 		for k,v in pairs(Config.Zones) do
 			for i = 1, #v.Pos, 1 do
-				if(Config.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos[i].x, v.Pos[i].y, v.Pos[i].z, true) < Config.DrawDistance) then
+				if(Config.Type ~= -1 and #(coords-v.Pos[i]) < Config.DrawDistance) then
 					waitara = 0
 					nasosta = 1
-					DrawMarker(Config.Type, v.Pos[i].x, v.Pos[i].y, v.Pos[i].z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.Size.x, Config.Size.y, Config.Size.z, Config.Color.r, Config.Color.g, Config.Color.b, 100, false, true, 2, false, false, false, false)
+					DrawMarker(Config.Type, v.Pos[i], 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.Size.x, Config.Size.y, Config.Size.z, Config.Color.r, Config.Color.g, Config.Color.b, 100, false, true, 2, false, false, false, false)
 				end
 			end
 		end
@@ -204,7 +204,7 @@ Citizen.CreateThread(function()
 		local currentZone = nil
 		for k,v in pairs(Config.Zones) do
 			for i = 1, #v.Pos, 1 do
-				if GetDistanceBetweenCoords(coords, v.Pos[i].x, v.Pos[i].y, v.Pos[i].z, true) < Config.Size.x then
+				if #(coords-v.Pos[i]) < Config.Size.x then
 					isInMarker  = true
 					currentZone = k
 					TriggerEvent("dpc:EquipLast")
