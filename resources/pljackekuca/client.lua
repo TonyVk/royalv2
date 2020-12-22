@@ -23,29 +23,29 @@ end)
 
 local objektici = {
 	[1] = {
-		["Saffron"] = { x = 118.25135040283, y = 543.99011230469, z = 183.89744567871, pretrazio = false},
-		["Speaker"]  = {x = 125.09645843506, y = 547.57025146484, z = 184.09689331055, pretrazio = false},
-		["Laptop"] = { x = 118.00344085693, y = 548.41369628906, z = 184.09690856934, pretrazio = false},
-		["Bag of Cocaine"] = { x = 123.20567321777, y = 555.37945556641, z = 184.29708862305, pretrazio = false},
-		["Book"]  = { x = 118.44779205322, y = 543.353515625, z = 180.49751281738, pretrazio = false},
-		["Coupon"] = { x = 113.94953155518, y = 562.17327880859, z = 176.6971282959, pretrazio = false},
-		["Toothpaste"] = { x = 119.49589538574, y = 570.03479003906, z = 176.69709777832, pretrazio = false}
+		["Saffron"] = { Pos = vector3(118.25135040283, 543.99011230469, 183.89744567871), pretrazio = false},
+		["Speaker"]  = { Pos = vector3(125.09645843506, 547.57025146484, 184.09689331055), pretrazio = false},
+		["Laptop"] = { Pos = vector3(118.00344085693, 548.41369628906, 184.09690856934), pretrazio = false},
+		["Bag of Cocaine"] = { Pos = vector3(123.20567321777, 555.37945556641, 184.29708862305), pretrazio = false},
+		["Book"]  = { Pos = vector3(118.44779205322, 543.353515625, 180.49751281738), pretrazio = false},
+		["Coupon"] = { Pos = vector3(113.94953155518, 562.17327880859, 176.6971282959), pretrazio = false},
+		["Toothpaste"] = { Pos = vector3(119.49589538574, 570.03479003906, 176.69709777832), pretrazio = false}
 	},
 	[2] = {
-		["Saffron"] = { x = 265.89379882813, y = -999.44171142578, z = -99.008590698242, pretrazio = false},
-		["Speaker"]  = {x = 264.13989257813, y = -995.4775390625, z = -99.008590698242, pretrazio = false},
-		["Laptop"] = { x = 261.95956420898, y = -995.1552734375, z = -99.008636474609, pretrazio = false},
-		["Bag of Cocaine"] = { x = 261.52496337891, y = -1002.5629272461, z = -99.008636474609, pretrazio = false},
-		["Book"]  = { x = 263.00848388672, y = -1003.0875854492, z = -99.008636474609, pretrazio = false}
+		["Saffron"] = { Pos = vector3(265.89379882813, -999.44171142578, -99.008590698242), pretrazio = false},
+		["Speaker"]  = { Pos = vector3(264.13989257813, -995.4775390625, -99.008590698242), pretrazio = false},
+		["Laptop"] = { Pos = vector3(261.95956420898, -995.1552734375, -99.008636474609), pretrazio = false},
+		["Bag of Cocaine"] = { Pos = vector3(261.52496337891, -1002.5629272461, -99.008636474609), pretrazio = false},
+		["Book"]  = { Pos = vector3(263.00848388672, -1003.0875854492, -99.008636474609), pretrazio = false}
 	},
 	[3] = {
-		["Saffron"] = { x = -674.51049804688, y = 584.60119628906, z = 145.16969299316, pretrazio = false},
-		["Speaker"]  = {x = -671.81317138672, y = 581.19378662109, z = 144.97027587891, pretrazio = false},
-		["Laptop"] = { x = -668.32434082031, y = 588.04925537109, z = 145.16967773438, pretrazio = false},
-		["Bag of Cocaine"] = { x = -671.60125732422, y = 581.06695556641, z = 141.57061767578, pretrazio = false},
-		["Book"]  = { x = -666.57220458984, y = 587.11364746094, z = 141.59564208984, pretrazio = false},
-		["Coupon"] = { x = -682.54266357422, y = 595.76135253906, z = 137.76582336426, pretrazio = false},
-		["Toothpaste"] = { x = -679.27862548828, y = 585.32684326172, z = 137.76976013184, pretrazio = false}
+		["Saffron"] = { Pos = vector3(-674.51049804688, 584.60119628906, 145.16969299316), pretrazio = false},
+		["Speaker"]  = {Pos = vector3(-671.81317138672, 581.19378662109, 144.97027587891), pretrazio = false},
+		["Laptop"] = { Pos = vector3(-668.32434082031, 588.04925537109, 145.16967773438), pretrazio = false},
+		["Bag of Cocaine"] = { Pos = vector3(-671.60125732422, 581.06695556641, 141.57061767578), pretrazio = false},
+		["Book"]  = { Pos = vector3(-666.57220458984, 587.11364746094, 141.59564208984), pretrazio = false},
+		["Coupon"] = { Pos = vector3(-682.54266357422, 595.76135253906, 137.76582336426), pretrazio = false},
+		["Toothpaste"] = { Pos = vector3(-679.27862548828, 585.32684326172, 137.76976013184), pretrazio = false}
 	},
 }
 
@@ -124,21 +124,22 @@ Citizen.CreateThread(function()
 	local zadnjakuca = nil
 	local ulaz = nil
 	local kuca = nil
+	local nekakoord = vector3(6.1003332138062, 6469.1396484375, 30.425291061401)
 	local waitara = 500
 	while true do
 		Citizen.Wait(waitara)
 		local naso = 0
 		local kordic = GetEntityCoords(PlayerPedId())
-		if GetDistanceBetweenCoords(6.1003332138062, 6469.1396484375, 30.425291061401,  kordic.x,  kordic.y,  kordic.z,  true) <= 50.0 then
+		if #(nekakoord-kordic) <= 50.0 then
 			waitara = 0
 			naso = 1
-			DrawMarker(27, 6.1003332138062, 6469.1396484375, 30.425291061401, 0, 0, 0, 0, 0, 0, 2.25, 2.25, 1.0001, 0, 128, 0, 200, 0, 0, 0, 0)
+			DrawMarker(27, nekakoord, 0, 0, 0, 0, 0, 0, 2.25, 2.25, 1.0001, 0, 128, 0, 200, 0, 0, 0, 0)
 		end
 		
 		local isInMarker  = false
 		local currentZone = nil
 
-		if(GetDistanceBetweenCoords(kordic, 6.1003332138062, 6469.1396484375, 30.425291061401, true) < 2.25) then
+		if(#(kordic-nekakoord) < 2.25) then
 			isInMarker  = true
 			currentZone = "prodaja"
 		end
@@ -157,7 +158,8 @@ Citizen.CreateThread(function()
 			for k, v in pairs(Config.Houses) do
 				local vrataCoords = v['door']
 				local xo,yo,zo = table.unpack(v['door'])
-				if GetDistanceBetweenCoords(vrataCoords, GetEntityCoords(PlayerPedId()), true) <= 2 then
+				if #(vrataCoords-GetEntityCoords(PlayerPedId())) <= 2 then
+				--if GetDistanceBetweenCoords(vrataCoords, GetEntityCoords(PlayerPedId()), true) <= 2 then
 					waitara = 0
 					naso = 1
 					if IsControlJustPressed(0, 24) or IsControlJustPressed(0, 140) then
@@ -218,9 +220,9 @@ Citizen.CreateThread(function()
 				if v.pretrazio == false then
 					local playerPed = PlayerPedId()
 					local coords = GetEntityCoords(playerPed)
-					local dist   = GetDistanceBetweenCoords(v.x, v.y, v.z, coords.x, coords.y, coords.z, false)
+					local dist   = #(v.Pos-coords)
 					if dist <= 1.2 then
-						DrawText3D(v.x, v.y, v.z, "Pritisnite E da pretrazite!", 0.4)
+						DrawText3D(v.Pos.x, v.Pos.y, v.Pos.z, "Pritisnite E da pretrazite!", 0.4)
 						if dist <= 0.5 and IsControlJustPressed(0, 38) then
 							v.pretrazio = true
 							FreezeEntityPosition(playerPed, true)
@@ -233,7 +235,8 @@ Citizen.CreateThread(function()
 					end
 				end
 			end
-			if GetDistanceBetweenCoords(izlaz, GetEntityCoords(PlayerPedId()), true) <= 2 then
+			if #(izlaz-GetEntityCoords(PlayerPedId())) <= 2 then
+			--if GetDistanceBetweenCoords(izlaz, GetEntityCoords(PlayerPedId()), true) <= 2 then
 				DrawText3D(izlaz.x, izlaz.y, izlaz.z, "Pritisnite E da izadjete iz kuce!", 0.4)
 				if IsControlJustPressed(0, 38) then
 					DoScreenFadeOut(100)

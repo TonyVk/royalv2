@@ -80,21 +80,36 @@ AddEventHandler('LSD:ProdajLSD', function()
 	end
 end)
 
-ESX.RegisterServerCallback('LSD:process', function (source, cb)
+ESX.RegisterServerCallback('LSD:process', function (source, cb, torba)
 	
 	local _source = source
 	
 	local xPlayer  = ESX.GetPlayerFromId(_source)
 			
-			
-				if xPlayer.getInventoryItem('kemija').count >= 2 then
-					xPlayer.removeInventoryItem('kemija', 2) 
-					xPlayer.addInventoryItem('LSD', 1) 
-					cb(true)
-				else
-				TriggerClientEvent('esx:showNotification', source, '~r~Nemate dosta kemije za preraditi u LSD')
+	if xPlayer.getInventoryItem('kemija').count >= 2 then
+		if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+			if xPlayer.getInventoryItem('LSD').count < 10*2 then 
+				xPlayer.removeInventoryItem('kemija', 2) 
+				xPlayer.addInventoryItem('LSD', 1) 
+				cb(true)
+			else
+				TriggerClientEvent('esx:showNotification', source, '~r~Nemate vise prostora za LSD')
 				cb(false)
-				end
+			end
+		else
+			if xPlayer.getInventoryItem('LSD').count < 10 then 
+				xPlayer.removeInventoryItem('kemija', 2) 
+				xPlayer.addInventoryItem('LSD', 1) 
+				cb(true)
+			else
+				TriggerClientEvent('esx:showNotification', source, '~r~Nemate vise prostora za LSD')
+				cb(false)
+			end
+		end
+	else
+		TriggerClientEvent('esx:showNotification', source, '~r~Nemate dosta kemije za preraditi u LSD')
+		cb(false)
+	end
 end)
 
 

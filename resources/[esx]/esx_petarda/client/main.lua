@@ -75,10 +75,11 @@ Citizen.CreateThread(function()
 		local coords = GetEntityCoords(GetPlayerPed(-1))
 
 		for k,v in pairs(Config.Zones) do
-			if GetDistanceBetweenCoords(coords, v.x, v.y, v.z, true) < Config.DrawDistance then
+			if #(coords-v.Pos) < Config.DrawDistance then
+			--if GetDistanceBetweenCoords(coords, v.x, v.y, v.z, true) < Config.DrawDistance then
 				waitara = 0
 				nasosta = 1
-				DrawMarker(Config.MarkerType, v.x, v.y, v.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.ZoneSize.x, Config.ZoneSize.y, Config.ZoneSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
+				DrawMarker(Config.MarkerType, v.Pos, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.ZoneSize.x, Config.ZoneSize.y, Config.ZoneSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
 			end
 		end
 		
@@ -86,7 +87,8 @@ Citizen.CreateThread(function()
 		local currentZone = nil
 
 		for k,v in pairs(Config.Zones) do
-			if(GetDistanceBetweenCoords(coords, v.x, v.y, v.z, true) < 2) then
+			if #(coords-v.Pos) < 2 then
+			--if(GetDistanceBetweenCoords(coords, v.x, v.y, v.z, true) < 2) then
 				isInMarker  = true
 				currentZone = k
 			end
@@ -112,7 +114,7 @@ if Config.ShowBlips then
 	-- oznaczenie
 	Citizen.CreateThread(function()
 		for k,v in pairs(Config.Zones) do
-			local blip = AddBlipForCoord(v.x, v.y, v.z)
+			local blip = AddBlipForCoord(v.Pos)
 
 			SetBlipSprite (blip, v.sprite)
 			SetBlipDisplay(blip, 4)
@@ -149,7 +151,8 @@ Citizen.CreateThread(function()
 				if CurrentAction == 'BitCoin' then
 					for k,v in pairs(Config.Zones) do
 						if k == "BitCoin" then
-							if(GetDistanceBetweenCoords(coords, v.x, v.y, v.z, true) < 2) then
+							if #(coords-v.Pos) < 2 then
+							--if(GetDistanceBetweenCoords(coords, v.x, v.y, v.z, true) < 2) then
 								local torba = 0
 								TriggerEvent('skinchanger:getSkin', function(skin)
 									torba = skin['bags_1']
@@ -170,7 +173,8 @@ Citizen.CreateThread(function()
 				elseif CurrentAction == 'VendaDeBitcon' then
 					for k,v in pairs(Config.Zones) do
 						if k == "VendaDeBitcon" then
-							if(GetDistanceBetweenCoords(coords, v.x, v.y, v.z, true) < 2) then
+							if #(coords-v.Pos) < 2 then
+							--if(GetDistanceBetweenCoords(coords, v.x, v.y, v.z, true) < 2) then
 								TriggerServerEvent('esx_bitcoin:startSellKoda')
 							else
 								TriggerEvent('esx_bitcoin:hasExitedMarker', lastZone)

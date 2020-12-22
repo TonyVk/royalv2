@@ -80,21 +80,34 @@ AddEventHandler('heroin:ProdajHeroin', function()
 	end
 end)
 
-ESX.RegisterServerCallback('Heroin:process', function (source, cb)
-	
+ESX.RegisterServerCallback('Heroin:process', function (source, cb, torba)
 	local _source = source
-	
 	local xPlayer  = ESX.GetPlayerFromId(_source)
 			
-			
-				if xPlayer.getInventoryItem('gljive').count >= 3 then
-					xPlayer.removeInventoryItem('gljive', 3) 
-					xPlayer.addInventoryItem('heroin', 1) 
-					cb(true)
-				else
-				TriggerClientEvent('esx:showNotification', source, '~r~Nemate dosta gljiva')
+	if xPlayer.getInventoryItem('gljive').count >= 3 then
+		if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+			if xPlayer.getInventoryItem('heroin').count < 10*2 then 
+				xPlayer.removeInventoryItem('gljive', 3) 
+				xPlayer.addInventoryItem('heroin', 1) 
+				cb(true)
+			else
+				TriggerClientEvent('esx:showNotification', source, '~r~Nemate vise prostora')
 				cb(false)
-				end
+			end
+		else
+			if xPlayer.getInventoryItem('heroin').count < 10 then 
+				xPlayer.removeInventoryItem('gljive', 3) 
+				xPlayer.addInventoryItem('heroin', 1) 
+				cb(true)
+			else
+				TriggerClientEvent('esx:showNotification', source, '~r~Nemate vise prrostora')
+				cb(false)
+			end
+		end
+	else
+		TriggerClientEvent('esx:showNotification', source, '~r~Nemate dosta gljiva')
+		cb(false)
+	end
 end)
 
 

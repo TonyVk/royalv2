@@ -225,7 +225,7 @@ Citizen.CreateThread(function()
 			local tablica = GetVehicleNumberPlateText(GetVehiclePedIsIn(GetPlayerPed(-1), false))
 			if tablica == plaquevehicule then
 				local kord = GetEntityCoords(PlayerPedId())
-				if GetDistanceBetweenCoords(kord, Config.Objekti[Odradio].x, Config.Objekti[Odradio].y, Config.Objekti[Odradio].z, true) <= 10 then
+				if #(kord-Config.Objekti[Odradio]) <= 10 then
 					ESX.Game.DeleteObject(Objekti[Odradio])
 					if DoesBlipExist(Blipara[Odradio]) then
 						RemoveBlip(Blipara[Odradio])
@@ -242,7 +242,7 @@ Citizen.CreateThread(function()
 								if DoesBlipExist(Blip) then
 									RemoveBlip(Blip)
 								end
-								Blip = AddBlipForCoord(v.Pos.x, v.Pos.y, v.Pos.z)
+								Blip = AddBlipForCoord(v.Pos)
 								SetBlipSprite(Blip, 1)
 								SetBlipColour (Blip, 5)
 								SetBlipAlpha(Blip, 255)
@@ -297,7 +297,7 @@ Citizen.CreateThread(function()
 			local currentZone = nil
 
 			for k,v in pairs(Config.Zones) do
-				if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
+				if(#(coords-v.Pos) < v.Size.x) then
 					waitara = 0
 					naso = 1
 					isInMarker  = true
@@ -306,7 +306,7 @@ Citizen.CreateThread(function()
 			end
 			
 			for k,v in pairs(Config.Cloakroom) do
-				if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
+				if(#(coords-v.Pos) < v.Size.x) then
 					waitara = 0
 					naso = 1
 					isInMarker  = true
@@ -329,20 +329,20 @@ Citizen.CreateThread(function()
 		
 		for k,v in pairs(Config.Zones) do
 
-			if isInService and (IsJobRalica() and v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+			if isInService and (IsJobRalica() and v.Type ~= -1 and #(coords-v.Pos) < Config.DrawDistance) then
 				waitara = 0
 				naso = 1
-				DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
+				DrawMarker(v.Type, v.Pos, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 			end
 
 		end
 
 		for k,v in pairs(Config.Cloakroom) do
 
-			if(IsJobRalica() and v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+			if(IsJobRalica() and v.Type ~= -1 and #(coords-v.Pos) < Config.DrawDistance) then
 				waitara = 0
 				naso = 1
-				DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
+				DrawMarker(v.Type, v.Pos, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 			end
 
 		end

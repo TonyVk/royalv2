@@ -343,12 +343,15 @@ function Process()
 	process = true
 	local making = true
 	while making and process do
-	TriggerEvent('esx:showNotification', '~g~Pocetak ~g~proizvodnje ~w~heroina')
-	Citizen.Wait(5000)
-	ESX.TriggerServerCallback('Heroin:process', function(output)
-			making = output
+		TriggerEvent('esx:showNotification', '~g~Pocetak ~g~proizvodnje ~w~heroina')
+		local torba = 0
+		TriggerEvent('skinchanger:getSkin', function(skin)
+			torba = skin['bags_1']
 		end)
-
+		Citizen.Wait(5000)
+		ESX.TriggerServerCallback('Heroin:process', function(output)
+			making = output
+		end, torba)
 	end
 end
 

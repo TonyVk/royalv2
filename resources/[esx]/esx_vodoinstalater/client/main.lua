@@ -252,11 +252,6 @@ AddEventHandler('esx_vodoinstalater:hasEnteredMarker', function(zone)
 			ESX.ShowNotification("Uspjesno popravljen kvar! Dobili ste 150 dolara!")
 			TriggerServerEvent("vodaa:platituljanu")
 			TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.job.name)
-			ESX.Game.DeleteObject(NoviObj)
-			ESX.Game.DeleteObject(NoviObj2)
-			ESX.Game.DeleteObject(NoviObj3)
-			ESX.Game.DeleteObject(NoviObj4)
-			ESX.Game.DeleteObject(NoviObj5)
 			RemoveBlip(Blipara)
 			TriggerServerEvent("vodoinstalater:MaknutKvar", GetPlayerServerId(PlayerId()))
 			NoviObj = nil
@@ -328,20 +323,22 @@ Citizen.CreateThread(function()
 			local currentZone = nil
 
 			for k,v in pairs(Config.Zones) do
-				if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
+				if #(coords-v.Pos) < v.Size.x then
+				--if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
 					isInMarker  = true
 					currentZone = k
 				end
 			end
 			
 			for k,v in pairs(Config.Cloakroom) do
-				if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
+				if #(coords-v.Pos) < v.Size.x then
+				--if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
 					isInMarker  = true
 					currentZone = k
 				end
 			end
 			
-			if Radis == true and SpawnMarker == true and (GetDistanceBetweenCoords(coords, Lokacija, true) < 2.0) then
+			if Radis == true and SpawnMarker == true and (#(coords-Lokacija) < 2.0) then
 				isInMarker  = true
 				currentZone = "kvar"
 			end
@@ -358,7 +355,7 @@ Citizen.CreateThread(function()
 			end
 
 		
-			if SpawnMarker and GetDistanceBetweenCoords(coords, Lokacija, true) < Config.DrawDistance then
+			if SpawnMarker and #(coords-Lokacija) < Config.DrawDistance then
 				waitara = 0
 				naso = 1
 				local x,y,z = table.unpack(Lokacija)
@@ -367,20 +364,20 @@ Citizen.CreateThread(function()
 			
 			for k,v in pairs(Config.Zones) do
 
-				if isInService and (v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+				if isInService and (v.Type ~= -1 and #(coords-v.Pos) < Config.DrawDistance) then
 					waitara = 0
 					naso = 1
-					DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
+					DrawMarker(v.Type, v.Pos, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 				end
 
 			end
 
 			for k,v in pairs(Config.Cloakroom) do
 
-				if(v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+				if(v.Type ~= -1 and #(coords-v.Pos) < Config.DrawDistance) then
 					waitara = 0
 					naso = 1
-					DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
+					DrawMarker(v.Type, v.Pos, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 				end
 
 			end
@@ -391,11 +388,6 @@ end)
 function MakniKvar()
 	TrajeIntervencija = false
 	Radis = false
-	ESX.Game.DeleteObject(NoviObj)
-	ESX.Game.DeleteObject(NoviObj2)
-	ESX.Game.DeleteObject(NoviObj3)
-	ESX.Game.DeleteObject(NoviObj4)
-	ESX.Game.DeleteObject(NoviObj5)
 	RemoveBlip(Blipara)
 	NoviObj = nil
 	NoviObj2 = nil
@@ -419,14 +411,17 @@ function SpawnajKvar()
 		local retval, outPosition = GetClosestVehicleNode(xa, ya, za, 0, 3.0, 0)
 		local JelKoBlizu = false
 		local KodGlavne = false
-		if GetDistanceBetweenCoords(228.61502075195, -793.43957519531, 30.63419342041, outPosition, false) <= 80.0 then
+		local kvarpos = vector3(228.61502075195, -793.43957519531, 30.63419342041)
+		if #(kvarpos-outPosition) <= 80.0 then
+		--if GetDistanceBetweenCoords(228.61502075195, -793.43957519531, 30.63419342041, outPosition, false) <= 80.0 then
 			KodGlavne = true
 		end
 		if KodGlavne == false then
 			for _,player in ipairs(GetActivePlayers()) do
 				Wait(1)
 				local kore = GetEntityCoords(GetPlayerPed(player))
-				if GetDistanceBetweenCoords(kore, outPosition, false) <= 50.0 then
+				if #(kore-outPosition) <= 50.0 then
+				--if GetDistanceBetweenCoords(kore, outPosition, false) <= 50.0 then
 					JelKoBlizu = true
 				end
 			end
@@ -515,19 +510,6 @@ end
 -------------------------------------------------
 -- Fonctions
 -------------------------------------------------
-RegisterNetEvent('vodoinstalater:ObrisiObjekte')
-AddEventHandler('vodoinstalater:ObrisiObjekte', function(obj1, obj2, obj3, obj4, obj5)
-	NetworkRequestControlOfNetworkId(obj1)
-	ESX.Game.DeleteObject(NetToObj(obj1))
-	NetworkRequestControlOfNetworkId(obj2)
-	ESX.Game.DeleteObject(NetToObj(obj2))
-	NetworkRequestControlOfNetworkId(obj3)
-	ESX.Game.DeleteObject(NetToObj(obj3))
-	NetworkRequestControlOfNetworkId(obj4)
-	ESX.Game.DeleteObject(NetToObj(obj4))
-	NetworkRequestControlOfNetworkId(obj5)
-	ESX.Game.DeleteObject(NetToObj(obj5))
-end)
 -- Fonction selection nouvelle mission livraison
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)

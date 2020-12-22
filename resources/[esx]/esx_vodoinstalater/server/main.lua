@@ -7,8 +7,8 @@ RegisterServerEvent('vodaa:platituljanu')
 AddEventHandler('vodaa:platituljanu', function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
-	xPlayer.addMoney(350)
-	TriggerEvent("biznis:StaviUSef", "vodoinstalater", math.ceil(350*0.30))
+	xPlayer.addMoney(550)
+	TriggerEvent("biznis:StaviUSef", "vodoinstalater", math.ceil(550*0.30))
 end)
 
 RegisterServerEvent('vodoinstalater:PosaljiObjekte')
@@ -24,13 +24,13 @@ RegisterServerEvent('vodoinstalater:MaknutKvar')
 AddEventHandler('vodoinstalater:MaknutKvar', function(id)
 	for i=1, #Objekti, 1 do
 		if Objekti[i] ~= nil and Objekti[i].ID == id then
-			Objekti[i].ID = nil
-			Objekti[i].Obj1 = nil
-			Objekti[i].Obj2 = nil
-			Objekti[i].Obj3 = nil
-			Objekti[i].Obj4 = nil
-			Objekti[i].Obj5 = nil
-			Objekti[i] = nil
+			DeleteEntity(NetworkGetEntityFromNetworkId(Objekti[i].Obj1))
+			DeleteEntity(NetworkGetEntityFromNetworkId(Objekti[i].Obj2))
+			DeleteEntity(NetworkGetEntityFromNetworkId(Objekti[i].Obj3))
+			DeleteEntity(NetworkGetEntityFromNetworkId(Objekti[i].Obj4))
+			DeleteEntity(NetworkGetEntityFromNetworkId(Objekti[i].Obj5))
+			table.remove(Objekti, i)
+			break
 		end
 	end
 end)
@@ -38,14 +38,12 @@ end)
 AddEventHandler('playerDropped', function()
 	for i=1, #Objekti, 1 do
 		if Objekti[i] ~= nil and Objekti[i].ID == source then
-			TriggerClientEvent("vodoinstalater:ObrisiObjekte", -1, Objekti[i].Obj1, Objekti[i].Obj2, Objekti[i].Obj3, Objekti[i].Obj4, Objekti[i].Obj5)
-			Objekti[i].ID = nil
-			Objekti[i].Obj1 = nil
-			Objekti[i].Obj2 = nil
-			Objekti[i].Obj3 = nil
-			Objekti[i].Obj4 = nil
-			Objekti[i].Obj5 = nil
-			Objekti[i] = nil
+			DeleteEntity(NetworkGetEntityFromNetworkId(Objekti[i].Obj1))
+			DeleteEntity(NetworkGetEntityFromNetworkId(Objekti[i].Obj2))
+			DeleteEntity(NetworkGetEntityFromNetworkId(Objekti[i].Obj3))
+			DeleteEntity(NetworkGetEntityFromNetworkId(Objekti[i].Obj4))
+			DeleteEntity(NetworkGetEntityFromNetworkId(Objekti[i].Obj5))
+			table.remove(Objekti, i)
 			break
 		end
 	end

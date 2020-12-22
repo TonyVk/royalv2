@@ -82,23 +82,34 @@ AddEventHandler('kokain:ProdajKoku', function()
 	end
 end)
 
-ESX.RegisterServerCallback('KCoke:process', function (source, cb)
-	
+ESX.RegisterServerCallback('KCoke:process', function (source, cb, torba)
 	local _source = source
-	
 	local xPlayer  = ESX.GetPlayerFromId(_source)
 			
-			
-				if xPlayer.getInventoryItem('coke').count >= 2 then
-					xPlayer.removeInventoryItem('coke', 2) 
-					xPlayer.addInventoryItem('cocaine', 1) 
-					cb(true)
-				else
-				TriggerClientEvent('esx:showNotification', source, '~r~Nemate dosta listova')
+	if xPlayer.getInventoryItem('coke').count >= 2 then
+		if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+			if xPlayer.getInventoryItem('cocaine').count < 10*2 then 
+				xPlayer.removeInventoryItem('coke', 2) 
+				xPlayer.addInventoryItem('cocaine', 1) 
+				cb(true)
+			else
+				TriggerClientEvent('esx:showNotification', source, '~r~Nemate vise prostora')
 				cb(false)
-				end
-			
-
+			end
+		else
+			if xPlayer.getInventoryItem('cocaine').count < 10 then 
+				xPlayer.removeInventoryItem('coke', 2) 
+				xPlayer.addInventoryItem('cocaine', 1) 
+				cb(true)
+			else
+				TriggerClientEvent('esx:showNotification', source, '~r~Nemate vise prostora')
+				cb(false)
+			end
+		end
+	else
+		TriggerClientEvent('esx:showNotification', source, '~r~Nemate dosta listova')
+		cb(false)
+	end
 end)
 
 

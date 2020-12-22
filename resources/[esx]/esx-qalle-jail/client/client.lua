@@ -99,10 +99,11 @@ function InJail()
 	--Jail Timer--
 
 	Citizen.CreateThread(function()
-
+		local koord1 = vector3(1009.6475830078, -3100.6489257813, -38.999870300293)
+		local koord2 = vector3(1793.9350585938, 2483.2326660156, -122.70251464844)
 		while jailTime > 0 do
 			local poz = GetEntityCoords(PlayerPedId())
-			if GetDistanceBetweenCoords(poz, 1009.6475830078, -3100.6489257813, -38.999870300293, false) > 110 and GetDistanceBetweenCoords(poz, 1793.9350585938, 2483.2326660156, -122.70251464844, false) > 110 then
+			if #(poz-koord1) > 110 and #(poz-koord2) > 110 then
 				local JailPosition = Config.JailPositions["Cell"]
 				SetEntityCoords(PlayerPedId(), JailPosition["x"], JailPosition["y"], JailPosition["z"] - 1)	
 				ESX.ShowNotification("Vraceni ste u zatvor!")
@@ -141,7 +142,7 @@ function InJail()
 
 			for posId, v in pairs(Packages) do
 
-				local DistanceCheck = GetDistanceBetweenCoords(PedCoords, v["x"], v["y"], v["z"], true)
+				local DistanceCheck = #(PedCoords-v["Pos"])
 
 				if DistanceCheck <= 10.0 then
 
@@ -193,7 +194,7 @@ function LoadTeleporters()
 
 			for p, v in pairs(Config.Teleports) do
 
-				local DistanceCheck = GetDistanceBetweenCoords(PedCoords, v["x"], v["y"], v["z"], true)
+				local DistanceCheck = #(PedCoords-v["Pos"])
 
 				if DistanceCheck <= 7.5 then
 
@@ -289,7 +290,7 @@ function DeliverPackage(packageId)
 		else
 			local DeliverPosition = Config.PrisonWork["DeliverPackage"]
 			local PedPosition = GetEntityCoords(PlayerPedId())
-			local DistanceCheck = GetDistanceBetweenCoords(PedPosition, DeliverPosition["x"], DeliverPosition["y"], DeliverPosition["z"], true)
+			local DistanceCheck = #(PedPosition-DeliverPosition["Pos"])
 
 			ESX.Game.Utils.DrawText3D(DeliverPosition, "[E] Ostavi paket", 0.4)
 

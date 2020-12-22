@@ -241,7 +241,8 @@ AddEventHandler('esx_kamion:hasEnteredMarker', function(zone)
 	
 	if zone == 'dostava' then
 		local corde = GetEntityCoords(prikolica)
-		if GetDistanceBetweenCoords(corde, Lokacija, true) <= 10.0 then
+		if #(corde-Lokacija) <= 10.0 then
+		--if GetDistanceBetweenCoords(corde, Lokacija, true) <= 10.0 then
 			RemoveBlip(Blipara)
 			Blipara = nil
 			FreezeEntityPosition(kamion, true)
@@ -336,14 +337,15 @@ Citizen.CreateThread(function()
 			local currentZone = nil
 
 			for k,v in pairs(Config.Zones) do
-					if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
-						isInMarker  = true
-						currentZone = k
-					end
+				if #(coords-v.Pos) < v.Size.x then
+					isInMarker  = true
+					currentZone = k
+				end
 			end
 			
 			for k,v in pairs(Config.Cloakroom) do
-				if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
+				if #(coords-v.Pos) < v.Size.x then
+				--if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
 					isInMarker  = true
 					currentZone = k
 				end
@@ -388,7 +390,8 @@ Citizen.CreateThread(function()
 			end
 			
 			if Lokacija ~= nil then
-				if GetDistanceBetweenCoords(coords, Lokacija, true) < 100 then
+				if #(coords-Lokacija) < 100 then
+				--if GetDistanceBetweenCoords(coords, Lokacija, true) < 100 then
 					waitara = 0
 					naso = 1
 					local x,y,z = table.unpack(Lokacija)
@@ -396,7 +399,7 @@ Citizen.CreateThread(function()
 				end
 			end
 			
-			if Radis == true and Lokacija ~= nil and (GetDistanceBetweenCoords(coords, Lokacija, true) < 2.0) then
+			if Radis == true and Lokacija ~= nil and (#(coords-Lokacija) < 2.0) then
 				isInMarker  = true
 				currentZone = "dostava"
 			end
@@ -413,19 +416,19 @@ Citizen.CreateThread(function()
 			end
 			
 			for k,v in pairs(Config.Zones) do
-					if isInService and (v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+					if isInService and (v.Type ~= -1 and #(coords-v.Pos) < Config.DrawDistance) then
 						waitara = 0
 						naso = 1
-						DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
+						DrawMarker(v.Type, v.Pos, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 					end
 			end
 
 			for k,v in pairs(Config.Cloakroom) do
 
-				if(v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+				if(v.Type ~= -1 and #(coords-v.Pos) < Config.DrawDistance) then
 					waitara = 0
 					naso = 1
-					DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
+					DrawMarker(v.Type, v.Pos, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 				end
 
 			end
@@ -525,7 +528,8 @@ function StartajPosao(br)
 				end
 				local corda = GetEntityCoords(prikolica)
 				local corda2 = GetEntityCoords(kont)
-				if GetDistanceBetweenCoords(corda, corda2, true) <= 1.0 then
+				if #(corda-corda2) <= 1.0
+				--if GetDistanceBetweenCoords(corda, corda2, true) <= 1.0 then
 					DetachContainerFromHandlerFrame(GetVehiclePedIsIn(PlayerPedId(), false))
 					AttachEntityToEntity(kont, prikolica, 0, 0.0, 0.0, 0.4, 0.0, 0.0, 0.0, false, false, true, false, 20, true)
 					utovario = true

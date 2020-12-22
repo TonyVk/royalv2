@@ -126,9 +126,11 @@ function Cutscene()
 	Citizen.Wait(500)
 	DoScreenFadeIn(250)
 	Citizen.CreateThread(function()
+		local nekakoord = vector3(1852.4729003906, 2608.1918945312, 45.889236450196)
 		while TrajeVoznja == 1 do
 			local corda = GetEntityCoords(PlayerPedId())
-			if GetDistanceBetweenCoords(corda, 1852.4729003906, 2608.1918945312, 45.889236450196, false) <= 10 then
+			if #(corda-nekakoord) <= 10 then
+			--if GetDistanceBetweenCoords(corda, 1852.4729003906, 2608.1918945312, 45.889236450196, false) <= 10 then
 				ESX.Game.DeleteVehicle(voza)
 				RemovePedElegantly(pilot)
 				TrajeVoznja = 0
@@ -206,7 +208,7 @@ function TeleportPlayer(pos)
 
 			Citizen.Wait(250)
 
-			SetEntityCoords(PlayerPedId(), position["x"], position["y"], position["z"])
+			SetEntityCoords(PlayerPedId(), position["Pos"])
 
 			Citizen.Wait(250)
 
@@ -224,7 +226,7 @@ function TeleportPlayer(pos)
 
 		Citizen.Wait(250)
 
-		SetEntityCoords(PlayerPedId(), position["x"], position["y"], position["z"])
+		SetEntityCoords(PlayerPedId(), position["Pos"])
 
 		Citizen.Wait(250)
 
@@ -233,7 +235,7 @@ function TeleportPlayer(pos)
 end
 
 Citizen.CreateThread(function()
-	local blip = AddBlipForCoord(Config.Teleports["Boiling Broke"]["x"], Config.Teleports["Boiling Broke"]["y"], Config.Teleports["Boiling Broke"]["z"])
+	local blip = AddBlipForCoord(Config.Teleports["Boiling Broke"]["Pos"])
 
     SetBlipSprite (blip, 188)
     SetBlipDisplay(blip, 4)

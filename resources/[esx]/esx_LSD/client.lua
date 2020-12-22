@@ -303,17 +303,20 @@ end
 
 function Process()
 	ESX.Streaming.RequestAnimDict("mini@repair", function()
-            TaskPlayAnim(PlayerPedId(), "mini@repair", "fixing_a_ped", 8.0, -8.0, -1, 32, 0, false, false, false)
+        TaskPlayAnim(PlayerPedId(), "mini@repair", "fixing_a_ped", 8.0, -8.0, -1, 32, 0, false, false, false)
 	end)
 	process = true
 	local making = true
 	while making and process do
-	TriggerEvent('esx:showNotification', '~g~Pocetak ~g~proizvodnje ~w~LSDa')
-	Citizen.Wait(5000)
-	ESX.TriggerServerCallback('LSD:process', function(output)
-			making = output
+		TriggerEvent('esx:showNotification', '~g~Pocetak ~g~proizvodnje ~w~LSDa')
+		local torba = 0
+		TriggerEvent('skinchanger:getSkin', function(skin)
+			torba = skin['bags_1']
 		end)
-
+		Citizen.Wait(5000)
+		ESX.TriggerServerCallback('LSD:process', function(output)
+			making = output
+		end, torba)
 	end
 end
 

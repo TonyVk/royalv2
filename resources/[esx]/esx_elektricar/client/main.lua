@@ -329,7 +329,8 @@ Citizen.CreateThread(function()
 			local currentZone = nil
 
 			for k,v in pairs(Config.Zones) do
-				if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
+				if #(coords-v.Pos) < v.Size.x
+				--if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
 					waitara = 0
 					naso = 1
 					isInMarker  = true
@@ -338,12 +339,15 @@ Citizen.CreateThread(function()
 			end
 			
 			if LokBroj ~= nil then
-				if(GetDistanceBetweenCoords(coords, Config.Lokacije[LokBroj].x, Config.Lokacije[LokBroj].y, Config.Lokacije[LokBroj].z-1.0, true) < 15.0) then
+				if #(coords-Config.Lokacije[LokBroj]) < 15.0 then
+				--if(GetDistanceBetweenCoords(coords, Config.Lokacije[LokBroj].x, Config.Lokacije[LokBroj].y, Config.Lokacije[LokBroj].z-1.0, true) < 15.0) then
 					waitara = 0
 					naso = 1
-					DrawMarker(1, Config.Lokacije[LokBroj].x, Config.Lokacije[LokBroj].y, Config.Lokacije[LokBroj].z-1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 1.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
+					local x,y,z = table.unpack(Config.Lokacije[LokBroj])
+					DrawMarker(1, x, y, z-1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 1.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
 				end
-				if(GetDistanceBetweenCoords(coords, Config.Lokacije[LokBroj].x, Config.Lokacije[LokBroj].y, Config.Lokacije[LokBroj].z, true) < 1.0) then
+				if #(coords-Config.Lokacije[LokBroj]) < 1.0
+				--if(GetDistanceBetweenCoords(coords, Config.Lokacije[LokBroj].x, Config.Lokacije[LokBroj].y, Config.Lokacije[LokBroj].z, true) < 1.0) then
 					if not IsPedInAnyVehicle(PlayerPedId(), false) then
 						isInMarker  = true
 						currentZone = "Radis"
@@ -352,7 +356,8 @@ Citizen.CreateThread(function()
 			end
 			
 			for k,v in pairs(Config.Cloakroom) do
-				if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
+				if #(coords-v.Pos) < v.Size.x then
+				--if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
 					waitara = 0
 					naso = 1
 					isInMarker  = true
@@ -372,18 +377,18 @@ Citizen.CreateThread(function()
 			end
 			
 			for k,v in pairs(Config.Zones) do
-				if isInService and (v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+				if isInService and (v.Type ~= -1 and #(coords-v.Pos) < Config.DrawDistance) then
 					waitara = 0
 					naso = 1
-					DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
+					DrawMarker(v.Type, v.Pos, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 				end
 			end
 
 			for k,v in pairs(Config.Cloakroom) do
-				if(v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+				if(v.Type ~= -1 and #(coords-v.Pos) < Config.DrawDistance) then
 					waitara = 0
 					naso = 1
-					DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
+					DrawMarker(v.Type, v.Pos, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 				end
 			end
 			if naso == 0 then

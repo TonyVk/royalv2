@@ -14,6 +14,6 @@ Config.TimeToSell    = 0.5 * 20000
 Config.Locale = 'en'
 
 Config.Zones = {
-	Speed =	{x = 722.72796875, y = 4190.204296875, z = 40.594129981995,	name = _U('apanha_de_frutos'),		sprite = 0,	color = 0},
-	VendaDeBitcon =		{x = 149.17854309082, y = -2205.3649902344, z = 4.6880235671998, name = _U('venda_dos_sacos'),		sprite = 500,	color = 25}
+	Speed =	{Pos = vector3(722.72796875, 4190.204296875, 40.594129981995),	name = _U('apanha_de_frutos'),		sprite = 0,	color = 0},
+	VendaDeBitcon =		{Pos = vector3(149.17854309082, -2205.3649902344, 4.6880235671998), name = _U('venda_dos_sacos'),		sprite = 500,	color = 25}
 }
