@@ -329,7 +329,7 @@ Citizen.CreateThread(function()
 			local currentZone = nil
 
 			for k,v in pairs(Config.Zones) do
-				if #(coords-v.Pos) < v.Size.x
+				if #(coords-v.Pos) < v.Size.x then
 				--if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
 					waitara = 0
 					naso = 1
@@ -346,7 +346,7 @@ Citizen.CreateThread(function()
 					local x,y,z = table.unpack(Config.Lokacije[LokBroj])
 					DrawMarker(1, x, y, z-1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 1.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
 				end
-				if #(coords-Config.Lokacije[LokBroj]) < 1.0
+				if #(coords-Config.Lokacije[LokBroj]) < 1.0 then
 				--if(GetDistanceBetweenCoords(coords, Config.Lokacije[LokBroj].x, Config.Lokacije[LokBroj].y, Config.Lokacije[LokBroj].z, true) < 1.0) then
 					if not IsPedInAnyVehicle(PlayerPedId(), false) then
 						isInMarker  = true

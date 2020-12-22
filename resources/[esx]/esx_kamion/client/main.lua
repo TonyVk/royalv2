@@ -528,7 +528,7 @@ function StartajPosao(br)
 				end
 				local corda = GetEntityCoords(prikolica)
 				local corda2 = GetEntityCoords(kont)
-				if #(corda-corda2) <= 1.0
+				if #(corda-corda2) <= 1.0 then
 				--if GetDistanceBetweenCoords(corda, corda2, true) <= 1.0 then
 					DetachContainerFromHandlerFrame(GetVehiclePedIsIn(PlayerPedId(), false))
 					AttachEntityToEntity(kont, prikolica, 0, 0.0, 0.0, 0.4, 0.0, 0.0, 0.0, false, false, true, false, 20, true)

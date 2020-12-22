@@ -291,8 +291,6 @@ Citizen.CreateThread(function()
 		local coords = GetEntityCoords(GetPlayerPed(-1))
 		
 		if IsJobRalica() then
-
-			local coords      = GetEntityCoords(GetPlayerPed(-1))
 			local isInMarker  = false
 			local currentZone = nil
 
