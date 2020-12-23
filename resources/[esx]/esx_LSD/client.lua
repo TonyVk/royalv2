@@ -189,7 +189,7 @@ Citizen.CreateThread(function()
 			local isInMarker  = false
 			local currentZone = nil
 
-			if #(kordic-prodaja) <= 50.0 then
+			if #(kordic-prodaja) < 2.25 then
 				isInMarker  = true
 				currentZone = "prodaja"
 			end
@@ -370,4 +370,3 @@ function DisplayHelpText(str)
 	AddTextComponentString(str)
 	DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 end
-

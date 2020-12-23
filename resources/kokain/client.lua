@@ -140,7 +140,7 @@ Citizen.CreateThread( function()
 	Citizen.Wait(10000)
 	while true do
 	Citizen.Wait(1000)
-		if #(GetEntityCoords(PlayerPedId())-Config.PickupBlip) then
+		if #(GetEntityCoords(PlayerPedId())-Config.PickupBlip) <= 200 then
 		--if GetDistanceBetweenCoords(Config.PickupBlip.x,Config.PickupBlip.y,Config.PickupBlip.z, GetEntityCoords(GetPlayerPed(-1))) <= 200 then
 			if spawned == false then
 				if ESX.PlayerData.job ~= nil then
