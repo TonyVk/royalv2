@@ -277,7 +277,9 @@ Config.AuthorizedHelicopters = {
 	
 	interventna = {},
 
-	chef = {},
+	chef = {
+		{ model = 'polmav', label = 'Police Maverick', livery = 0, price = 0 }
+	},
 
 	boss = {
 		{ model = 'polmav', label = 'Police Maverick', livery = 0, price = 0 }

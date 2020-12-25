@@ -143,8 +143,8 @@ Config.Locations11 = { -- CASINO Guards
 	{ x = 1134.03,    y = 260.48,   z = -52.04, heading = 34.58 },	-- GCasino4 vipizq
 	{ x = 1143.39,    y = 270.54,   z = -52.84, heading = 223.96 },	-- GCasino5 mesas bj
 	{ x = 1152.02,    y = 262.01,   z = -52.84, heading = 43.07 },	-- GCasino5 mesas bj
-	{ x = 923.57,     y = 43.46,    z = 80.11,  heading = 57.87 },	-- GCasino6 afu1
-	{ x = 927.41,     y = 50.81,    z = 80.11,  heading = 108.14 },	-- GCasinoWelcome
+	{ x = 929.77, 	  y = 47.40, 	z = 79.89,  heading = 67.80 },	-- GCasino6 afu1
+	{ x = 926.07, 	  y = 41.97, 	z = 79.89,  heading = 59.36 },	-- GCasinoWelcome
 	{ x = 1087.65,    y = 209.83,   z = -50.0,  heading = 264.7 }	-- GCasinoOut
 }
 

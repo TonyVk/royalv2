@@ -279,7 +279,7 @@ Citizen.CreateThread(function()
 								DrawMarker(1, Config.Processing, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.3, 1.3, 1.0, 0, 200, 0, 110, 0, 1, 0, 0)	
 								if #(kordic-Config.Processing) < 2 then
 								--if GetDistanceBetweenCoords(Config.Processing, GetEntityCoords(GetPlayerPed(-1)), true) < 2 then			
-									Draw3DText( Config.Processing , "~w~Proizvodnja kokaina~y~\nPritisnite [~b~E~y~] da krenete sa proizvodnjom",4,0.15,0.1)
+									Draw3DText( Config.Processing.x, Config.Processing.y, Config.Processing.z , "~w~Proizvodnja kokaina~y~\nPritisnite [~b~E~y~] da krenete sa proizvodnjom",4,0.15,0.1)
 									if IsControlJustReleased(0, Keys['E']) then
 										Citizen.CreateThread(function()
 											Process()

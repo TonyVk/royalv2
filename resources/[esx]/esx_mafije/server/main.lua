@@ -73,22 +73,22 @@ function UcitajMafije()
 			local data3 = json.decode(result[i].Vozila)
 			if data3 ~= nil then
 				for b=1, #data3 do
-					table.insert(Vozila, {Mafija = data3[b].Mafija, Ime = data3[b].Ime, Label = data3[b].Label})
+					table.insert(Vozila, {Mafija = result[i].Ime, Ime = data3[b].Ime, Label = data3[b].Label})
 				end
 			end
 			local data4 = json.decode(result[i].Oruzja)
 			if data4 ~= nil then
 				for c=1, #data4 do
-					table.insert(Oruzja, {Mafija = data4[c].Mafija, Ime = data4[c].Ime, Cijena = data4[c].Cijena})
+					table.insert(Oruzja, {Mafija = result[i].Ime, Ime = data4[c].Ime, Cijena = data4[c].Cijena})
 				end
 			end
 			local data5 = json.decode(result[i].Boje)
 			if data5 ~= nil then
 				for d=1, #data5 do
 					if data5[d].Ime == "Vozilo" then
-						table.insert(Boje, {Mafija = data5[d].Mafija, Ime = "Vozilo", R = data5[d].R, G = data5[d].G, B = data5[d].B})
+						table.insert(Boje, {Mafija = result[i].Ime, Ime = "Vozilo", R = data5[d].R, G = data5[d].G, B = data5[d].B})
 					else
-						table.insert(Boje, {Mafija = data5[d].Mafija, Ime = "Blip", Boja = data5[d].Boja})
+						table.insert(Boje, {Mafija = result[i].Ime, Ime = "Blip", Boja = data5[d].Boja})
 					end
 				end
 			end
@@ -344,9 +344,9 @@ AddEventHandler('mafije:DodajBoju', function(maf, br, bojaid, r, g, b)
 					for i=1, #Boje, 1 do
 						if Boje[i] ~= nil and Boje[i].Mafija == maf then
 							if Boje[i].R then
-								table.insert(Temp, {Mafija = Boje[i].Mafija, Ime = Boje[i].Ime, R = Boje[i].R, G = Boje[i].G, B = Boje[i].B})
+								table.insert(Temp, {Ime = Boje[i].Ime, R = Boje[i].R, G = Boje[i].G, B = Boje[i].B})
 							else
-								table.insert(Temp, {Mafija = Boje[i].Mafija, Ime = Boje[i].Ime, Boja = Boje[i].Boja})
+								table.insert(Temp, {Ime = Boje[i].Ime, Boja = Boje[i].Boja})
 							end
 						end
 					end
@@ -372,9 +372,9 @@ AddEventHandler('mafije:DodajBoju', function(maf, br, bojaid, r, g, b)
 					for i=1, #Boje, 1 do
 						if Boje[i] ~= nil and Boje[i].Mafija == maf then
 							if Boje[i].R then
-								table.insert(Temp, {Mafija = Boje[i].Mafija, Ime = Boje[i].Ime, R = Boje[i].R, G = Boje[i].G, B = Boje[i].B})
+								table.insert(Temp, {Ime = Boje[i].Ime, R = Boje[i].R, G = Boje[i].G, B = Boje[i].B})
 							else
-								table.insert(Temp, {Mafija = Boje[i].Mafija, Ime = Boje[i].Ime, Boja = Boje[i].Boja})
+								table.insert(Temp, {Ime = Boje[i].Ime, Boja = Boje[i].Boja})
 							end
 						end
 					end
@@ -519,7 +519,7 @@ AddEventHandler('mafije:DodajOruzje', function(maf, ime, cij, staroime)
 			local Temp = {}
 			for i=1, #Oruzja, 1 do
 				if Oruzja[i] ~= nil and Oruzja[i].Mafija == maf then
-					table.insert(Temp, {Mafija = Oruzja[i].Mafija, Ime = Oruzja[i].Ime, Cijena = Oruzja[i].Cijena})
+					table.insert(Temp, {Ime = Oruzja[i].Ime, Cijena = Oruzja[i].Cijena})
 				end
 			end
 			
@@ -540,7 +540,7 @@ AddEventHandler('mafije:DodajOruzje', function(maf, ime, cij, staroime)
 			local Temp = {}
 			for i=1, #Oruzja, 1 do
 				if Oruzja[i] ~= nil and Oruzja[i].Mafija == maf then
-					table.insert(Temp, {Mafija = Oruzja[i].Mafija, Ime = Oruzja[i].Ime, Cijena = Oruzja[i].Cijena})
+					table.insert(Temp, {Ime = Oruzja[i].Ime, Cijena = Oruzja[i].Cijena})
 				end
 			end
 			
@@ -566,7 +566,7 @@ AddEventHandler('mafije:ObrisiOruzje', function(ime, maf)
 			local Temp = {}
 			for h=1, #Oruzja, 1 do
 				if Oruzja[h] ~= nil and Oruzja[h].Mafija == maf then
-					table.insert(Temp, {Mafija = Oruzja[h].Mafija, Ime = Oruzja[h].Ime, Cijena = Oruzja[h].Cijena})
+					table.insert(Temp, {Ime = Oruzja[h].Ime, Cijena = Oruzja[h].Cijena})
 				end
 			end
 				
@@ -602,7 +602,7 @@ AddEventHandler('mafije:DodajVozilo', function(maf, ime, lab, staroime)
 			local Temp = {}
 			for i=1, #Vozila, 1 do
 				if Vozila[i] ~= nil and Vozila[i].Mafija == maf then
-					table.insert(Temp, {Mafija = Vozila[i].Mafija, Ime = Vozila[i].Ime, Label = Vozila[i].Label})
+					table.insert(Temp, {Ime = Vozila[i].Ime, Label = Vozila[i].Label})
 				end
 			end
 			
@@ -622,7 +622,7 @@ AddEventHandler('mafije:DodajVozilo', function(maf, ime, lab, staroime)
 			local Temp = {}
 			for i=1, #Vozila, 1 do
 				if Vozila[i] ~= nil and Vozila[i].Mafija == maf then
-					table.insert(Temp, {Mafija = Vozila[i].Mafija, Ime = Vozila[i].Ime, Label = Vozila[i].Label})
+					table.insert(Temp, {Ime = Vozila[i].Ime, Label = Vozila[i].Label})
 				end
 			end
 			
@@ -648,7 +648,7 @@ AddEventHandler('mafije:ObrisiVozilo', function(ime, maf)
 			local Temp = {}
 			for i=1, #Vozila, 1 do
 				if Vozila[i] ~= nil and Vozila[i].Mafija == maf then
-					table.insert(Temp, {Mafija = Vozila[i].Mafija, Ime = Vozila[i].Ime, Label = Vozila[i].Label})
+					table.insert(Temp, {Ime = Vozila[i].Ime, Label = Vozila[i].Label})
 				end
 			end
 			

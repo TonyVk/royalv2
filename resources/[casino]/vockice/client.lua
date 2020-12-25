@@ -242,7 +242,7 @@ positions = {
     --[[
     {{Teleport1 X, Teleport1 Y, Teleport1 Z, Teleport1 Heading}, {Teleport2 X, Teleport 2Y, Teleport 2Z, Teleport2 Heading}, {Red, Green, Blue}, "Text for Teleport"}
     ]]
-    {{925.0, 47.0, 80.00, 0}, {1090.00, 207.00, -49.9, 358},{36,237,157}, "Casino Diamond"},
+    {{930.50213623047, 41.459465026855, 80.098182678223, 0}, {1090.00, 207.00, -49.9, 358},{36,237,157}, "Casino Diamond"},
     --{{1086.00, 215.0, -50.00, 312}, {980.00, 57.0, 115.0, 52},{255, 157, 0}, "Penthouse"},
 }
 
