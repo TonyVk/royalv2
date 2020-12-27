@@ -613,6 +613,8 @@ RegisterCommand("uredimafiju", function(source, args, raw)
 									table.insert(elements, {label = "Postavi koordinate crate dropa", value = "6"})
 									table.insert(elements, {label = "Postavi koordinate ulaza u kucu", value = "7"})
 									table.insert(elements, {label = "Postavi koordinate izlaza iz kuce", value = "8"})
+									table.insert(elements, {label = "Postavi koordinate spawna plovila", value = "9"})
+									table.insert(elements, {label = "Postavi koordinate brisanja plovila", value = "10"})
 
 									ESX.UI.Menu.Open(
 									  'default', GetCurrentResourceName(), 'listarankova',
@@ -1507,8 +1509,21 @@ function OpenVehicleSpawnerMenu()
 			BVozilo = nil
 		end
 		ESX.Streaming.RequestModel(model)
-		if model == "seashark" then
-			BVozilo = CreateVehicle(model, 1537.4366455078, -2773.9877929688, 0.82165724039078, 180.80, true, false)
+		if IsThisModelABoat(model) or model == "submersible" or model == "submersible2" then
+			local x2,y2,z2,h2
+			for i=1, #Koord, 1 do
+				if Koord[i] ~= nil then
+					if Koord[i].Mafija == PlayerData.job.name and Koord[i].Ime == "LokVozila2" then
+						x2,y2,z2,h2 = table.unpack(Koord[i].Coord)
+						break
+					end
+				end
+			end
+			if (x2 == 0 or x2 == nil) and (y2 == 0 or y2 == nil) and (z2 == 0 or z2 == nil) then
+				ESX.ShowNotification("Vasoj mafiji nije postavljena lokacija spawna plovila, javite se adminu!")
+				return
+			end
+			BVozilo = CreateVehicle(model, x2, y2, z2, h2, true, false)
 		else
 			BVozilo = CreateVehicle(model, x,y,z,h, true, false)
 		end
@@ -2984,9 +2999,9 @@ Citizen.CreateThread(function()
 					if GetDistanceBetweenCoords(coords, x, y, z, true) < 100.0 then
 						waitara = 0
 						naso = 1
-						DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 255, 0, 0, 100, false, true, 2, false, false, false, false)
+						DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 2.5, 2.5, 3.0, 255, 0, 0, 100, false, true, 2, false, false, false, false)
 					end
-					if GetDistanceBetweenCoords(coords, x, y, z, true) < 1.5 then
+					if GetDistanceBetweenCoords(coords, x, y, z, true) < 2.5 then
 						isInMarker     = true
 						currentStation = 4
 						currentPart    = 'VehicleDeleter'

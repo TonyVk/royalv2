@@ -70,6 +70,8 @@ function UcitajMafije()
 			table.insert(Koord, {Mafija = result[i].Ime, Ime = "Ulaz", Coord = data2})
 			data2 = json.decode(result[i].Izlaz)
 			table.insert(Koord, {Mafija = result[i].Ime, Ime = "Izlaz", Coord = data2})
+			data2 = json.decode(result[i].LokVozila2)
+			table.insert(Koord, {Mafija = result[i].Ime, Ime = "LokVozila2", Coord = data2})
 			local data3 = json.decode(result[i].Vozila)
 			if data3 ~= nil then
 				for b=1, #data3 do
@@ -955,6 +957,45 @@ AddEventHandler('mafije:SpremiCoord', function(ime, coord, br, head)
 			table.insert(Koord, {Mafija = ime, Ime = "Izlaz", Coord = cordara})
 		end
 		TriggerClientEvent('esx:showNotification', source, 'Koordinate izlaza iz kuce su uspjesno spremljene za mafiju '..ime..'!')
+		TriggerClientEvent("mafije:UpdateKoord", -1, Koord)
+	elseif br == 9 then
+		local cordare = {}
+		table.insert(cordare, x)
+		table.insert(cordare, y)
+		table.insert(cordare, z)
+		table.insert(cordare, head)
+		MySQL.Async.execute('UPDATE mafije SET LokVozila2 = @cor WHERE Ime = @im', {
+			['@cor'] = json.encode(cordare),
+			['@im'] = ime
+		})
+		local Postoji = 0
+		for i=1, #Koord, 1 do
+			if Koord[i] ~= nil and Koord[i].Mafija == ime and Koord[i].Ime == "LokVozila2" then
+				Koord[i].Coord = cordare
+				Postoji = 1
+			end
+		end
+		if Postoji == 0 then
+			table.insert(Koord, {Mafija = ime, Ime = "LokVozila2", Coord = cordare})
+		end
+		TriggerClientEvent('esx:showNotification', source, 'Koordinate spawna plovila su uspjesno spremljene za mafiju '..ime..'!')
+		TriggerClientEvent("mafije:UpdateKoord", -1, Koord)
+	elseif br == 10 then
+		MySQL.Async.execute('UPDATE mafije SET DeleteV2 = @cor WHERE Ime = @im', {
+			['@cor'] = json.encode(cordara),
+			['@im'] = ime
+		})
+		local Postoji = 0
+		for i=1, #Koord, 1 do
+			if Koord[i] ~= nil and Koord[i].Mafija == ime and Koord[i].Ime == "DeleteV2" then
+				Koord[i].Coord = cordara
+				Postoji = 1
+			end
+		end
+		if Postoji == 0 then
+			table.insert(Koord, {Mafija = ime, Ime = "DeleteV2", Coord = cordara})
+		end
+		TriggerClientEvent('esx:showNotification', source, 'Koordinate brisanja plovila su uspjesno spremljene za mafiju '..ime..'!')
 		TriggerClientEvent("mafije:UpdateKoord", -1, Koord)
 	end
 end)

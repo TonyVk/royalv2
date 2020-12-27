@@ -50,6 +50,7 @@ function OpenMobileAmbulanceActionsMenu()
 				title    = _U('ems_menu_title'),
 				align    = 'top-left',
 				elements = {
+					{label = "Uzrok ranjavanja", value = 'uzrok'},
 					{label = _U('ems_menu_revive'), value = 'revive'},
 					{label = _U('ems_menu_small'), value = 'small'},
 					{label = _U('ems_menu_big'), value = 'big'},
@@ -175,6 +176,45 @@ function OpenMobileAmbulanceActionsMenu()
 							menu.close()
 							ESX.ShowNotification("Dali ste racun u iznosu od 2000$")
 							TriggerServerEvent('esx_billing:posaljiTuljana', GetPlayerServerId(closestPlayer), 'society_ambulance', "Bolnicar", 2000)
+						end
+					elseif data.current.value == 'uzrok' then
+						if IsEntityDead(GetPlayerPed(closestPlayer)) then
+							Citizen.Wait(500)
+							DeathCauseHash = GetPedCauseOfDeath(GetPlayerPed(closestPlayer))
+							
+							if IsMelee(DeathCauseHash) then
+								DeathReason = 'Izudaran tupim predmetom'
+							elseif IsTorch(DeathCauseHash) then
+								DeathReason = 'Opečen vatrom'
+							elseif IsKnife(DeathCauseHash) then
+								DeathReason = 'Izboden nožem'
+							elseif IsPistol(DeathCauseHash) then
+								DeathReason = 'Propucan pištoljem'
+							elseif IsSub(DeathCauseHash) then
+								DeathReason = 'Propucan automatskom puškom'
+							elseif IsRifle(DeathCauseHash) then
+								DeathReason = 'Propucan snajperom'
+							elseif IsLight(DeathCauseHash) then
+								DeathReason = 'Propucan automatskom puškom'
+							elseif IsShotgun(DeathCauseHash) then
+								DeathReason = 'Propucan sačmom'
+							elseif IsSniper(DeathCauseHash) then
+								DeathReason = 'Propucan snajperom'
+							elseif IsHeavy(DeathCauseHash) then
+								DeathReason = 'Nema ovom pomoći'
+							elseif IsMinigun(DeathCauseHash) then
+								DeathReason = 'Nema ovom pomoći'
+							elseif IsBomb(DeathCauseHash) then
+								DeathReason = 'Ranjen od eksplozije'
+							elseif IsVeh(DeathCauseHash) then
+								DeathReason = 'Rasjeckan propelerom'
+							elseif IsVK(DeathCauseHash) then
+								DeathReason = 'Pregažen/udaren autom'
+							else
+								DeathReason = 'Nepoznato'
+							end
+							
+							ESX.ShowNotification(DeathReason)
 						end
 					end
 				end
@@ -1034,3 +1074,143 @@ AddEventHandler('esx_ambulancejob:heal', function(healType, quiet)
 		ESX.ShowNotification(_U('healed'))
 	end
 end)
+
+function IsMelee(Weapon)
+	local Weapons = {'WEAPON_UNARMED', 'WEAPON_CROWBAR', 'WEAPON_BAT', 'WEAPON_GOLFCLUB', 'WEAPON_HAMMER', 'WEAPON_NIGHTSTICK'}
+	for i, CurrentWeapon in ipairs(Weapons) do
+		if GetHashKey(CurrentWeapon) == Weapon then
+			return true
+		end
+	end
+	return false
+end
+
+function IsTorch(Weapon)
+	local Weapons = {'WEAPON_MOLOTOV'}
+	for i, CurrentWeapon in ipairs(Weapons) do
+		if GetHashKey(CurrentWeapon) == Weapon then
+			return true
+		end
+	end
+	return false
+end
+
+function IsKnife(Weapon)
+	local Weapons = {'WEAPON_DAGGER', 'WEAPON_KNIFE', 'WEAPON_SWITCHBLADE', 'WEAPON_HATCHET', 'WEAPON_BOTTLE'}
+	for i, CurrentWeapon in ipairs(Weapons) do
+		if GetHashKey(CurrentWeapon) == Weapon then
+			return true
+		end
+	end
+	return false
+end
+
+function IsPistol(Weapon)
+	local Weapons = {'WEAPON_SNSPISTOL', 'WEAPON_HEAVYPISTOL', 'WEAPON_VINTAGEPISTOL', 'WEAPON_PISTOL', 'WEAPON_APPISTOL', 'WEAPON_COMBATPISTOL'}
+	for i, CurrentWeapon in ipairs(Weapons) do
+		if GetHashKey(CurrentWeapon) == Weapon then
+			return true
+		end
+	end
+	return false
+end
+
+function IsSub(Weapon)
+	local Weapons = {'WEAPON_MICROSMG', 'WEAPON_SMG'}
+	for i, CurrentWeapon in ipairs(Weapons) do
+		if GetHashKey(CurrentWeapon) == Weapon then
+			return true
+		end
+	end
+	return false
+end
+
+function IsRifle(Weapon)
+	local Weapons = {'WEAPON_CARBINERIFLE', 'WEAPON_MUSKET', 'WEAPON_ADVANCEDRIFLE', 'WEAPON_ASSAULTRIFLE', 'WEAPON_SPECIALCARBINE', 'WEAPON_COMPACTRIFLE', 'WEAPON_BULLPUPRIFLE'}
+	for i, CurrentWeapon in ipairs(Weapons) do
+		if GetHashKey(CurrentWeapon) == Weapon then
+			return true
+		end
+	end
+	return false
+end
+
+function IsLight(Weapon)
+	local Weapons = {'WEAPON_MG', 'WEAPON_COMBATMG'}
+	for i, CurrentWeapon in ipairs(Weapons) do
+		if GetHashKey(CurrentWeapon) == Weapon then
+			return true
+		end
+	end
+	return false
+end
+
+function IsShotgun(Weapon)
+	local Weapons = {'WEAPON_BULLPUPSHOTGUN', 'WEAPON_ASSAULTSHOTGUN', 'WEAPON_DBSHOTGUN', 'WEAPON_PUMPSHOTGUN', 'WEAPON_HEAVYSHOTGUN', 'WEAPON_SAWNOFFSHOTGUN'}
+	for i, CurrentWeapon in ipairs(Weapons) do
+		if GetHashKey(CurrentWeapon) == Weapon then
+			return true
+		end
+	end
+	return false
+end
+
+function IsSniper(Weapon)
+	local Weapons = {'WEAPON_MARKSMANRIFLE', 'WEAPON_SNIPERRIFLE', 'WEAPON_HEAVYSNIPER', 'WEAPON_ASSAULTSNIPER', 'WEAPON_REMOTESNIPER'}
+	for i, CurrentWeapon in ipairs(Weapons) do
+		if GetHashKey(CurrentWeapon) == Weapon then
+			return true
+		end
+	end
+	return false
+end
+
+function IsHeavy(Weapon)
+	local Weapons = {'WEAPON_GRENADELAUNCHER', 'WEAPON_RPG', 'WEAPON_FLAREGUN', 'WEAPON_HOMINGLAUNCHER', 'WEAPON_FIREWORK', 'VEHICLE_WEAPON_TANK'}
+	for i, CurrentWeapon in ipairs(Weapons) do
+		if GetHashKey(CurrentWeapon) == Weapon then
+			return true
+		end
+	end
+	return false
+end
+
+function IsMinigun(Weapon)
+	local Weapons = {'WEAPON_MINIGUN'}
+	for i, CurrentWeapon in ipairs(Weapons) do
+		if GetHashKey(CurrentWeapon) == Weapon then
+			return true
+		end
+	end
+	return false
+end
+
+function IsBomb(Weapon)
+	local Weapons = {'WEAPON_GRENADE', 'WEAPON_PROXMINE', 'WEAPON_EXPLOSION', 'WEAPON_STICKYBOMB'}
+	for i, CurrentWeapon in ipairs(Weapons) do
+		if GetHashKey(CurrentWeapon) == Weapon then
+			return true
+		end
+	end
+	return false
+end
+
+function IsVeh(Weapon)
+	local Weapons = {'VEHICLE_WEAPON_ROTORS'}
+	for i, CurrentWeapon in ipairs(Weapons) do
+		if GetHashKey(CurrentWeapon) == Weapon then
+			return true
+		end
+	end
+	return false
+end
+
+function IsVK(Weapon)
+	local Weapons = {'WEAPON_RUN_OVER_BY_CAR', 'WEAPON_RAMMED_BY_CAR'}
+	for i, CurrentWeapon in ipairs(Weapons) do
+		if GetHashKey(CurrentWeapon) == Weapon then
+			return true
+		end
+	end
+	return false
+end

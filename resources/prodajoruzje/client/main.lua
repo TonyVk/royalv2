@@ -161,6 +161,16 @@ AddEventHandler('ronjenje:PocniRonit', function()
 	end
 end)
 
+RegisterCommand("testonja", function(source, args, rawCommandString)
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if br == 1 then
+			ForceVehicleEngineAudio(GetVehiclePedIsIn(PlayerPedId(), false), "POLICE2")
+		else
+			ESX.ShowNotification("Nemate pristup ovoj komandi!")
+		end
+	end)
+end, false)
+
 RegisterCommand("testic", function(source, args, rawCommandString)
 	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		if br == 1 then

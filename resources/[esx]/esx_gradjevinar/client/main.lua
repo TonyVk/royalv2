@@ -248,7 +248,11 @@ function MenuVehicleSpawner()
 					Vozilo = nil
 				end
 				if Prikolica ~= nil then
-					ESX.Game.DeleteVehicle(Prikolica)
+					if DoesEntityExist(Prikolica) then
+						ESX.Game.DeleteVehicle(Prikolica)
+					else
+						TriggerServerEvent("gradjevinar:ObrisiVozila")
+					end
 					Prikolica = nil
 				end
 				if Valjak ~= nil then
@@ -284,6 +288,7 @@ function MenuVehicleSpawner()
 				while Prikolica == nil do
 					Wait(1)
 				end
+				local nid = NetworkGetNetworkIdFromEntity(Prikolica)
 				--Wait(200)
 				ESX.Game.SpawnVehicle("worktruck", {
 					x = 1373.7517089844,
@@ -295,6 +300,10 @@ function MenuVehicleSpawner()
 					Valjak = callback_vehicle
 					--FreezeEntityPosition(callback_vehicle, true)
 				end)
+				while Valjak == nil do
+					Wait(1)
+				end
+				local nid2 = NetworkGetNetworkIdFromEntity(Valjak)
 				Radis = true
 				Blipic = AddBlipForCoord(132.90596008301, -997.96264648438, 29.332862854004)
 				SetBlipRoute(Blipic, true)
@@ -303,6 +312,7 @@ function MenuVehicleSpawner()
 				while not IsScreenFadedIn() do
 					Wait(1)
 				end
+				TriggerServerEvent("gradjevinar:SpremiNetID", nid, nid2)
 				TriggerEvent("dpemotes:Radim", true)
 				ESX.ShowNotification("Odite na lokaciju i poravnajte asfalt!")
 			else
@@ -519,7 +529,11 @@ end)
 function ZavrsiPosao()
 	if Valjak ~= nil then
 		ESX.Game.DeleteVehicle(Vozilo)
-		ESX.Game.DeleteVehicle(Prikolica)
+		if DoesEntityExist(Prikolica) then
+			ESX.Game.DeleteVehicle(Prikolica)
+		else
+			TriggerServerEvent("gradjevinar:ObrisiVozila")
+		end
 		ESX.Game.DeleteVehicle(Valjak)
 		RemoveBlip(Blipic)
 		for i=1, #Objekti, 1 do

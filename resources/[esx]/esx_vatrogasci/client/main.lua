@@ -320,6 +320,31 @@ Citizen.CreateThread(function()
 			local coords      = GetEntityCoords(GetPlayerPed(-1))
 			local isInMarker  = false
 			local currentZone = nil
+			
+			if IsATruck() then
+				naso = 1
+				waitara = 0
+				if IsPedInAnyVehicle(PlayerPedId(), false) then
+					if IsControlJustReleased(0, 86) then
+						if UpaljenaSirena then
+							local nid = NetworkGetNetworkIdFromEntity(GetVehiclePedIsIn(PlayerPedId(), false))
+							TriggerServerEvent("policija:UpaliSirenu", nid, true, false)
+							UpaljenaSirena = false
+						end
+					end
+					if IsControlJustReleased(0, 137) then
+						if not UpaljenaSirena then
+							local nid = NetworkGetNetworkIdFromEntity(GetVehiclePedIsIn(PlayerPedId(), false))
+							TriggerServerEvent("policija:UpaliSirenu", nid, true, true)
+							UpaljenaSirena = true
+						else
+							local nid = NetworkGetNetworkIdFromEntity(GetVehiclePedIsIn(PlayerPedId(), false))
+							TriggerServerEvent("policija:UpaliSirenu", nid, false, false)
+							UpaljenaSirena = false
+						end
+					end
+				end
+			end
 
 			for k,v in pairs(Config.Zones) do
 				if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then

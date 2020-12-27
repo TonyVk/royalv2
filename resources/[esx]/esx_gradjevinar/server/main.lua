@@ -1,6 +1,8 @@
 ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
+local Vozila = {}
+
 RegisterServerEvent('gradjevinar:tuljaniplivaju')
 AddEventHandler('gradjevinar:tuljaniplivaju', function()
 	local _source = source
@@ -15,4 +17,45 @@ AddEventHandler('gradjevinar:tuljaniplivaju2', function()
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	xPlayer.addMoney(100)
 	TriggerEvent("biznis:StaviUSef", "gradjevinar", math.ceil(100*0.30))
+end)
+
+AddEventHandler('playerDropped', function()
+	for i=1, #Vozila, 1 do
+		if Vozila[i] ~= nil and Vozila[i].Vlasnik == source then
+			DeleteEntity(NetworkGetEntityFromNetworkId(Vozila[i].Nid))
+			DeleteEntity(NetworkGetEntityFromNetworkId(Vozila[i].Nid2))
+			table.remove(Vozila, i)
+			break
+		end
+	end
+end)
+
+RegisterServerEvent('gradjevinar:SpremiNetID')
+AddEventHandler('gradjevinar:SpremiNetID', function(nid, nid2)
+	local _source = source
+	local naso = 0
+	for i=1, #Vozila, 1 do
+		if Vozila[i] ~= nil and Vozila[i].Vlasnik == _source then
+			Vozila[i].Nid = nid
+			Vozila[i].Nid2 = nid2
+			naso = 1
+			break
+		end
+	end
+	if naso == 0 then
+		table.insert(Vozila, {Vlasnik = _source, Nid = nid, Nid2 = nid2})
+	end
+end)
+
+RegisterServerEvent('gradjevinar:ObrisiVozila')
+AddEventHandler('gradjevinar:ObrisiVozila', function()
+	local _source = source
+	for i=1, #Vozila, 1 do
+		if Vozila[i] ~= nil and Vozila[i].Vlasnik == _source then
+			DeleteEntity(NetworkGetEntityFromNetworkId(Vozila[i].Nid))
+			DeleteEntity(NetworkGetEntityFromNetworkId(Vozila[i].Nid2))
+			table.remove(Vozila, i)
+			break
+		end
+	end
 end)
