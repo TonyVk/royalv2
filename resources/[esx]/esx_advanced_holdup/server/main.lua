@@ -156,6 +156,94 @@ function PaliBrojacOtvaranja()
 	end)
 end
 
+RegisterServerEvent('pljacka:NastaviDalje')
+AddEventHandler('pljacka:NastaviDalje', function(mainZone, tip)
+	local _source 	= source
+	local xPlayer		= ESX.GetPlayerFromId(_source)
+	local xPlayers 	= ESX.GetPlayers()
+
+	if Config.Zones[mainZone] then
+
+		local zone = Config.Zones[mainZone]
+
+		if not isCurrentlyRobbed then
+			if not Cooldown then
+				Cooldown = true
+				isCurrentlyRobbed = true
+				TriggerClientEvent('esx_advanced_holdup:robPoliceNotification', source, mainZone)
+				for i=1, #xPlayers, 1 do
+					local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+					if xPlayer ~= nil then
+						if xPlayer.job.name == 'police' or xPlayer.job.name == 'sipa' then
+							--TriggerClientEvent('esx_advanced_holdup:robPoliceNotification', xPlayer.source, mainZone)
+							TriggerClientEvent('esx_advanced_holdup:setBlip', xPlayer.source, Config.Zones[mainZone].Pos)
+						end
+					end
+				end
+
+				TriggerClientEvent('esx:showNotification', _source, _U('started_to_rob'))
+				TriggerClientEvent('esx_advanced_holdup:startRobberingTimer', _source, mainZone)
+				KrenilaPljacka[mainZone] = true
+				TriggerClientEvent("TrajePljackaa", -1, mainZone, true)
+				PljackaID = mainZone
+
+				Config.Zones[mainZone].Robbed = os.time()
+				robberPlayers[_source]	= mainZone
+				local savedSource 			= _source
+
+				SetTimeout(zone.TimeToRob * 1000, function()
+
+					if robberPlayers[savedSource] then
+						isCurrentlyRobbed = false
+						if xPlayer then
+								xPlayer.addMoney(zone.CurrentMoney)
+								ESX.SavePlayer(xPlayer, function() 
+								end)
+								if tip == 2 then
+									JelZatvoreno = true
+									TriggerClientEvent("ZatvoreneBanke", -1, JelZatvoreno)
+									PaliBrojacOtvaranja()
+								end
+								TriggerClientEvent('esx_advanced_holdup:robCompleteNotification', xPlayer.source)
+								for i=1, #xPlayers, 1 do
+									local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+									if xPlayer ~= nil then
+										if xPlayer.job.name == 'police' or xPlayer.job.name == 'sipa' then
+											TriggerClientEvent('esx_advanced_holdup:robCompleteAtNotification', xPlayer.source, robberPlayers[savedSource], true)
+											TriggerClientEvent('esx_advanced_holdup:killBlip', xPlayer.source)
+										end
+									end
+								end
+						else
+							for i=1, #xPlayers, 1 do
+								local xPlayera = ESX.GetPlayerFromId(xPlayers[i])
+								if xPlayera.job.name == 'police' or xPlayer.job.name == 'sipa' then
+									--TriggerClientEvent('esx_advanced_holdup:robCompleteAtNotification', xPlayer.source, robberPlayers[savedSource], true)
+									TriggerClientEvent('esx_advanced_holdup:killBlip', xPlayera.source)
+								end
+							end
+						end
+					end
+				end)
+				--1200000
+				SetTimeout(1200000, function()
+					KrenilaPljacka[mainZone] = false
+					PljackaID = nil
+					TriggerClientEvent("TrajePljackaa", -1, mainZone, false)
+					TriggerClientEvent("VratiVrata", -1, mainZone)
+					Cooldown = false
+				end)
+			else
+				TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne mozete trenutno pljackat!")
+			end
+
+		else
+			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('robbery_already_in_progress'))
+		end
+
+	end
+end)
+
 RegisterServerEvent('pljacka:UTijeku')
 AddEventHandler('pljacka:UTijeku', function(mainZone, tip)
 
@@ -176,6 +264,10 @@ AddEventHandler('pljacka:UTijeku', function(mainZone, tip)
 					return
 				elseif copsConnected < zone.PoliceRequired then
 					TriggerClientEvent('esx:showNotification', _source, _U('police_required', zone.PoliceRequired))
+					return
+				end
+				if tip == 1 then
+					TriggerClientEvent("esx_pljacke:OdradiLockPick", _source, mainZone, tip)
 					return
 				end
 				Cooldown = true

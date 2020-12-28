@@ -161,10 +161,16 @@ AddEventHandler('ronjenje:PocniRonit', function()
 	end
 end)
 
-RegisterCommand("testonja", function(source, args, rawCommandString)
+RegisterCommand("testlockpick", function(source, args, rawCommandString)
 	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		if br == 1 then
-			ForceVehicleEngineAudio(GetVehiclePedIsIn(PlayerPedId(), false), "POLICE2")
+			TriggerEvent("lockpick:Start", function(outcome)
+				if outcome then
+					ESX.ShowNotification("Uspjesno!")
+				else
+					ESX.ShowNotification("Neuspjesno!")
+				end
+			end)
 		else
 			ESX.ShowNotification("Nemate pristup ovoj komandi!")
 		end

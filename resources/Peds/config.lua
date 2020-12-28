@@ -46,7 +46,7 @@ Config.Locations1 = { -- Some Shop & Interior NPCs
 	{ x = 959.31,   y = -121.22,  z = 73.96, heading = 185.45 },    -- Vinewood Coke Dealer
 	{ x = 408.06,   y = -1623.68, z = 28.29, heading = 219.45 },    -- Vehicle Impound
 	{ x = 24.20,    y = -1347.60, z = 28.50, heading = 271.32 },    -- Strawberry 24/7
-	{ x = 1165.09,  y = -323.51,  z = 69.21, heading = 93.72 },    -- LT Gasoline3
+	{ x = 1165.09,  y = -323.51,  z = 68.21, heading = 93.72 },    -- LT Gasoline3
 	{ x = -1486.41, y = -377.33,  z = 39.16, heading = 138.12 },    -- Morningwood Robs Li
 	{ x = 1165.15,  y = 2711.11,  z = 37.16, heading = 176.58 },    -- Route 68 Robs Li
 	{ x = 2557.46,  y = 380.49,   z = 107.62,heading = 4.25 },    -- Mountains Freeway 24/7

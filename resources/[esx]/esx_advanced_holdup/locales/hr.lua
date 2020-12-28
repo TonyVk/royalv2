@@ -13,7 +13,7 @@ Locales['hr'] = {
 	['notif_zone_name'] = '~y~%s~s~',
 	['started_to_rob'] = 'poceli ste pljacku, ~o~nemojte otici predaleko!~s~',
 	['robbery_complete'] = '~g~Pljacka zavrsena, novac pokupljen.~s~~n~~p~~h~Bjezi dok se policija ne pojavi!~s~',
-	['robbery_has_cancelled'] = '~r~Pobjegli ste prije nego sto ste otvorili sef ...~s~',
+	['robbery_has_cancelled'] = '~r~Pobjegli ste prije nego sto ste ispraznili sef ...~s~',
 	['can_inside_vehicle'] = '~r~Ne mozete pljackati iz vozila...~s~',
     ['robbery_already_in_progress'] = '~r~Pljacka vec traje...~s~',
 }

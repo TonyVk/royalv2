@@ -601,6 +601,22 @@ AddEventHandler('mafije:UpdateMafije', function(maf)
 	Mafije = maf
 end)
 
+RegisterNetEvent('esx_pljacke:OdradiLockPick')
+AddEventHandler('esx_pljacke:OdradiLockPick', function(mainZone, tip)
+	TriggerEvent("lockpick:Start", function(outcome)
+		if outcome then
+			TriggerServerEvent("pljacka:NastaviDalje", mainZone, tip)
+		else
+			ESX.ShowNotification("Niste uspjeli obiti sef.")
+			local koords = GetEntityCoords(PlayerPedId())
+			local PlayerCoords = { x = koords.x, y = koords.y, z = koords.z }
+			TriggerServerEvent('esx_addons_gcphone:startCall', 'police', "Pokušaj obijanja sefa u trgovini", PlayerCoords, {
+				PlayerCoords = { x = koords.x, y = koords.y, z = koords.z },
+			})
+		end
+	end)
+end)
+
 -- Key Controls
 Citizen.CreateThread(function()
 	while true do
