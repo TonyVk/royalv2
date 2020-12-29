@@ -19,6 +19,14 @@ AddEventHandler('gradjevinar:tuljaniplivaju2', function()
 	TriggerEvent("biznis:StaviUSef", "gradjevinar", math.ceil(100*0.30))
 end)
 
+RegisterServerEvent('gradjevinar:Penali')
+AddEventHandler('gradjevinar:Penali', function()
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	xPlayer.removeMoney(1000)
+	TriggerEvent("biznis:StaviUSef", "gradjevinar", math.ceil(1000*0.30))
+end)
+
 AddEventHandler('playerDropped', function()
 	for i=1, #Vozila, 1 do
 		if Vozila[i] ~= nil and Vozila[i].Vlasnik == source then

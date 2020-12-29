@@ -783,6 +783,11 @@ Citizen.CreateThread(function()
 				if IsControlJustPressed(0, 38) and IsJobGradjevinar() then
 
 					if CurrentAction == 'Obrisi' then
+						local retval, trailer = GetVehicleTrailerVehicle(Vozilo)
+						if trailer ~= Prikolica then
+							ESX.ShowNotification("Oduzeto vam je 1000 dolara zato sto ste se vratili bez prikolice")
+							TriggerServerEvent("gradjevinar:Penali")
+						end
 						ZavrsiPosao()
 					end
 					CurrentAction = nil
