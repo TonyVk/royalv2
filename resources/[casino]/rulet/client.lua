@@ -24,10 +24,17 @@ RegisterNetEvent('route68_ruletka:start')
 AddEventHandler('route68_ruletka:start', function()
 	ESX.TriggerServerCallback('esx_roulette:check_money', function(quantity)
 		if quantity >= 10 then
-			SendNUIMessage({
-				type = "show_table",
-				zetony = quantity
-			})
+			if quantity > 100000 then
+				SendNUIMessage({
+					type = "show_table",
+					zetony = 100000
+				})
+			else
+				SendNUIMessage({
+					type = "show_table",
+					zetony = quantity
+				})
+			end
 			SetNuiFocus(true, true)
 		else
 			ESX.ShowNotification('Trebate minimalno 10 zetona za igrati!!')

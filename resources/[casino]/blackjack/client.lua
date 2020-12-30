@@ -12,11 +12,19 @@ RegisterNetEvent('route68_blackjack:start')
 AddEventHandler('route68_blackjack:start', function()
 	ESX.TriggerServerCallback('route68_blackjack:check_money', function(quantity)
 		if quantity >= 100 then
-			SendNUIMessage({
-				type = "enableui",
-				enable = true,
-				coins = quantity
-			})
+			if quantity > 100000 then
+				SendNUIMessage({
+					type = "enableui",
+					enable = true,
+					coins = 100000
+				})
+			else
+				SendNUIMessage({
+					type = "enableui",
+					enable = true,
+					coins = quantity
+				})
+			end
 			SetNuiFocus(true, true)
 		else
 			ESX.ShowNotification('Morate imati minimalno 100 zetona!')

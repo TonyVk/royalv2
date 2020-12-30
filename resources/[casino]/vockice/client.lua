@@ -1,6 +1,7 @@
 ESX                             = nil
 local PlayerData                = {}
 local open 						= false
+local OtvorenMenu 				= false
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -30,12 +31,13 @@ end)
 
 Citizen.CreateThread(function()
 	local waitara = 500
+	local poza = vector3(1115.9971923828, 219.96560668945, -49.435085296631)
 	while true do
 		Citizen.Wait(waitara)
 		local naso = 0
 		local Igrac = GetPlayerPed(-1)
 		local PozicijaIgraca = GetEntityCoords(Igrac)
-		local Udaljenost = GetDistanceBetweenCoords(PozicijaIgraca, 1115.9971923828, 219.96560668945, -49.435085296631, true)
+		local Udaljenost = #(PozicijaIgraca-poza)
 		if Udaljenost <= 10.0 then
 			waitara = 0
 			naso = 1
@@ -48,6 +50,10 @@ Citizen.CreateThread(function()
 			if IsControlJustReleased(0, 38) and Udaljenost <= 1.5 then
 				OtvoriMenuBlagajna()
 			end
+			if OtvorenMenu and Udaljenost > 1.5 then
+				ESX.UI.Menu.CloseAll()
+				OtvorenMenu = false
+			end
 		end
 		if naso == 0 then
 			waitara = 500
@@ -56,6 +62,7 @@ Citizen.CreateThread(function()
 end)
 
 function OtvoriMenuBlagajna()
+	OtvorenMenu = true
 	ESX.UI.Menu.Open(
       'default', GetCurrentResourceName(), 'zetoni',
       {
@@ -81,6 +88,7 @@ function OtvoriMenuBlagajna()
 					TriggerServerEvent('vockice:KupZetony', quantity)
 					menu2.close()
 					menu.close()
+					OtvorenMenu = false
 				end
 
 			end, function(data2, menu2)
@@ -99,6 +107,7 @@ function OtvoriMenuBlagajna()
 					TriggerServerEvent('vockice:WymienZetony', quantity)
 					menu2.close()
 					menu.close()
+					OtvorenMenu = false
 				end
 
 			end, function(data2, menu2)
@@ -108,6 +117,7 @@ function OtvoriMenuBlagajna()
       end,
       function(data, menu)
 		menu.close()
+		OtvorenMenu = false
 	  end
   )
 end
@@ -183,7 +193,7 @@ Citizen.CreateThread(function()
 		local naso = 0
 		local coords = GetEntityCoords(GetPlayerPed(-1))
 		for i=1, #Config.Sloty do
-			local dis = GetDistanceBetweenCoords(coords, Config.Sloty[i].x, Config.Sloty[i].y, Config.Sloty[i].z, true)
+			local dis = #(coords-Config.Sloty[i])
 			if dis <= 2.0 then
 				naso = 1
 				waitara = 0
@@ -199,7 +209,7 @@ Citizen.CreateThread(function()
 			end
 		end
 		for i=1, #Config.Ruletka do
-			local dis = GetDistanceBetweenCoords(coords, Config.Ruletka[i].x, Config.Ruletka[i].y, Config.Ruletka[i].z, true)
+			local dis = #(coords-Config.Ruletka[i])
 			if dis <= 2.0 then
 				naso = 1
 				waitara = 0
@@ -215,7 +225,7 @@ Citizen.CreateThread(function()
 			end
 		end
 		for i=1, #Config.Blackjack do
-			local dis = GetDistanceBetweenCoords(coords, Config.Blackjack[i].x, Config.Blackjack[i].y, Config.Blackjack[i].z, true)
+			local dis = #(coords-Config.Blackjack[i])
 			if dis <= 2.0 then
 				naso = 1
 				waitara = 0
