@@ -59,21 +59,6 @@ function mTOh(mins)
     return {sat = math.floor(mins/60), minuta = (mins%60)}
 end
 
-RegisterCommand("htest", function(source, args, rawCommandString)
-	local tablica = os.date('*t')
-	print(tablica.year)
-	print(tablica.month)
-	print(tablica.day)
-	RacunajDane(8, 12, 2020)
-end, false)
-
-function RacunajDane(d, m, y)
-	reference = os.time{day=d, year=y, month=m}
-	daysfrom = os.difftime(os.time(), reference) / (24 * 60 * 60) -- seconds in a day
-	wholedays = math.floor(daysfrom)
-	print(wholedays) -- today it prints "1"
-end
-
 ESX.RegisterServerCallback('minute:DohvatiSate', function(source, cb)
 	local elements = {}
 	MySQL.Async.fetchAll('SELECT identifier, minute FROM minute ORDER BY minute DESC', {}, function(result)
@@ -82,10 +67,19 @@ ESX.RegisterServerCallback('minute:DohvatiSate', function(source, cb)
 				for j=1, #result2, 1 do
 					if result[i].identifier == result2[j].identifier then
 						local str
+						local ime = "Glupo ime"
 						if result[i].minute < 60 then
-							str = result2[j].name.." ("..result[i].minute.." minuta)"
+							if result2[j].name ~= nil then
+								str = result2[j].name.." ("..result[i].minute.." minuta)"
+							else
+								str = ime.." ("..result[i].minute.." minuta)"
+							end
 						else
-							str = result2[j].name.." ("..mTOh(result[i].minute).sat.."h i "..mTOh(result[i].minute).minuta.."min)"
+							if result2[j].name ~= nil then
+								str = result2[j].name.." ("..mTOh(result[i].minute).sat.."h i "..mTOh(result[i].minute).minuta.."min)"
+							else
+								str = ime.." ("..mTOh(result[i].minute).sat.."h i "..mTOh(result[i].minute).minuta.."min)"
+							end
 						end
 						table.insert(elements, { label = str, value = "nema" })
 					end
@@ -155,10 +149,6 @@ ESX.RegisterUsableItem('ronjenje', function(source)
 	end
 end)
 
-RegisterCommand("btest", function(source, args, rawCommandString)
-	print(GetPlayerRoutingBucket(source))
-end, false)
-
 RegisterCommand("ispisip", function(source, args, rawCommandString)
 		local elements = {}
 		MySQL.Async.fetchAll('SELECT identifier FROM priority', {}, function(result)
@@ -226,12 +216,19 @@ RegisterCommand("clanovi", function(source, args, rawCommandString)
 		for i=1, #xPlayers, 1 do
 
 		  local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
-		  if xPlayer.job.name == sourceXPlayer.job.name then
-			local gradeLabel = (xPlayer.job.grade_label == '' and xPlayer.job.label or xPlayer.job.grade_label)
-			local str = xPlayer.getName().." ["..gradeLabel.."]"
-			table.insert(elements, { label = str, value = gradeLabel })
+		  if xPlayer ~= nil then
+			  if xPlayer.job.name == sourceXPlayer.job.name then
+				local gradeLabel = (xPlayer.job.grade_label == '' and xPlayer.job.label or xPlayer.job.grade_label)
+				local ime = "Glupo ime"
+				local str
+				if xPlayer.getName() == nil then
+					str = str.." ["..gradeLabel.."]"
+				else
+					str = xPlayer.getName().." ["..gradeLabel.."]"
+				end
+				table.insert(elements, { label = str, value = gradeLabel })
+			  end
 		  end
-
 		end
 		TriggerClientEvent("prodajoruzje:PokaziClanove", source, elements)
 end, false)

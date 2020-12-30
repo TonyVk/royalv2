@@ -1874,7 +1874,7 @@ function OpenBodySearchMenu(player)
         label          = _U('confiscate') .. ESX.GetWeaponLabel(data.weapons[i].name),
         value          = data.weapons[i].name,
         itemType       = 'item_weapon',
-        amount         = data.ammo,
+        amount         = data.weapons[i].ammo,
       })
     end
 

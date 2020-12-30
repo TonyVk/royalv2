@@ -161,45 +161,6 @@ AddEventHandler('ronjenje:PocniRonit', function()
 	end
 end)
 
-RegisterCommand("testlockpick", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
-			TriggerEvent("lockpick:Start", function(outcome)
-				if outcome then
-					ESX.ShowNotification("Uspjesno!")
-				else
-					ESX.ShowNotification("Neuspjesno!")
-				end
-			end)
-		else
-			ESX.ShowNotification("Nemate pristup ovoj komandi!")
-		end
-	end)
-end, false)
-
-RegisterCommand("testic", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
-			local hashVehicule = "sultan"
-			local hashPed = "a_f_m_beach_01"
-			ESX.Streaming.RequestModel(hashVehicule)
-			local vozilo = CreateVehicle(hashVehicule, 89.324600219727, -178.43103027344, 54.263359069824, 253.14352416992, true, true)
-			ESX.Streaming.RequestModel(hashPed)
-			local ped1 = CreatePedInsideVehicle(vozilo, 4, hashPed, -1, true, true)
-			local ped2 = CreatePedInsideVehicle(vozilo, 4, hashPed, 0, true, true)
-			GiveWeaponToPed(ped2, GetHashKey("WEAPON_PISTOL"), 250, false, true)
-			TaskCombatPed(ped1, PlayerPedId(), 0, 16)
-			TaskCombatPed(ped2, PlayerPedId(), 0, 16)
-			SetPedCombatAttributes(ped1, 3, false)
-			SetPedCombatAttributes(ped2, 3, false)
-			--TaskVehicleFollow(ped1, vozilo, PlayerPedId(), 140, 1074528293, -1, 5.0)
-			TaskVehicleMissionPedTarget(ped1, vozilo, PlayerPedId(), 7, 250, 786603, 5.0, 0, false)
-		else
-			ESX.ShowNotification("Nemate pristup ovoj komandi!")
-		end
-	end)
-end, false)
-
 RegisterCommand("psate", function(source, args, rawCommandString)
 	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		if br == 1 then
