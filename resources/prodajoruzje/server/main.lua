@@ -49,6 +49,13 @@ AddEventHandler('EoTiSkinara', function(pid, modid, id)
 	TriggerClientEvent('chat:addMessage', id, { args = { '[TEST]', str } })
 end)
 
+ESX.RegisterUsableItem("petarde", function(source)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	xPlayer.removeInventoryItem("petarde", 1)
+	TriggerClientEvent('prodajoruzje:petarde', _source)
+end)
+
 ESX.RegisterServerCallback('prodajoruzje:DajNovac', function(source, cb, target)
 	local tar = ESX.GetPlayerFromId(target)
 	local missingMoney = tar.getMoney()

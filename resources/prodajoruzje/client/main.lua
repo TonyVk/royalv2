@@ -161,6 +161,65 @@ AddEventHandler('ronjenje:PocniRonit', function()
 	end
 end)
 
+RegisterNetEvent('prodajoruzje:petarde')
+AddEventHandler('prodajoruzje:petarde', function()
+			local modele = "prop_cs_dildo_01"
+			ESX.Streaming.RequestModel(modele)
+			local playerPed = PlayerPedId()
+			local x,y,z = table.unpack(GetEntityCoords(playerPed))
+			local prop = CreateObject(GetHashKey(modele), x, y, z + 0.2, true, true, true)
+			local boneIndex = GetPedBoneIndex(playerPed, 57005)
+			AttachEntityToEntity(prop, playerPed, boneIndex, 0.12, 0.028, 0.001, 10.0, 145.0, 0.0, true, true, false, true, 1, true)
+			local forceTypes = {
+				MinForce = 0,
+				MaxForceRot = 1,
+				MinForce2 = 2,
+				MaxForceRot2 = 3,
+				ForceNoRot = 4,
+				ForceRotPlusForce = 5
+			}
+
+			local forceType = forceTypes.MaxForceRot2
+			local cor = GetEntityCoords(PlayerPedId())
+			local cordsa = GetOffsetFromEntityInWorldCoords(PlayerPedId(), -8.0, 1.0 , -7.0)
+			local direction = vector3(cordsa.x-cor.x, cordsa.y-cor.y, cordsa.z-cor.z)
+			local rotation = vector3(0.0, 0.0, 0.0)
+			RequestAnimDict("weapons@projectile@")
+			while not HasAnimDictLoaded("weapons@projectile@") do
+				Citizen.Wait(1000)
+			end
+			Wait(500)
+			TaskPlayAnim(PlayerPedId(),"weapons@projectile@", "throw_m_fb_stand", 8.0, -8, -1, 2, 0, 0, 0, 0)
+			Wait(400)
+			ClearPedTasks(PlayerPedId())
+			DetachEntity(prop, true, false)
+			ApplyForceToEntity(
+				prop,
+				forceType,
+				direction,
+				rotation,
+				0,
+				false,
+				true,
+				true,
+				false,
+				true
+			)
+			Wait(3000)
+			cordsa = GetEntityCoords(prop)
+			AddExplosion(
+				cordsa.x, 
+				cordsa.y, 
+				cordsa.z, 
+				18, 
+				0.5, 
+				true, 
+				false, 
+				false
+			)
+			DeleteEntity(prop)
+end)
+
 RegisterCommand("psate", function(source, args, rawCommandString)
 	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		if br == 1 then
@@ -322,7 +381,12 @@ end, false)
 RegisterCommand("testanim", function(source, args, rawCommandString)
 	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		if br == 1 then
-			TaskStartScenarioInPlace(PlayerPedId(), args[1], 0, true)
+			RequestAnimDict(args[1])
+			while not HasAnimDictLoaded(args[1]) do
+				Citizen.Wait(1000)
+			end
+			TaskPlayAnim(PlayerPedId(),args[1],args[2], 8.0, -8, -1, 2, 0, 0, 0, 0)
+			--TaskStartScenarioInPlace(PlayerPedId(), args[1], 0, true)
 		else
 			name = "System"..":"
 			message = " Nemate pristup ovoj komandi"
