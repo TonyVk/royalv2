@@ -7,6 +7,7 @@ AddEventHandler('esx_roulette:removemoney', function(amount)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	xPlayer.removeInventoryItem('zeton', amount)
+	TriggerEvent("DiscordBot:Zetoni", xPlayer.name.."["..xPlayer.source.."] se kladio na ruletu sa "..amount.." zetona. Kod sebe ima "..xPlayer.getInventoryItem('zeton').count.." zetona.")
 end)
 
 RegisterServerEvent('esx_roulette:givemoney')
@@ -18,9 +19,11 @@ AddEventHandler('esx_roulette:givemoney', function(action, amount)
 	if action == 'black' or action == 'red' then
 		local win = amount*2
 		xPlayer.addInventoryItem('zeton', win)
+		TriggerEvent("DiscordBot:Zetoni", xPlayer.name.."["..xPlayer.source.."] je osvojio na ruletu "..win.." zetona. Sada ima "..xPlayer.getInventoryItem('zeton').count.." zetona.")
 	elseif action == 'green' then
 		local win = amount*14
 		xPlayer.addInventoryItem('zeton', win)
+		TriggerEvent("DiscordBot:Zetoni", xPlayer.name.."["..xPlayer.source.."] je osvojio na ruletu "..win.." zetona. Sada ima "..xPlayer.getInventoryItem('zeton').count.." zetona.")
 	else
 	end
 end)

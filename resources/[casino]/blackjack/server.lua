@@ -8,6 +8,7 @@ AddEventHandler('route68_blackjack:removemoney', function(amount)
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	xPlayer.removeInventoryItem('zeton', amount)
 	TriggerClientEvent('pNotify:SendNotification', _source, {text = "Kladili ste se sa "..amount.." zetona u BlackJacku.", layout = "bottomCenter"})
+	TriggerEvent("DiscordBot:Zetoni", xPlayer.name.."["..xPlayer.source.."] se kladio na blackjacku sa "..amount.." zetona. Sada ima kod sebe "..xPlayer.getInventoryItem('zeton').count.." zetona.")
 	--TriggerClientEvent('route68_blackjack:start', _source)
 end)
 
@@ -23,6 +24,7 @@ AddEventHandler('route68_blackjack:givemoney', function(amount, multi)
 	elseif multi == 1 then
 		TriggerClientEvent('pNotify:SendNotification', _source, {text = "Obranili ste "..win.." zetona! Cestitamo!", layout = "bottomCenter"})
 	end
+	TriggerEvent("DiscordBot:Zetoni", xPlayer.name.."["..xPlayer.source.."] je osvojio na blackjacku "..win.." zetona. Sada ima kod sebe "..xPlayer.getInventoryItem('zeton').count.." zetona.")
 	--TriggerClientEvent('route68_blackjack:start', _source)
 end)
 

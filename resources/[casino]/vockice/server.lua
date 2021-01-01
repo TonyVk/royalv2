@@ -13,6 +13,7 @@ AddEventHandler("vockice:BetsAndMoney", function(bets)
             MySQL.Sync.execute("UPDATE users SET zeton=@zetony WHERE identifier=@identifier",{['@identifier'] = xPlayer.identifier, ['@zetony'] = xItem.count})
             TriggerClientEvent("vockice:UpdateSlots", _source, xItem.count)
             xPlayer.removeInventoryItem('zeton', xItem.count)
+			TriggerEvent("DiscordBot:Zetoni", xPlayer.name.."["..xPlayer.source.."] je poceo igrati vockice sa "..xItem.count.." zetona.")
         end
     end
 end)
@@ -34,6 +35,7 @@ AddEventHandler("vockice:PayOutRewards", function(amount)
         amount = math.floor(tonumber(amount))
         if amount > 0 then
             xPlayer.addInventoryItem('zeton', amount)
+			TriggerEvent("DiscordBot:Zetoni", xPlayer.name.."["..xPlayer.source.."] je izaso iz vockica sa "..amount.." zetona.")
         end
         MySQL.Sync.execute("UPDATE users SET zeton=0 WHERE identifier=@identifier",{['@identifier'] = xPlayer.identifier})
     end
@@ -52,6 +54,7 @@ AddEventHandler("vockice:WymienZetony", function(count)
             xPlayer.removeInventoryItem('zeton', count)
             xPlayer.addMoney(kwota)
             TriggerClientEvent('pNotify:SendNotification', _source, {text = 'Dobili ste $'..kwota..' za '..count..' zetona.', layout = "bottomCenter"})
+			TriggerEvent("DiscordBot:Zetoni", xPlayer.name.."["..xPlayer.source.."] je dobio $"..kwota.." za "..count.." zetona.")
         end
     end
 end)
@@ -69,6 +72,7 @@ AddEventHandler("vockice:KupZetony", function(count)
             xPlayer.addInventoryItem('zeton', count)
             xPlayer.removeMoney(kwota)
             TriggerClientEvent('pNotify:SendNotification', _source, {text = 'Dobili ste '..count..' zetona za $'..kwota..'.', layout = "bottomCenter"})
+			TriggerEvent("DiscordBot:Zetoni", xPlayer.name.."["..xPlayer.source.."] je kupio "..count.." zetona za $"..kwota..".")
         end
     end
 end)
