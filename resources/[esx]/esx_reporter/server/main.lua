@@ -41,7 +41,7 @@ AddEventHandler("weazel:DodajClanak", function(ime, naziv, clanak)
 		['@cl']  = clanak,
 		['@au']  = ime
 	})
-	TriggerClientEvent("weazel:SaljiClanak", -1, ime, naziv, clanak)
+	TriggerClientEvent("weazel:SaljiClanak", -1, Sanitize(ime), naziv, clanak)
 end)
 
 RegisterNetEvent("weazel:DohvatiVijesti")
@@ -148,6 +148,21 @@ AddEventHandler('esx_reporter:putStockItems', function(itemName, count)
 
 end)
 
+function Sanitize(str)
+	local replacements = {
+		['&' ] = '&amp;',
+		['<' ] = '&lt;',
+		['>' ] = '&gt;',
+		['\n'] = '<br/>'
+	}
+
+	return str
+		:gsub('[&<>\n]', replacements)
+		:gsub(' +', function(s)
+			return ' '..('&nbsp;'):rep(#s-1)
+		end)
+end
+
 ESX.RegisterServerCallback('esx_reporter:getOtherPlayerData', function(source, cb, target)
 
   if Config.EnableESXIdentity then
@@ -168,7 +183,7 @@ ESX.RegisterServerCallback('esx_reporter:getOtherPlayerData', function(source, c
     local height        = user['height'] .. " Inches"
 
     local data = {
-      name        = GetPlayerName(target),
+      name        = Sanitize(GetPlayerName(target)),
       job         = xPlayer.job,
       inventory   = xPlayer.inventory,
       accounts    = xPlayer.accounts,
@@ -204,7 +219,7 @@ ESX.RegisterServerCallback('esx_reporter:getOtherPlayerData', function(source, c
     local xPlayer = ESX.GetPlayerFromId(target)
 
     local data = {
-      name       = GetPlayerName(target),
+      name       = Sanitize(GetPlayerName(target)),
       job        = xPlayer.job,
       inventory  = xPlayer.inventory,
       accounts   = xPlayer.accounts,

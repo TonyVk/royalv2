@@ -191,7 +191,18 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	end
 
 	self.getName = function()
+		local replacements = {
+			['&' ] = '&amp;',
+			['<' ] = '&lt;',
+			['>' ] = '&gt;',
+			['\n'] = '<br/>'
+		}
+		
 		return self.name
+		:gsub('[&<>\n]', replacements)
+		:gsub(' +', function(s)
+			return ' '..('&nbsp;'):rep(#s-1)
+		end)
 	end
 
 	self.setName = function(newName)

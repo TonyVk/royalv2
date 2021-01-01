@@ -149,9 +149,24 @@ AddEventHandler('currentbalance1', function(balance)
 	SendNUIMessage({
 		type = "balanceHUD",
 		balance = balance,
-		player = playerName
+		player = Sanitize(playerName)
 		})
 end)
+
+function Sanitize(str)
+	local replacements = {
+		['&' ] = '&amp;',
+		['<' ] = '&lt;',
+		['>' ] = '&gt;',
+		['\n'] = '<br/>'
+	}
+
+	return str
+		:gsub('[&<>\n]', replacements)
+		:gsub(' +', function(s)
+			return ' '..('&nbsp;'):rep(#s-1)
+		end)
+end
 
 RegisterNUICallback('vratikredit', function()
 	ESX.TriggerServerCallback('banka:DohvatiKredit', function(br)

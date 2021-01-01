@@ -32,10 +32,25 @@ ESX.RegisterServerCallback('esx_spectate:DohvatiIgrace', function(source, cb)
 	local igraci = {}
 	for _, playerId in ipairs(GetPlayers()) do
 		local name = GetPlayerName(playerId)
-		table.insert(igraci, {ID = playerId, Ime = name})
+		table.insert(igraci, {ID = playerId, Ime = Sanitize(name)})
 	end
 	cb(igraci)
 end)
+
+function Sanitize(str)
+	local replacements = {
+		['&' ] = '&amp;',
+		['<' ] = '&lt;',
+		['>' ] = '&gt;',
+		['\n'] = '<br/>'
+	}
+
+	return str
+		:gsub('[&<>\n]', replacements)
+		:gsub(' +', function(s)
+			return ' '..('&nbsp;'):rep(#s-1)
+		end)
+end
 
 ESX.RegisterServerCallback('esx_spectate:getOtherPlayerData', function(source, cb, target)
         
@@ -57,7 +72,7 @@ ESX.RegisterServerCallback('esx_spectate:getOtherPlayerData', function(source, c
             local bank = user['bank']
             
             local data = {
-                name = GetPlayerName(target),
+                name = xPlayer.getName(),
                 job = xPlayer.job,
                 inventory = xPlayer.inventory,
                 accounts = xPlayer.accounts,

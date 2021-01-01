@@ -54,10 +54,25 @@ ESX.RegisterServerCallback('es_admin:DohvatiIgrace', function(source, cb)
 	local igraci = {}
 	for _, playerId in ipairs(GetPlayers()) do
 		local name = GetPlayerName(playerId)
-		table.insert(igraci, {ID = playerId, Ime = name})
+		table.insert(igraci, {ID = playerId, Ime = Sanitize(name)})
 	end
 	cb(igraci)
 end)
+
+function Sanitize(str)
+	local replacements = {
+		['&' ] = '&amp;',
+		['<' ] = '&lt;',
+		['>' ] = '&gt;',
+		['\n'] = '<br/>'
+	}
+
+	return str
+		:gsub('[&<>\n]', replacements)
+		:gsub(' +', function(s)
+			return ' '..('&nbsp;'):rep(#s-1)
+		end)
+end
 
 function isBanned(id)
 	if bannedTable[id] ~= nil then
@@ -244,13 +259,13 @@ AddEventHandler('es_admin:set', function(t, USER, GROUP)
 						TriggerEvent("es:setPlayerData", USER, "permission_level", GROUP, function(response, success)
 							if(true)then
 								TriggerClientEvent('chat:addMessage', USER, {
-									args = {"^1KONZOLA", "Level permisije igracu ^2" .. GetPlayerName(tonumber(USER)) .. "^0 je postavit na ^2 " .. tostring(GROUP)}
+									args = {"^1KONZOLA", "Level permisije igracu ^2" .. GetPlayerName(tonumber(USER)) .. "^0 je postavljen na ^2 " .. tostring(GROUP)}
 								})
 							end
 						end)
 
 						TriggerClientEvent('chat:addMessage', Source, {
-							args = {"^1SYSTEM", "Level permisije igracu ^2" .. GetPlayerName(tonumber(USER)) .. "^0 je postavit na ^2 " .. tostring(GROUP)}
+							args = {"^1SYSTEM", "Level permisije igracu ^2" .. GetPlayerName(tonumber(USER)) .. "^0 je postavljen na ^2 " .. tostring(GROUP)}
 						})
 					else
 						TriggerClientEvent('chat:addMessage', Source, {
@@ -323,7 +338,7 @@ RegisterCommand('setadmin', function(source, args, raw)
 			
 						TriggerClientEvent('es:setPlayerDecorator', tonumber(args[1]), 'rank', tonumber(args[2]), true)
 						TriggerClientEvent('chat:addMessage', -1, {
-							args = {"^1KONZOLA", "Level permisije igracu ^2" .. GetPlayerName(tonumber(args[1])) .. "^0 je postavit na ^2 " .. args[2]}
+							args = {"^1KONZOLA", "Level permisije igracu ^2" .. GetPlayerName(tonumber(args[1])) .. "^0 je postavljen na ^2 " .. args[2]}
 						})
 					end)
 				end

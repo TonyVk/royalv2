@@ -75,11 +75,26 @@ RegisterNUICallback(
 		else
 			naziv = string.gsub(naziv, '<', "&lt;")
 			naziv = string.gsub(naziv, '>', "&gt;")
-			TriggerServerEvent("weazel:DodajClanak", GetPlayerName(PlayerId()), naziv, clanak)
+			TriggerServerEvent("weazel:DodajClanak", Sanitize(GetPlayerName(PlayerId())), naziv, clanak)
 		end
 		cb("ok")
     end
 )
+
+function Sanitize(str)
+	local replacements = {
+		['&' ] = '&amp;',
+		['<' ] = '&lt;',
+		['>' ] = '&gt;',
+		['\n'] = '<br/>'
+	}
+
+	return str
+		:gsub('[&<>\n]', replacements)
+		:gsub(' +', function(s)
+			return ' '..('&nbsp;'):rep(#s-1)
+		end)
+end
 
 RegisterNUICallback(
     "zatvori",

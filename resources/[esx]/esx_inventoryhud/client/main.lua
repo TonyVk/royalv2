@@ -144,6 +144,21 @@ RegisterNUICallback(
     end
 )
 
+function Sanitize(str)
+	local replacements = {
+		['&' ] = '&amp;',
+		['<' ] = '&lt;',
+		['>' ] = '&gt;',
+		['\n'] = '<br/>'
+	}
+
+	return str
+		:gsub('[&<>\n]', replacements)
+		:gsub(' +', function(s)
+			return ' '..('&nbsp;'):rep(#s-1)
+		end)
+end
+
 RegisterNUICallback(
     "GetNearPlayers",
     function(data, cb)
@@ -159,7 +174,7 @@ RegisterNUICallback(
                 table.insert(
                     elements,
                     {
-                        label = GetPlayerName(players[i]),
+                        label = Sanitize(GetPlayerName(players[i])),
                         player = GetPlayerServerId(players[i])
                     }
                 )
@@ -244,7 +259,7 @@ RegisterNUICallback(
         local players, nearbyPlayer = ESX.Game.GetPlayersInArea(GetEntityCoords(playerPed), 3.0)
         local foundPlayer = false
         for i = 1, #players, 1 do
-            if players[i] ~= PlayerId() then
+			if players[i] ~= PlayerId() then
                 if GetPlayerServerId(players[i]) == data.player then
                     foundPlayer = true
                 end
