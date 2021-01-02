@@ -21,15 +21,6 @@ end)
 	          })
 	  end
   end)
-  
-RegisterCommand("testic", function(source, args, rawCommandString)
-			exports['screenshot-basic']:requestClientScreenshot(GetPlayers()[1], {
-				fileName = 'screenshot5.jpg'
-			}, function(err, data)
-				print('err', err)
-				print('data', data)
-			end)
-end, false)
 
 function stringsplit(inputstr, sep)
 	if sep == nil then

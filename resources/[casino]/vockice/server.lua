@@ -18,8 +18,8 @@ AddEventHandler("vockice:BetsAndMoney", function(bets)
     end
 end)
 
-RegisterServerEvent("vockice:updateCoins")
-AddEventHandler("vockice:updateCoins", function(bets)
+RegisterServerEvent("vockice:updateTuljan")
+AddEventHandler("vockice:updateTuljan", function(bets)
     local _source   = source
     local xPlayer   = ESX.GetPlayerFromId(_source)
     if xPlayer then
@@ -27,8 +27,8 @@ AddEventHandler("vockice:updateCoins", function(bets)
     end
 end)
 
-RegisterServerEvent("vockice:PayOutRewards")
-AddEventHandler("vockice:PayOutRewards", function(amount)
+RegisterServerEvent("vockice:platiTuljanu")
+AddEventHandler("vockice:platiTuljanu", function(amount)
     local _source   = source
     local xPlayer   = ESX.GetPlayerFromId(_source)
     if xPlayer then
@@ -41,8 +41,8 @@ AddEventHandler("vockice:PayOutRewards", function(amount)
     end
 end)
 
-RegisterServerEvent("vockice:WymienZetony")
-AddEventHandler("vockice:WymienZetony", function(count)
+RegisterServerEvent("vockice:Tuljan")
+AddEventHandler("vockice:Tuljan", function(count)
     local _source   = source
     local xPlayer   = ESX.GetPlayerFromId(_source)
     if xPlayer then

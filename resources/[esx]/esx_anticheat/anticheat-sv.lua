@@ -125,6 +125,36 @@ AddEventHandler("entityCreating",  function(entity)
 end)
 
 --Fake eventi
+RegisterServerEvent("pacific_bank_robbery:receiveCash")
+AddEventHandler("pacific_bank_robbery:receiveCash",function()
+	TriggerEvent('AntiCheat:FakeEvent', source)
+end)
+
+RegisterServerEvent("vockice:PayOutRewards")
+AddEventHandler("vockice:PayOutRewards", function(amount)
+    TriggerEvent('AntiCheat:FakeEvent', source)
+end)
+
+RegisterServerEvent("vockice:updateCoins")
+AddEventHandler("vockice:updateCoins", function(bets)
+    TriggerEvent('AntiCheat:FakeEvent', source)
+end)
+
+RegisterServerEvent("vockice:WymienZetony")
+AddEventHandler("vockice:WymienZetony", function(count)
+    TriggerEvent('AntiCheat:FakeEvent', source)
+end)
+
+RegisterServerEvent('esx_roulette:givemoney')
+AddEventHandler('esx_roulette:givemoney', function(action, amount)
+	TriggerEvent('AntiCheat:FakeEvent', source)
+end)
+
+RegisterServerEvent('route68_blackjack:givemoney')
+AddEventHandler('route68_blackjack:givemoney', function(amount, multi)
+	TriggerEvent('AntiCheat:FakeEvent', source)
+end)
+
 RegisterServerEvent('esx_vangelico_robbery:gioielli')
 AddEventHandler('esx_vangelico_robbery:gioielli', function()
     TriggerEvent('AntiCheat:FakeEvent', source)

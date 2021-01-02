@@ -54,8 +54,8 @@ AddEventHandler("SaljiDelay",function(i)
 	end)
 end)
 
-RegisterServerEvent("pacific_bank_robbery:receiveCash")
-AddEventHandler("pacific_bank_robbery:receiveCash",function()
+RegisterServerEvent("glavnabanka:DajTuljane")
+AddEventHandler("glavnabanka:DajTuljane",function()
 	local h=a.GetPlayerFromId(source)
 	if h then 
 		local j=math.random(Config.Trolley["cash"][1],Config.Trolley["cash"][2])

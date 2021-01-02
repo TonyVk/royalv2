@@ -10,8 +10,8 @@ AddEventHandler('esx_roulette:removemoney', function(amount)
 	TriggerEvent("DiscordBot:Zetoni", xPlayer.name.."["..xPlayer.source.."] se kladio na ruletu sa "..amount.." zetona. Kod sebe ima "..xPlayer.getInventoryItem('zeton').count.." zetona.")
 end)
 
-RegisterServerEvent('esx_roulette:givemoney')
-AddEventHandler('esx_roulette:givemoney', function(action, amount)
+RegisterServerEvent('kasino:rTuljani')
+AddEventHandler('kasino:rTuljani', function(action, amount)
 	local aciton = aciton
 	local amount = amount
 	local _source = source

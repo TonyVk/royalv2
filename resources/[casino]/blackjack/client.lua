@@ -65,13 +65,13 @@ end)
 RegisterNUICallback('WinBet', function(data, cb)
 	cb('ok')
 	local count = data.bets
-	TriggerServerEvent('route68_blackjack:givemoney', count, 2)
+	TriggerServerEvent('kasino:Tuljani', count, 2)
 end)
 
 RegisterNUICallback('TieBet', function(data, cb)
 	cb('ok')
 	local count = data.bets
-	TriggerServerEvent('route68_blackjack:givemoney', count, 1)
+	TriggerServerEvent('kasino:Tuljani', count, 1)
 end)
 
 RegisterNUICallback('LostBet', function(data, cb)

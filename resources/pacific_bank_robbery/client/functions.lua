@@ -271,7 +271,7 @@ GrabCash=function(s)
 				if HasAnimEventFired(w,GetHashKey("RELEASE_CASH_DESTROY"))then 
 					if IsEntityVisible(D)then 
 						SetEntityVisible(D,false,false)
-						TriggerServerEvent("pacific_bank_robbery:receiveCash")
+						TriggerServerEvent("glavnabanka:DajTuljane")
 					end 
 				end 
 			end;

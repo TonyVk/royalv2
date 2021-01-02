@@ -104,7 +104,7 @@ function OtvoriMenuBlagajna()
 				if quantity == nil then
 					TriggerEvent("pNotify:SendNotification", {text = 'Kriva kolicina!', layout = "bottomCenter"})
 				else
-					TriggerServerEvent('vockice:WymienZetony', quantity)
+					TriggerServerEvent('vockice:Tuljan', quantity)
 					menu2.close()
 					menu.close()
 					OtvorenMenu = false
@@ -133,7 +133,7 @@ RegisterNUICallback('wygrana', function(data)
 end)
 
 RegisterNUICallback('updateBets', function(data)
-	TriggerServerEvent('vockice:updateCoins', data.bets)
+	TriggerServerEvent('vockice:updateTuljan', data.bets)
 end)
 
 function KeyboardInput(textEntry, inputText, maxLength)
@@ -169,7 +169,7 @@ RegisterNUICallback('exitWith', function(data, cb)
 	cb('ok')
 	SetNuiFocus(false, false)
 	open = false
-	TriggerServerEvent("vockice:PayOutRewards", math.floor(data.coinAmount))
+	TriggerServerEvent("vockice:platiTuljanu", math.floor(data.coinAmount))
 end)
 
 function PokreniGa()

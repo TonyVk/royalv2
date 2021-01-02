@@ -12,8 +12,8 @@ AddEventHandler('route68_blackjack:removemoney', function(amount)
 	--TriggerClientEvent('route68_blackjack:start', _source)
 end)
 
-RegisterServerEvent('route68_blackjack:givemoney')
-AddEventHandler('route68_blackjack:givemoney', function(amount, multi)
+RegisterServerEvent('kasino:Tuljani')
+AddEventHandler('kasino:Tuljani', function(amount, multi)
 	local aciton = aciton
 	local win = math.floor(amount * multi)
 	local _source = source

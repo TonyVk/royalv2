@@ -97,7 +97,7 @@ AddEventHandler('esx_roulette:start_game', function(action, amount)
 			if has_value(black, randomNumber) then
 				local win = amount * 2
 				ESX.ShowNotification('Osvojili ste '..win..' zetona!')
-				TriggerServerEvent('esx_roulette:givemoney', action, amount)
+				TriggerServerEvent('kasino:rTuljani', action, amount)
 			else
 				ESX.ShowNotification('Izgubili ste. Pokusajte ponovno! Sretno!')
 			end
@@ -105,7 +105,7 @@ AddEventHandler('esx_roulette:start_game', function(action, amount)
 			local win = amount * 2
 			if has_value(red, randomNumber) then
 				ESX.ShowNotification('Osvojili ste '..win..' zetona!')
-				TriggerServerEvent('esx_roulette:givemoney', action, amount)
+				TriggerServerEvent('kasino:rTuljani', action, amount)
 			else
 				ESX.ShowNotification('Izgubili ste. Pokusajte ponovno! Sretno!')
 			end
@@ -113,7 +113,7 @@ AddEventHandler('esx_roulette:start_game', function(action, amount)
 			local win = amount * 14
 			if randomNumber == 0 then
 				ESX.ShowNotification('Osvojili ste '..win..' zetona!')
-				TriggerServerEvent('esx_roulette:givemoney', action, amount)
+				TriggerServerEvent('kasino:rTuljani', action, amount)
 			else
 				ESX.ShowNotification('Izgubili ste. Pokusajte ponovno! Sretno!')
 			end
