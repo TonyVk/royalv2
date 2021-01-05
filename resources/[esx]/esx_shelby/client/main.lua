@@ -1992,26 +1992,6 @@ AddEventHandler('esx_shelby:IzvuciGa', function(t)
   SetEntityCoords(GetPlayerPed(-1), xnew, ynew, plyPos.z)
 end)
 
--- Create blips
-Citizen.CreateThread(function()
-
-	for k,v in pairs(Config.ShelbyStations) do
-
-		local blip = AddBlipForCoord(v.Blip.Pos.x, v.Blip.Pos.y, v.Blip.Pos.z)
-
-		SetBlipSprite (blip, v.Blip.Sprite)
-		SetBlipDisplay(blip, v.Blip.Display)
-		SetBlipScale  (blip, v.Blip.Scale)
-		SetBlipColour (blip, v.Blip.Colour)
-		SetBlipAsShortRange(blip, true)
-
-		BeginTextCommandSetBlipName("STRING")
-		AddTextComponentString(_U('map_blip'))
-		EndTextCommandSetBlipName(blip)
-	end
-
-end)
-
 Citizen.CreateThread(function()
   while true do
     Wait(0)

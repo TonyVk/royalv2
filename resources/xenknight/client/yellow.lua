@@ -4,7 +4,7 @@
 
 RegisterNetEvent("xenknight:yellow_getPagess")
 AddEventHandler("xenknight:yellow_getPagess", function(pagess)
-  SendNUIMessage({event = 'yellow_pagess', pagess = pagess})
+	SendNUIMessage({event = 'yellow_pagess', pagess = pagess})
 end)
 
 RegisterNetEvent("xenknight:yellow_newPagess")

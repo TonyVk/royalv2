@@ -1,4 +1,4 @@
-function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, lastPosition)
+function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, lastPosition, broj)
 	local self = {}
 
 	self.player       = player
@@ -8,6 +8,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	self.loadout      = loadout
 	self.name         = name
 	self.lastPosition = lastPosition
+	self.number 	  = broj
 
 	self.source     = self.player.get('source')
 	self.identifier = self.player.get('identifier')
@@ -198,11 +199,22 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 			['\n'] = '<br/>'
 		}
 		
-		return self.name
+		local ime
+		if self.name == nil then
+			ime = "Glupo ime"
+		else
+			ime = self.name
+		end
+		
+		return ime
 		:gsub('[&<>\n]', replacements)
 		:gsub(' +', function(s)
 			return ' '..('&nbsp;'):rep(#s-1)
 		end)
+	end
+	
+	self.getNumber = function()
+		return self.number
 	end
 
 	self.setName = function(newName)

@@ -151,6 +151,14 @@ ESX.GetPlayerFromIdentifier = function(identifier)
 	end
 end
 
+ESX.GetPlayerFromNumber = function(number)
+	for k,v in pairs(ESX.Players) do
+		if v.number == number then
+			return v
+		end
+	end
+end
+
 ESX.RegisterUsableItem = function(item, cb)
 	ESX.UsableItemsCallbacks[item] = cb
 end

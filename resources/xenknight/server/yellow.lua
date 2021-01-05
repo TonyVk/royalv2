@@ -1,22 +1,25 @@
 --====================================================================================
 -- # Discord XenKnighT#7085
 --====================================================================================
+local Oglasi = nil
+
 function YellowGetPagess (accountId, cb)
   if accountId == nil then
     MySQL.Async.fetchAll([===[
-      SELECT yellow_tweets.*,
-        users.firstname,
-        users.phone_number
-      FROM yellow_tweets
-        LEFT JOIN users
-        ON yellow_tweets.phone_number = users.phone_number
-      ORDER BY time DESC LIMIT 130
+      SELECT * FROM yellow_tweets
+	  ORDER BY time DESC LIMIT 50
       ]===], {}, cb)
   end
 end
 
+MySQL.ready(function()
+	YellowGetPagess(nil, function (pagess)
+		Oglasi = pagess
+    end)
+end)
+
 function getUserYellow(phone_number, firstname, cb)
-  MySQL.Async.fetchAll("SELECT firstname, phone_number FROM users WHERE users.firstname = @firstname AND users.phone_number = @phone_number", {
+  MySQL.Async.fetchAll("SELECT identifier, firstname, phone_number FROM users WHERE users.firstname = @firstname AND users.phone_number = @phone_number", {
     ['@phone_number'] = phone_number,
 	['@firstname'] = firstname
   }, function (data)
@@ -45,8 +48,8 @@ function YellowPostPages (phone_number, firstname, lastname, message, sourcePlay
         pages = pagess[1]
         pages['firstname'] = user.firstname
         pages['phone_number'] = user.phone_number
+		table.insert(Oglasi, {phone_number = user.phone_number, firstname = user.firstname, lastname = lastname, message = message})
         TriggerClientEvent('xenknight:yellow_newPagess', -1, pages)
-        TriggerEvent('xenknight:yellow_newPagess', pages)
       end)
     end)
   end)
@@ -63,6 +66,7 @@ end
 RegisterServerEvent('xenknight:yellow_getPagess')
 AddEventHandler('xenknight:yellow_getPagess', function(phone_number, firstname)
   local sourcePlayer = tonumber(source)
+  local xPlayer = ESX.GetPlayerFromId(sourcePlayer)
   if phone_number ~= nil and phone_number ~= "" and firstname ~= nil and firstname ~= "" then
     getUserYellow(phone_number, firstname, function (user)
       local accountId = user and user.id
@@ -71,9 +75,20 @@ AddEventHandler('xenknight:yellow_getPagess', function(phone_number, firstname)
       end)
     end)
   else
-    YellowGetPagess(nil, function (pagess)
-      TriggerClientEvent('xenknight:yellow_getPagess', sourcePlayer, pagess)
-    end)
+    --YellowGetPagess(nil, function (pagess)
+	  if xPlayer.getPermissions() > 0 then
+		  for i=1, #Oglasi, 1 do
+			local xTarget = ESX.GetPlayerFromNumber(Oglasi[i].phone_number)
+			if xTarget then
+				print(Oglasi[i].lastname)
+				if string.find(Oglasi[i].lastname, "ID:") == nil then
+					Oglasi[i].lastname = Oglasi[i].lastname.." (ID: "..xTarget.source..")"
+				end
+			end
+		  end
+	  end
+      TriggerClientEvent('xenknight:yellow_getPagess', sourcePlayer, Oglasi)
+	--end)
   end
 end)
 

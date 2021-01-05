@@ -299,6 +299,8 @@ Citizen.CreateThread(function()
 				DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 				if IsControlJustPressed(0, 38) then
 					if CurrentAction == 'prodaj' then
+						local rand = math.random(200, 800)
+						Citizen.Wait(rand)
 						TriggerServerEvent("heroin:ProdajHeroin")
 					end
 					CurrentAction = nil

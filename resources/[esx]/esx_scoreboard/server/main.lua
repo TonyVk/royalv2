@@ -59,8 +59,8 @@ end)
 function AddPlayerToScoreboard(xPlayer, update)
 	if xPlayer ~= nil then
 		local playerId = xPlayer.source
-		local png = GetPlayerPing(playerId)
-		--if png ~= 0 then
+		local ping = GetPlayerPing(playerId)
+		if ping and ping > 0 then
 			connectedPlayers[playerId] = {}
 			connectedPlayers[playerId].ping = GetPlayerPing(playerId)
 			connectedPlayers[playerId].id = playerId
@@ -71,7 +71,7 @@ function AddPlayerToScoreboard(xPlayer, update)
 				TriggerClientEvent('esx_scoreboard:updateConnectedPlayers', -1, connectedPlayers)
 			end
 			TriggerClientEvent('esx_scoreboard:toggleID', playerId, true)
-		--end
+		end
 	end
 end
 

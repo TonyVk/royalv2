@@ -18,11 +18,10 @@ end
 -- end
 
 
---[[
+
 local ESX = nil
-TriggerEvent('esx:getSharedObject', function(obj) 
-    ESX = obj 
-    ESX.RegisterServerCallback('xenknight:getItemAmount', function(source, cb, item)
+TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+    --[[ESX.RegisterServerCallback('xenknight:getItemAmount', function(source, cb, item)
         print('xenknight:getItemAmount call item : ' .. item)
         local xPlayer = ESX.GetPlayerFromId(source)
         local items = xPlayer.getInventoryItem(item)
