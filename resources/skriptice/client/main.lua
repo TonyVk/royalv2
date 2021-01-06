@@ -861,6 +861,16 @@ function ManageReticle()
 		end 
 end 
 
+RegisterCommand('+pokazi', function()
+    if not mp_pointing then
+		startPointing()
+		mp_pointing = true
+	else
+		stopPointing()
+		mp_pointing = false
+	end
+end, false)
+RegisterKeyMapping('+pokazi', 'Pokazi prstom', 'keyboard', 'b')
 
 Citizen.CreateThread(function()
 	local waitara = 500
@@ -935,6 +945,47 @@ Citizen.CreateThread(function()
 			DisableControlAction(0,270,true)
 			DisableControlAction(0,35,true) -- disable move right
 			DisableControlAction(0,271,true)
+		end
+		if mp_pointing then
+			if IsTaskMoveNetworkActive(PlayerPedId()) then
+				naso = 1
+				waitara = 1
+				if not IsPedOnFoot(PlayerPedId()) then
+					stopPointing()
+				else
+					local ped = GetPlayerPed(-1)
+					local camPitch = GetGameplayCamRelativePitch()
+					if camPitch < -70.0 then
+						camPitch = -70.0
+					elseif camPitch > 42.0 then
+						camPitch = 42.0
+					end
+					camPitch = (camPitch + 70.0) / 112.0
+
+					local camHeading = GetGameplayCamRelativeHeading()
+					local cosCamHeading = Cos(camHeading)
+					local sinCamHeading = Sin(camHeading)
+					if camHeading < -180.0 then
+						camHeading = -180.0
+					elseif camHeading > 180.0 then
+						camHeading = 180.0
+					end
+					camHeading = (camHeading + 180.0) / 360.0
+
+					local blocked = 0
+					local nn = 0
+
+					local coords = GetOffsetFromEntityInWorldCoords(ped, (cosCamHeading * -0.2) - (sinCamHeading * (0.4 * camHeading + 0.3)), (sinCamHeading * -0.2) + (cosCamHeading * (0.4 * camHeading + 0.3)), 0.6)
+					local ray = Cast_3dRayPointToPoint(coords.x, coords.y, coords.z - 0.2, coords.x, coords.y, coords.z + 0.2, 0.4, 95, ped, 7);
+					nn,blocked,coords,coords = GetRaycastResult(ray)
+
+					Citizen.InvokeNative(0xD5BB4025AE449A4E, ped, "Pitch", camPitch)
+					Citizen.InvokeNative(0xD5BB4025AE449A4E, ped, "Heading", camHeading * -1.0 + 1.0)
+					Citizen.InvokeNative(0xB0A6CFD2C69C1088, ped, "isBlocked", blocked)
+					Citizen.InvokeNative(0xB0A6CFD2C69C1088, ped, "isFirstPerson", Citizen.InvokeNative(0xEE778F8C7E1142E2, Citizen.InvokeNative(0x19CAFA3C87F7C2FF)) == 4)
+
+				end
+			end
 		end
 		local ped = GetPlayerPed( -1 )
 		
