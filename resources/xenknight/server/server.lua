@@ -19,7 +19,7 @@ end
 
 
 
-local ESX = nil
+ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
     --[[ESX.RegisterServerCallback('xenknight:getItemAmount', function(source, cb, item)
         print('xenknight:getItemAmount call item : ' .. item)

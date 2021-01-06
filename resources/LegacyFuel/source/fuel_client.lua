@@ -190,12 +190,18 @@ AddEventHandler('fuel:startFuelUpTick', function(pumpObject, ped, vehicle)
 
 		currentCost = currentCost + extraCost
 
-		if currentCash >= currentCost then
+		if pumpObject then
+			if currentCash >= currentCost then
+				SetFuel(vehicle, currentFuel)
+				local retval = NetworkGetNetworkIdFromEntity(vehicle)
+				TriggerServerEvent("SyncajToGorivo", retval, GetVehicleFuelLevel(vehicle))
+			else
+				isFueling = false
+			end
+		else
 			SetFuel(vehicle, currentFuel)
 			local retval = NetworkGetNetworkIdFromEntity(vehicle)
 			TriggerServerEvent("SyncajToGorivo", retval, GetVehicleFuelLevel(vehicle))
-		else
-			isFueling = false
 		end
 	end
 
@@ -248,7 +254,7 @@ AddEventHandler('fuel:refuelFromPump', function(pumpObject, ped, vehicle)
 			TaskPlayAnim(ped, "timetable@gardener@filling_can", "gar_ig_5_filling_can", 2.0, 8.0, -1, 50, 0, 0, 0, 0)
 		end
 
-		if IsControlJustReleased(0, 38) or DoesEntityExist(GetPedInVehicleSeat(vehicle, -1)) or (isNearPump and GetEntityHealth(pumpObject) <= 0) then
+		if IsControlJustReleased(0, 38) or DoesEntityExist(GetPedInVehicleSeat(vehicle, -1)) or (pumpObject and isNearPump and GetEntityHealth(pumpObject) <= 0) then
 			isFueling = false
 		end
 	end
@@ -286,17 +292,26 @@ Citizen.CreateThread(function()
 						end
 
 						if GetVehicleFuelLevel(vehicle) < 95 and canFuel then
-							if currentCash > 0 then
+							if GetSelectedPedWeapon(ped) == 883325847 then
 								DrawText3Ds(stringCoords.x, stringCoords.y, stringCoords.z + 1.2, Config.Strings.EToRefuel)
 
 								if IsControlJustReleased(0, 38) then
 									isFueling = true
-
-									TriggerEvent('fuel:refuelFromPump', isNearPump, ped, vehicle)
+									TriggerEvent('fuel:refuelFromPump', false, ped, vehicle)
 									LoadAnimDict("timetable@gardener@filling_can")
 								end
 							else
-								DrawText3Ds(stringCoords.x, stringCoords.y, stringCoords.z + 1.2, Config.Strings.NotEnoughCash)
+								if currentCash > 0 then
+									DrawText3Ds(stringCoords.x, stringCoords.y, stringCoords.z + 1.2, Config.Strings.EToRefuel)
+
+									if IsControlJustReleased(0, 38) then
+										isFueling = true
+										TriggerEvent('fuel:refuelFromPump', isNearPump, ped, vehicle)
+										LoadAnimDict("timetable@gardener@filling_can")
+									end
+								else
+									DrawText3Ds(stringCoords.x, stringCoords.y, stringCoords.z + 1.2, Config.Strings.NotEnoughCash)
+								end
 							end
 						elseif not canFuel then
 							DrawText3Ds(stringCoords.x, stringCoords.y, stringCoords.z + 1.2, Config.Strings.JerryCanEmpty)

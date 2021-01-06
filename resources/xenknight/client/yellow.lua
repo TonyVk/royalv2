@@ -9,7 +9,7 @@ end)
 
 RegisterNetEvent("xenknight:yellow_newPagess")
 AddEventHandler("xenknight:yellow_newPagess", function(pages)
-  SendNUIMessage({event = 'yellow_newPages', pages = pages})
+	SendNUIMessage({event = 'yellow_newPages', pages = pages})
 end)
 
 RegisterNetEvent("xenknight:yellow_showError")

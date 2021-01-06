@@ -38,10 +38,6 @@ Citizen.CreateThread(function()
 	end
 	KreirajBlip()
 	Citizen.Wait(10000)
-
-	ESX.TriggerServerCallback('esx_vehicleshop:getVehicles', function(vehicles)
-		Vehicles = vehicles
-	end)
 	
 	ESX.TriggerServerCallback('pijaca:DohvatiVozila', function(vehicles)
 		Vozila = vehicles
