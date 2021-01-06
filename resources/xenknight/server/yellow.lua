@@ -48,17 +48,17 @@ function YellowPostPages (phone_number, firstname, lastname, message, sourcePlay
         pages = pagess[1]
         pages['firstname'] = user.firstname
         pages['phone_number'] = user.phone_number
-		table.insert(Oglasi, {phone_number = user.phone_number, firstname = user.firstname, lastname = lastname, message = message, time = pages.time})
+		local ide = nil
+		local xTarget = ESX.GetPlayerFromNumber(user.phone_number)
+		if xTarget then
+			ide = xTarget.source
+			pages.ID = ide
+		end
+		table.insert(Oglasi, {phone_number = user.phone_number, firstname = user.firstname, lastname = lastname, message = message, time = pages.time, ID = ide})
 		table.sort(Oglasi, function(a,b) return a.time > b.time end)
 		if string.find(pages.message, "@anon") ~= nil then
 			pages.firstname = "Anonimno"
 			pages.lastname = ""
-		end
-		local xTarget = ESX.GetPlayerFromNumber(pages.phone_number)
-		if xTarget then
-			if string.find(pages.lastname, "ID:") == nil then
-				pages.lastname = pages.lastname.." (ID: "..xTarget.source..")"
-			end
 		end
         TriggerClientEvent('xenknight:yellow_newPagess', -1, pages)
       end)
@@ -94,9 +94,7 @@ AddEventHandler('xenknight:yellow_getPagess', function(phone_number, firstname)
 		end
 		local xTarget = ESX.GetPlayerFromNumber(Oglasi[i].phone_number)
 		if xTarget then
-			if string.find(Oglasi[i].lastname, "ID:") == nil then
-				Oglasi[i].lastname = Oglasi[i].lastname.." (ID: "..xTarget.source..")"
-			end
+			Oglasi[i].ID = xTarget.source
 		end
 	end
     TriggerClientEvent('xenknight:yellow_getPagess', sourcePlayer, Oglasi)

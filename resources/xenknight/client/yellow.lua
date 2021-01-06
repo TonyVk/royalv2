@@ -1,14 +1,36 @@
 --====================================================================================
 -- # Discord XenKnighT#7085
 --====================================================================================
+local perm = 0
+Citizen.CreateThread(function()
+	while ESX == nil do
+		Citizen.Wait(0)
+	end
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		perm = br
+	end)
+end)
 
 RegisterNetEvent("xenknight:yellow_getPagess")
 AddEventHandler("xenknight:yellow_getPagess", function(pagess)
+	if perm > 0 then
+		for i=1, #pagess, 1 do
+			if string.find(pagess[i].lastname, "ID:") == nil and pagess[i].ID ~= nil then
+				pagess[i].lastname = pagess[i].lastname.." (ID: "..pagess[i].ID..")"
+			end
+		end
+	end
 	SendNUIMessage({event = 'yellow_pagess', pagess = pagess})
 end)
 
 RegisterNetEvent("xenknight:yellow_newPagess")
 AddEventHandler("xenknight:yellow_newPagess", function(pages)
+	if perm > 0 then
+		print(pages.ID)
+		if string.find(pages.lastname, "ID:") == nil and pages.ID ~= nil then
+			pages.lastname = pages.lastname.." (ID: "..pages.ID..")"
+		end
+	end
 	SendNUIMessage({event = 'yellow_newPages', pages = pages})
 end)
 
