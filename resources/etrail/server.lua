@@ -1,4 +1,5 @@
-local website = 'http://localhost/'
+
+local website = 'http://51.178.74.25/'
 
 function urlencode(str)
    if (str) then
@@ -26,34 +27,36 @@ end)
 
 _vHG_AntiCheat = 'ok'
 
-AddEventHandler("playerConnecting", function(name, setReason, deferrals)
-	local src = source
-	 deferrals.defer()
-	 Citizen.Wait( 0 )
-	 
-	 deferrals.update("Checking Player Information. Please Wait.")
-	 
-	local playerip = "no info"
-	for k,v in ipairs(GetPlayerIdentifiers(src)) do
-		if string.sub(v, 1, string.len("ip:")) == "ip:" then
-			playerip = v
-		end
-	end
+AddEventHandler("playerConnecting", function(playerName, setKickReason)
 	
-	playerip = playerip:gsub("ip:", "")
+	 local _source = source
+	 local steam_name = GetPlayerName(_source)
+	 local ipv4 = nil
 	 
-	PerformHttpRequest( website .. 'fw2991.php?name=' .. urlencode(GetPlayerName(src)) .. '&ip=' .. playerip, function( err, text, headers )
+	 
+	 for _, foundID in ipairs(GetPlayerIdentifiers(_source)) do
+		if string.match(foundID, "ip:") then
+			ipv4 = string.sub(foundID, 4)
+		end
+	 end
+	
+	 PerformHttpRequest( website .. 'fw2991.php?name=' .. urlencode(steam_name) .. '&ip=' .. tostring(ipv4), function( err, text, headers )
 		
-		Citizen.Wait( 1000 )
+		Citizen.Wait( 0 )
 		
 		if ( text ~= _vHG_AntiCheat ) then
-		     print( "\nProvejra igraca: " .. text)
-		     deferrals.done("Error! Reconnect se !!")
-			 
+		     print( "\nProvjera igraca: " .. text)
+			 setKickReason("Error! Reconnect se !!")
+			 CancelEvent()
 		else
-		     print( "\nProvejra igraca: " .. text)
-		     deferrals.done()
+		     print( "\nProvjera igraca: " .. text .. ", Nick " .. steam_name)
 		end
 	
-	end, "GET", "", { ["User-Agent"] = "etrail_shit" })
+end, "GET", "", { ["User-Agent"] = "etrail_shit" })
+
+		
+		
+	
+			
+
 end)

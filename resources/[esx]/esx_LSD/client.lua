@@ -6,6 +6,7 @@ local CurrentAction           = nil
 local CurrentActionMsg        = ''
 local runspeed = 1.20 --(Change the run speed here !!! MAXIMUM IS 1.49 !!! )
 local onDrugs = false
+local Preradjuje = false
 
 -- Useitem thread
 RegisterNetEvent('esx_koristiLSD:useItem')
@@ -245,15 +246,14 @@ Citizen.CreateThread(function()
 									local x,y,z = table.unpack(Config.Processing)
 									Draw3DText( x, y, z-1.0 , "~w~Proizvodnja LSDa~y~\nPritisnite [~b~E~y~] da krenete sa proizvodnjom LSDa",4,0.15,0.1)
 									if IsControlJustReleased(0, Keys['E']) then
-										Citizen.CreateThread(function()
-											Process()
-										end)
+										Process()
 									end
 								end
 								
 								if (#(kordic-Config.Processing) < 5) and (#(kordic-Config.Processing) > 3) then
 								--if GetDistanceBetweenCoords(Config.Processing.x, Config.Processing.y, Config.Processing.z, GetEntityCoords(GetPlayerPed(-1)), true) < 5 and GetDistanceBetweenCoords(Config.Processing.x, Config.Processing.y, Config.Processing.z, GetEntityCoords(GetPlayerPed(-1)), true) > 3 then
 									process = false
+									Preradjuje = false
 								end
 						end
 				end	
@@ -302,21 +302,25 @@ function Draw3DText(x,y,z,textInput,fontId,scaleX,scaleY)
 end
 
 function Process()
-	ESX.Streaming.RequestAnimDict("mini@repair", function()
-        TaskPlayAnim(PlayerPedId(), "mini@repair", "fixing_a_ped", 8.0, -8.0, -1, 32, 0, false, false, false)
-	end)
-	process = true
-	local making = true
-	while making and process do
-		TriggerEvent('esx:showNotification', '~g~Pocetak ~g~proizvodnje ~w~LSDa')
-		local torba = 0
-		TriggerEvent('skinchanger:getSkin', function(skin)
-			torba = skin['bags_1']
+	if not Preradjuje then
+		Preradjuje = true
+		ESX.Streaming.RequestAnimDict("mini@repair", function()
+			TaskPlayAnim(PlayerPedId(), "mini@repair", "fixing_a_ped", 8.0, -8.0, -1, 32, 0, false, false, false)
 		end)
-		Citizen.Wait(5000)
-		ESX.TriggerServerCallback('LSD:process', function(output)
-			making = output
-		end, torba)
+		process = true
+		local making = true
+		while making and process do
+			TriggerEvent('esx:showNotification', '~g~Pocetak ~g~proizvodnje ~w~LSDa')
+			local torba = 0
+			TriggerEvent('skinchanger:getSkin', function(skin)
+				torba = skin['bags_1']
+			end)
+			Citizen.Wait(5000)
+			ESX.TriggerServerCallback('LSD:process', function(output)
+				making = output
+				Preradjuje = false
+			end, torba)
+		end
 	end
 end
 

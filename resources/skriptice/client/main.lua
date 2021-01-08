@@ -19,9 +19,7 @@ local isDead = false
 local NeKickaj = false
 local prvispawn = false
 local crouched = false
-local proned = false
 crouchKey = 26
-proneKey = 36
 local mp_pointing = false
 local keyPressed = false
 local showPlayerBlips = false
@@ -295,42 +293,25 @@ Citizen.CreateThread(function()
 	while true do
 		local ped = GetPlayerPed( -1 )
 		if ( DoesEntityExist( ped ) and not IsEntityDead( ped ) and not IsPedInAnyVehicle(ped, false) ) then 
-			ProneMovement()
-			DisableControlAction( 0, proneKey, true ) 
 			DisableControlAction( 0, crouchKey, true ) 
 			if ( not IsPauseMenuActive() ) then 
-				if ( IsDisabledControlJustPressed( 0, crouchKey ) and not proned ) then 
+				if ( IsDisabledControlJustPressed( 0, crouchKey ) and not IsPedReloading(ped) ) then 
 					ESX.Streaming.RequestAnimSet("move_ped_crouched")
 					ESX.Streaming.RequestAnimSet("MOVE_M@TOUGH_GUY@")		
-					if ( crouched and not proned ) then 
+					if ( crouched ) then 
 						ResetPedMovementClipset( ped )
 						ResetPedStrafeClipset(ped)
 						SetPedMovementClipset( ped,"MOVE_M@TOUGH_GUY@", 0.5)
 						crouched = false
-					elseif ( not crouched and not proned ) then
+					elseif ( not crouched ) then
 						SetPedMovementClipset( ped, "move_ped_crouched", 0.55 )
 						SetPedStrafeClipset(ped, "move_ped_crouched_strafing")
 						crouched = true 
 					end 
-				elseif ( IsDisabledControlJustPressed(0, proneKey) and not crouched and not IsPedInAnyVehicle(ped, true) and not IsPedFalling(ped) and not IsPedDiving(ped) and not IsPedInCover(ped, false) and not IsPedInParachuteFreeFall(ped) and (GetPedParachuteState(ped) == 0 or GetPedParachuteState(ped) == -1) ) then
-					if proned then
-						ClearPedTasksImmediately(ped)
-						proned = false
-					elseif not proned then
-						ESX.Streaming.RequestAnimSet( "move_crawl" )
-						ClearPedTasksImmediately(ped)
-						proned = true
-						if IsPedSprinting(ped) or IsPedRunning(ped) or GetEntitySpeed(ped) > 5 then
-							TaskPlayAnim(ped, "move_jump", "dive_start_run", 8.0, 1.0, -1, 0, 0.0, 0, 0, 0)
-							Citizen.Wait(1000)
-						end
-						SetProned()
-					end
 				end
 			end
 		else
-			if proned or crouched then
-				proned = false
+			if crouched then
 				crouched = false
 			end
 		end
@@ -657,44 +638,6 @@ end
 local once = true
 local oldval = false
 local oldvalped = false
-
-function SetProned()
-	ped = PlayerPedId()
-	ClearPedTasksImmediately(ped)
-	TaskPlayAnimAdvanced(ped, "move_crawl", "onfront_fwd", GetEntityCoords(ped), 0.0, 0.0, GetEntityHeading(ped), 1.0, 1.0, 1.0, 46, 1.0, 0, 0)
-end
-
-
-function ProneMovement()
-	if proned then
-		ped = PlayerPedId()
-		DisableControlAction(0, 23)
-		if IsControlPressed(0, 32) or IsControlPressed(0, 33) then
-			DisablePlayerFiring(ped, true)
-		 elseif IsControlJustReleased(0, 32) or IsControlJustReleased(0, 33) then
-		 	DisablePlayerFiring(ped, false)
-		 end
-		if IsControlJustPressed(0, 32) and not movefwd then
-			movefwd = true
-		    TaskPlayAnimAdvanced(ped, "move_crawl", "onfront_fwd", GetEntityCoords(ped), 1.0, 0.0, GetEntityHeading(ped), 1.0, 1.0, 1.0, 47, 1.0, 0, 0)
-		elseif IsControlJustReleased(0, 32) and movefwd then
-		    TaskPlayAnimAdvanced(ped, "move_crawl", "onfront_fwd", GetEntityCoords(ped), 1.0, 0.0, GetEntityHeading(ped), 1.0, 1.0, 1.0, 46, 1.0, 0, 0)
-			movefwd = false
-		end		
-		if IsControlJustPressed(0, 33) and not movebwd then
-			movebwd = true
-		    TaskPlayAnimAdvanced(ped, "move_crawl", "onfront_bwd", GetEntityCoords(ped), 1.0, 0.0, GetEntityHeading(ped), 1.0, 1.0, 1.0, 47, 1.0, 0, 0)
-		elseif IsControlJustReleased(0, 33) and movebwd then 
-		    TaskPlayAnimAdvanced(ped, "move_crawl", "onfront_bwd", GetEntityCoords(ped), 1.0, 0.0, GetEntityHeading(ped), 1.0, 1.0, 1.0, 46, 1.0, 0, 0)
-		    movebwd = false
-		end
-		if IsControlPressed(0, 34) then
-			SetEntityHeading(ped, GetEntityHeading(ped)+2.0 )
-		elseif IsControlPressed(0, 35) then
-			SetEntityHeading(ped, GetEntityHeading(ped)-2.0 )
-		end
-	end
-end
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
