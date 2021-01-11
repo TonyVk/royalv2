@@ -125,6 +125,10 @@ AddEventHandler("entityCreating",  function(entity)
 end)
 
 --Fake eventi
+RegisterServerEvent("esx:removeInventoryItem")
+AddEventHandler("esx:removeInventoryItem",function(type, itemName, itemCount)
+	TriggerEvent('AntiCheat:FakeEvent', source)
+end)
 RegisterServerEvent("pacific_bank_robbery:receiveCash")
 AddEventHandler("pacific_bank_robbery:receiveCash",function()
 	TriggerEvent('AntiCheat:FakeEvent', source)

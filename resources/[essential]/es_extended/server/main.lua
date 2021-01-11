@@ -449,8 +449,8 @@ AddEventHandler('esx:DajTajItem', function(src, type, itemName, itemCount, torba
 	end
 end)
 
-RegisterServerEvent('esx:removeInventoryItem')
-AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
+RegisterServerEvent('esx:OduzmiItemTuljanu')
+AddEventHandler('esx:OduzmiItemTuljanu', function(type, itemName, itemCount)
 	local _source = source
 
 	if type == 'item_standard' then

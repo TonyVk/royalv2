@@ -295,8 +295,6 @@ function OpenDoor(bankId)
 		local NeDiraj = true
 		Citizen.CreateThread(function()
 			FreezeEntityPosition(door, false)
-			print(rotation)
-			print(Bank["Bank_Vault"]["hEnd"])
 			if Bank["Bank_Vault"]["hEnd"] < 0 then
 				while rotation >= Bank["Bank_Vault"]["hEnd"] do
 					Citizen.Wait(1)

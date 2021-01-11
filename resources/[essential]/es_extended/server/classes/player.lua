@@ -353,7 +353,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 		item.count     = newCount
 
 		TriggerEvent('esx:onRemoveInventoryItem', self.source, item, count)
-		TriggerClientEvent('esx:removeInventoryItem', self.source, item, count)
+		TriggerClientEvent('esx:OduzmiTuljanuIzInva', self.source, item, count)
 	end
 
 	self.setInventoryItem = function(name, count)
@@ -363,7 +363,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 
 		if oldCount > item.count  then
 			TriggerEvent('esx:onRemoveInventoryItem', self.source, item, oldCount - item.count)
-			TriggerClientEvent('esx:removeInventoryItem', self.source, item, oldCount - item.count)
+			TriggerClientEvent('esx:OduzmiTuljanuIzInva', self.source, item, oldCount - item.count)
 		else
 			TriggerEvent('esx:onAddInventoryItem', self.source, item, item.count - oldCount)
 			TriggerClientEvent('esx:addInventoryItem', self.source, item, item.count - oldCount)
@@ -448,7 +448,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 
 		if weaponLabel then
 			TriggerClientEvent('esx:removeWeapon', self.source, weaponName, ammo)
-			TriggerClientEvent('esx:removeInventoryItem', self.source, {label = weaponLabel}, 1)
+			TriggerClientEvent('esx:OduzmiTuljanuIzInva', self.source, {label = weaponLabel}, 1)
 		end
 	end
 

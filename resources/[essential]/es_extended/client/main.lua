@@ -178,8 +178,8 @@ AddEventHandler('esx:addInventoryItem', function(item, count)
 	end
 end)
 
-RegisterNetEvent('esx:removeInventoryItem')
-AddEventHandler('esx:removeInventoryItem', function(item, count)
+RegisterNetEvent('esx:OduzmiTuljanuIzInva')
+AddEventHandler('esx:OduzmiTuljanuIzInva', function(item, count)
 	for i=1, #ESX.PlayerData.inventory, 1 do
 		if ESX.PlayerData.inventory[i].name == item.name then
 			ESX.PlayerData.inventory[i] = item
