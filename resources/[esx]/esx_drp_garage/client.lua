@@ -182,42 +182,47 @@ function ListVehiclesMenu()
 	local elements = {}
 
 	ESX.TriggerServerCallback('eden_garage:getVehicles', function(vehicles)
- 	for _,v in pairs(vehicles) do
-		if this_Garage.Brod == nil then
-			if v.brod == 0 then
-				ESX.TriggerServerCallback('pijaca:JelNaProdaju', function(br)
-					if not br then
-						local hashVehicule = v.vehicle.model
-						local vehicleName = GetDisplayNameFromVehicleModel(hashVehicule)
-						local labelvehicle
-						if v.state == 1 then
-							labelvehicle = vehicleName..' <font color="green">U garazi</font>'
-						elseif v.state == 2 then
-							labelvehicle = vehicleName..' <font color="red">Ukradeno</font>'
-						elseif v.state == 0 then
-							labelvehicle = vehicleName..' <font color="red">Izvan garaze</font>'
-						end    
-						table.insert(elements, {label =labelvehicle , value = v})
-					end
-				end, v.plate)
-			end
-        else
-			if v.brod == 1 then
-				local hashVehicule = v.vehicle.model
-				local vehicleName = GetDisplayNameFromVehicleModel(hashVehicule)
-				local labelvehicle
-				if v.state == 1 then
-					labelvehicle = vehicleName..' <font color="green">U garazi</font>'
-				elseif v.state == 2 then
-					labelvehicle = vehicleName..' <font color="red">Ukradeno</font>'
-				elseif v.state == 0 then
-					labelvehicle = vehicleName..' <font color="red">Izvan garaze</font>'
-				end    
-				table.insert(elements, {label =labelvehicle , value = v})
+		for _,v in pairs(vehicles) do
+			if this_Garage.Brod == nil then
+				if v.brod == 0 then
+					ESX.TriggerServerCallback('pijaca:JelNaProdaju', function(br)
+						if not br then
+							local hashVehicule = v.vehicle.model
+							local vehicleName = GetDisplayNameFromVehicleModel(hashVehicule)
+							local labelvehicle
+							if v.state == 1 then
+								labelvehicle = vehicleName..' <font color="green">U garazi</font>'
+							elseif v.state == 2 then
+								labelvehicle = vehicleName..' <font color="red">Ukradeno</font>'
+							elseif v.state == 0 then
+								labelvehicle = vehicleName..' <font color="red">Izvan garaze</font>'
+							end    
+							table.insert(elements, {label =labelvehicle , value = v})
+						end
+					end, v.plate)
+				end
+			else
+				if v.brod == 1 then
+					local hashVehicule = v.vehicle.model
+					local vehicleName = GetDisplayNameFromVehicleModel(hashVehicule)
+					local labelvehicle
+					if v.state == 1 then
+						labelvehicle = vehicleName..' <font color="green">U garazi</font>'
+					elseif v.state == 2 then
+						labelvehicle = vehicleName..' <font color="red">Ukradeno</font>'
+					elseif v.state == 0 then
+						labelvehicle = vehicleName..' <font color="red">Izvan garaze</font>'
+					end    
+					table.insert(elements, {label =labelvehicle , value = v})
+				end
 			end
 		end
-   	 end
-		Wait(500)
+		if #vehicles > 0 then
+			while #elements == 0 do
+				Wait(100)
+			end
+		end
+		--Wait(500)
 		ESX.UI.Menu.Open(
 		'default', GetCurrentResourceName(), 'spawn_vehicle',
 		{

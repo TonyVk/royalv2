@@ -239,7 +239,7 @@ RegisterNUICallback(
 
         if type(data.number) == "number" and math.floor(data.number) == data.number then
 			if data.item.name ~= "medikit" and data.item.name ~= "net_cracker" and data.item.name ~= "thermite" then
-				TriggerServerEvent("esx:OduzmiTuljanuIzInva", data.item.type, data.item.name, data.number)
+				TriggerServerEvent("esx:OduzmiItemTuljanu", data.item.type, data.item.name, data.number)
 			else
 				ESX.ShowNotification("Ne mozete bacati taj predmet!")
 			end

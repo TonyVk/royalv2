@@ -239,8 +239,10 @@ AddEventHandler('gepeke:RemoveVehicleList', function(plate)
         end
     end
 	for a = 1, #Tablice, 1 do
-        if Tablice[a].plate == plate then
-			table.remove(Tablice, a)
+		if Tablice[a] ~= nil then
+			if Tablice[a].plate == plate then
+				table.remove(Tablice, a)
+			end
 		end
 	end
 end)

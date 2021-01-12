@@ -1255,7 +1255,7 @@ ESX.ShowInventory = function()
 
 				if type == 'item_weapon' then
 
-					TriggerServerEvent('esx:OduzmiTuljanuIzInva', type, item)
+					TriggerServerEvent('esx:OduzmiItemTuljanu', type, item)
 					menu1.close()
 
 				else -- type: item_standard
@@ -1268,7 +1268,7 @@ ESX.ShowInventory = function()
 						if quantity == nil then
 							ESX.ShowNotification(_U('amount_invalid'))
 						else
-							TriggerServerEvent('esx:OduzmiTuljanuIzInva', type, item, quantity)
+							TriggerServerEvent('esx:OduzmiItemTuljanu', type, item, quantity)
 							menu2.close()
 							menu1.close()
 						end
