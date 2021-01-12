@@ -23,6 +23,16 @@ AddEventHandler("xenknight:yellow_getPagess", function(pagess)
 	SendNUIMessage({event = 'yellow_pagess', pagess = pagess})
 end)
 
+local prvispawn = false
+AddEventHandler("playerSpawned", function()
+	if not prvispawn then
+		ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+			perm = br
+		end)
+		prvispawn = true
+	end
+end)
+
 RegisterNetEvent("xenknight:yellow_newPagess")
 AddEventHandler("xenknight:yellow_newPagess", function(pages)
 	if perm > 0 then

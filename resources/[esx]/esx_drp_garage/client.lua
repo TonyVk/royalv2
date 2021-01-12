@@ -217,12 +217,7 @@ function ListVehiclesMenu()
 				end
 			end
 		end
-		if #vehicles > 0 then
-			while #elements == 0 do
-				Wait(100)
-			end
-		end
-		--Wait(500)
+		Wait(1000)
 		ESX.UI.Menu.Open(
 		'default', GetCurrentResourceName(), 'spawn_vehicle',
 		{
