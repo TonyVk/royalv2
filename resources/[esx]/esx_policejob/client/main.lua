@@ -497,6 +497,10 @@ function OpenCloakroomMenu()
 		table.insert(elements, {label = _U('police_wear'), value = 'intendent_wear'})
 	elseif grade == 'lieutenant' then
 		table.insert(elements, {label = _U('police_wear'), value = 'lieutenant_wear'})
+	elseif grade == 'interventna' then
+		table.insert(elements, {label = _U('police_wear'), value = 'interventna_wear'})
+	elseif grade == 'granicna' then
+		table.insert(elements, {label = _U('police_wear'), value = 'granicna_wear'})
 	elseif grade == 'chef' then
 		table.insert(elements, {label = _U('police_wear'), value = 'chef_wear'})
 	elseif grade == 'boss' then
@@ -608,6 +612,8 @@ function OpenCloakroomMenu()
 			data.current.value == 'sergeant_wear' or
 			data.current.value == 'intendent_wear' or
 			data.current.value == 'lieutenant_wear' or
+			data.current.value == 'interventna_wear' or
+			data.current.value == 'granicna_wear' or
 			data.current.value == 'chef_wear' or
 			data.current.value == 'boss_wear' or
 			data.current.value == 'bullet_wear' or
@@ -1431,8 +1437,7 @@ function LookupVehicle()
 	{
 		title = _U('search_database_title'),
 	}, function(data, menu)
-		local length = string.len(data.value)
-		if data.value == nil or length < 2 or length > 13 then
+		if data.value == nil or string.len(data.value) < 2 or string.len(data.value) > 13 then
 			ESX.ShowNotification(_U('search_database_error_invalid'))
 		else
 			ESX.TriggerServerCallback('esx_policejob:getVehicleFromPlate', function(owner, found)

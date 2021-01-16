@@ -81,6 +81,33 @@ function MenuCloakRoom()
 	)
 end
 
+RegisterNUICallback(
+    "kraj",
+    function(data, cb)
+		if data.win then
+			SendNUIMessage({
+				prikazi = true
+			})
+			SetNuiFocus(false)
+			ClearPedTasksImmediately(PlayerPedId())
+			TriggerServerEvent("elektricar:platituljanu")
+			TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.job.name)
+			BrTura = BrTura+1
+			if BrTura ~= 10 then
+				SpucajPosao()
+			else
+				ESX.ShowNotification("Vratite vozilo u firmu!")
+				for k,v in pairs(Config.Zones) do
+					if k == "VehicleDeletePoint" then
+						Blipic = AddBlipForCoord(v.Pos.x, v.Pos.y, v.Pos.z)
+						SetBlipRoute(Blipic, true)
+					end
+				end
+			end
+		end
+    end
+)
+
 function MenuVehicleSpawner()
 	local elements = {}
 
@@ -242,22 +269,11 @@ AddEventHandler('esx_elektricar:hasEnteredMarker', function(zone)
 		LokBroj = nil
 		RemoveBlip(Blipic)
 		TaskStartScenarioInPlace(PlayerPedId(), "WORLD_HUMAN_WELDING", 0, true)
-        Wait(10000)
-		ClearPedTasksImmediately(PlayerPedId())
-		TriggerServerEvent("elektricar:platituljanu")
-		TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.job.name)
-		BrTura = BrTura+1
-		if BrTura ~= 10 then
-			SpucajPosao()
-		else
-			ESX.ShowNotification("Vratite vozilo u firmu!")
-			for k,v in pairs(Config.Zones) do
-				if k == "VehicleDeletePoint" then
-					Blipic = AddBlipForCoord(v.Pos.x, v.Pos.y, v.Pos.z)
-					SetBlipRoute(Blipic, true)
-				end
-			end
-		end
+		SendNUIMessage({
+			prikazi = true
+		})
+		SetNuiFocus(true, true)
+		ESX.ShowNotification("Povezite zice sa svojim bojama kako bih ste popravili kvar!")
 	end
 
 	if zone == 'VehicleSpawner' then

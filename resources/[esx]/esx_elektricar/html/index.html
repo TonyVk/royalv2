@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<script src="assets/plugins/jquery/jquery-3.2.1.min.js"></script>
+	<script src="nui://game/ui/jquery.js" type="text/javascript"></script>
     <title>Spajanje zica</title>
 	<style>
 		html {
@@ -421,7 +421,7 @@
 				}
 			  });
 			}
-
+			var Prikazan = false;
 			function toggleLight(selector, visibility) {
 			  if (visibility) {
 				completedLights[selector - 1] = 1;
@@ -436,6 +436,9 @@
 					toggleLight(1, false);
 					toggleLight(3, false);
 					toggleLight(4, false);
+					$.post("http://esx_elektricar/kraj", JSON.stringify({
+						win: true
+					}));
 				  }, 2000);
 				}
 			  } else {
@@ -466,9 +469,6 @@
 			}
 
 			const audioTask = new Audio('https://assets.codepen.io/127738/Among_Us-Task-complete.mp3');
-		
-			var Prikazan = false;
-			var Zabrani = false;
 			window.addEventListener('message', function(event) {
 				var item = event.data;
 				if (item.prikazi) {
@@ -476,19 +476,6 @@
 					if(Prikazan == false)
 					{
 						x.style.display = "block";
-						numPins = item.ukosnice;
-						if(numPins >= 2 && numPins <= 4)
-						{
-							$('span').text(numPins+" ukosnice preostalo");
-						}
-						else if(numPins == 1)
-						{
-							$('span').text(numPins+" ukosnica preostala");
-						}
-						else
-						{
-							$('span').text(numPins+" ukosnica preostalo");
-						}
 						Prikazan = true;
 					}
 					else

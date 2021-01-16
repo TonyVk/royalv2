@@ -65,7 +65,7 @@ Config.Livraison = {
 			kHeading = 69.278335571289,
 			Model = -58485588,
 			Type  = 1,
-			Paye = 400
+			Paye = 200
 		},
 	-- fleeca2
 	Delivery2LS = {
@@ -77,7 +77,7 @@ Config.Livraison = {
 			kHeading = 249.71127319336,
 			Model = 218085040,
 			Type  = 1,
-			Paye = 400
+			Paye = 200
 		},
 	-- blainecounty
 	Delivery3LS = {
@@ -89,7 +89,7 @@ Config.Livraison = {
 			kHeading = 320.00003051758,
 			Model = 1605769687,
 			Type  = 1,
-			Paye = 400
+			Paye = 200
 		},
 	-- PrincipalBank
 	Delivery4LS = {
@@ -101,7 +101,7 @@ Config.Livraison = {
 			kHeading = 142.26383972168,
 			Model = 218085040,
 			Type  = 1,
-			Paye = 300
+			Paye = 200
 		},
 	-- route68e
 	Delivery5LS = {
@@ -125,7 +125,7 @@ Config.Livraison = {
 			kHeading = 91.052421569824,
 			Model = 1605769687,
 			Type  = 1,
-			Paye = 400
+			Paye = 200
 		},
 	--grovestreetgas
 	Delivery7LS = {
@@ -137,7 +137,7 @@ Config.Livraison = {
 			kHeading = 244.85772705078,
 			Model = 666561306,
 			Type  = 1,
-			Paye = 300
+			Paye = 200
 		},
 	--fleecacarpark
 	Delivery8LS = {
@@ -149,7 +149,7 @@ Config.Livraison = {
 			kHeading = 340.75958251953,
 			Model = 666561306,
 			Type  = 1,
-			Paye = 300
+			Paye = 200
 		},
 	--Mt Haan Dr Radio Tower
 	Delivery9LS = {
@@ -161,7 +161,7 @@ Config.Livraison = {
 			kHeading = 180.91479492188,
 			Model = -387405094,
 			Type  = 1,
-			Paye = 400
+			Paye = 200
 		},
 	--Senora Way Fuel Depot
 	Delivery10LS = {
@@ -173,7 +173,7 @@ Config.Livraison = {
 			kHeading = 348.79708862305,
 			Model = 666561306,
 			Type  = 1,
-			Paye = 400
+			Paye = 200
 		},
 ------------------------------------------- 2nd Patrol 
 	-- Palomino Noose HQ
@@ -186,7 +186,7 @@ Config.Livraison = {
 			kHeading = 244.39865112305,
 			Model = -58485588,
 			Type  = 1,
-			Paye = 400
+			Paye = 200
 		},
 	-- El Burro Oil plain
 	Delivery2BC = {
@@ -198,7 +198,7 @@ Config.Livraison = {
 			kHeading = 264.99920654297,
 			Model = -58485588,
 			Type  = 1,
-			Paye = 300
+			Paye = 200
 		},
 	-- Orchardville ave
 	Delivery3BC = {
@@ -210,7 +210,7 @@ Config.Livraison = {
 			kHeading = 90.001449584961,
 			Model = 666561306,
 			Type  = 1,
-			Paye = 300
+			Paye = 200
 		},
 	-- Elysian Fields
 	Delivery4BC = {
@@ -222,7 +222,7 @@ Config.Livraison = {
 			kHeading = 346.00006103516,
 			Model = 1511880420,
 			Type  = 1,
-			Paye = 300
+			Paye = 200
 		},
 
 		-- Carson Ave
@@ -235,7 +235,7 @@ Config.Livraison = {
 		kHeading = 359.71841430664,
 		Model = 1511880420,
 		Type  = 1,
-		Paye = 300
+		Paye = 200
 	},
 
 
@@ -249,7 +249,7 @@ Config.Livraison = {
 			kHeading = 246.8586730957,
 			Model = 666561306,
 			Type  = 1,
-			Paye = 300
+			Paye = 200
 		},
 	-- Dutch London
 	Delivery7BC = {
@@ -261,7 +261,7 @@ Config.Livraison = {
 			kHeading = 268.33996582031,
 			Model = 666561306,
 			Type  = 1,
-			Paye = 300
+			Paye = 200
 		},
 	-- Autopia Pkwy
 	Delivery8BC = {
@@ -273,7 +273,7 @@ Config.Livraison = {
 			kHeading = 159.99879455566,
 			Model = 666561306,
 			Type  = 1,
-			Paye = 300
+			Paye = 200
 		},
 	-- Miriam Turner Overpass
 	Delivery9BC = {
@@ -285,7 +285,7 @@ Config.Livraison = {
 			kHeading = 244.34002685547,
 			Model = 218085040,
 			Type  = 1,
-			Paye = 300
+			Paye = 200
 		},
 	-- Exceptionalist Way
 	Delivery10BC = {
@@ -297,7 +297,7 @@ Config.Livraison = {
 			kHeading = 343.51263427734,
 			Model = 666561306,
 			Type  = 1,
-			Paye = 300
+			Paye = 200
 		},
 		
 	RetourCamion = {

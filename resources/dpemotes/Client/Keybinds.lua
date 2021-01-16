@@ -1,3 +1,13 @@
+RegisterKeyMapping('+radio', 'Radio animacija', 'keyboard', 'z')
+
+RegisterCommand('+radio', function()
+    ExecuteCommand("e radio")
+end, false)
+
+RegisterCommand('-radio', function()
+    ExecuteCommand("e c")
+end, false)
+
 if Config.SqlKeybinding then
 local emob1 = ""
 local emob2 = ""

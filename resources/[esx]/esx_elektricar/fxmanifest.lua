@@ -19,6 +19,5 @@ client_scripts {
 ui_page 'html/index.html'
 
 files {
-	'html/index.html',
-	'html/kosilica.mp3'
+	'html/index.html'
 }
