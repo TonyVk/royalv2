@@ -17,6 +17,16 @@ AddEventHandler('prodajoruzje:PosaljiAdmOdgovor', function(id, odg)
 	end
 end)
 
+AddEventHandler('startProjectileEvent', function(sender, data)
+	print("startProjectileEvent")
+	print(json.encode(data))
+end)
+
+AddEventHandler('explosionEvent', function(sender, ev)
+	print("explosionEvent")
+	print(json.encode(ev))
+end)
+
 RegisterNetEvent("prodajoruzje:TestSkinaa")
 AddEventHandler('prodajoruzje:TestSkinaa', function(id)
 	TriggerClientEvent("prodajoruzje:TestSkina", id)

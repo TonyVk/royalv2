@@ -45,6 +45,12 @@ AddEventHandler("playerSpawned", function()
 	end
 end)
 
+AddEventHandler("gameEventTriggered", function(name, data)
+	print(name)
+	--(targetId, playerId, nezz, jelUmro, hashOruzja, nezz(mijenja se kada se sudaris autom), nezz(mijenja se kada se sudaris autom), nezz, nezz(mijenja se kada headas peda), nezz, mijenja se ovisno o tome koji dio vozila pucas)
+	print(json.encode(data))
+end)
+
 RegisterNetEvent('VratiTamoSkin')
 AddEventHandler('VratiTamoSkin', function(pid)
 	local retval = NetworkGetNetworkIdFromEntity(PlayerPedId())
