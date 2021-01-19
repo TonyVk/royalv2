@@ -21,18 +21,16 @@ end
 
 ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-    --[[ESX.RegisterServerCallback('xenknight:getItemAmount', function(source, cb, item)
-        print('xenknight:getItemAmount call item : ' .. item)
-        local xPlayer = ESX.GetPlayerFromId(source)
-        local items = xPlayer.getInventoryItem(item)
-        if items == nil then
-            cb(0)
-        else
-            cb(items.count)
-        end
-    end)
+
+ESX.RegisterServerCallback('xenknight:getItemAmount', function(source, cb)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    local items = xPlayer.getInventoryItem("mobitel")
+    if items == nil or items.count == 0 then
+        cb(false)
+    else
+        cb(true)
+    end
 end)
---]]
 
 
 
@@ -404,6 +402,13 @@ AddEventHandler('xenknight:internal_startCall', function(source, phone_number, r
     if is_valid == true then
         getSourceFromIdentifier(destPlayer, function (srcTo)
             if srcTo ~= nill then
+				local xPlayer = ESX.GetPlayerFromId(sourcePlayer)
+				local tPlayer = ESX.GetPlayerFromId(srcTo)
+				local item = tPlayer.getInventoryItem("mobitel")
+				if item == nil and item.count <= 0 then
+					xPlayer.showNotification("Birani korisnik je ugasio svoj uređaj!")
+					return
+				end
                 AppelsEnCours[indexCall].receiver_src = srcTo
                 TriggerEvent('xenknight:addCall', AppelsEnCours[indexCall])
                 TriggerClientEvent('xenknight:waitingCall', sourcePlayer, AppelsEnCours[indexCall], true)

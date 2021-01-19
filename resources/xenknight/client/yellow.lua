@@ -33,15 +33,25 @@ AddEventHandler("playerSpawned", function()
 	end
 end)
 
+function hasPhone (cb)
+	if (ESX == nil) then return cb(false) end
+	ESX.TriggerServerCallback('xenknight:getItemAmount', function(imal)
+		cb(imal)
+	end)
+end
+
 RegisterNetEvent("xenknight:yellow_newPagess")
 AddEventHandler("xenknight:yellow_newPagess", function(pages)
-	if perm > 0 then
-		print(pages.ID)
-		if string.find(pages.lastname, "ID:") == nil and pages.ID ~= nil then
-			pages.lastname = pages.lastname.." (ID: "..pages.ID..")"
+	hasPhone(function (hasPhone)
+		if hasPhone == true then
+			if perm > 0 then
+				if string.find(pages.lastname, "ID:") == nil and pages.ID ~= nil then
+					pages.lastname = pages.lastname.." (ID: "..pages.ID..")"
+				end
+			end
+			SendNUIMessage({event = 'yellow_newPages', pages = pages})
 		end
-	end
-	SendNUIMessage({event = 'yellow_newPages', pages = pages})
+	end)
 end)
 
 RegisterNetEvent("xenknight:yellow_showError")

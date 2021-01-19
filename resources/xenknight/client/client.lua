@@ -28,14 +28,6 @@ local PhoneInCall = {}
 local currentPlaySound = false
 local soundDistanceMax = 8.0
 
-
---====================================================================================
---  Check si le joueurs poséde un téléphone
---  Callback true or false
---====================================================================================
-function hasPhone (cb)
-  cb(true)
-end
 --====================================================================================
 --  Que faire si le joueurs veut ouvrir sont téléphone n'est qu'il en a pas ?
 --====================================================================================
@@ -67,6 +59,21 @@ function ShowNoPhoneWarning ()
 end
 --]]
 
+--====================================================================================
+--  Check si le joueurs poséde un téléphone
+--  Callback true or false
+--====================================================================================
+function hasPhone (cb)
+	if (ESX == nil) then return cb(false) end
+	ESX.TriggerServerCallback('xenknight:getItemAmount', function(imal)
+		cb(imal)
+	end)
+end
+
+function ShowNoPhoneWarning () 
+  if (ESX == nil) then return end
+  ESX.ShowNotification("Nemate mobitel kod sebe!")
+end
 
 --====================================================================================
 --  
@@ -227,28 +234,32 @@ end)
 RegisterNetEvent("xenknight:receiveMessage")
 AddEventHandler("xenknight:receiveMessage", function(message)
   -- SendNUIMessage({event = 'updateMessages', messages = messages})
-  SendNUIMessage({event = 'newMessage', message = message})
-  table.insert(messages, message)
-  if message.owner == 0 then
-    local text = '~o~Nova poruka'
-    if ShowNumberNotification == true then
-      text = '~o~Nova poruka od ~y~'.. message.transmitter
-      for _,contact in pairs(contacts) do
-        if contact.number == message.transmitter then
-          text = '~o~Nova poruka od ~g~'.. contact.display
-          break
-        end
-      end
-    end
-    SetNotificationTextEntry("STRING")
-    AddTextComponentString(text)
-    DrawNotification(false, false)
-    PlaySound(-1, "Menu_Accept", "Phone_SoundSet_Default", 0, 0, 1)
-    Citizen.Wait(300)
-    PlaySound(-1, "Menu_Accept", "Phone_SoundSet_Default", 0, 0, 1)
-    Citizen.Wait(300)
-    PlaySound(-1, "Menu_Accept", "Phone_SoundSet_Default", 0, 0, 1)
-  end
+	hasPhone(function (hasPhone)
+		if hasPhone == true then
+		  SendNUIMessage({event = 'newMessage', message = message})
+		  table.insert(messages, message)
+		  if message.owner == 0 then
+			local text = '~o~Nova poruka'
+			if ShowNumberNotification == true then
+			  text = '~o~Nova poruka od ~y~'.. message.transmitter
+			  for _,contact in pairs(contacts) do
+				if contact.number == message.transmitter then
+				  text = '~o~Nova poruka od ~g~'.. contact.display
+				  break
+				end
+			  end
+			end
+			SetNotificationTextEntry("STRING")
+			AddTextComponentString(text)
+			DrawNotification(false, false)
+			PlaySound(-1, "Menu_Accept", "Phone_SoundSet_Default", 0, 0, 1)
+			Citizen.Wait(300)
+			PlaySound(-1, "Menu_Accept", "Phone_SoundSet_Default", 0, 0, 1)
+			Citizen.Wait(300)
+			PlaySound(-1, "Menu_Accept", "Phone_SoundSet_Default", 0, 0, 1)
+		  end
+		end
+	end)
 end)
 
 --====================================================================================
