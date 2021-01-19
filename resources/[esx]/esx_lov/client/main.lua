@@ -170,10 +170,14 @@ function PokreniLov()
 			Vozilo = nil
 		end
 		ESX.ShowNotification("Zavrsili ste sa lovom!")
+		TriggerEvent("esx:ZabraniInv", false)
+		TriggerEvent("gepeke:OdjebiGa", 1)
 	else
 		ESX.TriggerServerCallback('ex_lov:ImasLiLove', function(imal)
 			if imal then
 				Lovis = true
+				TriggerEvent("esx:ZabraniInv", true)
+				TriggerEvent("gepeke:OdjebiGa", 2)
 				BrojZivotinja = 0
 				ESX.ShowNotification("Zapoceli ste lov na zivotinje. Imate pravo na 5 zivotinja!")
 				GiveWeaponToPed(PlayerPedId(), GetHashKey("WEAPON_HEAVYSNIPER"),45, true, false)
@@ -235,6 +239,8 @@ function PokreniLov()
 						end
 						if IsEntityDead(PlayerPedId()) then
 							Lovis = false
+							TriggerEvent("esx:ZabraniInv", false)
+							TriggerEvent("gepeke:OdjebiGa", 1)
 							RemoveWeaponFromPed(PlayerPedId(), GetHashKey("WEAPON_HEAVYSNIPER"), true, true)
 							RemoveWeaponFromPed(PlayerPedId(), GetHashKey("WEAPON_KNIFE"), true, true)
 							if DoesEntityExist(Zivotinja) then
@@ -250,6 +256,9 @@ function PokreniLov()
 							ESX.ShowNotification("Umrli ste i zavrsili sa lovom!")
 						end
 						if PlyCoords.x < -2000.0 or PlyCoords.x > -500.0 then
+							Lovis = false
+							TriggerEvent("esx:ZabraniInv", false)
+							TriggerEvent("gepeke:OdjebiGa", 1)
 							ESX.ShowNotification("Napustili ste zonu lova, te vam je vozilo i oruzje oduzeto!")
 							RemoveWeaponFromPed(PlayerPedId(), GetHashKey("WEAPON_HEAVYSNIPER"), true, true)
 							RemoveWeaponFromPed(PlayerPedId(), GetHashKey("WEAPON_KNIFE"), true, true)

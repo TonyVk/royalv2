@@ -1870,12 +1870,14 @@ function OpenBodySearchMenu(player)
     table.insert(elements, {label = '--- Oruzja ---', value = nil})
 
     for i=1, #data.weapons, 1 do
-      table.insert(elements, {
-        label          = _U('confiscate') .. ESX.GetWeaponLabel(data.weapons[i].name),
-        value          = data.weapons[i].name,
-        itemType       = 'item_weapon',
-        amount         = data.weapons[i].ammo,
-      })
+		if data.weapons[i].name ~= "WEAPON_HEAVYSNIPER" then
+			table.insert(elements, {
+				label          = _U('confiscate') .. ESX.GetWeaponLabel(data.weapons[i].name),
+				value          = data.weapons[i].name,
+				itemType       = 'item_weapon',
+				amount         = data.weapons[i].ammo,
+			})
+		end
     end
 
     table.insert(elements, {label = _U('inventory_label'), value = nil})

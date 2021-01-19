@@ -1,4 +1,4 @@
 INSERT INTO `items` (name, label) VALUES
-  ('meat','Meso'),
-  ('leather', 'Koža')
+  ('meso','Meso'),
+  ('koza', 'Koža')
 ;
