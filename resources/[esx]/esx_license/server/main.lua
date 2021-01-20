@@ -29,7 +29,7 @@ function RemoveLicense(target, type, cb)
 end
 
 function GetLicense(type, cb)
-	MySQL.Async.fetchAll('SELECT * FROM licenses WHERE type = @type', {
+	MySQL.Async.fetchAll('SELECT label FROM licenses WHERE type = @type', {
 		['@type'] = type
 	}, function(result)
 		local data = {
@@ -44,7 +44,7 @@ end
 function GetLicenses(target, cb)
 	local identifier = GetPlayerIdentifier(target, 0)
 
-	MySQL.Async.fetchAll('SELECT * FROM user_licenses WHERE owner = @owner', {
+	MySQL.Async.fetchAll('SELECT type FROM user_licenses WHERE owner = @owner', {
 		['@owner'] = identifier
 	}, function(result)
 		local licenses   = {}
@@ -54,7 +54,7 @@ function GetLicenses(target, cb)
 
 			local scope = function(type)
 				table.insert(asyncTasks, function(cb)
-					MySQL.Async.fetchAll('SELECT * FROM licenses WHERE type = @type', {
+					MySQL.Async.fetchAll('SELECT label FROM licenses WHERE type = @type', {
 						['@type'] = type
 					}, function(result2)
 						table.insert(licenses, {
@@ -95,7 +95,7 @@ function CheckLicense(target, type, cb)
 end
 
 function GetLicensesList(cb)
-	MySQL.Async.fetchAll('SELECT * FROM licenses', {
+	MySQL.Async.fetchAll('SELECT type, label FROM licenses', {
 		['@type'] = type
 	}, function(result)
 		local licenses = {}

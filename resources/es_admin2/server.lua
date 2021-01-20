@@ -263,6 +263,8 @@ AddEventHandler('es_admin:set', function(t, USER, GROUP)
 								})
 							end
 						end)
+						
+						TriggerClientEvent('es_admin:setPerm', USER)
 
 						TriggerClientEvent('chat:addMessage', Source, {
 							args = {"^1SYSTEM", "Level permisije igracu ^2" .. GetPlayerName(tonumber(USER)) .. "^0 je postavljen na ^2 " .. tostring(GROUP)}

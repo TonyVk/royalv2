@@ -139,7 +139,7 @@ RegisterNetEvent("minute:SpremiIh")
 AddEventHandler('minute:SpremiIh', function(minute)
 	local src = source
 	local identifier = GetPlayerIdentifiers(src)[1]
-	MySQL.Async.fetchAll('SELECT * FROM minute WHERE identifier = @identifier', {['@identifier'] = identifier}, function(result)
+	MySQL.Async.fetchAll('SELECT minute FROM minute WHERE identifier = @identifier', {['@identifier'] = identifier}, function(result)
 		if result[1] == nil then
 			MySQL.Async.execute('INSERT INTO minute (identifier, minute) VALUES (@ident, @mina)',
 			{
@@ -155,7 +155,7 @@ AddEventHandler('minute:SpremiIh', function(minute)
 	end)
 end)
 
-ESX.RegisterUsableItem('ronjenje', function(source)
+--[[ESX.RegisterUsableItem('ronjenje', function(source)
 	print(GetPlayerPed(source))
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local oprema = xPlayer.getInventoryItem("ronjenje").count
@@ -164,7 +164,7 @@ ESX.RegisterUsableItem('ronjenje', function(source)
 	else
 		xPlayer.showNotification("Nemate opremu za ronjenje!")
 	end
-end)
+end)]]
 
 RegisterCommand("ispisip", function(source, args, rawCommandString)
 		local elements = {}

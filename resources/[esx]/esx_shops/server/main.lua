@@ -1,5 +1,6 @@
 ESX             = nil
 local ShopItems = {}
+local Shopovi = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -26,6 +27,11 @@ MySQL.ready(function()
 			end
 		end
 	end)
+	MySQL.Async.fetchAll('SELECT store, owner, sef FROM shops2', {}, function(result)
+		for i=1, #result, 1 do
+			table.insert(Shopovi, { store = result[i].store, owner = result[i].owner, sef = result[i].sef })
+		end
+	end)
 end)
 
 ESX.RegisterServerCallback('esx_shops:requestDBItems', function(source, cb)
@@ -33,34 +39,43 @@ ESX.RegisterServerCallback('esx_shops:requestDBItems', function(source, cb)
 end)
 
 ESX.RegisterServerCallback('esx_shops:DajDostupnost', function(source, cb, store)
-	local result = MySQL.Sync.fetchAll('SELECT owner FROM shops2 WHERE store = @store', {
-		['@store'] = store
-	})
-	if result[1].owner == nil then
-		cb(1)
-	else
+	local naso = false
+	for i=1, #Shopovi, 1 do
+		if Shopovi[i] ~= nil and Shopovi[i].store == store then
+			if Shopovi[i].owner == nil then
+				cb(1)
+				naso = true
+				break
+			end
+		end
+	end
+	if not naso then
 		cb(0)
 	end
 end)
 
 ESX.RegisterServerCallback('esx_shops:DajSef', function(source, cb, store)
-	local result = MySQL.Sync.fetchAll('SELECT sef FROM shops2 WHERE store = @store', {
-		['@store'] = store
-	})
-	cb(result[1].sef)
+	for i=1, #Shopovi, 1 do
+		if Shopovi[i] ~= nil and Shopovi[i].store == store then
+			cb(Shopovi[i].sef)
+			break
+		end
+	end
 end)
 
 ESX.RegisterServerCallback('esx_shops:DalJeVlasnik', function(source, cb, zona)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
-	local result = MySQL.Sync.fetchAll('SELECT id FROM shops2 WHERE owner = @id AND store = @st', {
-		['@id'] = xPlayer.identifier,
-		['@st'] = zona
-	})
-	if result[1] == nil then
+	local naso = false
+	for i=1, #Shopovi, 1 do
+		if Shopovi[i] ~= nil and Shopovi[i].store == zona and Shopovi[i].owner == xPlayer.identifier then
+			cb(1)
+			naso = true
+			break
+		end
+	end
+	if not naso then
 		cb(0)
-	else
-		cb(1)
 	end
 end)
 
@@ -79,6 +94,12 @@ AddEventHandler('ducan:piku2', function(zona, id)
 		})
 		TriggerClientEvent('esx:showNotification', _source, "Kupili ste trgovinu za $2000000")
 		TriggerClientEvent("esx_shops:ReloadBlip", _source)
+		for i=1, #Shopovi, 1 do
+			if Shopovi[i] ~= nil and Shopovi[i].store == store then
+				Shopovi[i].owner = xPlayer.identifier
+				break
+			end
+		end
 	else
 		local missingMoney = 2000000 - xPlayer.getMoney()
 		TriggerClientEvent('esx:showNotification', _source, _U('not_enough', ESX.Math.GroupDigits(missingMoney)))
@@ -94,6 +115,12 @@ function DajFirmi(id, price)
 		['@se'] = cij,
 		['@st'] = id
 	})
+	for i=1, #Shopovi, 1 do
+		if Shopovi[i] ~= nil and Shopovi[i].store == id then
+			Shopovi[i].sef = Shopovi[i].sef+price
+			break
+		end
+	end
 end
 
 function OduzmiFirmi(id, price)
@@ -105,6 +132,12 @@ function OduzmiFirmi(id, price)
 		['@se'] = cij,
 		['@st'] = id
 	})
+	for i=1, #Shopovi, 1 do
+		if Shopovi[i] ~= nil and Shopovi[i].store == id then
+			Shopovi[i].sef = Shopovi[i].sef-price
+			break
+		end
+	end
 end
 
 RegisterServerEvent('esx_shops:ProdajFirmu')
@@ -117,6 +150,12 @@ AddEventHandler('esx_shops:ProdajFirmu', function(firma)
 	})
 	TriggerClientEvent('esx:showNotification', _source, "Uspjesno ste prodali trgovinu!")
 	TriggerClientEvent("esx_shops:ReloadBlip", _source)
+	for i=1, #Shopovi, 1 do
+		if Shopovi[i] ~= nil and Shopovi[i].store == firma then
+			Shopovi[i].owner = nil
+			break
+		end
+	end
 end)
 
 RegisterServerEvent('esx_shops:OduzmiFirmi')

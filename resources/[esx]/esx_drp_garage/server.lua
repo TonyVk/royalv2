@@ -20,7 +20,7 @@ ESX.RegisterServerCallback('eden_garage:getVehicles', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	local vehicules = {}
 
-	MySQL.Async.fetchAll("SELECT * FROM owned_vehicles WHERE owner=@identifier",{['@identifier'] = xPlayer.getIdentifier()}, function(data) 
+	MySQL.Async.fetchAll("SELECT vehicle, state, plate, brod FROM owned_vehicles WHERE owner=@identifier",{['@identifier'] = xPlayer.getIdentifier()}, function(data) 
 		for _,v in pairs(data) do
 			local vehicle = json.decode(v.vehicle)
 			table.insert(vehicules, {vehicle = vehicle, state = v.state, plate = v.plate, brod = v.brod})
@@ -200,10 +200,9 @@ end)
 function getPlayerVehicles(identifier)
 	
 	local vehicles = {}
-	local data = MySQL.Sync.fetchAll("SELECT * FROM owned_vehicles WHERE owner=@identifier",{['@identifier'] = identifier})	
+	local data = MySQL.Sync.fetchAll("SELECT plate FROM owned_vehicles WHERE owner=@identifier",{['@identifier'] = identifier})	
 	for _,v in pairs(data) do
-		local vehicle = json.decode(v.vehicle)
-		table.insert(vehicles, {id = v.id, plate = v.plate})
+		table.insert(vehicles, {plate = v.plate})
 	end
 	return vehicles
 end

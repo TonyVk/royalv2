@@ -2,6 +2,7 @@ ESX = nil
 
 local Cuffan = {}
 local BrojObjekata = 0
+local Kazne = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -11,6 +12,14 @@ end
 
 TriggerEvent('esx_phone:registerNumber', 'police', _U('alert_police'), true, true)
 TriggerEvent('esx_society:registerSociety', 'police', 'Police', 'society_police', 'society_police', 'society_police', {type = 'public'})
+
+MySQL.ready(function()
+	MySQL.Async.fetchAll('SELECT * FROM fine_types', {
+		['@category'] = category
+	}, function(fines)
+		Kazne = fines
+	end)
+end)
 
 RegisterServerEvent('popo:zapljeni9')
 AddEventHandler('popo:zapljeni9', function(target, itemType, itemName, amount)
@@ -112,7 +121,7 @@ end)
 
 function getIdentity(source)
     local identifier = GetPlayerIdentifiers(source)[1]
-    local result = MySQL.Sync.fetchAll("SELECT * FROM users WHERE identifier = @identifier", {['@identifier'] = identifier})
+    local result = MySQL.Sync.fetchAll("SELECT firstname, lastname FROM users WHERE identifier = @identifier", {['@identifier'] = identifier})
     if result[1] ~= nil then
         local identity = result[1]
         return identity
@@ -350,11 +359,13 @@ ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, 
 end)
 
 ESX.RegisterServerCallback('esx_policejob:getFineList', function(source, cb, category)
-	MySQL.Async.fetchAll('SELECT * FROM fine_types WHERE category = @category', {
-		['@category'] = category
-	}, function(fines)
-		cb(fines)
-	end)
+	local Kurac = {}
+	for i=1, #Kazne, 1 do
+		if Kazne[i] ~= nil and Kazne[i].category == category then
+			table.insert(Kurac, { id = Kazne[i].id, amount = Kazne[i].amount, label = Kazne[i].label})
+		end
+	end
+	cb(Kurac)
 end)
 
 ESX.RegisterServerCallback('esx_policejob:getVehicleInfos', function(source, cb, plate)

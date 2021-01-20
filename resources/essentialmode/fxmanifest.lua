@@ -10,8 +10,6 @@ description 'EssentialMode by Kanersps.'
 
 server_scripts {
 	'@mysql-async/lib/MySQL.lua',
-	'server/sqlite/SQLite.net.dll',
-	'server/sqlite/sqlite.js',
 	'config.lua',
 	'server/util.lua',
 	'server/main.lua',

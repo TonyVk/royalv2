@@ -90,7 +90,7 @@ AddEventHandler('esx_markeras:completeService', function()
 	local _source = source
 	local identifier = GetPlayerIdentifiers(_source)[1]
 
-	MySQL.Async.fetchAll('SELECT * FROM communityservice WHERE identifier = @identifier', {
+	MySQL.Async.fetchAll('SELECT actions_remaining FROM communityservice WHERE identifier = @identifier', {
 		['@identifier'] = identifier
 	}, function(result)
 
@@ -113,7 +113,7 @@ AddEventHandler('esx_markeras:extendService', function()
 	local _source = source
 	local identifier = GetPlayerIdentifiers(_source)[1]
 
-	MySQL.Async.fetchAll('SELECT * FROM communityservice WHERE identifier = @identifier', {
+	MySQL.Async.fetchAll('SELECT actions_remaining FROM communityservice WHERE identifier = @identifier', {
 		['@identifier'] = identifier
 	}, function(result)
 
@@ -138,7 +138,7 @@ AddEventHandler('esx_markeras:sendToCommunityService', function(target, actions_
 
 	local identifier = GetPlayerIdentifiers(target)[1]
 
-	MySQL.Async.fetchAll('SELECT * FROM communityservice WHERE identifier = @identifier', {
+	MySQL.Async.fetchAll('SELECT actions_remaining FROM communityservice WHERE identifier = @identifier', {
 		['@identifier'] = identifier
 	}, function(result)
 		if result[1] then
@@ -182,7 +182,7 @@ AddEventHandler('esx_markeras:checkIfSentenced', function()
 	local _source = source -- cannot parse source to client trigger for some weird reason
 	local identifier = GetPlayerIdentifiers(_source)[1] -- get steam identifier
 
-	MySQL.Async.fetchAll('SELECT * FROM communityservice WHERE identifier = @identifier', {
+	MySQL.Async.fetchAll('SELECT actions_remaining FROM communityservice WHERE identifier = @identifier', {
 		['@identifier'] = identifier
 	}, function(result)
 		if result[1] ~= nil and result[1].actions_remaining > 0 then
@@ -198,7 +198,7 @@ ESX.RegisterServerCallback('esx_markeras:ProvjeriMarkere', function(source, cb)
 	local _source = source -- cannot parse source to client trigger for some weird reason
 	local identifier = GetPlayerIdentifiers(_source)[1] -- get steam identifier
 
-	MySQL.Async.fetchAll('SELECT * FROM communityservice WHERE identifier = @identifier', {
+	MySQL.Async.fetchAll('SELECT actions_remaining FROM communityservice WHERE identifier = @identifier', {
 		['@identifier'] = identifier
 	}, function(result)
 		if result[1] ~= nil and result[1].actions_remaining > 0 then
@@ -227,7 +227,7 @@ end)
 function releaseFromCommunityService(target)
 
 	local identifier = GetPlayerIdentifiers(target)[1]
-	MySQL.Async.fetchAll('SELECT * FROM communityservice WHERE identifier = @identifier', {
+	MySQL.Async.fetchAll('SELECT actions_remaining FROM communityservice WHERE identifier = @identifier', {
 		['@identifier'] = identifier
 	}, function(result)
 		if result[1] then

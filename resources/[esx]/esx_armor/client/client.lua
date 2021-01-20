@@ -12,7 +12,7 @@ local TimeFreshCurrentArmour = 60000  -- 60 seconds
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
-        if citizen == true then
+        if citizen == true and GetPedArmour(PlayerPedId()) > 0 then
             TriggerServerEvent('LRP-Armour:Server:RefreshCurrentArmour', GetPedArmour(PlayerPedId()))
             Citizen.Wait(TimeFreshCurrentArmour)
         end

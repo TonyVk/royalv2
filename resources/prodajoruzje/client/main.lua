@@ -18,6 +18,7 @@ local Metci 					= 0
 local CijenaDroge 				= 0
 local Kolicina 					= 0
 local Prodavac2 				= nil
+local perm 						= 0
 
 ESX                             = nil
 
@@ -43,13 +44,23 @@ AddEventHandler("playerSpawned", function()
 	if GetDistanceBetweenCoords(coords, 0, 0, 0, true) <= 10.0 then
 		SetEntityCoords(PlayerPedId(), 222.41250610352, -805.18627929688, 30.663234710693)
 	end
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		perm = br
+	end)
 end)
 
-AddEventHandler("gameEventTriggered", function(name, data)
+RegisterNetEvent('es_admin:setPerm')
+AddEventHandler('es_admin:setPerm', function()
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		perm = br
+	end)
+end)
+
+--[[AddEventHandler("gameEventTriggered", function(name, data)
 	print(name)
 	--(targetId, playerId, nezz, jelUmro, hashOruzja, nezz(mijenja se kada se sudaris autom), nezz(mijenja se kada se sudaris autom), nezz, nezz(mijenja se kada headas peda), nezz, mijenja se ovisno o tome koji dio vozila pucas)
 	print(json.encode(data))
-end)
+end)]]
 
 RegisterNetEvent('VratiTamoSkin')
 AddEventHandler('VratiTamoSkin', function(pid)
@@ -228,8 +239,8 @@ AddEventHandler('prodajoruzje:petarde', function()
 end)
 
 RegisterCommand("psate", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
+	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if perm == 1 then
 			ESX.TriggerServerCallback('minute:DohvatiSate', function(elem)
 				ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'sati_list', {
 					title    = "Sati igraca",
@@ -244,17 +255,17 @@ RegisterCommand("psate", function(source, args, rawCommandString)
 		else
 			ESX.ShowNotification("Nemate pristup ovoj komandi!")
 		end
-	end)
+	--end)
 end, false)
 
 RegisterCommand("ndv", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
+	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if perm == 1 then
 			TriggerEvent("esx:deleteVehicle2")
 		else
 			ESX.ShowNotification("Nemate pristup ovoj komandi!")
 		end
-	end)
+	--end)
 end, false)
 
 RegisterNetEvent('esx:deleteVehicle2')
@@ -287,8 +298,8 @@ AddEventHandler('esx:deleteVehicle2', function()
 end)
 
 RegisterCommand("obrisivatromet", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
+	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if perm == 1 then
 			local NewBin, NewBinDistance = ESX.Game.GetClosestObject("ind_prop_firework_03")
 			if NewBinDistance <= 3 then
 				ESX.Game.DeleteObject(NewBin)
@@ -297,12 +308,12 @@ RegisterCommand("obrisivatromet", function(source, args, rawCommandString)
 		else
 			ESX.ShowNotification("Nemate pristup ovoj komandi!")
 		end
-	end)
+	--end)
 end, false)
 
 RegisterCommand("obrisikontenjer", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
+	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if perm == 1 then
 			local NewBin, NewBinDistance = ESX.Game.GetClosestObject("prop_contr_03b_ld")
 			if NewBinDistance <= 3 then
 				ESX.Game.DeleteObject(NewBin)
@@ -312,12 +323,12 @@ RegisterCommand("obrisikontenjer", function(source, args, rawCommandString)
 		else
 			ESX.ShowNotification("Nemate pristup ovoj komandi!")
 		end
-	end)
+	--end)
 end, false)
 
 RegisterCommand("obrisikutiju", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
+	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if perm == 1 then
 			local NewBin, NewBinDistance = ESX.Game.GetClosestObject("prop_box_wood05a")
 			if NewBinDistance <= 3 then
 				ESX.Game.DeleteObject(NewBin)
@@ -328,12 +339,12 @@ RegisterCommand("obrisikutiju", function(source, args, rawCommandString)
 		else
 			ESX.ShowNotification("Nemate pristup ovoj komandi!")
 		end
-	end)
+	--end)
 end, false)
 
 RegisterCommand("aodg", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
+	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if perm == 1 then
 			--local playerIdx = GetPlayerFromServerId(tonumber(args[1]))
 			--if playerIdx ~= -1 then
 				if args[1] ~= nil and args[2] ~= nil then
@@ -354,12 +365,12 @@ RegisterCommand("aodg", function(source, args, rawCommandString)
 		else
 			ESX.ShowNotification("Nemate pristup ovoj komandi!")
 		end
-	end)
+	--end)
 end, false)
 
 RegisterCommand("mute", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
+	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if perm == 1 then
 			local id = 0
 			local minu = 0
 			id = tonumber(args[1])
@@ -376,12 +387,12 @@ RegisterCommand("mute", function(source, args, rawCommandString)
 			message = " Nemate pristup ovoj komandi"
 			TriggerEvent('chat:addMessage', { args = { name, message }, color = r,g,b })	
 		end
-	end)
+	--end)
 end, false)
 
 RegisterCommand("unmute", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
+	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if perm == 1 then
 			local id = 0
 			id = tonumber(args[1])
 			if id ~= 0 and id ~= nil then
@@ -396,12 +407,12 @@ RegisterCommand("unmute", function(source, args, rawCommandString)
 			message = " Nemate pristup ovoj komandi"
 			TriggerEvent('chat:addMessage', { args = { name, message }, color = r,g,b })	
 		end
-	end)
+	--end)
 end, false)
 
 RegisterCommand("testanim", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
+	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if perm == 1 then
 			RequestAnimDict(args[1])
 			while not HasAnimDictLoaded(args[1]) do
 				Citizen.Wait(1000)
@@ -413,12 +424,12 @@ RegisterCommand("testanim", function(source, args, rawCommandString)
 			message = " Nemate pristup ovoj komandi"
 			TriggerEvent('chat:addMessage', { args = { name, message }, color = r,g,b })	
 		end
-	end)
+	--end)
 end, false)
 
 RegisterCommand("dajmuskin", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
+	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if perm == 1 then
 			local id = 0
 			id = tonumber(args[1])
 			if id ~= 0 and id ~= nil then
@@ -433,12 +444,12 @@ RegisterCommand("dajmuskin", function(source, args, rawCommandString)
 			message = " Nemate pristup ovoj komandi"
 			TriggerEvent('chat:addMessage', { args = { name, message }, color = r,g,b })	
 		end
-	end)
+	--end)
 end, false)
 
 RegisterCommand("setskin", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
+	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if perm == 1 then
 			local id = 0
 			id = tonumber(args[1])
 			if id ~= 0 and id ~= nil then
@@ -453,12 +464,12 @@ RegisterCommand("setskin", function(source, args, rawCommandString)
 			message = " Nemate pristup ovoj komandi"
 			TriggerEvent('chat:addMessage', { args = { name, message }, color = r,g,b })	
 		end
-	end)
+	--end)
 end, false)
 
 RegisterCommand("oduzmisociety", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
+	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if perm == 1 then
 			local ime = args[1]
 			local broj = tonumber(args[2])
 			if ime ~= nil and (args[2] ~= nil or args[2] ~= 0) then
@@ -474,12 +485,12 @@ RegisterCommand("oduzmisociety", function(source, args, rawCommandString)
 			message = " Nemate pristup ovoj komandi"
 			TriggerClientEvent('chat:addMessage', { args = { name, message }, color = r,g,b })	
 		end
-	end)
+	--end)
 end, false)
 
 RegisterCommand("a", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
+	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if perm == 1 then
 				if args[1] ~= nil then
 					local playerName = GetPlayerName(PlayerId())
 					TriggerServerEvent("prodajoruzje:PosaljiRadio2Server", table.concat(args, " "), playerName)
@@ -493,7 +504,7 @@ RegisterCommand("a", function(source, args, rawCommandString)
 			message = " Nemate pristup ovoj komandi"
 			TriggerEvent('chat:addMessage', { args = { name, message }, color = r,g,b })	
 		end
-	end)
+	--end)
 end, false)
 
 RegisterNetEvent('esx:setJob')
@@ -669,8 +680,8 @@ RegisterCommand("prihvatidrogu", function(source, args, rawCommandString)
 end, false)
 
 RegisterCommand("vtest", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
+	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if perm == 1 then
 			SetVehicleEnginePowerMultiplier(GetVehiclePedIsIn(PlayerPedId(), false) , 1000000000)
 			print("doso tu ")
 			Citizen.CreateThread(function()
@@ -682,7 +693,7 @@ RegisterCommand("vtest", function(source, args, rawCommandString)
 		else
 			ESX.ShowNotification("Nemate pristup ovoj komandi!")
 		end
-	end)
+	--end)
 end, false)
 
 RegisterCommand("prihvatioruzje", function(source, args, rawCommandString)
@@ -840,16 +851,16 @@ function DajImeOruzja(hash)
 end
 
 RegisterCommand('rpchat', function(source, args, rawCommand)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
+	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if perm == 1 then
 			TriggerServerEvent("PromjeniGlobal")
 		end
-	end)
+	--end)
 end, false)
 	
 RegisterCommand("uauto", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
+	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if perm == 1 then
 			local closestVehicle, Distance = ESX.Game.GetClosestVehicle()
 			if closestVehicle ~= nil then
 				if Distance <= 8.0 then
@@ -860,36 +871,36 @@ RegisterCommand("uauto", function(source, args, rawCommandString)
 		else
 			ESX.ShowNotification("Nemate ovlasti!")
 		end
-	end)
+	--end)
 end, false)
 
 RegisterCommand("dvi", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
+	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if perm == 1 then
 			ObrisiBlizu()
 		else
 			ESX.ShowNotification("Nemate ovlasti!")
 		end
-	end)
+	--end)
 end, false)
 
 RegisterCommand("dvu", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
+	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if perm == 1 then
 			ObrisiUnisten()
 		else
 			ESX.ShowNotification("Nemate ovlasti!")
 		end
-	end)
+	--end)
 end, false)
 
 
 RegisterCommand("brnace", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
+	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if perm == 1 then
 			ObrisiBrnace()
 		end
-	end)
+	--end)
 end, false)
 
 function VehicleInFront()
@@ -1046,26 +1057,26 @@ AddEventHandler('prodajoruzje:VratiInfoSvima', function(odg, ime, ime2)
 	while ESX == nil do
 		Wait(0)
 	end
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br > 0 then
+	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if perm == 1 then
 			TriggerEvent('chat:addMessage', {
 						template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(226, 109, 17, 0.6); border-radius: 3px;"><i class="fas fa-info-circle"></i>[ADMIN ODGOVOR] {0} je odgovorio {1}: <br> {2}</div>',
 						args = { ime, ime2, odg }
 			})
 		end
-	end)
+	--end)
 end)
 
 RegisterNetEvent("prodajoruzje:PosaljiRadio2")
 AddEventHandler('prodajoruzje:PosaljiRadio2', function(odg, ime)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br > 0 then
+	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if perm == 1 then
 			TriggerEvent('chat:addMessage', {
 						template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(51, 153, 255, 0.6); border-radius: 3px;"><i class="fas fa-info-circle"></i>[ADMIN CHAT] {0}:<br> {1}</div>',
 						args = { ime, odg }
 			})
 		end
-	end)
+	--end)
 end)
 
 RegisterNetEvent("prodajoruzje:VratiAdmOdgovor")

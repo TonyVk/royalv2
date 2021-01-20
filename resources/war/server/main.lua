@@ -164,7 +164,7 @@ end)
 
 ESX.RegisterServerCallback('War:ImalIsta', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	local result = MySQL.Sync.fetchAll('SELECT * FROM waroruzja WHERE identifier = @identifier', {
+	local result = MySQL.Sync.fetchAll('SELECT 1 FROM waroruzja WHERE identifier = @identifier', {
 		['@identifier'] = xPlayer.identifier
 	})
 	if result[1] == nil or result[1] == 0 then

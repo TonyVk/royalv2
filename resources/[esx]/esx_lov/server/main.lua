@@ -6,13 +6,13 @@ RegisterServerEvent('esx_lov:dajtuljana')
 AddEventHandler('esx_lov:dajtuljana', function()
     local xPlayer = ESX.GetPlayerFromId(source)
 	
-	local AnimalWeight = math.random(10, 160) / 10
+	local Weight = math.random(10, 160) / 10
 
-	xPlayer.showNotification('Raskomadali ste zivotinju i dobili ' ..AnimalWeight.. 'kg mesa!')
+	xPlayer.showNotification('Raskomadali ste zivotinju i dobili ' ..Weight.. 'kg mesa!')
 	
-    if Weight >= 1 then
+    if Weight >= 1 and Weight < 9 then
         xPlayer.addInventoryItem('meso', 1)
-    elseif Weight >= 9 then
+    elseif Weight >= 9 and Weight < 15 then
         xPlayer.addInventoryItem('meso', 2)
     elseif Weight >= 15 then
         xPlayer.addInventoryItem('meso', 3)
