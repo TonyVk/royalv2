@@ -59,8 +59,6 @@ local Zivotinje = {
 	vector3(-960.91, 5001.16, 183.0)
 }
 
-local AnimalsInSession = {}
-
 AddEventHandler('esx_lov:hasEnteredMarker', function(zone)
 	if zone == 'lov' then
 		CurrentAction     = 'lov'
@@ -169,6 +167,8 @@ function PokreniLov()
 			ESX.Game.DeleteVehicle(Vozilo)
 			Vozilo = nil
 		end
+		ZadnjiRand = 0
+		BrojZivotinja = 0
 		ESX.ShowNotification("Zavrsili ste sa lovom!")
 		TriggerEvent("esx:ZabraniInv", false)
 		TriggerEvent("gepeke:OdjebiGa", 1)
@@ -313,7 +313,7 @@ function Raskomadaj(id, blip)
 			end
 		end
 		ZadnjiRand = rand
-		Zivotinja = CreatePed(5, GetHashKey('a_c_deer'), Zivotinje[rand].x, Zivotinje[rand].y, Zivotinje[rand].z, 0.0, true, false)
+		Zivotinja = CreatePed(5, GetHashKey('a_c_deer'), Zivotinje[rand].x, Zivotinje[rand].y, Zivotinje[rand].z, 0.0, false, false)
 		TaskWanderStandard(Zivotinja, true, true)
 		SetEntityAsMissionEntity(Zivotinja, true, true)
 

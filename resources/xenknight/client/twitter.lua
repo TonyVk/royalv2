@@ -2,6 +2,13 @@
 -- # Discord XenKnighT#7085
 --====================================================================================
 
+function hasPhone (cb)
+	if (ESX == nil) then return cb(false) end
+	ESX.TriggerServerCallback('xenknight:getItemAmount', function(imal)
+		cb(imal)
+	end)
+end
+
 RegisterNetEvent("xenknight:twitter_getTweets")
 AddEventHandler("xenknight:twitter_getTweets", function(tweets)
   SendNUIMessage({event = 'twitter_tweets', tweets = tweets})
@@ -14,7 +21,11 @@ end)
 
 RegisterNetEvent("xenknight:twitter_newTweets")
 AddEventHandler("xenknight:twitter_newTweets", function(tweet)
-  SendNUIMessage({event = 'twitter_newTweet', tweet = tweet})
+	hasPhone(function (hasPhone)
+		if hasPhone == true then
+			SendNUIMessage({event = 'twitter_newTweet', tweet = tweet})
+		end
+	end)
 end)
 
 RegisterNetEvent("xenknight:twitter_updateTweetLikes")

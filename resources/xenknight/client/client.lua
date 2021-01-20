@@ -325,12 +325,24 @@ local inCall = false
 
 RegisterNetEvent("xenknight:waitingCall")
 AddEventHandler("xenknight:waitingCall", function(infoCall, initiator)
-  SendNUIMessage({event = 'waitingCall', infoCall = infoCall, initiator = initiator})
+  if initiator then
+	SendNUIMessage({event = 'waitingCall', infoCall = infoCall, initiator = initiator})
+  else
+	hasPhone(function (hasPhone)
+		if hasPhone == true then
+			SendNUIMessage({event = 'waitingCall', infoCall = infoCall, initiator = initiator})
+		end
+	end)
+  end
   if initiator == true then
-    PhonePlayCall()
-    if menuIsOpen == false then
-      TooglePhone()
-    end
+	hasPhone(function (hasPhone)
+		if hasPhone == true then
+			PhonePlayCall()
+			if menuIsOpen == false then
+			  TooglePhone()
+			end
+		end
+	end)
   end
 end)
 
@@ -355,7 +367,11 @@ AddEventHandler("xenknight:rejectCall", function(infoCall)
     Citizen.InvokeNative(0xE036A705F989E049)
     NetworkSetTalkerProximity(2.5)
   end
-  PhonePlayText()
+  hasPhone(function (hasPhone)
+	if hasPhone == true then
+		PhonePlayText()
+	end
+  end)
   SendNUIMessage({event = 'rejectCall', infoCall = infoCall})
 end)
 

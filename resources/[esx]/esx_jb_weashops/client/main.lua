@@ -16,7 +16,6 @@ Citizen.CreateThread(function()
     Citizen.Wait(0)
   end
   Wait(5000)
-  ReloadBlip()
   ESX.TriggerServerCallback('esx_weashop:requestDBItems', function(ShopItems)
     for k,v in pairs(ShopItems) do
       Config.Zones[k].Items = v
@@ -141,7 +140,7 @@ function OpenShopMenu(zone)
 	ESX.TriggerServerCallback('esx_gun:DajDostupnost', function(jelje)
 			if jelje == 1 then
 				table.insert(elements, {
-					label      = "Kupite trgovinu".. ' - <span style="color:green;">$5000000 </span>',
+					label      = "Kupite oruzarnicu".. ' - <span style="color:green;">$5000000 </span>',
 					label_real = "kupi",
 					item       = "kupit",
 					price      = 5000000,
@@ -153,12 +152,6 @@ function OpenShopMenu(zone)
 								label      = "Podignite novac".. ' - <span style="color:green;">$' .. lova .. ' </span>',
 								label_real = "podigni",
 								item       = "podignin",
-								price      = 0,
-							})
-							table.insert(elements, {
-								label      = "Ostavite novac",
-								label_real = "ostavi",
-								item       = "ostavin",
 								price      = 0,
 							})
 							table.insert(elements, {
@@ -214,32 +207,6 @@ function OpenShopMenu(zone)
 						  end,
 						  function(data3, menu3)
 							menu3.close()
-						  end
-						)
-				elseif data.current.item == 'ostavin' then
-						ESX.UI.Menu.Open(
-						  'dialog', GetCurrentResourceName(), 'weap_ostavi_lovu',
-						  {
-							title = "Unesite koliko novca zelite ostaviti"
-						  },
-						  function(data4, menu4)
-
-							local count = tonumber(data4.value)
-
-							if count == nil then
-								ESX.ShowNotification("Kriva vrijednost!")
-							else
-								menu4.close()
-								menu.close()
-								TriggerServerEvent("esx_gun:DajFirmi", st, count)
-								CurrentAction     = 'shop_menu'
-								CurrentActionMsg  = _U('shop_menu')
-								CurrentActionData = {zone = zone}
-							end
-
-						  end,
-						  function(data4, menu4)
-							menu4.close()
 						  end
 						)
 				elseif data.current.item == 'prodajt' then
@@ -385,6 +352,7 @@ function ReloadBlip()
 				local st = k..i
 				ESX.TriggerServerCallback('esx_gun:DalJeVlasnik', function(jelje2)
 					if jelje2 == 1 then
+						RemoveBlip(blip[st])
 						blip[st] = AddBlipForCoord(v.Pos[i].x, v.Pos[i].y, v.Pos[i].z)
 						SetBlipSprite (blip[st], 154)
 						SetBlipDisplay(blip[st], 4)
@@ -395,6 +363,7 @@ function ReloadBlip()
 						AddTextComponentString(_U('map_blip'))
 						EndTextCommandSetBlipName(blip[st])
 					else
+						RemoveBlip(blip[st])
 						blip[st] = AddBlipForCoord(v.Pos[i].x, v.Pos[i].y, v.Pos[i].z)
 						SetBlipSprite (blip[st], 154)
 						SetBlipDisplay(blip[st], 4)

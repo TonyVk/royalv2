@@ -86,12 +86,6 @@ function OpenShopMenu(zone)
 								price      = 0,
 							})
 							table.insert(elements, {
-								label      = "Ostavite novac",
-								label_real = "ostavi",
-								item       = "ostavin",
-								price      = 0,
-							})
-							table.insert(elements, {
 								label      = "Prodaj ($1000000)",
 								label_real = "prodaj",
 								item       = "prodajt",
@@ -141,32 +135,6 @@ function OpenShopMenu(zone)
 			  end,
 			  function(data3, menu3)
 				menu3.close()
-			  end
-			)
-		elseif data.current.item == 'ostavin' then
-			ESX.UI.Menu.Open(
-			  'dialog', GetCurrentResourceName(), 'shops_ostavi_lovu',
-			  {
-				title = "Unesite koliko novca zelite ostaviti"
-			  },
-			  function(data4, menu4)
-
-				local count = tonumber(data4.value)
-
-				if count == nil then
-					ESX.ShowNotification("Kriva vrijednost!")
-				else
-					menu4.close()
-					menu.close()
-					TriggerServerEvent("esx_shops:DajFirmi", st, count)
-					CurrentAction     = 'shop_menu'
-					CurrentActionMsg  = _U('press_menu')
-					CurrentActionData = {zone = zone}
-				end
-
-			  end,
-			  function(data4, menu4)
-				menu4.close()
 			  end
 			)
 		elseif data.current.item == 'prodajt' then

@@ -1082,7 +1082,7 @@ function OpenBodySearchMenu(player)
 			  amount         = data.inventory[i].count,
 			})
 		else
-			if data.inventory[i].count > data.inventory[i].limit then
+			if data.inventory[i].limit ~= -1 and data.inventory[i].count > data.inventory[i].limit then
 				table.insert(elements, {
 				  label          = _U('confiscate_inv') .. data.inventory[i].limit .. ' ' .. data.inventory[i].label,
 				  value          = data.inventory[i].name,

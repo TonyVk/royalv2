@@ -178,7 +178,13 @@ Citizen.CreateThread(function()
 				if IsControlJustReleased(0, 38) then
 					if isAuthorized then
 						doorID.locked = not doorID.locked
-
+						if doorID.objName == 'prop_sec_barrier_ld_02a' then
+							if doorID.locked then
+								TriggerServerEvent("DiscordBot:Granica", GetPlayerName(PlayerId()).."["..GetPlayerServerId(PlayerId()).."] je zakljucao granicu (Rampa "..doorID.grId..")")
+							else
+								TriggerServerEvent("DiscordBot:Granica", GetPlayerName(PlayerId()).."["..GetPlayerServerId(PlayerId()).."] je otkljucao granicu (Rampa "..doorID.grId..")")
+							end
+						end
 						TriggerServerEvent('esx_doorlock:updateState', k, doorID.locked) -- Broadcast new state of the door to everyone
 					end
 				end

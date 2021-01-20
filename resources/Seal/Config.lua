@@ -9,6 +9,7 @@ DiscordWebhookMarkeri = 'https://discordapp.com/api/webhooks/733851348457619477/
 DiscordWebhookGepek = 'https://discordapp.com/api/webhooks/747412906551017522/EpRXAzmF0X3NOBbvCoyiqBEmqAlTOawBCtCiPz4KfLm5rrCt55ADffj1RjLD-RNhujkg'
 DiscordWebhookOduzimanje = 'https://discord.com/api/webhooks/786704036476878859/nU03Z9HQh1y3egs7Q7a0v4FGmJQNR9EMWLbecE5V90zOyDX0WVJYXMDxKKwIgMX6ndR-'
 DiscordWebhookZetoni = 'https://discord.com/api/webhooks/794536116770045972/5AyVyA8ezOEgRGDH_7bK9CqECA3Sjdu9NO6mTHhvKs4f8ftI_mQ90OzFktzisjQBElFv'
+DiscordWebhookGranica = 'https://discord.com/api/webhooks/801580952601231431/vEWbueIzvYYfM4OwRX8dvOfgNHRKMWTLkkifYQcP_l5BRb2RIQ21Q0zJWQuhzFzHGPWJ'
 
 SystemAvatar = 'https://purepng.com/public/uploads/large/purepng.com-sealanimalssealsea-lion-981524671319vlofh.png'
 

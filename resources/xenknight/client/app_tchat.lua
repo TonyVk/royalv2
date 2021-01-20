@@ -2,9 +2,20 @@
 -- # Discord XenKnighT#7085
 --====================================================================================
 
+function hasPhone (cb)
+	if (ESX == nil) then return cb(false) end
+	ESX.TriggerServerCallback('xenknight:getItemAmount', function(imal)
+		cb(imal)
+	end)
+end
+
 RegisterNetEvent("xenknight:tchat_receive")
 AddEventHandler("xenknight:tchat_receive", function(message)
-  SendNUIMessage({event = 'tchat_receive', message = message})
+	hasPhone(function (hasPhone)
+        if hasPhone == true then
+			SendNUIMessage({event = 'tchat_receive', message = message})
+		end
+	end)
 end)
 
 RegisterNetEvent("xenknight:tchat_channel")
