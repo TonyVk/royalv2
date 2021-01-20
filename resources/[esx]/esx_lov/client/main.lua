@@ -25,6 +25,13 @@ local spojen = false
 AddEventHandler("playerSpawned", function()
 	if not spojen then
 		UcitajBlipove()
+		ESX.TriggerServerCallback('esx_lov:JelULovu', function(jelje)
+			if jelje == 1 then
+				RemoveWeaponFromPed(PlayerPedId(), GetHashKey("WEAPON_HEAVYSNIPER"), true, true)
+				RemoveWeaponFromPed(PlayerPedId(), GetHashKey("WEAPON_KNIFE"), true, true)
+				TriggerServerEvent("esx_lov:ULovu", 0)
+			end
+		end)
 		spojen = true
 	end
 end)
@@ -155,6 +162,7 @@ end)
 function PokreniLov()
 	if Lovis then
 		Lovis = false
+		TriggerServerEvent("esx_lov:ULovu", 0)
 		RemoveWeaponFromPed(PlayerPedId(), GetHashKey("WEAPON_HEAVYSNIPER"), true, true)
 		RemoveWeaponFromPed(PlayerPedId(), GetHashKey("WEAPON_KNIFE"), true, true)
 		if DoesEntityExist(Zivotinja) then
@@ -173,9 +181,10 @@ function PokreniLov()
 		TriggerEvent("esx:ZabraniInv", false)
 		TriggerEvent("gepeke:OdjebiGa", 1)
 	else
-		ESX.TriggerServerCallback('ex_lov:ImasLiLove', function(imal)
+		ESX.TriggerServerCallback('esx_lov:ImasLiLove', function(imal)
 			if imal then
 				Lovis = true
+				TriggerServerEvent("esx_lov:ULovu", 1)
 				TriggerEvent("esx:ZabraniInv", true)
 				TriggerEvent("gepeke:OdjebiGa", 2)
 				BrojZivotinja = 0
@@ -239,6 +248,7 @@ function PokreniLov()
 						end
 						if IsEntityDead(PlayerPedId()) then
 							Lovis = false
+							TriggerServerEvent("esx_lov:ULovu", 0)
 							TriggerEvent("esx:ZabraniInv", false)
 							TriggerEvent("gepeke:OdjebiGa", 1)
 							RemoveWeaponFromPed(PlayerPedId(), GetHashKey("WEAPON_HEAVYSNIPER"), true, true)
@@ -257,6 +267,7 @@ function PokreniLov()
 						end
 						if PlyCoords.x < -2000.0 or PlyCoords.x > -500.0 then
 							Lovis = false
+							TriggerServerEvent("esx_lov:ULovu", 0)
 							TriggerEvent("esx:ZabraniInv", false)
 							TriggerEvent("gepeke:OdjebiGa", 1)
 							ESX.ShowNotification("Napustili ste zonu lova, te vam je vozilo i oruzje oduzeto!")

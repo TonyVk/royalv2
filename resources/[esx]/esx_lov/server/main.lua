@@ -21,6 +21,15 @@ AddEventHandler('esx_lov:dajtuljana', function()
     xPlayer.addInventoryItem('koza', math.random(1, 4))
 end)
 
+RegisterServerEvent('esx_lov:ULovu')
+AddEventHandler('esx_lov:ULovu', function(br)
+	local xPlayer = ESX.GetPlayerFromId(source)
+    MySQL.Async.execute('UPDATE users SET lov = @br WHERE identifier = @ident', {
+		['@br'] = br,
+		['@ident'] = xPlayer.identifier
+	})
+end)
+
 RegisterServerEvent('esx_lov:prodajtuljana')
 AddEventHandler('esx_lov:prodajtuljana', function()
     local xPlayer = ESX.GetPlayerFromId(source)
@@ -43,7 +52,20 @@ AddEventHandler('esx_lov:prodajtuljana', function()
     end  
 end)
 
-ESX.RegisterServerCallback('ex_lov:ImasLiLove', function(source, cb)
+ESX.RegisterServerCallback('esx_lov:JelULovu', function(source, cb)
+    local xPlayer = ESX.GetPlayerFromId(source)
+	MySQL.Async.fetchAll(
+      'SELECT lov FROM users WHERE identifier = @ident',
+      { ['@ident'] = xPlayer.identifier },
+      function(result)
+        for i=1, #result, 1 do
+			cb(result[i].lov)
+        end
+      end
+    )
+end)
+
+ESX.RegisterServerCallback('esx_lov:ImasLiLove', function(source, cb)
     local xPlayer = ESX.GetPlayerFromId(source)
 	if xPlayer.getMoney() >= 250 then
 		xPlayer.removeMoney(250)
