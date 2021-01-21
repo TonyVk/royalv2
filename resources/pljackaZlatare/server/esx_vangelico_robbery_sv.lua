@@ -99,6 +99,7 @@ AddEventHandler('esx_vangelico_robbery:rob', function(robb)
 			TriggerClientEvent('esx:showNotification', source, _U('alarm_triggered'))
 			TriggerClientEvent('esx:showNotification', source, _U('hold_pos'))
 			TriggerClientEvent('esx_vangelico_robbery:currentlyrobbing', source, robb)
+			robbers[source] = true
             CancelEvent()
 			Stores[robb].lastrobbed = os.time()
 		else
@@ -109,8 +110,13 @@ end)
 
 RegisterServerEvent('esx_vangelico_robbery:PitajBogaStaRadi')
 AddEventHandler('esx_vangelico_robbery:PitajBogaStaRadi', function()
-	local xPlayer = ESX.GetPlayerFromId(source)
-	xPlayer.addInventoryItem('jewels', math.random(Config.MinJewels, Config.MaxJewels))
+    local src = source
+    if(robbers[src])then
+		local xPlayer = ESX.GetPlayerFromId(src)
+		xPlayer.addInventoryItem('jewels', math.random(Config.MinJewels, Config.MaxJewels))
+    else
+        TriggerEvent("DiscordBot:Anticheat", GetPlayerName(src).."("..src..") je pokusao dodati si nakit, a nije na pljacki zlatare!")
+    end
 end)
 
 RegisterServerEvent('seal:AeRekoStae')
@@ -131,3 +137,4 @@ ESX.RegisterServerCallback('esx_vangelico_robbery:conteggio', function(source, c
 	cb(CopsConnected)
 end)
 
+		
