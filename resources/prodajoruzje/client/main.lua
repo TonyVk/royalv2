@@ -238,6 +238,24 @@ AddEventHandler('prodajoruzje:petarde', function()
 			DeleteEntity(prop)
 end)
 
+RegisterCommand("lc", function(source, args, rawCommandString)
+	if IsPedInAnyVehicle(PlayerPedId(), false) then
+		local deri = true
+		local veha = GetVehiclePedIsIn(PlayerPedId(), false)
+		SetVehicleHandbrake(veha, true)
+		while deri do
+			if IsControlJustPressed(0, 71) then
+				SetVehicleHandbrake(veha, false)
+				deri = false
+			end
+			SetVehicleCurrentRpm(veha, 0.8)
+			Wait(1)
+		end
+	else
+		ESX.ShowNotification("Morate biti u vozilu!")
+	end
+end, false)
+
 RegisterCommand("psate", function(source, args, rawCommandString)
 	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		if perm == 1 then
