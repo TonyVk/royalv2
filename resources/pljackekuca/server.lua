@@ -66,8 +66,9 @@ end)
 ESX.RegisterServerCallback('pkuca:DohvatiVrijeme', function (source, cb)
 	local src = source
 	local xPlayer = ESX.GetPlayerFromId(src)
-	local result = MySQL.Sync.fetchAll('SELECT kpljacka FROM users WHERE identifier = @identifier', {
+	MySQL.Async.fetchScalar('SELECT kpljacka FROM users WHERE identifier = @identifier', {
 		['@identifier'] = xPlayer.identifier
-	})
-	cb(result[1].kpljacka)
+	}, function(result)
+        cb(result)
+    end)
 end)

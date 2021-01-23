@@ -34,10 +34,10 @@ end)
 ESX.RegisterServerCallback('esx_skin:getPlayerSkin', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	MySQL.Async.fetchAll('SELECT skin FROM users WHERE identifier = @identifier', {
+	MySQL.Async.fetchScalar('SELECT skin FROM users WHERE identifier = @identifier', {
 		['@identifier'] = xPlayer.identifier
 	}, function(users)
-		local user, skin = users[1]
+		local user, skin = users
 
 		local jobSkin = {
 			skin_male   = xPlayer.job.skin_male,

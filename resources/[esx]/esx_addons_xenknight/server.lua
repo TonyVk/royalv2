@@ -103,11 +103,11 @@ AddEventHandler('esx:playerLoaded', function(source)
 
   local xPlayer = ESX.GetPlayerFromId(source)
 
-  MySQL.Async.fetchAll('SELECT * FROM users WHERE identifier = @identifier',{
+  MySQL.Async.fetchScalar('SELECT phone_number FROM users WHERE identifier = @identifier',{
     ['@identifier'] = xPlayer.identifier
   }, function(result)
 
-    local phoneNumber = result[1].phone_number
+    local phoneNumber = result.phone_number
     xPlayer.set('phoneNumber', phoneNumber)
 	local posao = xPlayer.job.name
 	if xPlayer.job.name == "sipa" then
@@ -139,10 +139,10 @@ function getPhoneNumber (source, callback)
   if xPlayer == nil then
     callback(nil)
   end
-  MySQL.Async.fetchAll('SELECT * FROM users WHERE identifier = @identifier',{
+  MySQL.Async.fetchScalar('SELECT phone_number FROM users WHERE identifier = @identifier',{
     ['@identifier'] = xPlayer.identifier
   }, function(result)
-    callback(result[1].phone_number)
+    callback(result.phone_number)
   end)
 end
 

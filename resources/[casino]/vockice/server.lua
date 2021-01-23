@@ -99,11 +99,11 @@ AddEventHandler("vockice:getJoinChips", function()
     local _source   = source
     local xPlayer   = ESX.GetPlayerFromId(_source)
     local identifier = xPlayer.identifier
-    MySQL.Async.fetchAll('SELECT zeton FROM users WHERE @identifier=identifier', {
+    MySQL.Async.fetchScalar('SELECT zeton FROM users WHERE @identifier=identifier', {
 		['@identifier'] = identifier
 	}, function(result)
-		if result[1] then
-            local zetony = result[1].zeton
+		if result then
+            local zetony = result
             if zetony > 0 then
                 TriggerClientEvent('pNotify:SendNotification', _source, {text = 'Dobili ste '..tostring(zetony)..' zetona, zato sto ste izasli iz igre za vrijeme kladjenja.', layout = "bottomCenter"})
                 xPlayer.addInventoryItem('zeton', zetony)

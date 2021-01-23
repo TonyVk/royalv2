@@ -219,9 +219,9 @@ ESX.RegisterServerCallback("esx-qalle-jail:retrieveJailTime", function(source, c
 	local Identifier = xPlayer.identifier
 
 
-	MySQL.Async.fetchAll("SELECT jail FROM users WHERE identifier = @identifier", { ["@identifier"] = Identifier }, function(result)
+	MySQL.Async.fetchScalar("SELECT jail FROM users WHERE identifier = @identifier", { ["@identifier"] = Identifier }, function(result)
 
-		local JailTime = tonumber(result[1].jail)
+		local JailTime = tonumber(result)
 
 		if JailTime > 0 then
 

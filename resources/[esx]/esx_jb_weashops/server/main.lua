@@ -176,7 +176,7 @@ end)
 ESX.RegisterServerCallback('esx_weashop:requestDBItems', function(source, cb)
 
   MySQL.Async.fetchAll(
-    'SELECT * FROM weashops',
+    'SELECT name, item, price FROM weashops',
     {},
     function(result)
 

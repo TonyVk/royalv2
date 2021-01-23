@@ -25,10 +25,10 @@ function RemoveOwnedVehicle(plate)
 end
 
 MySQL.ready(function()
-	MySQL.Async.fetchAll('SELECT * FROM vehicle_categories', {}, function(_categories)
+	MySQL.Async.fetchAll('SELECT name, label, brod FROM vehicle_categories', {}, function(_categories)
 		categories = _categories
 
-		MySQL.Async.fetchAll('SELECT * FROM vehicles', {}, function(_vehicles)
+		MySQL.Async.fetchAll('SELECT name, model, price, category, brod FROM vehicles', {}, function(_vehicles)
 			vehicles = _vehicles
 
 			for k,v in ipairs(vehicles) do
@@ -87,7 +87,7 @@ AddEventHandler('ProvjeraObrisanihVozila', function ()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 
-	MySQL.Async.fetchAll('SELECT * FROM owned_vehicles WHERE owner = @owner', {
+	MySQL.Async.fetchAll('SELECT vehicle FROM owned_vehicles WHERE owner = @owner', {
 		['@owner'] = xPlayer.identifier
 	}, function (result)
 		for i=1, #result, 1 do
@@ -444,18 +444,18 @@ ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function(source, cb,
 			print(('[esx_vehicleshop] [^3WARNING^7] %s attempted to sell an unknown vehicle!'):format(xPlayer.identifier))
 			cb(false)
 		else
-			MySQL.Async.fetchAll('SELECT * FROM rented_vehicles WHERE plate = @plate', {
+			MySQL.Async.fetchScalar('SELECT base_price FROM rented_vehicles WHERE plate = @plate', {
 				['@plate'] = plate
 			}, function(result)
-				if result[1] then -- is it a rented vehicle?
+				if result then -- is it a rented vehicle?
 					cb(false) -- it is, don't let the player sell it since he doesn't own it
 				else
-					MySQL.Async.fetchAll('SELECT * FROM owned_vehicles WHERE owner = @owner AND @plate = plate', {
+					MySQL.Async.fetchScalar('SELECT vehicle FROM owned_vehicles WHERE owner = @owner AND @plate = plate', {
 						['@owner'] = xPlayer.identifier,
 						['@plate'] = plate
 					}, function(result)
-						if result[1] then -- does the owner match?
-							local vehicle = json.decode(result[1].vehicle)
+						if result then -- does the owner match?
+							local vehicle = json.decode(result.vehicle)
 
 							if vehicle.model == model then
 								if vehicle.plate == plate then
@@ -516,7 +516,7 @@ ESX.RegisterServerCallback('esx_vehicleshop:DajGaVamo', function (source, cb, mo
 	print(mod)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local test = 0
-	MySQL.Async.fetchAll('SELECT * FROM owned_vehicles WHERE owner = @owner', {
+	MySQL.Async.fetchAll('SELECT vehicle FROM owned_vehicles WHERE owner = @owner', {
 		['@owner'] = xPlayer.identifier
 	}, function (result)
 		for i = 1, #result, 1 do

@@ -13,7 +13,7 @@ AddEventHandler('gepeke:getOwnedVehicule', function()
     local _source = source
     local xPlayer = ESX.GetPlayerFromId(_source)
     MySQL.Async.fetchAll(
-        'SELECT * FROM owned_vehicles WHERE owner = @owner',
+        'SELECT vehicle FROM owned_vehicles WHERE owner = @owner',
         {
             ['@owner'] = xPlayer.identifier
         },
@@ -53,7 +53,7 @@ AddEventHandler('gepeke:getInventory', function(plate)
 	end
 	if moze then
 		MySQL.Async.fetchAll(
-			'SELECT * FROM `truck_inventory` WHERE `plate` = @plate',
+			'SELECT item, count, name, itemt FROM `truck_inventory` WHERE `plate` = @plate',
 			{
 				['@plate'] = plate
 			},

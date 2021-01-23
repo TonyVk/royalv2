@@ -25,24 +25,19 @@ ESX.RegisterServerCallback('rpchat:DohvatiMute', function(source, cb)
 	end
 end)
 
-function getIdentity(source)
+function getIdentity(source, cb)
 	local identifier = GetPlayerIdentifiers(source)[1]
-	local result = MySQL.Sync.fetchAll("SELECT * FROM users WHERE identifier = @identifier", {['@identifier'] = identifier})
-	if result[1] ~= nil then
-		local identity = result[1]
-
-		return {
-			identifier = identity['identifier'],
-			firstname = identity['firstname'],
-			lastname = identity['lastname'],
-			dateofbirth = identity['dateofbirth'],
-			sex = identity['sex'],
-			height = identity['height']
-			
-		}
-	else
-		return nil
-	end
+	MySQL.Async.fetchAll("SELECT firstname, lastname FROM users WHERE identifier = @identifier", {['@identifier'] = identifier}, function (result)
+        if result[1] ~= nil then
+			local identity = result[1]
+			cb({
+				firstname = identity['firstname'],
+				lastname = identity['lastname']
+			})
+		else
+			cb(nil)
+		end
+    end)
 end
 
  AddEventHandler('chatMessage', function(source, name, message)
@@ -50,21 +45,22 @@ end
 	  if string.sub(message, 1, string.len("/")) ~= "/" then
 		if Mute[source] == nil then
 			  local playerName = GetPlayerName(source)
-			  local name = getIdentity(source)
-			  local fal = name.firstname .. " " .. name.lastname
-			  local msg = message
-			  local imee = playerName.." ("..fal..")"
-			  if Global == 1 then
-				  TriggerClientEvent('chat:addMessage', -1, {
-						template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(41, 41, 41, 0.6); border-radius: 3px;"><i class="fas fa-globe"></i>(OOC) {0}:<br> {1}</div>',
-						args = { imee, msg }
-				  })
-			  else
-				local player = source
-				local ped = GetPlayerPed(player)
-				local koord = GetEntityCoords(ped)
-				TriggerClientEvent('sendProximityMessage', -1, source, imee, msg, koord)
-			  end
+			  getIdentity(source, function (name)
+				  local fal = name.firstname .. " " .. name.lastname
+				  local msg = message
+				  local imee = playerName.." ("..fal..")"
+				  if Global == 1 then
+					  TriggerClientEvent('chat:addMessage', -1, {
+							template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(41, 41, 41, 0.6); border-radius: 3px;"><i class="fas fa-globe"></i>(OOC) {0}:<br> {1}</div>',
+							args = { imee, msg }
+					  })
+				  else
+					local player = source
+					local ped = GetPlayerPed(player)
+					local koord = GetEntityCoords(ped)
+					TriggerClientEvent('sendProximityMessage', -1, source, imee, msg, koord)
+				  end
+			  end)
 		else
 			TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM ', " Morate pricekati jos "..Mute[source].." minuta do unmutea!" } })
 		end
@@ -102,12 +98,13 @@ end)--]]
 
 RegisterCommand('me', function(source, args, rawCommand)
 	if args[1] ~= nil then
-		local name = getIdentity(source)
 		if Mute[source] == nil then
-			local player = source
-			local ped = GetPlayerPed(player)
-			local koord = GetEntityCoords(ped)
-			TriggerClientEvent('sendProximityMessageMe', -1, source, name.firstname, table.concat(args, " "), koord)
+			getIdentity(source, function (name)
+				local player = source
+				local ped = GetPlayerPed(player)
+				local koord = GetEntityCoords(ped)
+				TriggerClientEvent('sendProximityMessageMe', -1, source, name.firstname, table.concat(args, " "), koord)
+			end)
 		else
 			TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM ', " Morate pricekati jos "..Mute[source].." minuta do unmutea!" } })
 		end
@@ -117,11 +114,12 @@ end, false)
 RegisterCommand('do', function(source, args, rawCommand)
 	if args[1] ~= nil then
 		if Mute[source] == nil then
-			local name = getIdentity(source)
-			local player = source
-			local ped = GetPlayerPed(player)
-			local koord = GetEntityCoords(ped)
-			TriggerClientEvent('sendProximityMessageDo', -1, source, name.firstname, table.concat(args, " "), koord)
+			getIdentity(source, function (name)
+				local player = source
+				local ped = GetPlayerPed(player)
+				local koord = GetEntityCoords(ped)
+				TriggerClientEvent('sendProximityMessageDo', -1, source, name.firstname, table.concat(args, " "), koord)
+			end)
 		else
 			TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM ', " Morate pricekati jos "..Mute[source].." minuta do unmutea!" } })
 		end
@@ -133,10 +131,10 @@ AddEventHandler('rpchat:PogleMute', function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	if xPlayer ~= nil then
-		MySQL.Async.fetchAll('SELECT mute FROM users WHERE identifier = @identifier', {
+		MySQL.Async.fetchScalar('SELECT mute FROM users WHERE identifier = @identifier', {
 			['@identifier'] = xPlayer.identifier
 		}, function(result)
-			local mi = result[1].mute
+			local mi = result
 			if mi <= 0 then
 				Mute[_source] = nil
 				TriggerClientEvent("BrojiMute", _source, 0)

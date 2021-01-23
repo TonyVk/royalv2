@@ -35,11 +35,11 @@ end)
 ESX.RegisterServerCallback('DajMiPermLevelCall', function(source, cb)
 	local id = source
     local xPlayer = ESX.GetPlayerFromId(id)
-	local result = MySQL.Sync.fetchAll('SELECT permission_level FROM users WHERE identifier = @identifier', {
+	MySQL.Async.fetchScalar('SELECT permission_level FROM users WHERE identifier = @identifier', {
 		['@identifier'] = xPlayer.identifier
-	})
-	local vr = result[1].permission_level
-	cb(vr)
+	}, function(result)
+		cb(result)
+    end)
 end)
 
 RegisterNetEvent("DajMiPermLevel")
@@ -48,12 +48,10 @@ AddEventHandler('DajMiPermLevel', function(id)
 		TriggerEvent('VratiPermLevel', 69)
 	else
 		local xPlayer = ESX.GetPlayerFromId(id)
-		local result = MySQL.Sync.fetchAll('SELECT permission_level FROM users WHERE identifier = @identifier', {
+		MySQL.Async.fetchScalar('SELECT permission_level FROM users WHERE identifier = @identifier', {
 			['@identifier'] = xPlayer.identifier
-		})
-		SetTimeout(500, function()
-			local vr = result[1].permission_level
-			TriggerEvent('VratiPermLevel', vr)
+		}, function(result)
+			TriggerEvent('VratiPermLevel', result)
 		end)
 	end
 end)
@@ -71,11 +69,11 @@ end)
 RegisterNetEvent("DajMiPermLevel2")
 AddEventHandler('DajMiPermLevel2', function(id)
 	local xPlayer = ESX.GetPlayerFromId(id)
-	local result = MySQL.Sync.fetchAll('SELECT permission_level FROM users WHERE identifier = @identifier', {
+	MySQL.Async.fetchScalar('SELECT permission_level FROM users WHERE identifier = @identifier', {
 		['@identifier'] = xPlayer.identifier
-	})
-	local vr = result[1].permission_level
-	TriggerEvent('VratiPermLevel2', vr)
+	}, function(result)
+		TriggerEvent('VratiPermLevel2', result)
+	end)
 end)
 
 ESX.RegisterServerCallback('esx-races:DohvatiPermisiju', function(source, cb)
@@ -83,17 +81,19 @@ ESX.RegisterServerCallback('esx-races:DohvatiPermisiju', function(source, cb)
     local xPlayer = ESX.GetPlayerFromId(id)
 	local Vrati = 0
 	if xPlayer ~= nil then
-		local result = MySQL.Sync.fetchAll('SELECT permission_level FROM users WHERE identifier = @identifier', {
+		MySQL.Async.fetchScalar('SELECT permission_level FROM users WHERE identifier = @identifier', {
 			['@identifier'] = xPlayer.identifier
-		})
-		local vr = result[1].permission_level
-		if vr > 0 then
-			Vrati = 1
-		else
-			Vrati = 0
-		end
+		}, function(result)
+			if result > 0 then
+				Vrati = 1
+			else
+				Vrati = 0
+			end
+			cb(Vrati)
+		end)
+	else
+		cb(0)
 	end
-	cb(Vrati)
 end)
 
 function PokreniAutoUtrku()

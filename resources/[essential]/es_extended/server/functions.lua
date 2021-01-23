@@ -41,23 +41,6 @@ ESX.SavePlayer = function(xPlayer, cb)
 	local asyncTasks = {}
 	xPlayer.setLastPosition(xPlayer.getCoords())
 
-	-- User accounts
-	for i=1, #xPlayer.accounts, 1 do
-		if ESX.LastPlayerData[xPlayer.source].accounts[xPlayer.accounts[i].name] ~= xPlayer.accounts[i].money then
-			table.insert(asyncTasks, function(cb)
-				MySQL.Async.execute('UPDATE user_accounts SET `money` = @money WHERE identifier = @identifier AND name = @name', {
-					['@money']      = xPlayer.accounts[i].money,
-					['@identifier'] = xPlayer.identifier,
-					['@name']       = xPlayer.accounts[i].name
-				}, function(rowsChanged)
-					cb()
-				end)
-			end)
-
-			ESX.LastPlayerData[xPlayer.source].accounts[xPlayer.accounts[i].name] = xPlayer.accounts[i].money
-		end
-	end
-
 	-- Inventory items
 	for i=1, #xPlayer.inventory, 1 do
 		if ESX.LastPlayerData[xPlayer.source].items[xPlayer.inventory[i].name] ~= xPlayer.inventory[i].count then

@@ -23,32 +23,10 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 			end)
 		end)
 
-		-- Get accounts
-		table.insert(tasks, function(cb)
-			MySQL.Async.fetchAll('SELECT * FROM `user_accounts` WHERE `identifier` = @identifier', {
-				['@identifier'] = player.getIdentifier()
-			}, function(accounts)
-				for i=1, #Config.Accounts, 1 do
-					for j=1, #accounts, 1 do
-						if accounts[j].name == Config.Accounts[i] then
-							table.insert(userData.accounts, {
-								name  = accounts[j].name,
-								money = accounts[j].money,
-								label = Config.AccountLabels[accounts[j].name]
-							})
-							break
-						end
-					end
-				end
-
-				cb()
-			end)
-		end)
-
 		-- Get inventory
 		table.insert(tasks, function(cb)
 
-			MySQL.Async.fetchAll('SELECT * FROM `user_inventory` WHERE `identifier` = @identifier', {
+			MySQL.Async.fetchAll('SELECT item, count FROM `user_inventory` WHERE `identifier` = @identifier', {
 				['@identifier'] = player.getIdentifier()
 			}, function(inventory)
 				local tasks2 = {}

@@ -5,11 +5,11 @@ ESX.RegisterServerCallback('SmallTattoos:GetPlayerTattoos', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	if xPlayer then
-		MySQL.Async.fetchAll('SELECT tattoos FROM users WHERE identifier = @identifier', {
+		MySQL.Async.fetchScalar('SELECT tattoos FROM users WHERE identifier = @identifier', {
 			['@identifier'] = xPlayer.identifier
 		}, function(result)
-			if result[1].tattoos then
-				cb(json.decode(result[1].tattoos))
+			if result then
+				cb(json.decode(result))
 			else
 				cb()
 			end

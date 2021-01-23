@@ -437,7 +437,7 @@ function nouvelledestination()
 	multibagpay = totalbagpay
 	end
 	local temppayamount =  (destination.Paye + multibagpay) / (count + 1)
-	TriggerServerEvent('esx_garbagejob:requestpay', platenumb,  temppayamount)
+	TriggerServerEvent('smetlar:dajpare', platenumb,  temppayamount)
 	TriggerServerEvent('esx_garbagejob:endcollection', platenumb)
 	livraisonTotalPaye = 0
 	totalbagpay = 0

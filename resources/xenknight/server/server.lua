@@ -103,7 +103,7 @@ end
 --  Contacts
 --====================================================================================
 function getContacts(identifier)
-    local result = MySQL.Sync.fetchAll("SELECT * FROM phone_users_contacts WHERE phone_users_contacts.identifier = @identifier", {
+    local result = MySQL.Sync.fetchAll("SELECT number, display FROM phone_users_contacts WHERE phone_users_contacts.identifier = @identifier", {
         ['@identifier'] = identifier
     })
     return result

@@ -153,8 +153,8 @@ local function savePlayerMoney()
 				if Users[k] ~= nil then
 					db.updateUser(v.get('identifier'), {money = v.getMoney(), bank = v.getBank()}, function()end)
 				end
+				Wait(100)
 			end
-
 			savePlayerMoney()
 		end)
 	end)

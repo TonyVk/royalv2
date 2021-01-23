@@ -9,7 +9,7 @@ MySQL.ready(function()
 end)
 
 function UcitajVozila()
-	MySQL.Async.fetchAll('SELECT * FROM vehicles_for_sale WHERE prodan = 0', {}, function(result)
+	MySQL.Async.fetchAll('SELECT seller, vehicleProps, plate, price FROM vehicles_for_sale WHERE prodan = 0', {}, function(result)
 		for i=1, #result, 1 do
 			table.insert(Vozila, { Vlasnik = result[i].seller, Tablica = result[i].plate, Props = json.decode(result[i].vehicleProps), Cijena = result[i].price })
 		end
@@ -20,7 +20,7 @@ RegisterServerEvent('pijaca:ProvjeriProdane')
 AddEventHandler('pijaca:ProvjeriProdane', function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
-	MySQL.Async.fetchAll('SELECT * FROM vehicles_for_sale WHERE seller = @id AND prodan = 1', 
+	MySQL.Async.fetchAll('SELECT id, price FROM vehicles_for_sale WHERE seller = @id AND prodan = 1', 
 	{
 		['@id'] = xPlayer.identifier
 	}, function(result)
@@ -32,6 +32,7 @@ AddEventHandler('pijaca:ProvjeriProdane', function()
 				['@id'] = result[i].id
 			}, function(rowsChanged)
 			end)
+			Wait(100)
 		end
 	end)
 end)

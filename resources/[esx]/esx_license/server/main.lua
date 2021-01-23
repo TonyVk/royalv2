@@ -29,12 +29,12 @@ function RemoveLicense(target, type, cb)
 end
 
 function GetLicense(type, cb)
-	MySQL.Async.fetchAll('SELECT label FROM licenses WHERE type = @type', {
+	MySQL.Async.fetchScalar('SELECT label FROM licenses WHERE type = @type', {
 		['@type'] = type
 	}, function(result)
 		local data = {
 			type  = type,
-			label = result[1].label
+			label = result
 		}
 
 		cb(data)
@@ -54,12 +54,12 @@ function GetLicenses(target, cb)
 
 			local scope = function(type)
 				table.insert(asyncTasks, function(cb)
-					MySQL.Async.fetchAll('SELECT label FROM licenses WHERE type = @type', {
+					MySQL.Async.fetchScalar('SELECT label FROM licenses WHERE type = @type', {
 						['@type'] = type
 					}, function(result2)
 						table.insert(licenses, {
 							type  = type,
-							label = result2[1].label
+							label = result2
 						})
 
 						cb()
@@ -68,7 +68,7 @@ function GetLicenses(target, cb)
 			end
 
 			scope(result[i].type)
-
+			Wait(100)
 		end
 
 		Async.parallel(asyncTasks, function(results)
@@ -81,11 +81,11 @@ end
 function CheckLicense(target, type, cb)
 	local identifier = GetPlayerIdentifier(target, 0)
 
-	MySQL.Async.fetchAll('SELECT COUNT(*) as count FROM user_licenses WHERE type = @type AND owner = @owner', {
+	MySQL.Async.fetchScalar('SELECT COUNT(*) as count FROM user_licenses WHERE type = @type AND owner = @owner', {
 		['@type']  = type,
 		['@owner'] = identifier
 	}, function(result)
-		if tonumber(result[1].count) > 0 then
+		if tonumber(result) > 0 then
 			cb(true)
 		else
 			cb(false)

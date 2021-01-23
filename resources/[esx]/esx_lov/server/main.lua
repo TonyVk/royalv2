@@ -54,13 +54,11 @@ end)
 
 ESX.RegisterServerCallback('esx_lov:JelULovu', function(source, cb)
     local xPlayer = ESX.GetPlayerFromId(source)
-	MySQL.Async.fetchAll(
+	MySQL.Async.fetchScalar(
       'SELECT lov FROM users WHERE identifier = @ident',
       { ['@ident'] = xPlayer.identifier },
       function(result)
-        for i=1, #result, 1 do
-			cb(result[i].lov)
-        end
+		cb(result)
       end
     )
 end)

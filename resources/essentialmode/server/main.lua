@@ -337,20 +337,21 @@ function addGroupCommand(command, group, callback, callbackfailed, suggestion, a
 					permisija = 69
 				end
 				local identifier = GetPlayerIdentifiers(source)[1]
-				local result = MySQL.Sync.fetchAll('SELECT * FROM users WHERE identifier = @identifier', {
+				MySQL.Async.fetchScalar('SELECT permission_level FROM users WHERE identifier = @identifier', {
 					['@identifier'] = identifier
-				})
-				local perm = result[1].permission_level
-				--if IsPlayerAceAllowed(Source, "command." .. command) or groups[Users[source].getGroup()]:canTarget(group) then
-				if perm >= permisija then
-					if((#args <= commands[command].arguments and #args == commands[command].arguments) or commands[command].arguments == -1)then
-						callback(source, args, Users[source])
+				}, function(result)
+					local perm = result
+					--if IsPlayerAceAllowed(Source, "command." .. command) or groups[Users[source].getGroup()]:canTarget(group) then
+					if perm >= permisija then
+						if((#args <= commands[command].arguments and #args == commands[command].arguments) or commands[command].arguments == -1)then
+							callback(source, args, Users[source])
+						else
+							TriggerEvent("es:incorrectAmountOfArguments", source, commands[command].arguments, #args, Users[source])
+						end
 					else
-						TriggerEvent("es:incorrectAmountOfArguments", source, commands[command].arguments, #args, Users[source])
+						callbackfailed(source, args, Users[source])
 					end
-				else
-					callbackfailed(source, args, Users[source])
-				end
+				end)
 			else
 				if((#args <= commands[command].arguments and #args == commands[command].arguments) or commands[command].arguments == -1)then
 					callback(source, args, Users[source])

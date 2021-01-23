@@ -8,7 +8,7 @@ RegisterServerEvent('loaf_housing:enterHouse')
 AddEventHandler('loaf_housing:enterHouse', function(id)
     local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
-    MySQL.Async.fetchAll("SELECT * FROM users WHERE identifier = @identifier", {['@identifier'] = xPlayer.identifier}, function(result)
+    MySQL.Async.fetchAll("SELECT house, bought_furniture FROM users WHERE identifier = @identifier", {['@identifier'] = xPlayer.identifier}, function(result)
         local house = json.decode(result[1].house)
         local furniture = json.decode(result[1]['bought_furniture'])
         if house.houseId == id then
@@ -31,10 +31,11 @@ end)
 
 ESX.RegisterServerCallback('loaf_housing:DohvatiZadnjuKucu', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	local result = MySQL.Sync.fetchAll('SELECT last_house FROM users WHERE identifier = @identifier', {
+	MySQL.Async.fetchScalar('SELECT last_house FROM users WHERE identifier = @identifier', {
 		['@identifier'] = xPlayer.identifier
-	})
-	cb(result[1].last_house)
+	}, function(result)
+		cb(result)
+    end)
 end)
 
 ESX.RegisterServerCallback('esx_property:getPlayerDressing', function(source, cb)
@@ -107,8 +108,8 @@ AddEventHandler('loaf_housing:buy_furniture', function(category, id)
     end
 
     if hadMoney then
-        MySQL.Async.fetchAll("SELECT * FROM users WHERE identifier = @identifier", {['@identifier'] = xPlayer.identifier}, function(result)
-            local furniture = json.decode(result[1]['bought_furniture'])
+        MySQL.Async.fetchScalar("SELECT bought_furniture FROM users WHERE identifier = @identifier", {['@identifier'] = xPlayer.identifier}, function(result)
+            local furniture = json.decode(result)
             if furniture[Config.Furniture[Config.Furniture['Categories'][category][1]][id][2]] then 
                 furniture[Config.Furniture[Config.Furniture['Categories'][category][1]][id][2]]['amount'] = furniture[Config.Furniture[Config.Furniture['Categories'][category][1]][id][2]]['amount'] + 1
             else
@@ -226,12 +227,12 @@ RegisterServerEvent('loaf_housing:buyHouse')
 AddEventHandler('loaf_housing:buyHouse', function(id)
     local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
-    MySQL.Async.fetchAll("SELECT * FROM users WHERE identifier = @identifier", {['@identifier'] = xPlayer.identifier}, function(result)
-        local house = json.decode(result[1].house)
+    MySQL.Async.fetchScalar("SELECT house FROM users WHERE identifier = @identifier", {['@identifier'] = xPlayer.identifier}, function(result)
+        local house = json.decode(result)
         if house.houseId == 0 then
-            MySQL.Async.fetchAll("SELECT * FROM bought_houses WHERE houseid=@houseid", {['@houseid'] = id}, function(result)
+            MySQL.Async.fetchScalar("SELECT houseid FROM bought_houses WHERE houseid=@houseid", {['@houseid'] = id}, function(result)
                 local newHouse = ('{"owns":false,"furniture":[],"houseId":%s}'):format(id)
-                if not result[1] then
+                if not result then
                     if xPlayer.getAccount('bank').money >= Config.Houses[id]['price'] then
                         xPlayer.removeAccountMoney('bank', Config.Houses[id]['price'])
                         MySQL.Async.execute("UPDATE users SET house=@house WHERE identifier=@identifier", {['@identifier'] = xPlayer.identifier, ['@house'] = newHouse}) 
@@ -257,8 +258,8 @@ RegisterServerEvent('loaf_housing:sellHouse')
 AddEventHandler('loaf_housing:sellHouse', function()
     local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
-    MySQL.Async.fetchAll("SELECT * FROM users WHERE identifier = @identifier", {['@identifier'] = xPlayer.identifier}, function(result)
-        local house = json.decode(result[1].house)
+    MySQL.Async.fetchScalar("SELECT house FROM users WHERE identifier = @identifier", {['@identifier'] = xPlayer.identifier}, function(result)
+        local house = json.decode(result)
         if Config.Houses[house.houseId]['price'] then
             xPlayer.addMoney(Config.Houses[house.houseId]['price'] * (Config.SellPercentage/100))
             TriggerClientEvent('esx:showNotification', xPlayer.source, (Strings['Sold_House']):format(math.floor(Config.Houses[house.houseId]['price'] * (Config.SellPercentage/100))))
@@ -274,9 +275,9 @@ RegisterServerEvent('loaf_housing:getOwned')
 AddEventHandler('loaf_housing:getOwned', function()
     local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
-    MySQL.Async.fetchAll("SELECT * FROM users WHERE identifier = @identifier", {['@identifier'] = xPlayer.identifier}, function(result)
-        local house = json.decode(result[1].house)
-        MySQL.Async.fetchAll("SELECT * FROM bought_houses", {}, function(result2)
+    MySQL.Async.fetchScalar("SELECT house FROM users WHERE identifier = @identifier", {['@identifier'] = xPlayer.identifier}, function(result)
+        local house = json.decode(result)
+        MySQL.Async.fetchAll("SELECT houseid FROM bought_houses", {}, function(result2)
             TriggerClientEvent('loaf_housing:setHouse', xPlayer.source, house, result2)
         end)
     end)

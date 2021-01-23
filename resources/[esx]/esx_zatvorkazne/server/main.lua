@@ -90,11 +90,11 @@ AddEventHandler('esx_markeras:completeService', function()
 	local _source = source
 	local identifier = GetPlayerIdentifiers(_source)[1]
 
-	MySQL.Async.fetchAll('SELECT actions_remaining FROM communityservice WHERE identifier = @identifier', {
+	MySQL.Async.fetchScalar('SELECT actions_remaining FROM communityservice WHERE identifier = @identifier', {
 		['@identifier'] = identifier
 	}, function(result)
 
-		if result[1] then
+		if result then
 			MySQL.Async.execute('UPDATE communityservice SET actions_remaining = actions_remaining - 1 WHERE identifier = @identifier', {
 				['@identifier'] = identifier
 			})
@@ -113,11 +113,11 @@ AddEventHandler('esx_markeras:extendService', function()
 	local _source = source
 	local identifier = GetPlayerIdentifiers(_source)[1]
 
-	MySQL.Async.fetchAll('SELECT actions_remaining FROM communityservice WHERE identifier = @identifier', {
+	MySQL.Async.fetchScalar('SELECT actions_remaining FROM communityservice WHERE identifier = @identifier', {
 		['@identifier'] = identifier
 	}, function(result)
 
-		if result[1] then
+		if result then
 			MySQL.Async.execute('UPDATE communityservice SET actions_remaining = actions_remaining + @extension_value WHERE identifier = @identifier', {
 				['@identifier'] = identifier,
 				['@extension_value'] = 500
@@ -138,10 +138,10 @@ AddEventHandler('esx_markeras:sendToCommunityService', function(target, actions_
 
 	local identifier = GetPlayerIdentifiers(target)[1]
 
-	MySQL.Async.fetchAll('SELECT actions_remaining FROM communityservice WHERE identifier = @identifier', {
+	MySQL.Async.fetchScalar('SELECT actions_remaining FROM communityservice WHERE identifier = @identifier', {
 		['@identifier'] = identifier
 	}, function(result)
-		if result[1] then
+		if result then
 			MySQL.Async.execute('UPDATE communityservice SET actions_remaining = @actions_remaining WHERE identifier = @identifier', {
 				['@identifier'] = identifier,
 				['@actions_remaining'] = actions_count
@@ -182,12 +182,12 @@ AddEventHandler('esx_markeras:checkIfSentenced', function()
 	local _source = source -- cannot parse source to client trigger for some weird reason
 	local identifier = GetPlayerIdentifiers(_source)[1] -- get steam identifier
 
-	MySQL.Async.fetchAll('SELECT actions_remaining FROM communityservice WHERE identifier = @identifier', {
+	MySQL.Async.fetchScalar('SELECT actions_remaining FROM communityservice WHERE identifier = @identifier', {
 		['@identifier'] = identifier
 	}, function(result)
-		if result[1] ~= nil and result[1].actions_remaining > 0 then
+		if result ~= nil and result > 0 then
 			--TriggerClientEvent('chat:addMessage', -1, { args = { _U('judge'), _U('jailed_msg', GetPlayerName(_source), ESX.Math.Round(result[1].jail_time / 60)) }, color = { 147, 196, 109 } })
-			TriggerClientEvent('esx_markeras:inCommunityService', _source, tonumber(result[1].actions_remaining))
+			TriggerClientEvent('esx_markeras:inCommunityService', _source, tonumber(result))
 		end
 	end)
 end)
@@ -198,10 +198,10 @@ ESX.RegisterServerCallback('esx_markeras:ProvjeriMarkere', function(source, cb)
 	local _source = source -- cannot parse source to client trigger for some weird reason
 	local identifier = GetPlayerIdentifiers(_source)[1] -- get steam identifier
 
-	MySQL.Async.fetchAll('SELECT actions_remaining FROM communityservice WHERE identifier = @identifier', {
+	MySQL.Async.fetchScalar('SELECT actions_remaining FROM communityservice WHERE identifier = @identifier', {
 		['@identifier'] = identifier
 	}, function(result)
-		if result[1] ~= nil and result[1].actions_remaining > 0 then
+		if result ~= nil and result > 0 then
 			cb(true)
 		else
 			cb(false)
@@ -213,11 +213,11 @@ ESX.RegisterServerCallback('esx_markeras:DohvatiMarkere', function(source, cb)
 	local _source = source -- cannot parse source to client trigger for some weird reason
 	local identifier = GetPlayerIdentifiers(_source)[1] -- get steam identifier
 
-	MySQL.Async.fetchAll('SELECT actions_remaining FROM communityservice WHERE identifier = @identifier', {
+	MySQL.Async.fetchScalar('SELECT actions_remaining FROM communityservice WHERE identifier = @identifier', {
 		['@identifier'] = identifier
 	}, function(result)
-		if result[1] ~= nil then
-			cb(result[1].actions_remaining)
+		if result ~= nil then
+			cb(result)
 		else
 			cb(nil)
 		end
@@ -227,10 +227,10 @@ end)
 function releaseFromCommunityService(target)
 
 	local identifier = GetPlayerIdentifiers(target)[1]
-	MySQL.Async.fetchAll('SELECT actions_remaining FROM communityservice WHERE identifier = @identifier', {
+	MySQL.Async.fetchScalar('SELECT actions_remaining FROM communityservice WHERE identifier = @identifier', {
 		['@identifier'] = identifier
 	}, function(result)
-		if result[1] then
+		if result then
 			MySQL.Async.execute('DELETE from communityservice WHERE identifier = @identifier', {
 				['@identifier'] = identifier
 			})

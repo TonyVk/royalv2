@@ -627,7 +627,7 @@ TriggerEvent('es:addGroupCommand', 'reason', Config.permission, function (source
 				reason = _U('no_reason').." ("..GetPlayerName(source)..")"
 			end
 
-			MySQL.Async.fetchAll('SELECT * FROM baninfo WHERE playername = @playername', 
+			MySQL.Async.fetchAll('SELECT identifier, license, liveid, xblid, discord, playerip FROM baninfo WHERE playername = @playername', 
 			{
 				['@playername'] = name
 			}, function(data)
@@ -761,7 +761,7 @@ end
 
 function loadBanList()
   MySQL.Async.fetchAll(
-    'SELECT * FROM banlist',
+    'SELECT identifier, license, liveid, xblid, discord, playerip, reason, expiration, permanent FROM banlist',
     {},
     function (data)
       BanList = {}
@@ -785,7 +785,7 @@ end
 
 function loadBanListHistory()
   MySQL.Async.fetchAll(
-    'SELECT * FROM banlisthistory',
+    'SELECT identifier, license, liveid, xblid, discord, playerip, targetplayername, sourceplayername, reason, expiration, permanent, timeat FROM banlisthistory',
     {},
     function (data)
       BanListHistory = {}
@@ -945,14 +945,12 @@ AddEventHandler('es:playerLoaded',function(source)
 		end
 	end
 
-		MySQL.Async.fetchAll('SELECT * FROM `baninfo` WHERE `identifier` = @identifier', {
+		MySQL.Async.fetchScalar('SELECT identifier FROM `baninfo` WHERE `identifier` = @identifier', {
 			['@identifier'] = steamID
 		}, function(data)
 		local found = false
-			for i=1, #data, 1 do
-				if data[i].identifier == steamID then
-					found = true
-				end
+			if data == steamID then
+				found = true
 			end
 			if not found then
 				MySQL.Async.execute('INSERT INTO baninfo (identifier,license,liveid,xblid,discord,playerip,playername) VALUES (@identifier,@license,@liveid,@xblid,@discord,@playerip,@playername)', 
@@ -986,39 +984,41 @@ AddEventHandler('es:playerLoaded',function(source)
 end)
 
 function DajMiPotrebno(ime)
-	local result = MySQL.Sync.fetchAll("SELECT * FROM users WHERE name = @imee", {['@imee'] = ime})
-	if result[1] ~= nil then
-		local identity = result[1]
+	MySQL.Async.fetchAll('SELECT identifier, license FROM users WHERE name = @imee', {['@imee'] = ime}, function(result)
+        if result[1] ~= nil then
+			local identity = result[1]
 
-		return {
-			identifier = identity['identifier'],
-			license = identity['license']
-		}
-	else
-		return nil
-	end
+			return {
+				identifier = identity['identifier'],
+				license = identity['license']
+			}
+		else
+			return nil
+		end
+    end)
 end
 
 function getIdentity(source)
 	local identifier = GetPlayerIdentifiers(source)[1]
-	local result = MySQL.Sync.fetchAll("SELECT * FROM users WHERE identifier = @identifier", {['@identifier'] = identifier})
-	if result[1] ~= nil then
-		local identity = result[1]
+	MySQL.Async.fetchAll('SELECT identifier, name, firstname, lastname, dateofbirth, sex, height, job, group FROM users WHERE identifier = @identifier', {['@identifier'] = identifier}, function(result)
+        if result[1] ~= nil then
+			local identity = result[1]
 
-		return {
-			identifier = identity['identifier'],
-			name = identity['name'],
-			firstname = identity['firstname'],
-			lastname = identity['lastname'],
-			dateofbirth = identity['dateofbirth'],
-			sex = identity['sex'],
-			height = identity['height'],
-			job = identity['job'],
-			group = identity['group']
-		}
-	else
-		return nil
-	end
+			return {
+				identifier = identity['identifier'],
+				name = identity['name'],
+				firstname = identity['firstname'],
+				lastname = identity['lastname'],
+				dateofbirth = identity['dateofbirth'],
+				sex = identity['sex'],
+				height = identity['height'],
+				job = identity['job'],
+				group = identity['group']
+			}
+		else
+			return nil
+		end
+    end)
 end
 
 function inArray(value, array)
