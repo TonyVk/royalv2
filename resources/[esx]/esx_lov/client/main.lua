@@ -14,6 +14,13 @@ local ZadnjiRand = -1
 local Vozilo = nil
 local BrojZivotinja = 0
 
+local Modeli = {
+	{Model = "a_c_deer"},
+	{Model = "a_c_boar"},
+	{Model = "a_c_coyote"},
+	{Model = "a_c_mtlion"}
+}
+
 Citizen.CreateThread(function()
 	while ESX == nil do
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
@@ -191,14 +198,15 @@ function PokreniLov()
 				ESX.ShowNotification("Zapoceli ste lov na zivotinje. Imate pravo na 5 zivotinja!")
 				GiveWeaponToPed(PlayerPedId(), GetHashKey("WEAPON_HEAVYSNIPER"),45, true, false)
 				GiveWeaponToPed(PlayerPedId(), GetHashKey("WEAPON_KNIFE"),0, true, false)
-				RequestModel(GetHashKey('a_c_deer'))
-				while not HasModelLoaded(GetHashKey('a_c_deer')) do
-					RequestModel(GetHashKey('a_c_deer'))
+				local m = math.random(1, #Modeli)
+				RequestModel(GetHashKey(Modeli[m].Model))
+				while not HasModelLoaded(GetHashKey(Modeli[m].Model)) do
+					RequestModel(GetHashKey(Modeli[m].Model))
 					Citizen.Wait(10)
 				end
 				local rand = math.random(#Zivotinje)
 				ZadnjiRand = rand
-				Zivotinja = CreatePed(5, GetHashKey('a_c_deer'), Zivotinje[rand].x, Zivotinje[rand].y, Zivotinje[rand].z, 0.0, false, false)
+				Zivotinja = CreatePed(5, GetHashKey(Modeli[m].Model), Zivotinje[rand].x, Zivotinje[rand].y, Zivotinje[rand].z, 0.0, false, false)
 				TaskWanderStandard(Zivotinja, true, true)
 				SetEntityAsMissionEntity(Zivotinja, true, true)
 
@@ -208,7 +216,7 @@ function PokreniLov()
 				BeginTextCommandSetBlipName("STRING")
 				AddTextComponentString('Jelen')
 				EndTextCommandSetBlipName(zBlip)
-				SetModelAsNoLongerNeeded(GetHashKey('a_c_deer'))
+				SetModelAsNoLongerNeeded(GetHashKey(Modeli[m].Model))
 				ESX.Game.SpawnVehicle("sanchez", {
 					x = -769.63067626953,
 					y = 5592.7573242188,
@@ -311,9 +319,10 @@ function Raskomadaj(id, blip)
 	DeleteEntity(id)
 	BrojZivotinja = BrojZivotinja+1
 	if BrojZivotinja < 5 then
-		RequestModel('a_c_deer')
-		while not HasModelLoaded('a_c_deer') do
-			RequestModel('a_c_deer')
+		local m = math.random(1, #Modeli)
+		RequestModel(Modeli[m].Model)
+		while not HasModelLoaded(Modeli[m].Model) do
+			RequestModel(Modeli[m].Model)
 			Citizen.Wait(10)
 		end
 		local rand = math.random(#Zivotinje)
@@ -324,7 +333,7 @@ function Raskomadaj(id, blip)
 			end
 		end
 		ZadnjiRand = rand
-		Zivotinja = CreatePed(5, GetHashKey('a_c_deer'), Zivotinje[rand].x, Zivotinje[rand].y, Zivotinje[rand].z, 0.0, false, false)
+		Zivotinja = CreatePed(5, GetHashKey(Modeli[m].Model), Zivotinje[rand].x, Zivotinje[rand].y, Zivotinje[rand].z, 0.0, false, false)
 		TaskWanderStandard(Zivotinja, true, true)
 		SetEntityAsMissionEntity(Zivotinja, true, true)
 
@@ -334,7 +343,7 @@ function Raskomadaj(id, blip)
 		BeginTextCommandSetBlipName("STRING")
 		AddTextComponentString('Jelen')
 		EndTextCommandSetBlipName(zBlip)
-		SetModelAsNoLongerNeeded(GetHashKey('a_c_deer'))
+		SetModelAsNoLongerNeeded(GetHashKey(Modeli[m].Model))
 	else
 		ESX.ShowNotification("Ubili ste 5 zivotinja, vratite se do lovackog drustva kako bih ste ostavili vozilo i oruzje ili produzili clanarinu!")
 	end
