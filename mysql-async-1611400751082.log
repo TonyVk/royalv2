@@ -228,3 +228,8 @@
 2021-01-23T12:25:51.249Z: [essentialmode] [1ms] SELECT * FROM users WHERE identifier = ? : ["steam:11000010441bee9"]
 2021-01-23T12:25:53.821Z: [xnTattoos] [2ms] SELECT tattoos FROM users WHERE identifier = ? : ["steam:11000010441bee9"]
 2021-01-23T12:25:56.020Z: [manual] [2ms] SELECT mjenjac FROM owned_vehicles WHERE plate = ? : ["22TZI638"]
+2021-01-23T12:26:15.883Z: [esplugin_mysql] [2ms] UPDATE users SET `bank`=?, `money`=? WHERE `identifier`=? : [154000,4920000,"steam:11000010441bee9"]
+2021-01-23T12:27:15.968Z: [esplugin_mysql] [2ms] UPDATE users SET `bank`=?, `money`=? WHERE `identifier`=? : [154000,4920000,"steam:11000010441bee9"]
+2021-01-23T12:27:58.104Z: [prodajoruzje] [2ms] SELECT minute FROM minute WHERE identifier = ? : ["steam:11000010441bee9"]
+2021-01-23T12:27:58.159Z: [prodajoruzje] [1ms] UPDATE minute SET minute = ? WHERE identifier = ? : [6675,"steam:11000010441bee9"]
+2021-01-23T12:28:16.054Z: [esplugin_mysql] [1ms] UPDATE users SET `bank`=?, `money`=? WHERE `identifier`=? : [154000,4920000,"steam:11000010441bee9"]
