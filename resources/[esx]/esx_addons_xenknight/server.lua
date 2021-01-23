@@ -107,7 +107,7 @@ AddEventHandler('esx:playerLoaded', function(source)
     ['@identifier'] = xPlayer.identifier
   }, function(result)
 
-    local phoneNumber = result.phone_number
+    local phoneNumber = result
     xPlayer.set('phoneNumber', phoneNumber)
 	local posao = xPlayer.job.name
 	if xPlayer.job.name == "sipa" then
@@ -142,7 +142,7 @@ function getPhoneNumber (source, callback)
   MySQL.Async.fetchScalar('SELECT phone_number FROM users WHERE identifier = @identifier',{
     ['@identifier'] = xPlayer.identifier
   }, function(result)
-    callback(result.phone_number)
+    callback(result)
   end)
 end
 

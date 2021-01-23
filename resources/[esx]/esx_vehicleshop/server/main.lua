@@ -455,7 +455,7 @@ ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function(source, cb,
 						['@plate'] = plate
 					}, function(result)
 						if result then -- does the owner match?
-							local vehicle = json.decode(result.vehicle)
+							local vehicle = json.decode(result)
 
 							if vehicle.model == model then
 								if vehicle.plate == plate then

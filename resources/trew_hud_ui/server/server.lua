@@ -22,8 +22,7 @@ AddEventHandler('trew_hud_ui:getServerInfo', function()
 		local info = {
 			job = job,
 			money = xPlayer.getMoney(),
-			bankMoney = xPlayer.getBank(),
-			blackMoney = xPlayer.getAccount('black_money').money
+			bankMoney = xPlayer.getBank()
 		}
 
 		TriggerClientEvent('trew_hud_ui:setInfo', source, info)
