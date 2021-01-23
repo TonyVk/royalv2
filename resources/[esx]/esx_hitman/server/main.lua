@@ -10,13 +10,14 @@ if Config.MaxInService ~= -1 then
 end
 
 function DohvatiMete()
-	MySQL.Async.fetchAll('SELECT * FROM mete', {}, function(result)
+	MySQL.Async.fetchAll('SELECT identifier, ime, cijena FROM mete', {}, function(result)
 		if result[1] ~= nil then
 			for i=1, #result, 1 do
 				MySQL.Async.fetchAll("SELECT firstname, lastname FROM users WHERE identifier = @identifier", { ["@identifier"] = result[i].identifier }, function(result2)
 					Mete[result[i].ime] = result[i].cijena
 					Imena[result[i].ime] = result2[1].firstname.." "..result2[1].lastname
 				end)
+				Wait(100)
 			end
 		end
 	end)

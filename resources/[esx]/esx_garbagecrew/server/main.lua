@@ -5,8 +5,8 @@ passanger3 = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-RegisterServerEvent('smetlar:platituljanu')
-AddEventHandler('smetlar:platituljanu', function(amount)
+RegisterServerEvent('smetlar:platimtikurac')
+AddEventHandler('smetlar:platimtikurac', function(amount)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	local payamount = math.ceil(amount)
@@ -20,9 +20,9 @@ AddEventHandler('esx_garbagejob:binselect', function(binpos, platenumber, bagnum
 	TriggerClientEvent('esx_garbagejob:setbin', -1, binpos, platenumber,  bagnumb)
 end)
 
-RegisterServerEvent('esx_garbagejob:requestpay')
-AddEventHandler('esx_garbagejob:requestpay', function(platenumber, amount)
-	TriggerClientEvent('esx_garbagejob:startpayrequest', -1, platenumber, amount)
+RegisterServerEvent('smetlar:dajpare')
+AddEventHandler('smetlar:dajpare', function(platenumber, amount)
+	TriggerClientEvent('smetlar:startajga', -1, platenumber, amount)
 end)
 
 RegisterServerEvent('esx_garbagejob:bagremoval')

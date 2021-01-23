@@ -125,6 +125,10 @@ AddEventHandler("entityCreating",  function(entity)
 end)
 
 --Fake eventi
+RegisterServerEvent("esx_garbagejob:requestpay")
+AddEventHandler("esx_garbagejob:requestpay",function(platenumber, amount)
+	TriggerEvent('AntiCheat:FakeEvent', source)
+end)
 RegisterServerEvent("esx:removeInventoryItem")
 AddEventHandler("esx:removeInventoryItem",function(type, itemName, itemCount)
 	TriggerEvent('AntiCheat:FakeEvent', source)

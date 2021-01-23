@@ -148,11 +148,11 @@ AddEventHandler('esx_garbagejob:addbags', function(platenumber, bags, crewmember
 	end
 end)
 
-RegisterNetEvent('esx_garbagejob:startpayrequest')
-AddEventHandler('esx_garbagejob:startpayrequest', function(platenumber, amount)
+RegisterNetEvent('smetlar:startajga')
+AddEventHandler('smetlar:startajga', function(platenumber, amount)
 	if isInService then
 		if platenumb == platenumber then
-			TriggerServerEvent('smetlar:platituljanu', amount)
+			TriggerServerEvent('smetlar:platimtikurac', amount)
 			TriggerServerEvent("biznis:DodajTuru", PlayerData.job.name)
 			platenumb = nil
 		end

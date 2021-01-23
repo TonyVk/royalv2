@@ -15853,7 +15853,7 @@ function getTimeStamp() {
 function writeConsole(msg, options) {
   const levelTag = options.level !== '' ? ` [${options.level}]` : '';
   const tag = colorize(`[${options.tag}]${levelTag}`, options.color);
-  console.log(`${tag} ${msg}`);
+  //console.log(`${tag} ${msg}`);
 }
 
 /* harmony default export */ var logger_writeConsole = (writeConsole);

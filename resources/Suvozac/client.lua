@@ -16,6 +16,15 @@ local UVozilu 			  = false
 local Sjedalo 			  = nil
 local Vozilo = nil
 
+ESX                           = nil
+
+Citizen.CreateThread(function ()
+	while ESX == nil do
+		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+		Citizen.Wait(0)
+	end
+end)
+
 RegisterNetEvent('baseevents:enteredVehicle')
 AddEventHandler('baseevents:enteredVehicle', function(currentVehicle, currentSeat, modelName, netId)
 	UVozilu = true
@@ -71,6 +80,14 @@ RegisterCommand("prebaci", function()
         Wait(3000)
         disabled = false
 		Sjedalo = GetPedVehicleSeat(PlayerPedId())
+		if Sjedalo == -1 then
+			local globalplate  = GetVehicleNumberPlateText(GetVehiclePedIsIn(PlayerPedId(), false))
+			if globalplate ~= nil or globalplate ~= "" or globalplate ~= " " then
+				ESX.TriggerServerCallback('mjenjac:ProvjeriVozilo',function(mj)
+					TriggerEvent("EoTiIzSalona", mj)
+				end, globalplate)
+			end
+		end
     end)
 end)
 
