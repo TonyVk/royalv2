@@ -18,11 +18,11 @@ function UcitajBiznise()
         for i=1, #result, 1 do
 			local data2 = json.decode(result[i].Koord)
 			if result[i].Vlasnik == nil then
-				table.insert(Biznisi, {Ime = result[i].Ime, Label = result[i].Label, Posao = result[i].Posao, Kupljen = false, Sef = result[i].Sef, VlasnikIme = "Nema", Coord = data2, Tjedan = result[i].Tjedan})
+				table.insert(Biznisi, {Ime = result[i].Ime, Label = result[i].Label, Vlasnik = nil, Posao = result[i].Posao, Kupljen = false, Sef = result[i].Sef, VlasnikIme = "Nema", Coord = data2, Tjedan = result[i].Tjedan})
 			else
 				GetRPName(result[i].Vlasnik, function(Firstname, Lastname)
 					local im = Firstname.." "..Lastname
-					table.insert(Biznisi, {Ime = result[i].Ime, Label = result[i].Label, Posao = result[i].Posao, Kupljen = true, Sef = result[i].Sef, VlasnikIme = im, Coord = data2, Tjedan = result[i].Tjedan})
+					table.insert(Biznisi, {Ime = result[i].Ime, Label = result[i].Label, Vlasnik = result[i].Vlasnik, Posao = result[i].Posao, Kupljen = true, Sef = result[i].Sef, VlasnikIme = im, Coord = data2, Tjedan = result[i].Tjedan})
 				end)
 			end
 			local data3 = json.decode(result[i].Sati)
@@ -54,20 +54,21 @@ function UcitajSate()
     )
 end
 
-ESX.RegisterServerCallback('biznis:DohvatiVlasnika', function(source, cb)
+ESX.RegisterServerCallback('biznis:JelVlasnik', function(source, cb, ime)
 	local src = source
 	local xPlayer = ESX.GetPlayerFromId(src)
-	local Ime = nil
-	MySQL.Async.fetchAll(
-      'SELECT Ime FROM biznisi WHERE Vlasnik = @ident',
-      { ['@ident'] = xPlayer.identifier },
-      function(result)
-        for i=1, #result, 1 do
-			Ime = result[i].Ime
-        end
-		cb(Ime)
-      end
-    )
+	local naso = false
+	for i=1, #Biznisi, 1 do
+		if Biznisi[i] ~= nil and Biznisi[i].Ime == ime and Biznisi[i].Vlasnik ~= nil then
+			if Biznisi[i].Vlasnik == xPlayer.identifier then
+				naso = true
+				cb(true)
+			end
+		end
+	end
+	if not naso then
+		cb(false)
+	end
 end)
 
 ESX.RegisterServerCallback('biznis:DohvatiBiznise', function(source, cb)
@@ -141,6 +142,7 @@ AddEventHandler('biznis:PostaviVlasnika', function(ime, id)
 			if Biznisi[i] ~= nil and Biznisi[i].Ime == ime then
 				Biznisi[i].Kupljen = false
 				Biznisi[i].VlasnikIme = "Nema"
+				Biznisi[i].Vlasnik = nil
 				TriggerClientEvent("biznis:UpdateBiznise", -1, Biznisi)
 				TriggerClientEvent("biznis:UpdateBlip", -1, ime)
 				break
@@ -156,11 +158,11 @@ AddEventHandler('biznis:PostaviVlasnika', function(ime, id)
 			for i=1, #Biznisi, 1 do
 				if Biznisi[i] ~= nil and Biznisi[i].Ime == ime then
 					Biznisi[i].Kupljen = true
+					Biznisi[i].Vlasnik = xPlayer.identifier
 					GetRPName(xPlayer.identifier, function(Firstname, Lastname)
 						local im = Firstname.." "..Lastname
 						Biznisi[i].VlasnikIme = im
 						TriggerClientEvent("biznis:UpdateBiznise", -1, Biznisi)
-						TriggerClientEvent("biznis:DajVlasnika", id, ime)
 						TriggerClientEvent("biznis:UpdateBlip", -1, ime)
 						TriggerClientEvent('esx:showNotification', src, "Postavili ste vlasnika igracu "..GetPlayerName(id).."["..id.."]!")
 					end)

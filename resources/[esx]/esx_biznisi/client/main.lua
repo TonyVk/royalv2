@@ -14,7 +14,6 @@ local Keys = {
 
 local Biznisi = {}
 local Blipovi = {}
-local MojBiznis = nil
 
 local HasAlreadyEnteredMarker   = false
 local LastStation               = nil
@@ -37,10 +36,6 @@ Citizen.CreateThread(function()
 	Wait(5000)
 	ESX.TriggerServerCallback('biznis:DohvatiBiznise', function(biznis)
 		Biznisi = biznis.biz
-	end)
-	Wait(2000)
-	ESX.TriggerServerCallback('biznis:DohvatiVlasnika', function(ime)
-		MojBiznis = ime
 	end)
 	Wait(1000)
 	SpawnBlipove()
@@ -338,18 +333,25 @@ function OpenBiznisMenu(ime)
 		break
 	end
   end
+  local mere = false
   if Kupljen == true then
-	if MojBiznis == ime then
-		table.insert(elements, {label = "Stanje sefa", value = 'stanje'})
-		table.insert(elements, {label = "Uzmi iz sefa", value = 'sef'})
-		table.insert(elements, {label = "Radnici", value = 'radnici'})
-	else
-		table.insert(elements, {label = "Ovaj biznis nije tvoj!", value = 'error'})
-	end
+	ESX.TriggerServerCallback('biznis:JelVlasnik', function(vlasnik)
+		if vlasnik then
+			table.insert(elements, {label = "Stanje sefa", value = 'stanje'})
+			table.insert(elements, {label = "Uzmi iz sefa", value = 'sef'})
+			table.insert(elements, {label = "Radnici", value = 'radnici'})
+		else
+			table.insert(elements, {label = "Ovaj biznis nije tvoj!", value = 'error'})
+		end
+		mere = true
+	end, ime)
   else
 	table.insert(elements, {label = "Kako kupiti biznis saznajte na nasem discordu", value = 'error'})
+	mere = true
   end
-
+	while not mere do
+		Wait(100)
+	end
     ESX.UI.Menu.Open(
       'default', GetCurrentResourceName(), 'biznis',
       {
@@ -414,6 +416,10 @@ function OpenBiznisMenu(ime)
 			end)
 		end)
       end
+	  
+	  if data.current.value == "error" then
+		ExecuteCommand("discord")
+	  end
 	  
       CurrentAction     = 'menu_biznis'
       CurrentActionMsg  = "Pritisnite E da otvorite biznis menu!"
@@ -521,9 +527,4 @@ end)
 RegisterNetEvent('biznis:UpdateBiznise')
 AddEventHandler('biznis:UpdateBiznise', function(biz)
 	Biznisi = biz
-end)
-
-RegisterNetEvent('biznis:DajVlasnika')
-AddEventHandler('biznis:DajVlasnika', function(ime)
-	MojBiznis = ime
 end)

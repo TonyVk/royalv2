@@ -142,7 +142,7 @@ Citizen.CreateThread(function()
         --(11-11-2018) New Natives:
 		
         --Here you can add hover text for the "large" icon.
-        SetDiscordRichPresenceAssetText('https://discord.gg/rAWxYmp')
+        SetDiscordRichPresenceAssetText('https://discord.gg/hugo')
 		while ESX == nil do
 			Wait(0)
 		end
