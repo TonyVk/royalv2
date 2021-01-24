@@ -455,7 +455,6 @@ function RemoveItemsAfterRPDeath()
 		while not IsScreenFadedOut() do
 			Citizen.Wait(10)
 		end
-
 		ESX.TriggerServerCallback('ambulanta:kradenakonsmrti', function()
 			local formattedCoords = {
 				x = Config.RespawnPoint.coords.x,

@@ -469,8 +469,6 @@ RegisterNetEvent('esx:setAccountMoney')
 AddEventHandler('esx:setAccountMoney', function(account)
 	if account.name == "bank" then
 		SendNUIMessage({ action = 'setMoney', id = 'bank', value = account.money })
-	elseif account.name == "black_money" then
-		SendNUIMessage({ action = 'setMoney', id = 'blackMoney', value = account.money })
 	end
 end)
 
@@ -482,8 +480,6 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
 		local account = v
 		if account.name == "bank" then
 			SendNUIMessage({ action = 'setMoney', id = 'bank', value = account.money })
-		elseif account.name == "black_money" then
-			SendNUIMessage({ action = 'setMoney', id = 'blackMoney', value = account.money })
 		end
 	end
 
@@ -510,7 +506,6 @@ AddEventHandler('trew_hud_ui:setInfo', function(info)
 	SendNUIMessage({ action = 'setText', id = 'job', value = info['job'] })
 	SendNUIMessage({ action = 'setMoney', id = 'wallet', value = info['money'] })
 	SendNUIMessage({ action = 'setMoney', id = 'bank', value = info['bankMoney'] })
-	SendNUIMessage({ action = 'setMoney', id = 'blackMoney', value = info['blackMoney'] })
 
 	TriggerEvent('esx:getSharedObject', function(obj)
 		ESX = obj
