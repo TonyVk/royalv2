@@ -55,13 +55,13 @@ RegisterNUICallback('betup', function(data, cb)
 	TriggerServerEvent('InteractSound_SV:PlayOnSource', 'betup', 1.0)
 end)
 
-RegisterNUICallback('roll', function(data, cb)
+RegisterNUICallback('rollajga', function(data, cb)
 	cb('ok')
-	TriggerEvent('esx_roulette:start_game', data.kolor, data.kwota)
+	TriggerEvent('rulet:zapocni_igru', data.kolor, data.kwota)
 end)
 
-RegisterNetEvent('esx_roulette:start_game')
-AddEventHandler('esx_roulette:start_game', function(action, amount)
+RegisterNetEvent('rulet:zapocni_igru')
+AddEventHandler('rulet:zapocni_igru', function(action, amount)
 	local amount = amount
 	if game_during == false then
 		TriggerServerEvent('esx_roulette:removemoney', amount)

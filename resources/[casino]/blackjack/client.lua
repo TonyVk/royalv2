@@ -62,13 +62,13 @@ RegisterNUICallback('escape2', function(data, cb)
 	TriggerEvent('pNotify:SendNotification', {text = 'Nemate vise zetona!', layout = "bottomCenter"})
 end)
 
-RegisterNUICallback('WinBet', function(data, cb)
+RegisterNUICallback('DobioOkladu', function(data, cb)
 	cb('ok')
 	local count = data.bets
 	TriggerServerEvent('kasino:Tuljani', count, 2)
 end)
 
-RegisterNUICallback('TieBet', function(data, cb)
+RegisterNUICallback('IzjednacenaOklada', function(data, cb)
 	cb('ok')
 	local count = data.bets
 	TriggerServerEvent('kasino:Tuljani', count, 1)

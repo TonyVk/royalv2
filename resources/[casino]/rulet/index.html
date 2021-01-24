@@ -110,7 +110,7 @@
       })
       $('#Betczerwone').on('click', function(){
         if(bet <= coins){
-          $.post("http://rulet/roll", JSON.stringify({
+          $.post("http://rulet/rollajga", JSON.stringify({
             kolor: 'red',
             kwota: bet
           }));
@@ -119,7 +119,7 @@
       })
       $('#Betczarne').on('click', function(){
         if(bet <= coins){
-          $.post("http://rulet/roll", JSON.stringify({
+          $.post("http://rulet/rollajga", JSON.stringify({
             kolor: 'black',
             kwota: bet
           }));
@@ -128,7 +128,7 @@
       })
       $('#Betzielony').on('click', function(){
         if(bet <= coins){
-          $.post("http://rulet/roll", JSON.stringify({
+          $.post("http://rulet/rollajga", JSON.stringify({
             kolor: 'green',
             kwota: bet
           }));

@@ -87,6 +87,21 @@ ESX.RegisterServerCallback('esx_billing:getBills', function(source, cb)
 	end)
 end)
 
+ESX.RegisterServerCallback('esx_billing:getMBills', function(source, cb)
+	MySQL.Async.fetchAll('SELECT amount, users.name, users.firstname, users.lastname FROM billing LEFT JOIN users ON billing.identifier = users.identifier WHERE billing.target = "society_mechanic"', {}, function(result)
+		local bills = {}
+		for i=1, #result, 1 do
+			table.insert(bills, {
+				amount     = result[i].amount,
+				name 	   = result[i].name,
+				firstname  = result[i].firstname,
+				lastname   = result[i].lastname
+			})
+		end
+		cb(bills)
+	end)
+end)
+
 ESX.RegisterServerCallback('esx_billing:getTargetBills', function(source, cb, target)
 	local xPlayer = ESX.GetPlayerFromId(target)
 
@@ -110,6 +125,20 @@ ESX.RegisterServerCallback('esx_billing:getTargetBills', function(source, cb, ta
 	end)
 end)
 
+ESX.RegisterServerCallback('esx_billing:getMechanicBills', function(source, cb, target)
+	local xPlayer = ESX.GetPlayerFromId(target)
+	MySQL.Async.fetchAll('SELECT amount FROM billing WHERE identifier = @identifier AND target = "society_mechanic"', {
+		['@identifier'] = xPlayer.identifier
+	}, function(result)
+		local bills = {}
+		for i=1, #result, 1 do
+			table.insert(bills, {
+				amount = result[i].amount
+			})
+		end
+		cb(bills)
+	end)
+end)
 
 ESX.RegisterServerCallback('esx_platiii:platituljanu', function(source, cb, id)
 	local xPlayer = ESX.GetPlayerFromId(source)

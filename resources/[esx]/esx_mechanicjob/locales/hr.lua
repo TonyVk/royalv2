@@ -8,6 +8,7 @@ Locales['hr'] = {
   ['deposit_stock']             = 'ostavi Stock',
   ['withdraw_stock']            = 'podigni Stock',
   ['boss_actions']              = 'lider izbornik',
+  ['armory_item'] 				= '$%s',
   ['service_vehicle']           = 'servis vozila',
   ['flat_bed']                  = 'flatbed',
   ['tow_truck']                 = 'tow Truck',

@@ -61,7 +61,7 @@ var BlackJackObject = function() {
 	
 	this.Win = function() {
 		// Do Something With .bet
-		$.post('http://blackjack/WinBet', JSON.stringify({
+		$.post('http://blackjack/DobioOkladu', JSON.stringify({
 			bets: obecnyBet
 		}));
 		coins = coins + obecnyBet + obecnyBet;
@@ -72,7 +72,7 @@ var BlackJackObject = function() {
 	
 	this.Tie = function() {
 		// Do Something With .bet
-		$.post('http://blackjack/TieBet', JSON.stringify({
+		$.post('http://blackjack/IzjednacenaOklada', JSON.stringify({
 			bets: obecnyBet
 		}));
 		coins = coins + obecnyBet;

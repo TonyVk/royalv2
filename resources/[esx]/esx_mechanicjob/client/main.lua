@@ -159,6 +159,7 @@ function OpenMechanicActionsMenu()
 	end
 	if Config.EnablePlayerManagement and ESX.PlayerData.job and (ESX.PlayerData.job.grade_name == 'boss' or ESX.PlayerData.job.grade_name == 'vlasnik') then
 		table.insert(elements, {label = _U('boss_actions'), value = 'boss_actions'})
+		table.insert(elements, {label = "Pregled neplacenih racuna", value = 'racuni'})
 	end
 
 	ESX.UI.Menu.CloseAll()
@@ -267,6 +268,8 @@ function OpenMechanicActionsMenu()
 			TriggerEvent('esx_society:openBossMenu', 'mechanic', function(data, menu)
 				menu.close()
 			end)
+		elseif data.current.value == 'racuni' then
+			OpenNeplaceneRacune()
 		end
 	end, function(data, menu)
 		menu.close()
@@ -285,6 +288,46 @@ AddEventHandler('esx_meha:PucajCijenu', function(model, cijena)
 		Cijena[model] = cijena
 	end
 end)
+
+function OpenNeplaceneRacune()
+	local elements = {}
+
+	ESX.TriggerServerCallback('esx_billing:getMBills', function(bills)
+		for k,bill in ipairs(bills) do
+			table.insert(elements, {
+				label = ('%s - <span style="color:red;">%s</span>'):format(bill.firstname.." "..bill.lastname.."("..bill.name..")", _U('armory_item', ESX.Math.GroupDigits(bill.amount))),
+			})
+		end
+
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'billing', {
+			title    = "Neplaceni racuni",
+			align    = 'top-left',
+			elements = elements
+		}, nil, function(data, menu)
+			menu.close()
+		end)
+	end)
+end
+
+function OpenUnpaidBillsMenu(player)
+	local elements = {}
+
+	ESX.TriggerServerCallback('esx_billing:getMechanicBills', function(bills)
+		for k,bill in ipairs(bills) do
+			table.insert(elements, {
+				label = ('<span style="color:red;">%s</span>'):format(_U('armory_item', ESX.Math.GroupDigits(bill.amount))),
+			})
+		end
+
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'billing', {
+			title    = "Neplaceni racuni ("..GetPlayerName(player)..")",
+			align    = 'top-left',
+			elements = elements
+		}, nil, function(data, menu)
+			menu.close()
+		end)
+	end, GetPlayerServerId(player))
+end
 
 function OpenMobileMechanicActionsMenu()
 	ESX.UI.Menu.CloseAll()
@@ -311,7 +354,8 @@ function OpenMobileMechanicActionsMenu()
 					elements = {
 						{label = "Placanje tuninga", value = 'tuning'},
 						{label = "Placanje popravka", value = 'popravak'},
-						{label = "Placanje ciscenja", value = 'ciscenje'}
+						{label = "Placanje ciscenja", value = 'ciscenje'},
+						{label = "Provjeri neplacene racune", value = 'unpaid_bills'}
 					}
 				},
 				function(data2, menu2)
@@ -356,6 +400,15 @@ function OpenMobileMechanicActionsMenu()
 							ESX.ShowNotification("Dali ste racun u iznosu od 500$")
 							TriggerServerEvent("DiscordBot:Mehanicari", GetPlayerName(PlayerId()).." je dao racun(ciscenje) igracu "..GetPlayerName(closestPlayer).." od $500")
 							TriggerServerEvent('esx_billing:posaljiTuljana', GetPlayerServerId(closestPlayer), 'society_mechanic', _U('mechanic'), 500)
+						end
+					end
+					if data2.current.value == 'unpaid_bills' then
+						local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
+						if closestPlayer == -1 or closestDistance > 3.0 then
+							ESX.ShowNotification(_U('no_players_nearby'))
+						else
+							menu2.close()
+							OpenUnpaidBillsMenu(closestPlayer)
 						end
 					end
 					menu2.close()
