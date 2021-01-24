@@ -293,7 +293,9 @@ Config.AuthorizedHelicopters = {
 
 	lieutenant = {},
 	
-	interventna = {},
+	interventna = {
+		{ model = 'polmav', label = 'Police Maverick', livery = 0, price = 0 }
+	},
 	
 	granicna = {},
 
