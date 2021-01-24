@@ -33,18 +33,16 @@ Config.PoliceStations = {
 		},
 
 		Cloakrooms = {
-			vector3(452.6, -992.8, 30.6),
-			vector3(1662.814, -25.306, 172.551)
+			vector3(452.6, -992.8, 30.6)
 		},
 
 		Armories = {
-			vector3(451.7, -980.1, 30.6),
-			vector3(1663.998, -49.942, 168.552)
+			vector3(451.7, -980.1, 30.6)
 		},
 
 		Vehicles = {
 			{
-				Spawner = vector3(454.6, -1017.4, 28.4), vector3(1670.185, -59.915, 173.533),
+				Spawner = vector3(454.6, -1017.4, 28.4),
 				InsideShop = vector3(228.5, -993.5, -99.5),
 				SpawnPoints = {
 					{ coords = vector3(438.4, -1018.3, 27.7), heading = 90.0, radius = 6.0 },
@@ -153,7 +151,10 @@ Config.AuthorizedWeapons = {
 	},
 
 	lieutenant = {
+		{ weapon = 'WEAPON_APPISTOL', components = { 0, 0, 0, 0, nil }, price = 0 },
+		{ weapon = 'WEAPON_ADVANCEDRIFLE', components = { 0, 0, 0, 0, 0, nil }, price = 0 },
 		{ weapon = 'WEAPON_COMBATPISTOL', components = { 0, 0, 0, 0, nil }, price = 0 },
+		{ weapon = 'WEAPON_PUMPSHOTGUN', components = { 0, 0, nil }, price = 0 },
 		{ weapon = 'WEAPON_NIGHTSTICK', price = 0 },
 		{ weapon = 'WEAPON_STUNGUN', price = 0 },
 		{ weapon = 'WEAPON_FLASHLIGHT', price = 0 }
@@ -658,7 +659,7 @@ Config.Uniforms = {
 		}
 	},
 	interventna_wear = {
-		EUP = true,
+		EUP = false,
 		male = {
 			['tshirt_1'] = 15,  ['tshirt_2'] = 0,
 			['torso_1'] = 49,   ['torso_2'] = 2,
@@ -666,11 +667,11 @@ Config.Uniforms = {
 			['arms'] = 17,
 			['pants_1'] = 31,   ['pants_2'] = 2,
 			['shoes_1'] = 25,   ['shoes_2'] = 0,
-			['helmet_1'] = 44,  ['helmet_2'] = 1,
+			['helmet_1'] = 88,  ['helmet_2'] = 0,
 			['chain_1'] = 0,    ['chain_2'] = 0,
 			['ears_1'] = 0,     ['ears_2'] = 0,
-			['glasses_1'] = 15,     ['glasses_2'] = 6,
-			['mask_1'] = 35,		['mask_2'] = 0
+			['glasses_1'] = 0,     ['glasses_2'] = 0,
+			['mask_1'] = 0,		['mask_2'] = 0
 		},
 		female = {
 			['tshirt_1'] = 35,  ['tshirt_2'] = 0,
