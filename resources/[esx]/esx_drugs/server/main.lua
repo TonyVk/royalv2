@@ -175,88 +175,14 @@ function CancelProcessing(playerID)
 end
 
 RegisterServerEvent('trava:Izrasti')
-AddEventHandler('trava:Izrasti', function(nid, stanje)
-	Izrasti(nid, source, stanje)
+AddEventHandler('trava:Izrasti', function(stanje, koord)
+	Izrasti(source, stanje, koord)
 end)
 
 RegisterServerEvent('trava:MakniBranje')
 AddEventHandler('trava:MakniBranje', function(nid, co)
 	TriggerClientEvent("trava:NemosBrati", -1, nid, co)
 end)
-
-RegisterServerEvent('trava:ObrisiSadnicu')
-AddEventHandler('trava:ObrisiSadnicu', function(nid, co)
-	local ObjID = NetworkGetEntityFromNetworkId(nid)
-	for i=1, #Sadnice, 1 do
-		if Sadnice[i] ~= nil then
-			local x,y,z = table.unpack(Sadnice[i].Koord)
-			local x2,y2,z2 = table.unpack(co)
-			if Sadnice[i].NetID == nid and round(x, 3) == round(x2, 3) and round(y, 3) == round(y2, 3)and round(z, 3) == round(z2, 3) then
-				local src = Sadnice[i].ID
-				local xPlayer = ESX.GetPlayerFromId(src)
-				DeleteEntity(ObjID)
-				table.remove(Sadnice, i)
-				local Temp = {}
-				for a=1, #Sadnice, 1 do
-					if Sadnice[a] ~= nil and Sadnice[a].ID == src then
-						local ObjID = NetworkGetEntityFromNetworkId(Sadnice[a].NetID)
-						if DoesEntityExist(ObjID) then
-							local coord = GetEntityCoords(ObjID)
-							table.insert(Temp, {Stanje = Sadnice[a].Stanje, Koord = coord})
-						end
-					end
-				end
-				MySQL.Async.execute('UPDATE users SET sadnice = @sad WHERE identifier = @id', {
-					['@sad'] = json.encode(Temp),
-					['@id'] = xPlayer.identifier
-				})
-				TriggerClientEvent("trava:MakniSadnicu", -1, nid, co)
-				break
-			end
-		end
-	end
-end)
-
-RegisterServerEvent('trava:PonovoKreiraj')
-AddEventHandler('trava:PonovoKreiraj', function(nid, co)
-	for i=1, #Sadnice, 1 do
-		if Sadnice[i] ~= nil then
-			local x,y,z = table.unpack(Sadnice[i].Koord)
-			local x2,y2,z2 = table.unpack(co)
-			if Sadnice[i].NetID == nid and round(x, 3) == round(x2, 3) and round(y, 3) == round(y2, 3)and round(z, 3) == round(z2, 3) then
-				local ObjID = NetworkGetEntityFromNetworkId(nid)
-				if DoesEntityExist(ObjID) then
-					DeleteEntity(ObjID)
-				end
-				local stanje = Sadnice[i].Stanje
-				local mara
-				if stanje == 1 then
-					mara = "bkr_prop_weed_01_small_01a"
-				elseif stanje == 2 then
-					mara = "bkr_prop_weed_med_01a"
-				else
-					mara = "bkr_prop_weed_lrg_01a"
-				end
-				local Marih
-				Marih = CreateObjectNoOffset(GetHashKey(mara), co.x,  co.y,  co.z,true,false)
-				while not DoesEntityExist(Marih) do
-					Wait(100)
-				end
-				local src = Sadnice[i].ID
-				table.remove(Sadnice, i)
-				local netid = NetworkGetNetworkIdFromEntity(Marih)
-				table.insert(StariID, {ID = src, OldID = nid, NetID = netid})
-				TriggerClientEvent("trava:NoviNetID", -1, nid, netid, stanje, src)
-				table.insert(Sadnice, {ID = src, Objekt = Marih, Stanje = stanje, NetID = netid, Koord = co})
-				break
-			end
-		end
-	end
-end)
-
-function round(num, numDecimalPlaces)
-  return tonumber(string.format("%." .. (numDecimalPlaces or 0) .. "f", num))
-end
 
 function distanceFrom(x1,y1,x2,y2) return math.sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2) end
 
@@ -270,15 +196,8 @@ function PosadiTravu(src)
 		local dist = false
 		for i=1, #Sadnice, 1 do
 			if Sadnice[i] ~= nil then
-				local ObjID = NetworkGetEntityFromNetworkId(Sadnice[i].NetID)
 				if Sadnice[i].ID == src then
 					broj = broj+1
-				end
-				if DoesEntityExist(ObjID) then
-					local kord = GetEntityCoords(ObjID)
-					if distanceFrom(kord.x, kord.y, playerCoords.x, playerCoords.y) < 2.0 then
-						dist = true
-					end
 				end
 			end
 		end
@@ -286,31 +205,19 @@ function PosadiTravu(src)
 		local xSaksija = xPlayer.getInventoryItem('saksija')
 		local xZemlja = xPlayer.getInventoryItem('zemlja')
 		if xSeed.count >= 1 and xSaksija.count >= 1 and xZemlja.count >= 1 then
-			if broj < 20 then
+			if broj < 10 then
 				if dist == false then
 					xPlayer.removeInventoryItem('seed', 1)
 					xPlayer.removeInventoryItem('saksija', 1)
 					xPlayer.removeInventoryItem('zemlja', 1)
-					local mara = "bkr_prop_weed_01_small_01a"
-					local Marih
-					Marih = CreateObjectNoOffset(GetHashKey(mara), playerCoords.x,  playerCoords.y,  playerCoords.z-1.0,true,false)
-					while not DoesEntityExist(Marih) do
-						Wait(100)
-					end
-					local netid = NetworkGetNetworkIdFromEntity(Marih)
 					local xe,ye,ze = table.unpack(playerCoords)
 					local korde = vector3(xe,ye,ze-1.0)
-					table.insert(Sadnice, {ID = src, Objekt = Marih, Stanje = 1, NetID = netid, Koord = korde})
-					TriggerClientEvent("trava:EoTiNetID", -1, netid, korde, 1, src)
-					TriggerClientEvent("trava:PratiRast", src, netid, 1, korde)
+					TriggerClientEvent("trava:SpawnObjekt", -1, korde, 1, src, "bkr_prop_weed_01_small_01a")
+					table.insert(Sadnice, {ID = src, Stanje = 1, Koord = korde})
 					local Temp = {}
 					for i=1, #Sadnice, 1 do
 						if Sadnice[i] ~= nil and Sadnice[i].ID == src then
-							local ObjID = NetworkGetEntityFromNetworkId(Sadnice[i].NetID)
-							if DoesEntityExist(ObjID) then
-								local coord = GetEntityCoords(ObjID)
-								table.insert(Temp, {Stanje = Sadnice[i].Stanje, Koord = coord})
-							end
+							table.insert(Temp, {Stanje = Sadnice[i].Stanje, Koord = Sadnice[i].Koord})
 						end
 					end
 					MySQL.Async.execute('UPDATE users SET sadnice = @sad WHERE identifier = @id', {
@@ -352,46 +259,27 @@ function PosadiTravu2(src, co, stanje)
 	TriggerClientEvent("trava:PratiRast", src, netid, stanje, korda)
 end
 
-function Izrasti(nid, src, stanje) 
+function Izrasti(src, stanje, koord) 
 	local xPlayer = ESX.GetPlayerFromId(src)
-	local novinet = nid
 	local mara
 	if stanje == 2 then
 		mara = "bkr_prop_weed_med_01a"
 	else
 		mara = "bkr_prop_weed_lrg_01a"
 	end
-	local ObjID = NetworkGetEntityFromNetworkId(novinet)
-	local coord = nil
 	for i=1, #Sadnice, 1 do
 		if Sadnice[i] ~= nil then
-			if Sadnice[i].ID == src and Sadnice[i].NetID == novinet then
-				if DoesEntityExist(ObjID) then
-					coord = GetEntityCoords(ObjID)
-					DeleteEntity(ObjID)
+			if Sadnice[i].ID == src and Sadnice[i].Koord == koord then
+				--if DoesEntityExist(ObjID) then
 					Sadnice[i].Stanje = stanje
-					local Marih
-					Marih = CreateObjectNoOffset(GetHashKey(mara), coord.x,  coord.y,  coord.z,true,false)
-					while not DoesEntityExist(Marih) do
-						Wait(100)
-					end
-					Sadnice[i].Objekt = Marih
-					local netid = NetworkGetNetworkIdFromEntity(Marih)
-					Sadnice[i].NetID = netid
-					TriggerClientEvent("trava:PromjeniNetID", -1, novinet, netid, stanje, src)
-					if stanje ~= 3 then
-						TriggerClientEvent("trava:PratiRast", src, netid, stanje, coord)
-					else
+					if stanje == 3 then
 						xPlayer.showNotification("[Marihuana] Stabljika je spremna za branje!")
 					end
+					TriggerClientEvent("trava:SpawnObjekt", -1, koord, stanje, src, mara)
 					local Temp = {}
 					for a=1, #Sadnice, 1 do
 						if Sadnice[a] ~= nil and Sadnice[a].ID == src then
-							local ObjID = NetworkGetEntityFromNetworkId(Sadnice[a].NetID)
-							if DoesEntityExist(ObjID) then
-								local coord = GetEntityCoords(ObjID)
-								table.insert(Temp, {Stanje = stanje, Koord = coord})
-							end
+							table.insert(Temp, {Stanje = stanje, Koord = koord})
 						end
 					end
 					MySQL.Async.execute('UPDATE users SET sadnice = @sad WHERE identifier = @id', {
@@ -399,7 +287,7 @@ function Izrasti(nid, src, stanje)
 						['@id'] = xPlayer.identifier
 					})
 					break
-				end
+				--end
 			end
 		end
 	end

@@ -1,5 +1,4 @@
 RegisterServerEvent('eden_garage:debug')
-RegisterServerEvent('eden_garage:deletevehicle_sv')
 RegisterServerEvent('eden_garage:modifystate')
 RegisterServerEvent('eden_garage:modifystate2')
 RegisterServerEvent('garaza:tuljaniziraj')
@@ -48,7 +47,6 @@ ESX.RegisterServerCallback('eden_garage:stockv',function(source,cb, vehicleProps
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	local vehicules = getPlayerVehicles(xPlayer.getIdentifier())
 	local plate = vehicleProps.plate
-	print(plate)
 	
 		for _,v in pairs(vehicules) do
 			if(plate == plate)then
@@ -59,10 +57,6 @@ ESX.RegisterServerCallback('eden_garage:stockv',function(source,cb, vehicleProps
 			end		
 		end
 	cb(isFound)
-end)
-
-AddEventHandler('eden_garage:deletevehicle_sv', function(vehicle)
-	TriggerClientEvent('eden_garage:deletevehicle_cl', -1, vehicle)
 end)
 
 RegisterNetEvent('garaza:SpawnVozilo')
@@ -97,19 +91,12 @@ AddEventHandler('eden_garage:modifystate', function(vehicle, state)
 	local vehicules = getPlayerVehicles(xPlayer.getIdentifier())
 	local state = state
 	local plate = vehicle.plate
-	print('UPDATING STATE...')
 	if plate ~= nil then
-		print('plate')
 		plate = plate:gsub("^%s*(.-)%s*$", "%1")
-		print(plate)
-	else
-		print('vehicle')
-		print(vehicle)
 	end
 	for _,v in pairs(vehicules) do
 		if v.plate == plate then
 			MySQL.Sync.execute("UPDATE owned_vehicles SET state =@state WHERE plate=@plate",{['@state'] = state , ['@plate'] = plate})
-			print('STATE UPDATED...')
 			break
 		end
 	end
@@ -118,17 +105,10 @@ end)
 AddEventHandler('eden_garage:modifystate2', function(vehicle, state)
 	local state = state
 	local plate = vehicle.plate
-	print('UPDATING STATE...')
 	if plate ~= nil then
-		print('plate')
 		plate = plate:gsub("^%s*(.-)%s*$", "%1")
-		print(plate)
-	else
-		print('vehicle')
-		print(vehicle)
 	end
 	MySQL.Sync.execute("UPDATE owned_vehicles SET state =@state WHERE plate=@plate",{['@state'] = state , ['@plate'] = plate})
-	print('STATE UPDATED...')
 	if state == 2 then
 		MySQL.Async.execute('INSERT INTO ukradeni (tablica, datum) VALUES (@plate, @dat)', {
 			['@plate']   = vehicle.plate,

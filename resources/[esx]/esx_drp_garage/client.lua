@@ -311,53 +311,6 @@ function reparation(prix,vehicle,vehicleProps)
 	)	
 end
 
-RegisterNetEvent('eden_garage:deletevehicle_cl')
-AddEventHandler('eden_garage:deletevehicle_cl', function(plate)
-	local _plate = plate:gsub("^%s*(.-)%s*$", "%1")
-	local playerPed  = GetPlayerPed(-1)
-	if IsPedInAnyVehicle(playerPed,  false) then
-		local playerPed = GetPlayerPed(-1)
-		local coords    = GetEntityCoords(playerPed)
-		local vehicle =GetVehiclePedIsIn(playerPed,false)
-		local vehicleProps  = ESX.Game.GetVehicleProperties(vehicle)
-		local usedPlate = vehicleProps.plate:gsub("^%s*(.-)%s*$", "%1")
-		if usedPlate == _plate then
-			ESX.Game.DeleteVehicle(vehicle)
-			Wait(100)
-			if DoesEntityExist(vehicle) then
-				local entity = vehicle
-				carModel = GetEntityModel(entity)
-				carName = GetDisplayNameFromVehicleModel(carModel)
-				NetworkRequestControlOfEntity(entity)
-				
-				local timeout = 2000
-				while timeout > 0 and not NetworkHasControlOfEntity(entity) do
-					Wait(100)
-					timeout = timeout - 100
-				end
-
-				SetEntityAsMissionEntity(entity, true, true)
-				
-				local timeout = 2000
-				while timeout > 0 and not IsEntityAMissionEntity(entity) do
-					Wait(100)
-					timeout = timeout - 100
-				end
-
-				Citizen.InvokeNative( 0xEA386986E786A54F, Citizen.PointerValueIntInitialized( entity ) )
-				
-				if (DoesEntityExist(entity)) then 
-					DeleteEntity(entity)
-				end 
-			end
-			if this_Garage.Brod ~= nil then
-				SetEntityCoords(PlayerPedId(), this_Garage.Vracanje)
-				this_Garage = {}
-			end
-		end
-	end
-end)
-
 RegisterNetEvent('garaza:ObrisiProslo')
 AddEventHandler('garaza:ObrisiProslo', function()
 	if GarazaV ~= nil and DoesEntityExist(GarazaV) then
@@ -377,10 +330,45 @@ end)
 
 
 function ranger(vehicle,vehicleProps)
-	TriggerServerEvent('eden_garage:deletevehicle_sv', vehicleProps.plate)
+	ObrisiVozilo(vehicle)
 
 	TriggerServerEvent('eden_garage:modifystate', vehicleProps, 1)
 	exports.pNotify:SendNotification({ text = _U('ranger'), queue = "right", timeout = 3000, layout = "centerLeft" })
+end
+
+function ObrisiVozilo(vehicle)
+	ESX.Game.DeleteVehicle(vehicle)
+	Wait(100)
+	if DoesEntityExist(vehicle) then
+		local entity = vehicle
+		carModel = GetEntityModel(entity)
+		carName = GetDisplayNameFromVehicleModel(carModel)
+		NetworkRequestControlOfEntity(entity)
+				
+		local timeout = 2000
+		while timeout > 0 and not NetworkHasControlOfEntity(entity) do
+			Wait(100)
+			timeout = timeout - 100
+		end
+
+		SetEntityAsMissionEntity(entity, true, true)
+				
+		local timeout = 2000
+		while timeout > 0 and not IsEntityAMissionEntity(entity) do
+			Wait(100)
+			timeout = timeout - 100
+		end
+
+		Citizen.InvokeNative( 0xEA386986E786A54F, Citizen.PointerValueIntInitialized( entity ) )
+				
+		if (DoesEntityExist(entity)) then 
+			DeleteEntity(entity)
+		end 
+	end
+	if this_Garage.Brod ~= nil then
+		SetEntityCoords(PlayerPedId(), this_Garage.Vracanje)
+		this_Garage = {}
+	end
 end
 
 -- Function that allows player to enter a vehicle
@@ -406,15 +394,13 @@ function StockVehicleMenu()
 											TriggerServerEvent("garaza:SpremiModel", plate, nil)
 											TriggerEvent("esx_property:ProsljediVozilo", nil, nil)
 											owned = true
-											TriggerServerEvent('eden_garage:debug', "vehicle plate returned to the garage: "  .. vehicleProps.plate)
-											TriggerServerEvent('eden_garage:logging',"vehicle returned to the garage: " .. engineHealth)
 											GarazaV = nil
 											Vblip = nil
 											if engineHealth < 1000 then
 												local fraisRep= math.floor((1000 - engineHealth)*Config.RepairMultiplier)
-												reparation(fraisRep,vehicle,vehicleProps)
+												reparation(fraisRep,current,vehicleProps)
 											else
-												ranger(vehicle,vehicleProps)
+												ranger(current,vehicleProps)
 											end
 										else
 											--TriggerEvent("playradio", "https://www.youtube.com/watch?v=LIDKQmT0dCs")

@@ -53,7 +53,7 @@ AddEventHandler("playerSpawned", function()
 		while ESX.PlayerData.job == nil do
 			Citizen.Wait(100)
 		end
-		TriggerServerEvent("trava:ProvjeriSadnice")
+		--TriggerServerEvent("trava:ProvjeriSadnice")
 		connected = true
 	end
 end)
@@ -273,72 +273,22 @@ function OpenBuyLicenseMenu(licenseName)
 	end)
 end
 
-RegisterNetEvent("trava:EoTiNetID")
-AddEventHandler('trava:EoTiNetID', function(netid,co, stanje, src)
-	table.insert(Sadnice, {NetID = netid, Stanje = stanje, Koord = co, ID = src})
-	table.insert(Travica, {NetID = netid, ID = src, Koord = co})
-end)
-
-RegisterNetEvent("trava:PromjeniNetID")
-AddEventHandler('trava:PromjeniNetID', function(oldnet, newnet, stanje, src)
-	for i=1, #Sadnice, 1 do
-		if Sadnice[i] ~= nil then
-			if Sadnice[i].NetID == oldnet and Sadnice[i].ID == src then
-				Sadnice[i].NetID = newnet
-				for a=1, #Travica, 1 do
-					if Travica[a] ~= nil then
-						if Travica[a].NetID == oldnet then
-							Travica[a].NetID = newnet
-							break
-						end
-					end
-				end
-				if stanje == 3 then
-					table.insert(weedPlants, {NetID = newnet, Koord = Sadnice[i].Koord})
-				end
-				break
-			end
-		end
+RegisterNetEvent("trava:SpawnObjekt")
+AddEventHandler('trava:SpawnObjekt', function(koord, stanje, src, obj)
+	local mara = obj
+	RequestModel(mara)
+	while not HasModelLoaded(mara) do
+		Wait(1)
 	end
-end)
-
-RegisterNetEvent("trava:NoviNetID")
-AddEventHandler('trava:NoviNetID', function(oldnet, newnet, stanje, src)
-	for i=1, #Sadnice, 1 do
-		if Sadnice[i] ~= nil then
-			if Sadnice[i].NetID == oldnet and Sadnice[i].ID == src then
-				Sadnice[i].NetID = newnet
-				for a=1, #Travica, 1 do
-					if Travica[a] ~= nil and Travica[a].ID == src then
-						if Travica[a].NetID == oldnet then
-							Travica[a].NetID = newnet
-							break
-						end
-					end
-				end
-				if stanje == 3 then
-					for g=1, #weedPlants, 1 do
-						local x,y,z = table.unpack(weedPlants[g].Koord)
-						local x2,y2,z2 = table.unpack(Sadnice[i].Koord)
-						if weedPlants[g].NetID == oldnet and round(x, 3) == round(x2, 3) and round(y, 3) == round(y2, 3)and round(z, 3) == round(z2, 3) then
-							table.remove(weedPlants, g)
-							break
-						end
-					end
-					table.insert(weedPlants, {NetID = newnet, Koord = Sadnice[i].Koord})
-				end
-				break
-			end
-		end
-	end
+	local Marih = CreateObjectNoOffset(GetHashKey(mara), koord.x,  koord.y,  koord.z, false, false, false)
+	FreezeEntityPosition(Marih, true)
+	table.insert(Sadnice, {NetID = Marih, Stanje = stanje, Koord = koord, ID = src})
+	table.insert(Travica, {NetID = Marih, ID = src, Koord = koord})
+	TriggerEvent("trava:PratiRast", Marih, stanje, koord)
 end)
 
 RegisterNetEvent("trava:PratiRast")
 AddEventHandler('trava:PratiRast', function(netid, stanje, co)
-	if NetworkDoesEntityExistWithNetworkId(netid) then
-		local ObjID = NetworkGetEntityFromNetworkId(netid)
-		FreezeEntityPosition(ObjID, true)
-	end
 	if stanje == 3 then
 		table.insert(weedPlants, {NetID = netid, Koord = co})
 		ESX.ShowNotification("[Marihuana] Stabljika je spremna za branje!")
@@ -346,8 +296,9 @@ AddEventHandler('trava:PratiRast', function(netid, stanje, co)
 		Citizen.CreateThread(function()
 			local Idic = netid
 			local stanjic = stanje
-			Citizen.Wait(3600000)
-			TriggerServerEvent("trava:Izrasti", Idic, stanjic+1)
+			Citizen.Wait(10000)
+			DeleteEntity(Idic)
+			TriggerServerEvent("trava:Izrasti", stanjic+1, co)
 		end)
 	end
 end)
@@ -362,50 +313,6 @@ AddEventHandler('esx_drugs:Animacija', function()
 	end
 	Wait(10000)
 	ClearPedTasks(PlayerPedId())
-end)
-
-RegisterNetEvent("trava:NemosBrati")
-AddEventHandler('trava:NemosBrati', function(nid, co)
-	for b=1, #weedPlants, 1 do
-		local x,y,z = table.unpack(weedPlants[b].Koord)
-		local x2,y2,z2 = table.unpack(co)
-		if weedPlants[b].NetID == nid and round(x, 3) == round(x2, 3) and round(y, 3) == round(y2, 3)and round(z, 3) == round(z2, 3) then
-			table.remove(weedPlants, b)
-			break
-		end
-	end
-end)
-
-RegisterNetEvent("trava:MakniSadnicu")
-AddEventHandler('trava:MakniSadnicu', function(nid, co)
-	for i=1, #Sadnice, 1 do
-		if Sadnice[i] ~= nil then
-			local x,y,z = table.unpack(Sadnice[i].Koord)
-			local x2,y2,z2 = table.unpack(co)
-			if Sadnice[i].NetID == nid and round(x, 3) == round(x2, 3) and round(y, 3) == round(y2, 3)and round(z, 3) == round(z2, 3) then
-				table.remove(Sadnice, i)
-				break
-			end
-		end
-	end
-	for a=1, #Travica, 1 do
-		if Travica[a] ~= nil then
-			local x,y,z = table.unpack(Travica[a].Koord)
-			local x2,y2,z2 = table.unpack(co)
-			if Travica[a].NetID == nid and round(x, 3) == round(x2, 3) and round(y, 3) == round(y2, 3)and round(z, 3) == round(z2, 3) then
-				table.remove(Travica, a)
-				break
-			end
-		end
-	end
-	for b=1, #weedPlants, 1 do
-		local x,y,z = table.unpack(weedPlants[b].Koord)
-		local x2,y2,z2 = table.unpack(co)
-		if weedPlants[b].NetID == nid and round(x, 3) == round(x2, 3) and round(y, 3) == round(y2, 3)and round(z, 3) == round(z2, 3) then
-			table.remove(weedPlants, b)
-			break
-		end
-	end
 end)
 
 Citizen.CreateThread(function()
@@ -474,26 +381,6 @@ function ProcessWeed()
 	isProcessing = false
 end
 
-function round(num, numDecimalPlaces)
-  return tonumber(string.format("%." .. (numDecimalPlaces or 0) .. "f", num))
-end
-
-RegisterCommand("ispisisadnice", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
-			print("Broj sadnica:"..#Sadnice)
-			for i=1, #Sadnice, 1 do
-				if Sadnice[i] ~= nil then
-					print("Br:"..i)
-					print("NetID:"..Sadnice[i].NetID)
-				end
-			end
-		else
-			ESX.ShowNotification("Nemate pristup ovoj komandi!")
-		end
-	end)
-end, false)
-
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
@@ -504,35 +391,28 @@ Citizen.CreateThread(function()
 		local coords = GetEntityCoords(playerPed)
 		local nearbyObject = nil
 		local nearbyID = nil
-		local Travara = false
 
 		for i=1, #weedPlants, 1 do
-			if NetworkDoesEntityExistWithNetworkId(weedPlants[i].NetID) then
-				local ObjID = NetworkGetEntityFromNetworkId(weedPlants[i].NetID)
-				if IsEntityAnObject(ObjID) and GetEntityModel(ObjID) == GetHashKey("bkr_prop_weed_lrg_01a") then
-					if GetDistanceBetweenCoords(coords, GetEntityCoords(ObjID), false) < 1 then
-						nearbyObject, nearbyID = ObjID, i
-					end
+			local ObjID = weedPlants[i].NetID
+			if IsEntityAnObject(ObjID) and GetEntityModel(ObjID) == GetHashKey("bkr_prop_weed_lrg_01a") then
+				if #(coords-GetEntityCoords(ObjID)) < 2 then
+					nearbyObject, nearbyID = ObjID, i
 				end
 			end
 		end
 		
 		if ESX.PlayerData.job.name == "police" or ESX.PlayerData.job.name == "sipa" then
 			for i=1, #Travica, 1 do
-				if NetworkDoesEntityExistWithNetworkId(Travica[i].NetID) then
-					local ObjID = NetworkGetEntityFromNetworkId(Travica[i].NetID)
-					if IsEntityAnObject(ObjID) and (GetEntityModel(ObjID) == GetHashKey("bkr_prop_weed_lrg_01a") or GetEntityModel(ObjID) == GetHashKey("bkr_prop_weed_med_01a") or GetEntityModel(ObjID) == GetHashKey("bkr_prop_weed_01_small_01a")) then
-						if GetDistanceBetweenCoords(coords, GetEntityCoords(ObjID), false) < 1 then
-							nearbyObject, nearbyID = ObjID, i
-							Travara = true
-						end
+				local ObjID = Travica[i].NetID
+				if IsEntityAnObject(ObjID) and (GetEntityModel(ObjID) == GetHashKey("bkr_prop_weed_lrg_01a") or GetEntityModel(ObjID) == GetHashKey("bkr_prop_weed_med_01a") or GetEntityModel(ObjID) == GetHashKey("bkr_prop_weed_01_small_01a")) then
+					if #(coords-GetEntityCoords(ObjID)) < 2 then
+						nearbyObject, nearbyID = ObjID, i
 					end
 				end
 			end
 		end
 
 		if nearbyObject and IsPedOnFoot(playerPed) and nearbyObject ~= nil then
-			local netid = NetworkGetNetworkIdFromEntity(nearbyObject)
 			local kordara = GetEntityCoords(nearbyObject)
 			local xa,ya,za = table.unpack(kordara)
 			local kordara2 = vector3(xa,ya,za)
@@ -549,28 +429,17 @@ Citizen.CreateThread(function()
 				if ESX.PlayerData.job.name == "police" or ESX.PlayerData.job.name == "sipa" then
 					FreezeEntityPosition(playerPed, true)
 					TaskStartScenarioInPlace(playerPed, 'world_human_gardener_plant', 0, false)
-
 					Citizen.Wait(2000)
 					ClearPedTasks(playerPed)
 					Citizen.Wait(1500)
 					FreezeEntityPosition(playerPed, false)
-			
-					for a=1, #Sadnice, 1 do
-						if Sadnice[a] ~= nil then
-							local x,y,z = table.unpack(Sadnice[a].Koord)
-							local x2,y2,z2 = table.unpack(kordara2)
-							if round(x, 3) == round(x2, 3) and round(y, 3) == round(y2, 3)and round(z, 3) == round(z2, 3) then
-								TriggerServerEvent("trava:ObrisiSadnicu", netid, kordara2)
-								break
-							end
-						end
-					end
+					DeleteEntity(nearbyObject)
 					isPickingUp = false
 				else
 					ESX.TriggerServerCallback('esx_drugs:canPickUp', function(canPickUp)
 
 						if canPickUp then
-							TriggerServerEvent("trava:MakniBranje", netid, kordara2)
+							--TriggerServerEvent("trava:MakniBranje", netid, kordara2)
 							FreezeEntityPosition(playerPed, true)
 							TaskStartScenarioInPlace(playerPed, 'world_human_gardener_plant', 0, false)
 
@@ -579,20 +448,9 @@ Citizen.CreateThread(function()
 							Citizen.Wait(1500)
 							FreezeEntityPosition(playerPed, false)
 			
-							--ESX.Game.DeleteObject(nearbyObject)
+							DeleteEntity(nearbyObject)
 			
 							TriggerServerEvent('esx_drugs:EoTiKanabisa')
-
-							for a=1, #Sadnice, 1 do
-								if Sadnice[a] ~= nil then
-									local x,y,z = table.unpack(Sadnice[a].Koord)
-									local x2,y2,z2 = table.unpack(kordara2)
-									if round(x, 3) == round(x2, 3) and round(y, 3) == round(y2, 3)and round(z, 3) == round(z2, 3) then
-										TriggerServerEvent("trava:ObrisiSadnicu", netid, kordara2)
-										break
-									end
-								end
-							end
 						else
 							ESX.ShowNotification(_U('weed_inventoryfull'))
 						end
