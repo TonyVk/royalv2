@@ -1411,10 +1411,6 @@ function ObrisiVozilo(vehicle)
 			DeleteEntity(entity)
 		end 
 	end
-	if this_Garage.Brod ~= nil then
-		SetEntityCoords(PlayerPedId(), this_Garage.Vracanje)
-		this_Garage = {}
-	end
 end
 
 -- Function that allows player to enter a vehicle
