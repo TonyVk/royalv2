@@ -58,6 +58,7 @@ ESX.RegisterServerCallback('biznis:JelVlasnik', function(source, cb, ime)
 	local src = source
 	local xPlayer = ESX.GetPlayerFromId(src)
 	local naso = false
+	print(ime)
 	for i=1, #Biznisi, 1 do
 		if Biznisi[i] ~= nil and Biznisi[i].Ime == ime and Biznisi[i].Vlasnik ~= nil then
 			if Biznisi[i].Vlasnik == xPlayer.identifier then
@@ -260,16 +261,25 @@ AddEventHandler('biznis:StaviUSef', function(posao, cifra)
 		if Biznisi[i] ~= nil and Biznisi[i].Posao == posao then
 			Biznisi[i].Sef = Biznisi[i].Sef+cifra
 			Biznisi[i].Tjedan = Biznisi[i].Tjedan+cifra
-			MySQL.Async.execute('UPDATE biznisi SET Sef = @se, Tjedan = @tj WHERE Posao = @im', {
-				['@se'] = Biznisi[i].Sef,
-				['@tj'] = Biznisi[i].Tjedan,
-				['@im'] = posao
-			})
-			TriggerClientEvent("biznis:UpdateBiznise", -1, Biznisi)
 			break
 		end
 	end
 end)
+
+function SpremiPare()
+	for i=1, #Biznisi, 1 do
+		if Biznisi[i] ~= nil then
+			MySQL.Async.execute('UPDATE biznisi SET Sef = @se, Tjedan = @tj WHERE Posao = @im', {
+				['@se'] = Biznisi[i].Sef,
+				['@tj'] = Biznisi[i].Tjedan,
+				['@im'] = Biznisi[i].Posao
+			})
+		end
+		Wait(100)
+	end
+	TriggerClientEvent("biznis:UpdateBiznise", -1, Biznisi)
+	SetTimeout(300000, SpremiPare)
+end
 
 function BrisiZaposlenike(d, h, m)
 	if d == 2 then
@@ -287,5 +297,7 @@ function BrisiZaposlenike(d, h, m)
 		end)
 	end
 end
+
+SetTimeout(300000, SpremiPare)
 
 TriggerEvent('cron:runAt', 0, 0, BrisiZaposlenike)

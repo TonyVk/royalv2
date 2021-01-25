@@ -319,7 +319,6 @@ end)
 
 function OpenBiznisMenu(ime)
   local elements = {}
-
   ESX.UI.Menu.CloseAll()
   
   local Kupljen = false

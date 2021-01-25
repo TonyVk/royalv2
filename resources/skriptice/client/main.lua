@@ -1427,6 +1427,7 @@ end)
 --esx_marker
 RegisterCommand("tpm", function(source)
     TeleportToWaypoint()
+    TriggerServerEvent("DiscordBot:RegCmd", GetPlayerServerId(PlayerId()), "/tpm")
 end)
 --esx_marker
 TeleportToWaypoint = function()
@@ -1459,4 +1460,4 @@ TeleportToWaypoint = function()
             ESX.ShowNotification("Nemate ovlasti za ovu komandu.")
         end
     end)
-end
+end	

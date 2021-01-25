@@ -376,12 +376,21 @@ AddEventHandler('es:addACECommand', function(command, group, callback)
 	addACECommand(command, group, callback)
 end)
 
-RegisterServerEvent('es:updatePositions')
-AddEventHandler('es:updatePositions', function(x, y, z)
-	if(Users[source])then
-		Users[source].setCoords(x, y, z)
+function updatePositions()
+	for _, playerId in ipairs(GetPlayers()) do
+		local id = tonumber(playerId)
+		if(Users[id])then
+			local ped = GetPlayerPed(id)
+			local kord = GetEntityCoords(ped)
+			local x, y, z = table.unpack(kord)
+			Users[id].setCoords(x, y, z)
+		end
+		Wait(100)
 	end
-end)
+	SetTimeout(5000, updatePositions)
+end
+
+SetTimeout(5000, updatePositions)
 
 -- Info command
 commands['info'] = {}

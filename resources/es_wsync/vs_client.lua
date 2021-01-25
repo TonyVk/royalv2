@@ -1,6 +1,5 @@
 CurrentWeather = 'CLEAR'
 local lastWeather = CurrentWeather
-local sekunde = 0
 local minute = 0
 local timer = 0
 local sati = 0
@@ -37,16 +36,15 @@ Citizen.CreateThread(function()
 end)
 
 RegisterNetEvent('es_wsync:updateTime')
-AddEventHandler('es_wsync:updateTime', function(s, m, se)
+AddEventHandler('es_wsync:updateTime', function(s, m)
 	sati = s
 	minute = m
-	sekunde = se
 end)
 
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
-		NetworkOverrideClockTime(sati, minute, sekunde)
+		NetworkOverrideClockTime(sati, minute, 0)
 	end
 end)
 

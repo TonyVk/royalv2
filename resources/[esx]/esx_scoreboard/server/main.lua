@@ -42,7 +42,7 @@ end)
 
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(5000)
+		Citizen.Wait(15000)
 		UpdatePing()
 	end
 end)

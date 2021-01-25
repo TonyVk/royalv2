@@ -1061,7 +1061,7 @@ AddEventHandler('prodajoruzje:PosaljiRadio', function(odg, ime, posao)
 					})
 				else
 					TriggerEvent('chat:addMessage', {
-								template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(0, 51, 204, 0.6); border-radius: 3px;"><i class="fas fa-info-circle"></i>[Novinari] {0}:<br> {1}</div>',
+								template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(0, 51, 204, 0.6); border-radius: 3px;"><i class="fas fa-info-circle"></i>[Mehanicari] {0}:<br> {1}</div>',
 								args = { ime, odg }
 					})
 				end

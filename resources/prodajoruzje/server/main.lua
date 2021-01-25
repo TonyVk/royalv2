@@ -17,16 +17,6 @@ AddEventHandler('prodajoruzje:PosaljiAdmOdgovor', function(id, odg)
 	end
 end)
 
-AddEventHandler('startProjectileEvent', function(sender, data)
-	print("startProjectileEvent")
-	print(json.encode(data))
-end)
-
-AddEventHandler('explosionEvent', function(sender, ev)
-	print("explosionEvent")
-	print(json.encode(ev))
-end)
-
 RegisterNetEvent("prodajoruzje:TestSkinaa")
 AddEventHandler('prodajoruzje:TestSkinaa', function(id)
 	TriggerClientEvent("prodajoruzje:TestSkina", id)
@@ -63,6 +53,14 @@ ESX.RegisterUsableItem("petarde", function(source)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	xPlayer.removeInventoryItem("petarde", 1)
+	TriggerClientEvent('prodajoruzje:petarde', _source)
+end)
+
+
+ESX.RegisterUsableItem("petarda", function(source)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	xPlayer.removeInventoryItem("petarda", 1)
 	TriggerClientEvent('prodajoruzje:petarde', _source)
 end)
 
@@ -253,7 +251,7 @@ end, false)
 RegisterCommand("r", function(source, args, rawCommandString)
 	local br = 0
 	local targetXPlayer = ESX.GetPlayerFromId(source)
-	if targetXPlayer.job.name == 'police' or targetXPlayer.job.name == 'reporter' then
+	if targetXPlayer.job.name == 'police' or targetXPlayer.job.name == 'mechanic' then
 		br = 1
 	end
 	if br == 1 then

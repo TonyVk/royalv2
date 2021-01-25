@@ -27,12 +27,11 @@ local blackout = false
 local newWeatherTimer = 10
 local sati = 8
 local minute = 0
-local sekunde = 0
 
 RegisterServerEvent('es_wsync:requestSync')
 AddEventHandler('es_wsync:requestSync', function()
 	TriggerClientEvent('es_wsync:updateWeather', -1, CurrentWeather, blackout)
-	TriggerClientEvent('es_wsync:updateTime', -1, sati, minute, sekunde)
+	TriggerClientEvent('es_wsync:updateTime', -1, sati, minute)
 end)
 
 RegisterServerEvent('es_wsync:freeze_time')
@@ -225,7 +224,7 @@ TriggerEvent('es:addGroupCommand', 'timenow', 'admin', function(source, args, us
 		end)
 	end)
 	if Vrati == 1 then
-		TriggerClientEvent('esx:showNotification', source, 'Sada je: ~y~' .. sati..":"..minute..":"..sekunde .. "~s~!")
+		TriggerClientEvent('esx:showNotification', source, 'Sada je: ~y~' .. sati..":"..minute.."~s~!")
 	else
 		TriggerClientEvent('chatMessage', source, '', {255,255,255}, '^8Greska: ^1Niste admin!')
 	end
@@ -311,21 +310,17 @@ end)
 
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(1000)
-		if sekunde < 60 then
-			sekunde = sekunde+1
-		else
-			sekunde = 0
+		Citizen.Wait(60000)
+		if minute < 60 then
 			minute = minute+1
-			if minute == 60 then
-				minute = 0
-				sati = sati+1
-				if sati == 24 then
-					sati = 0
-				end
+		else
+			minute = 0
+			sati = sati+1
+			if sati == 24 then
+				sati = 0
 			end
 		end
-		TriggerClientEvent('es_wsync:updateTime', -1, sati, minute, sekunde)
+		TriggerClientEvent('es_wsync:updateTime', -1, sati, minute)
 	end
 end)
 

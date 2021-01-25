@@ -30,6 +30,7 @@ end)
 
 local spojen = false
 AddEventHandler("playerSpawned", function()
+	Wait(2000)
 	if not spojen then
 		UcitajBlipove()
 		ESX.TriggerServerCallback('esx_lov:JelULovu', function(jelje)
@@ -190,6 +191,7 @@ function PokreniLov()
 	else
 		ESX.TriggerServerCallback('esx_lov:ImasLiLove', function(imal)
 			if imal then
+				ESX.UI.Menu.CloseAll()
 				Lovis = true
 				TriggerServerEvent("esx_lov:ULovu", 1)
 				TriggerEvent("esx:ZabraniInv", true)
