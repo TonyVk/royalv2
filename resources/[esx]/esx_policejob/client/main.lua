@@ -552,6 +552,11 @@ function OpenCloakroomMenu()
 							msg      = _U('service_out_announce', GetPlayerName(PlayerId())),
 							iconType = 1
 						}
+						
+						exports["rp-radio"]:SetRadio(false)
+						exports["rp-radio"]:RemovePlayerAccessToFrequency(1)
+						exports["rp-radio"]:RemovePlayerAccessToFrequency(2)
+						exports["rp-radio"]:RemovePlayerAccessToFrequency(6)
 
 						TriggerServerEvent('esx_service:notifyAllInService', notification, 'police')
 
@@ -588,6 +593,10 @@ function OpenCloakroomMenu()
 							UpaliBlip()
 							TriggerEvent('esx_policejob:updateBlip')
 							ESX.ShowNotification(_U('service_in'))
+							exports["rp-radio"]:SetRadio(true)
+							exports["rp-radio"]:GivePlayerAccessToFrequency(1)
+							exports["rp-radio"]:GivePlayerAccessToFrequency(2)
+							exports["rp-radio"]:GivePlayerAccessToFrequency(6)
 						end
 					end, 'police')
 

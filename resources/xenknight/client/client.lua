@@ -350,8 +350,15 @@ RegisterNetEvent("xenknight:acceptCall")
 AddEventHandler("xenknight:acceptCall", function(infoCall, initiator)
   if inCall == false and USE_RTC == false then
     inCall = true
-    NetworkSetVoiceChannel(infoCall.id + 1)
-    NetworkSetTalkerProximity(0.0)
+	if Config.UseMumbleVoIP then
+      exports["mumble-voip"]:SetCallChannel(infoCall.id+1)
+    elseif Config.UseTokoVoIP then
+      exports.tokovoip_script:addPlayerToRadio(infoCall.id + 120)
+      TokoVoipID = infoCall.id + 120
+    else
+		NetworkSetVoiceChannel(infoCall.id + 1)
+		NetworkSetTalkerProximity(0.0)
+	end
   end
   if menuIsOpen == false then 
     TooglePhone()
@@ -364,8 +371,15 @@ RegisterNetEvent("xenknight:rejectCall")
 AddEventHandler("xenknight:rejectCall", function(infoCall)
   if inCall == true then
     inCall = false
-    Citizen.InvokeNative(0xE036A705F989E049)
-    NetworkSetTalkerProximity(2.5)
+	if Config.UseMumbleVoIP then
+      exports["mumble-voip"]:SetCallChannel(0)
+    elseif Config.UseTokoVoIP then
+      exports.tokovoip_script:removePlayerFromRadio(TokoVoipID)
+      TokoVoipID = nil
+    else
+		Citizen.InvokeNative(0xE036A705F989E049)
+		NetworkSetTalkerProximity(2.5)
+	end
   end
   hasPhone(function (hasPhone)
 	if hasPhone == true then

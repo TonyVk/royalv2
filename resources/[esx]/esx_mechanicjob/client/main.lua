@@ -254,11 +254,15 @@ function OpenMechanicActionsMenu()
 			local grade = ESX.PlayerData.job.grade_name
 			local val = grade.."_wear"
 			setUniform(val, PlayerPedId())
+			exports["rp-radio"]:SetRadio(true)
+			exports["rp-radio"]:GivePlayerAccessToFrequency(4)
 		elseif data.current.value == 'cloakroom2' then
 			menu.close()
 			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
 				TriggerEvent('skinchanger:loadSkin', skin)
 			end)
+			exports["rp-radio"]:SetRadio(false)
+			exports["rp-radio"]:RemovePlayerAccessToFrequency(4)
 			PostavioEUP = false
 		elseif data.current.value == 'put_stock' then
 			OpenPutStocksMenu()

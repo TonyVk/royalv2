@@ -338,7 +338,7 @@ Citizen.CreateThread(function()
 			SetCamCoord(cam,  nextCamLocation.x,  nextCamLocation.y,  nextCamLocation.z)
 			PointCamAtEntity(cam,  targetPed)
 			SetEntityCoords(playerPed,  coords.x, coords.y, coords.z - 5)
-			NetworkSetTalkerProximity(19.0)
+			--NetworkSetTalkerProximity(19.0)
 
 			if IsControlPressed(2, 47) then
 			OpenAdminActionMenu(targetPlayerId)

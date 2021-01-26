@@ -509,8 +509,14 @@ function OpenCloakroomMenu()
 			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 				TriggerEvent('skinchanger:loadSkin', skin)
 			end)
+			exports["rp-radio"]:SetRadio(false)
+			exports["rp-radio"]:RemovePlayerAccessToFrequency(6)
+			exports["rp-radio"]:RemovePlayerAccessToFrequency(3)
 		else
 			setUniform(data.current.value, PlayerPedId())
+			exports["rp-radio"]:SetRadio(true)
+			exports["rp-radio"]:GivePlayerAccessToFrequency(6)
+			exports["rp-radio"]:GivePlayerAccessToFrequency(3)
 		end
 
 		menu.close()
