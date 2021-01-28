@@ -561,7 +561,6 @@ function OpenCloakroomMenu()
 						TriggerServerEvent('esx_service:notifyAllInService', notification, 'police')
 
 						TriggerServerEvent('esx_service:disableService', 'police')
-						--TriggerEvent('esx_policejob:updateBlip')
 						ESX.ShowNotification(_U('service_out'))
 						RemoveAllPedWeapons(PlayerId(), false)
 					end
@@ -590,8 +589,6 @@ function OpenCloakroomMenu()
 							}
 
 							TriggerServerEvent('esx_service:notifyAllInService', notification, 'police')
-							--UpaliBlip()
-							--TriggerEvent('esx_policejob:updateBlip')
 							ESX.ShowNotification(_U('service_in'))
 							exports["rp-radio"]:SetRadio(true)
 							exports["rp-radio"]:GivePlayerAccessToFrequency(1)
@@ -655,15 +652,6 @@ function OpenCloakroomMenu()
 		CurrentAction     = 'menu_cloakroom'
 		CurrentActionMsg  = _U('open_cloackroom')
 		CurrentActionData = {}
-	end)
-end
-
-function UpaliBlip()
-	Citizen.CreateThread(function()
-		while playerInService do
-			Citizen.Wait(5000)
-			TriggerEvent('esx_policejob:updateBlip')
-		end
 	end)
 end
 
@@ -1874,9 +1862,6 @@ end
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
 	PlayerData.job = job
-
-	Citizen.Wait(5000)
-	TriggerServerEvent('esx_policejob:forceBlip')
 end)
 
 RegisterNetEvent('esx_phone:loaded')
@@ -2677,49 +2662,9 @@ function createBlip(id)
 	end
 end
 
-RegisterNetEvent('esx_policejob:updateBlip')
-AddEventHandler('esx_policejob:updateBlip', function()
-
-	-- Refresh all blips
-	for k, existingBlip in pairs(blipsCops) do
-		RemoveBlip(existingBlip)
-	end
-
-	-- Clean the blip table
-	blipsCops = {}
-
-	-- Enable blip?
-	if Config.MaxInService ~= -1 and not playerInService then
-		return
-	end
-
-	if not Config.EnableJobBlip then
-		return
-	end
-
-	-- Is the player a cop? In that case show all the blips for other cops
-	if PlayerData.job and PlayerData.job.name == 'police' then
-		ESX.TriggerServerCallback('esx_society:getOnlinePlayers', function(players)
-			for i=1, #players, 1 do
-				if players[i].job.name == 'police' or players[i].job.name == 'sipa' then
-					local id = GetPlayerFromServerId(players[i].source)
-					if NetworkIsPlayerActive(id) and GetPlayerPed(id) ~= PlayerPedId() then
-						createBlip(id)
-					end
-				end
-			end
-		end)
-	end
-
-end)
-
 AddEventHandler('playerSpawned', function(spawn)
 	isDead = false
 	TriggerEvent('esx_policejob:unrestrain')
-
-	if not hasAlreadyJoined then
-		TriggerServerEvent('esx_policejob:spawned')
-	end
 	hasAlreadyJoined = true
 end)
 

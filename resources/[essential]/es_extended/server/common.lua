@@ -113,7 +113,6 @@ RegisterServerEvent('esx:triggerServerCallback')
 AddEventHandler('esx:triggerServerCallback', function(name, requestId, ...)
 	local _source = source
 	ESX.TriggerServerCallback(name, requestID, _source, function(...)
-		print("CallbacK:"..name)
 		TriggerClientEvent('esx:serverCallback', _source, requestId, ...)
 	end, ...)
 end)

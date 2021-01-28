@@ -667,45 +667,6 @@ ESX.RegisterServerCallback('esx_policejob:getPlayerInventory', function(source, 
 	cb( { items = items } )
 end)
 
-AddEventHandler('playerDropped', function()
-	-- Save the source in case we lose it (which happens a lot)
-	local _source = source
-
-	-- Did the player ever join?
-	if _source ~= nil then
-		local xPlayer = ESX.GetPlayerFromId(_source)
-
-		-- Is it worth telling all clients to refresh?
-		if xPlayer ~= nil and xPlayer.job ~= nil and xPlayer.job.name == 'police' then
-			Citizen.Wait(5000)
-			TriggerClientEvent('esx_policejob:updateBlip', -1)
-		end
-	end
-end)
-
-RegisterServerEvent('esx_policejob:spawned')
-AddEventHandler('esx_policejob:spawned', function()
-	local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
-
-	if xPlayer ~= nil and xPlayer.job ~= nil and xPlayer.job.name == 'police' then
-		Citizen.Wait(5000)
-		TriggerClientEvent('esx_policejob:updateBlip', -1)
-	end
-end)
-
-RegisterServerEvent('esx_policejob:forceBlip')
-AddEventHandler('esx_policejob:forceBlip', function()
-	TriggerClientEvent('esx_policejob:updateBlip', -1)
-end)
-
-AddEventHandler('onResourceStart', function(resource)
-	if resource == GetCurrentResourceName() then
-		Citizen.Wait(5000)
-		TriggerClientEvent('esx_policejob:updateBlip', -1)
-	end
-end)
-
 AddEventHandler('onResourceStop', function(resource)
 	if resource == GetCurrentResourceName() then
 		TriggerEvent('esx_phone:removeNumber', 'police')

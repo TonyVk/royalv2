@@ -292,14 +292,12 @@ function OpenRecruitMenu(society)
 		local elements = {}
 
 		for i=1, #players, 1 do
-			if players[i].job.name ~= society then
-				table.insert(elements, {
-					label = players[i].name,
-					value = players[i].source,
-					name = players[i].name,
-					identifier = players[i].identifier
-				})
-			end
+			table.insert(elements, {
+				label = players[i].name,
+				value = players[i].source,
+				name = players[i].name,
+				identifier = players[i].identifier
+			})
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'recruit_' .. society, {
@@ -333,7 +331,7 @@ function OpenRecruitMenu(society)
 			menu.close()
 		end)
 
-	end)
+	end, society)
 
 end
 

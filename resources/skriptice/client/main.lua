@@ -152,7 +152,7 @@ Citizen.CreateThread(function()
 		end)
 
         --It updates every one minute just in case.
-		Citizen.Wait(60000)
+		Citizen.Wait(300000)
 	end
 end)
 

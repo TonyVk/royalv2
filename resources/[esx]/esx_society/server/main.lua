@@ -338,20 +338,22 @@ ESX.RegisterServerCallback('esx_society:setJobSalary', function(source, cb, job,
 	end
 end)
 
-ESX.RegisterServerCallback('esx_society:getOnlinePlayers', function(source, cb)
+ESX.RegisterServerCallback('esx_society:getOnlinePlayers', function(source, cb, job)
 	local xPlayers = ESX.GetPlayers()
 	local players  = {}
 
 	for i=1, #xPlayers, 1 do
 		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
-		table.insert(players, {
-			source     = xPlayer.source,
-			identifier = xPlayer.identifier,
-			name       = xPlayer.name,
-			job        = xPlayer.job
-		})
+		if xPlayer.job.name ~= job then
+			table.insert(players, {
+				source     = xPlayer.source,
+				identifier = xPlayer.identifier,
+				name       = xPlayer.name,
+				job        = xPlayer.job
+			})
+		end
+		Wait(100)
 	end
-
 	cb(players)
 end)
 
