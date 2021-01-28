@@ -405,7 +405,7 @@ AddEventHandler('xenknight:internal_startCall', function(source, phone_number, r
 				local xPlayer = ESX.GetPlayerFromId(sourcePlayer)
 				local tPlayer = ESX.GetPlayerFromId(srcTo)
 				local item = tPlayer.getInventoryItem("mobitel")
-				if item == nil and item.count <= 0 then
+				if item == nil or item.count <= 0 then
 					xPlayer.showNotification("Birani korisnik je ugasio svoj uređaj!")
 					return
 				end

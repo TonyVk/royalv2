@@ -60,6 +60,7 @@ function YellowPostPages (phone_number, firstname, lastname, message, sourcePlay
 			pages.firstname = "Anonimno"
 			pages.lastname = ""
 		end
+		table.remove(Oglasi, #Oglasi)
         TriggerClientEvent('xenknight:yellow_newPagess', -1, pages)
       end)
     end)
