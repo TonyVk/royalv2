@@ -561,7 +561,7 @@ function OpenCloakroomMenu()
 						TriggerServerEvent('esx_service:notifyAllInService', notification, 'police')
 
 						TriggerServerEvent('esx_service:disableService', 'police')
-						TriggerEvent('esx_policejob:updateBlip')
+						--TriggerEvent('esx_policejob:updateBlip')
 						ESX.ShowNotification(_U('service_out'))
 						RemoveAllPedWeapons(PlayerId(), false)
 					end
@@ -590,8 +590,8 @@ function OpenCloakroomMenu()
 							}
 
 							TriggerServerEvent('esx_service:notifyAllInService', notification, 'police')
-							UpaliBlip()
-							TriggerEvent('esx_policejob:updateBlip')
+							--UpaliBlip()
+							--TriggerEvent('esx_policejob:updateBlip')
 							ESX.ShowNotification(_U('service_in'))
 							exports["rp-radio"]:SetRadio(true)
 							exports["rp-radio"]:GivePlayerAccessToFrequency(1)
