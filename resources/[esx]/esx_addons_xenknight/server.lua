@@ -73,6 +73,7 @@ RegisterServerEvent('xenknight:sendMessage')
 AddEventHandler('xenknight:sendMessage', function(number, message)
     local sourcePlayer = tonumber(source)
     if PhoneNumbers[number] ~= nil then
+	  print(number)
       getPhoneNumber(source, function (phone) 
         notifyAlertSMS(number, {
           message = message,
@@ -86,6 +87,7 @@ RegisterServerEvent('esx_addons_gcphone:startCall')
 AddEventHandler('esx_addons_gcphone:startCall', function (number, message, coords)
   local source = source
   if PhoneNumbers[number] ~= nil then
+    print(number)
     getPhoneNumber(source, function (phone) 
       notifyAlertSMS(number, {
         message = message,

@@ -1,0 +1,163 @@
+ESX = nil
+
+local Zone = {}
+local Mafije = {}
+local BrZone = 1
+
+TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+
+MySQL.ready(function()
+	UcitajZone()
+end)
+
+RegisterServerEvent('zone:DodajZonu')
+AddEventHandler('zone:DodajZonu', function(koord, vel, rot)
+	local str = "zona"..BrZone
+	BrZone = BrZone+1
+	table.insert(Zone, {ID = nil, Ime = str, Koord = koord, Velicina = vel, Rotacija = rot, Boja = 0, Vlasnik = nil})
+	TriggerClientEvent("zone:SpawnZonu", -1, str, koord, vel, rot)
+	MySQL.Async.fetchScalar('SELECT idzone FROM zpostavke', {}, function(result)
+		if result == nil then
+			MySQL.Async.execute('INSERT INTO zpostavke (idzone, mafije, vrijeme) VALUES (@id, "{}", 1)',{
+				['@id'] = BrZone
+			})
+		else
+			MySQL.Async.execute('UPDATE zpostavke SET idzone = @id',{
+				['@id'] = BrZone
+			})
+		end
+    end)
+	MySQL.Async.execute('INSERT INTO zone (ime, koord, velicina, rotacija) VALUES (@ime, @koord, @vel, @rot)',{
+		['@ime'] = str,
+		['@koord'] = json.encode(koord),
+		['@vel'] = vel,
+		['@rot'] = rot
+	})
+end)
+
+RegisterServerEvent('zone:DodajMafiju')
+AddEventHandler('zone:DodajMafiju', function(ime, boja)
+	table.insert(Mafije, {Ime = ime, Boja = boja})
+	TriggerClientEvent("zone:DodajMafiju", -1, ime, boja)
+	MySQL.Async.fetchScalar('SELECT idzone FROM zpostavke', {}, function(result)
+		if result == nil then
+			MySQL.Async.execute('INSERT INTO zpostavke (idzone, mafije, vrijeme) VALUES (1, @maf, 1)',{
+				['@maf'] = json.encode(Mafije)
+			})
+		else
+			MySQL.Async.execute('UPDATE zpostavke SET mafije = @maf',{
+				['@maf'] = json.encode(Mafije)
+			})
+		end
+    end)
+end)
+
+RegisterServerEvent('zone:UrediVrijeme')
+AddEventHandler('zone:UrediVrijeme', function(br)
+	MySQL.Async.fetchScalar('SELECT idzone FROM zpostavke', {}, function(result)
+		if result == nil then
+			MySQL.Async.execute('INSERT INTO zpostavke (idzone, mafije, vrijeme) VALUES (1, "{}", @vr)',{
+				['@vr'] = br
+			})
+		else
+			MySQL.Async.execute('UPDATE zpostavke SET vrijeme = @vr',{
+				['@vr'] = br
+			})
+		end
+    end)
+end)
+
+RegisterServerEvent('zone:UpdateBoju')
+AddEventHandler('zone:UpdateBoju', function(ime, boja, maf)
+	for i=1, #Zone, 1 do
+		if Zone[i].Ime == ime then
+			Zone[i].Boja = boja
+			Zone[i].Vlasnik = maf
+			break
+		end
+	end
+	TriggerClientEvent("zone:UpdateBoju", -1, ime, boja, maf)
+	MySQL.Async.execute('UPDATE zone SET boja = @boja, vlasnik = @maf WHERE ime = @ime',{
+		['@ime'] = ime,
+		['@boja'] = boja,
+		['@maf'] = maf
+	})
+end)
+
+RegisterServerEvent('zone:Premjesti')
+AddEventHandler('zone:Premjesti', function(ime, koord, rot)
+	for i=1, #Zone, 1 do
+		if Zone[i].Ime == ime then
+			Zone[i].Koord = koord
+			Zone[i].Rotacija = rot
+			break
+		end
+	end
+	TriggerClientEvent("zone:UpdateZonu", -1, ime, koord, rot)
+	MySQL.Async.execute('UPDATE zone SET koord = @koord, rotacija = @rot WHERE ime = @ime',{
+		['@ime'] = ime,
+		['@koord'] = json.encode(koord),
+		['@rot'] = rot
+	})
+end)
+
+RegisterServerEvent('zone:Obrisi')
+AddEventHandler('zone:Obrisi', function(ime)
+	for i=1, #Zone, 1 do
+		if Zone[i].Ime == ime then
+			table.remove(Zone, i)
+			break
+		end
+	end
+	TriggerClientEvent("zone:ObrisiZonu", -1, ime)
+	MySQL.Async.execute('DELETE FROM zone WHERE ime = @ime',{
+		['@ime'] = ime
+	})
+end)
+
+RegisterServerEvent('zone:ObrisiMafiju')
+AddEventHandler('zone:ObrisiMafiju', function(ime)
+	for i=1, #Mafije, 1 do
+		if Mafije[i].Ime == ime then
+			table.remove(Mafije, i)
+			break
+		end
+	end
+	TriggerClientEvent("zone:ObrisiMafiju", -1, ime)
+	MySQL.Async.execute('UPDATE zpostavke SET mafije = @maf',{
+		['@maf'] = json.encode(Mafije)
+	})
+end)
+
+function UcitajZone()
+	Zone = {}
+	Mafije = {}
+	local postavke = MySQL.Sync.fetchAll('SELECT * FROM zpostavke', {})
+    for i=1, #postavke, 1 do
+		BrZone = postavke[i].idzone
+		local data = json.decode(postavke[i].mafije)
+		if data ~= nil then
+			for a=1, #data do
+				table.insert(Mafije, {Ime = data[a].Ime, Boja = data[a].Boja})
+				TriggerClientEvent("zone:DodajMafiju", -1, data[a].Ime)
+			end
+		end
+    end
+	MySQL.Async.fetchAll(
+      'SELECT * FROM zone',
+      {},
+      function(result)
+        for i=1, #result, 1 do
+			local tabla = json.decode(result[i].koord)
+			local a = vector3(tabla.x, tabla.y, tabla.z)
+			table.insert(Zone, {ID = nil, Ime = result[i].ime, Koord = a, Velicina = result[i].velicina, Rotacija = result[i].rotacija, Boja = result[i].boja, Vlasnik = result[i].vlasnik})
+			TriggerClientEvent("zone:SpawnZonu", -1, result[i].ime, a, result[i].velicina, result[i].rotacija)
+        end
+      end
+    )
+end
+
+ESX.RegisterServerCallback('zone:DohvatiZone', function(source, cb)
+	local vracaj = {zone = Zone, maf = Mafije}
+	cb(vracaj)
+end)

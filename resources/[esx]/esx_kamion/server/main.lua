@@ -8,8 +8,8 @@ AddEventHandler('kamiooon:platituljanu', function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	if xPlayer.job.name == "kamion" then
-		xPlayer.addMoney(1150)
-		TriggerEvent("biznis:StaviUSef", "kamion", math.ceil(1150*0.30))
+		xPlayer.addMoney(1450)
+		TriggerEvent("biznis:StaviUSef", "kamion", math.ceil(1450*0.30))
 	end
 end)
 
