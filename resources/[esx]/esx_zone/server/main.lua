@@ -317,19 +317,24 @@ ESX.RegisterServerCallback('zone:DohvatiZone', function(source, cb)
 	cb(vracaj)
 end)
 
+local brojcic = 0
 function Odbrojavaj()
-	for i=1, #Zone, 1 do
-		if Zone[i] ~= nil and Zone[i].Vrijeme > 0 then
-			Zone[i].Vrijeme = Zone[i].Vrijeme-1
-			MySQL.Async.execute('UPDATE zone SET vrijeme = @vr WHERE ime = @ime',{
-				['@ime'] = Zone[i].Ime,
-				['@vr'] = Zone[i].Vrijeme
-			})
-			TriggerClientEvent("zone:SmanjiVrijeme", -1, Zone[i].Ime, Zone[i].Vrijeme)
+	brojcic = brojcic+1
+	if brojcic == 6 then
+		brojcic = 0
+		for i=1, #Zone, 1 do
+			if Zone[i] ~= nil and Zone[i].Vrijeme > 0 then
+				Zone[i].Vrijeme = Zone[i].Vrijeme-1
+				MySQL.Async.execute('UPDATE zone SET vrijeme = @vr WHERE ime = @ime',{
+					['@ime'] = Zone[i].Ime,
+					['@vr'] = Zone[i].Vrijeme
+				})
+				TriggerClientEvent("zone:SmanjiVrijeme", -1, Zone[i].Ime, Zone[i].Vrijeme)
+			end
+			Wait(100)
 		end
-		Wait(100)
 	end
-	SetTimeout(60000, Odbrojavaj)
+	SetTimeout(600000, Odbrojavaj)
 end
 
-SetTimeout(60000, Odbrojavaj)
+SetTimeout(600000, Odbrojavaj)
