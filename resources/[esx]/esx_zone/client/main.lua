@@ -111,7 +111,7 @@ end)
 
 RegisterNetEvent("zone:SpawnZonu")
 AddEventHandler('zone:SpawnZonu', function(ime, koord, vel, rot)
-	table.insert(Zone, {ID = nil, Ime = ime, Koord = koord, Velicina = vel, Rotacija = rot})
+	table.insert(Zone, {ID = nil, Ime = ime, Koord = koord, Velicina = vel, Rotacija = rot, Boja = 0, Vlasnik = nil, Label = nil, Vrijeme = 0, Vrijednost = 30000})
 	if PlayerData.job ~= nil then
 		SpawnBlipove()
 	end
