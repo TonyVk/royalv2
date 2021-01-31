@@ -8,29 +8,11 @@ local LastEntity                = nil
 local CurrentAction             = nil
 local CurrentActionMsg          = ''
 local CurrentActionData         = {}
-local IsHandcuffed              = false
-local IsDragged                 = false
-local CopPed                    = 0
-local SpawnajDropMarker 		= false
-local DropCoord
-local PokupioCrate 				= false
-local DostavaBlip 				= nil
-local ZatrazioOruzje = {}
-local ZOBr = 0
-local BVozilo 					= nil
-local Rankovi = {}
-local Koord = {}
-local Vozila = {}
-local Oruzja = {}
-local Blipovi = {}
-local Boje = {}
-local OruzarnicaMenu = false
-local Vratio = nil
-local GarazaV 					= nil
-local Vblip 					= nil
 local Zone						= {}
 local Mafije 					= {}
 local Mere 						= false
+local Osvajam 					= Config.VrijemeZauzimanja --minute do osvajanja
+local Zauzima					= false
 
 ESX                             = nil
 GUI.Time                        = 0
@@ -105,6 +87,18 @@ AddEventHandler('zone:DodajMafiju', function(ime, boja)
 	end
 end)
 
+RegisterNetEvent("zone:SmanjiVrijeme")
+AddEventHandler('zone:SmanjiVrijeme', function(ime, vrijeme)
+	for i=1, #Zone, 1 do
+		if Zone[i] ~= nil then
+			if Zone[i].Ime == ime then
+				Zone[i].Vrijeme = vrijeme
+				break
+			end
+		end
+	end
+end)
+
 RegisterNetEvent("zone:UpdateZonu")
 AddEventHandler('zone:UpdateZonu', function(ime, koord, rot)
 	for i=1, #Zone, 1 do
@@ -122,6 +116,26 @@ AddEventHandler('zone:UpdateZonu', function(ime, koord, rot)
 				if naso then
 					SetBlipRotation(Zone[i].ID, rot)
 					SetBlipCoords(Zone[i].ID, koord.x, koord.y, koord.z)
+				end
+				break
+			end
+		end
+	end
+end)
+
+RegisterNetEvent("zone:NapadnutaZona")
+AddEventHandler('zone:NapadnutaZona', function(ime, br, vr)
+	for i=1, #Zone, 1 do
+		if Zone[i] ~= nil then
+			if Zone[i].Ime == ime then
+				if br then
+					SetBlipFlashes(Zone[i].ID, true)
+					if Zone[i].Vlasnik == PlayerData.job.name then
+						ESX.ShowNotification("[Teritoriji] Vas teritorij je napadnut!")
+					end
+				else
+					SetBlipFlashes(Zone[i].ID, false)
+					Zone[i].Vrijeme = vr
 				end
 				break
 			end
@@ -411,7 +425,7 @@ AddEventHandler('esx:setJob', function(job)
 					local a = tonumber(Zone[i].Velicina)+0.0
 					local VBlip = AddBlipForArea(Zone[i].Koord.x, Zone[i].Koord.y, Zone[i].Koord.z, a, a)
 					SetBlipRotation(VBlip, Zone[i].Rotacija)
-					SetBlipColour (VBlip, 0)
+					SetBlipColour (VBlip, Zone[i].Boja)
 					SetBlipAlpha(VBlip, 115)
 					SetBlipAsShortRange(VBlip, true)
 					SetBlipDisplay(VBlip, 8)
@@ -444,7 +458,7 @@ Citizen.CreateThread(function()
 			for i=1, #Zone, 1 do
 				if Zone[i] ~= nil then
 					local korda = GetEntityCoords(PlayerPedId())
-					if #(korda-Zone[i].Koord)  <= tonumber(Zone[i].Velicina)/2 then
+					if #(korda-Zone[i].Koord) <= tonumber(Zone[i].Velicina)/2 then
 						SetBlipDisplay(Zone[i].ID, 8)
 					else
 						SetBlipDisplay(Zone[i].ID, 3)
@@ -462,7 +476,6 @@ AddEventHandler('zone:hasEnteredMarker', function(station, part, partNum)
     CurrentAction     = 'Zona'
     CurrentActionMsg  = "Pritisnite E da zapocnete sa osvajanjem zone"
     CurrentActionData = {zona = partNum}
-	print(partNum)
   end
 end)
 
@@ -488,16 +501,56 @@ Citizen.CreateThread(function()
 
 		  if IsControlPressed(0,  38) and (GetGameTimer() - GUI.Time) > 150 then
 			if CurrentAction == 'Zona' then
-				local boja = 0
-				for i=1, #Mafije, 1 do
-					if PlayerData.job.name == Mafije[i].Ime then
-						boja = Mafije[i].Boja
-						break
-					end
-				end
-				ESX.ShowNotification("Weee osvojili ste teritorij!")
 				local id = CurrentActionData.zona
-				TriggerServerEvent("zone:UpdateBoju", Zone[id].Ime, boja, PlayerData.job.name)
+				ESX.TriggerServerCallback('zone:JelZauzeta', function(br)
+					if not br then
+						if Zone[id].Vlasnik == nil or Zone[id].Vlasnik ~= PlayerData.job.name then
+							if Zone[id].Vrijeme == 0 then
+								Osvajam = Config.VrijemeZauzimanja
+								TriggerServerEvent("zone:ZapocniZauzimanje", Zone[id].Ime)
+								Zauzima = true
+								ESX.ShowNotification("Zapoceli ste sa zauzimanjem teritorija!")
+								Citizen.CreateThread(function ()
+									local sec = Osvajam*60
+									local br = 0
+									while sec > 0 and #(GetEntityCoords(PlayerPedId())-Zone[id].Koord) <= tonumber(Zone[id].Velicina)/2 do
+										Citizen.Wait(1000)
+										sec = sec-1
+										br = br+1
+										if br == 60 then
+											br = 0
+											Osvajam = Osvajam-1
+											ESX.ShowNotification("Do osvajanja vam je preostalo jos "..Osvajam.." minuta!")
+										end
+									end
+									if not IsEntityDead(PlayerPedId()) and #(GetEntityCoords(PlayerPedId())-Zone[id].Koord) <= tonumber(Zone[id].Velicina)/2 then
+										local boja = 0
+										for i=1, #Mafije, 1 do
+											if PlayerData.job.name == Mafije[i].Ime then
+												boja = Mafije[i].Boja
+												break
+											end
+										end
+										Zauzima = false
+										TriggerServerEvent("zone:ZavrsiZauzimanje", Zone[id].Ime)
+										ESX.ShowNotification("Uspjesno ste osvojili teritorij!")
+										TriggerServerEvent("zone:UpdateBoju", Zone[id].Ime, boja, PlayerData.job.name)
+									else
+										Zauzima = false
+										ESX.ShowNotification("Niste uspjeli osvojiti teritorij!")
+										TriggerServerEvent("zone:ZavrsiZauzimanje", Zone[id].Ime)
+									end
+								end)
+							else
+								ESX.ShowNotification("Ova zona se ne može zauzimati još "..Zone[id].Vrijeme.." minuta!")
+							end
+						else
+							ESX.ShowNotification("Ovo je vasa zona!")
+						end
+					else
+						ESX.ShowNotification("Netko vec zauzima teritorij!")
+					end
+				end, Zone[id].Ime)
 			end
 			CurrentAction = nil
 			GUI.Time      = GetGameTimer()
@@ -512,18 +565,20 @@ Citizen.CreateThread(function()
 		local currentStation = nil
 		local currentPart    = nil
 		local currentPartNum = nil
-		for i=1, #Zone, 1 do
-			if Zone[i] ~= nil then
-				if #(coords-Zone[i].Koord) < 100.0 then
-					waitara = 0
-					naso = 1
-					DrawMarker(31, Zone[i].Koord.x, Zone[i].Koord.y, Zone[i].Koord.z+0.5, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 50, 50, 204, 100, false, true, 2, false, false, false, false)
-				end
-				if #(coords-Zone[i].Koord) < 1.5 then
-					isInMarker     = true
-					currentStation = 1
-					currentPart    = 'Zona'
-					currentPartNum = i
+		if not Zauzima then
+			for i=1, #Zone, 1 do
+				if Zone[i] ~= nil then
+					if #(coords-Zone[i].Koord) < 100.0 then
+						waitara = 0
+						naso = 1
+						DrawMarker(31, Zone[i].Koord.x, Zone[i].Koord.y, Zone[i].Koord.z+0.5, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 50, 50, 204, 100, false, true, 2, false, false, false, false)
+					end
+					if #(coords-Zone[i].Koord) < 1.5 then
+						isInMarker     = true
+						currentStation = 1
+						currentPart    = 'Zona'
+						currentPartNum = i
+					end
 				end
 			end
 		end
