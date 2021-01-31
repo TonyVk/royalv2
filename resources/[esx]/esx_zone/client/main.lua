@@ -520,7 +520,9 @@ Citizen.CreateThread(function()
 										if br == 60 then
 											br = 0
 											Osvajam = Osvajam-1
-											ESX.ShowNotification("Do osvajanja vam je preostalo jos "..Osvajam.." minuta!")
+											if Osvajam > 0 then
+												ESX.ShowNotification("Do osvajanja vam je preostalo jos "..Osvajam.." minuta!")
+											end
 										end
 									end
 									if not IsEntityDead(PlayerPedId()) and #(GetEntityCoords(PlayerPedId())-Zone[id].Koord) <= tonumber(Zone[id].Velicina)/2 then

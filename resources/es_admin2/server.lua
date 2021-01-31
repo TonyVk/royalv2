@@ -592,8 +592,8 @@ TriggerEvent('es:addGroupCommand', 'bring', "mod", function(source, args, user)
 
 			-- User permission check
 			TriggerEvent("es:getPlayerFromId", player, function(target)
-
-				TriggerClientEvent('es_admin:teleportUser', target.get('source'), user.getCoords().x, user.getCoords().y, user.getCoords().z)
+				local kord = GetEntityCoords(GetPlayerPed(player))
+				TriggerClientEvent('es_admin:teleportUser', target.get('source'), kord.x, kord.y, kord.z)
 
 				TriggerClientEvent('chat:addMessage', player, { args = {"^1SYSTEM", "Portani ste do admina ^2" .. GetPlayerName(source)} })
 				TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Igrac ^2" .. GetPlayerName(player) .. "^0 je portan do vas"} })
@@ -641,8 +641,8 @@ TriggerEvent('es:addGroupCommand', 'goto', "mod", function(source, args, user)
 			-- User permission check
 			TriggerEvent("es:getPlayerFromId", player, function(target)
 				if(target)then
-
-					TriggerClientEvent('es_admin:teleportUser', source, target.getCoords().x, target.getCoords().y, target.getCoords().z)
+					local kord = GetEntityCoords(GetPlayerPed(tonumber(args[1])))
+					TriggerClientEvent('es_admin:teleportUser', source, kord.x, kord.y, kord.z)
 
 					TriggerClientEvent('chat:addMessage', player, { args = {"^1SYSTEM", "Do vas se portao admin ^2" .. GetPlayerName(source)} })
 					TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Portani ste do igraca ^2" .. GetPlayerName(player) .. ""} })
