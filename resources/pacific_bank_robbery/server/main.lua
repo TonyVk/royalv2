@@ -84,7 +84,7 @@ RegisterServerEvent('vbanka:kashtan')
 AddEventHandler('vbanka:kashtan',function(p,q)
 	local r=a.GetPlayerFromId(source)
 	local quantity = r.getInventoryItem('thermite').count
-	if quantity >= amount then
+	if quantity >= 1 then
 		r.removeInventoryItem("thermite",1)
 		TriggerClientEvent('vbanka:terkidan',-1,p,q)
 	end
@@ -94,7 +94,7 @@ end)
 a.RegisterUsableItem('thermite',function(source)
 	local r=a.GetPlayerFromId(source)
 	local quantity = r.getInventoryItem('thermite').count
-	if quantity >= amount then
+	if quantity >= 1 then
 		TriggerClientEvent('vbanka:estefade_az_item',source)
 	end
 end)

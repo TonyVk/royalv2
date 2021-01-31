@@ -88,5 +88,5 @@ end)
 RegisterNUICallback('StartPartia', function(data, cb)
 	cb('ok')
 	local count = data.bets
-	TriggerServerEvent('route68_blackjack:removemoney', count)
+	TriggerServerEvent('bleki:brisituljana', count)
 end)

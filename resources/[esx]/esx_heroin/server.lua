@@ -38,7 +38,7 @@ end)
 
 ESX.RegisterUsableItem('heroin', function(source)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	local quantity = xPlayer.getInventoryItem(item).count
+	local quantity = xPlayer.getInventoryItem("heroin").count
 	if quantity >= 1 then
 		TriggerClientEvent('esx_koristiHeroin:useItem', source, 'heroin')
 		Citizen.Wait(1000)

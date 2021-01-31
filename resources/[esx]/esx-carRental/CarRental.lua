@@ -252,16 +252,18 @@ Citizen.CreateThread(function()
 			end
 		end
 		
-		local currentVehicle = GetVehiclePedIsIn(GetPlayerPed(-1), false)
-		local plate = GetVehicleNumberPlateText(currentVehicle)
-		if plate == RTablica then
-			if (IsVehicleDamaged(currentVehicle) and damageInsurance == false and damageCharge == false and canBeCharged == true) then
-				damageCharge = true
-				TriggerServerEvent("NaplatiTuljana", 500)
-				ESX.ShowNotification("Naplaceno vam je $500 zbog ostecivanja auta. Kupovina osiguranja bih vas spasila od placanja.")
-			elseif (damageInsurance == true and IsVehicleDamaged(currentVehicle) and damageCharge == false) then
-				ESX.ShowNotification("Ostetili ste auto ali zbog osiguranja vam nece biti naplaceno nista.")
-				damageCharge = true
+		if RTablica ~= nil then
+			local currentVehicle = GetVehiclePedIsIn(GetPlayerPed(-1), false)
+			local plate = GetVehicleNumberPlateText(currentVehicle)
+			if plate == RTablica then
+				if (IsVehicleDamaged(currentVehicle) and damageInsurance == false and damageCharge == false and canBeCharged == true) then
+					damageCharge = true
+					TriggerServerEvent("NaplatiTuljana", 500)
+					ESX.ShowNotification("Naplaceno vam je $500 zbog ostecivanja auta. Kupovina osiguranja bih vas spasila od placanja.")
+				elseif (damageInsurance == true and IsVehicleDamaged(currentVehicle) and damageCharge == false) then
+					ESX.ShowNotification("Ostetili ste auto ali zbog osiguranja vam nece biti naplaceno nista.")
+					damageCharge = true
+				end
 			end
 		end
 		
@@ -286,7 +288,6 @@ end)
 --Check to see if player is in marker
 Citizen.CreateThread(function()
 	while true do
-		local HasAlreadyEnteredMarker = false
 		Citizen.Wait(0)
 		
 		local coords = GetEntityCoords(GetPlayerPed(-1))
@@ -305,7 +306,7 @@ Citizen.CreateThread(function()
 			end
 		end
 		
-		if (isInReturnMarker and not WarMenu.IsMenuOpened('carReturn')) then
+		if (isInReturnMarker and not WarMenu.IsMenuOpened('carReturn')) and RTablica ~= nil then
 			local plate = GetVehicleNumberPlateText(GetVehiclePedIsIn(GetPlayerPed(-1), false))
 			if plate == RTablica then
 				WarMenu.OpenMenu('carReturn')
@@ -326,7 +327,7 @@ Citizen.CreateThread(function()
 			WarMenu.CloseMenu()
 		end
 	end
-end)	
+end)
 
 --Auto charge player every 5 minutes
 Citizen.CreateThread(function()
@@ -362,7 +363,7 @@ function SpawnVehicle(request)
 			canBeCharged = true
 			arrestCheckAlreadyRan = false
 			isInPrison = false
-			RTablica = str
+			RTablica = GetVehicleNumberPlateText(RentVehicle)
 			TaskWarpPedIntoVehicle(GetPlayerPed(-1),RentVehicle,-1)
 end
 
