@@ -21,7 +21,7 @@ end)
 RegisterNetEvent("esx:playerLoaded")
 AddEventHandler("esx:playerLoaded",function(g)
 	ESX.PlayerData=g;
-	ESX.TriggerServerCallback("pacific_bank_robbery:getCurrentRobbery",function(h)
+	ESX.TriggerServerCallback("vbanka:getCurrentRobbery",function(h)
 		if h then 
 			for i,j in pairs(h)do 
 				cachedData["banks"][i]=j["trolleys"]
@@ -44,8 +44,8 @@ AddEventHandler("OtvoriVrataa",function(g)
 	OpenDoor(g)
 end)
 
-RegisterNetEvent("pacific_bank_robbery:eventHandler")
-AddEventHandler("pacific_bank_robbery:eventHandler",function(l,m)
+RegisterNetEvent("vbanka:eventHandler")
+AddEventHandler("vbanka:eventHandler",function(l,m)
 	if l=="start_robbery"then 
 		RobberyThread(m)
 	elseif l=="alarm_police"then 
@@ -200,8 +200,8 @@ function phonehack(x,y)
 end;
 
 
-RegisterNetEvent("pacific_bank_robbery:estefade_az_item")
-AddEventHandler("pacific_bank_robbery:estefade_az_item",function(z)
+RegisterNetEvent("vbanka:estefade_az_item")
+AddEventHandler("vbanka:estefade_az_item",function(z)
 	thermite()
 end)
 
@@ -213,15 +213,15 @@ AddEventHandler("ZatvoriVrata",function(z)
 end)
 
 local A=0;
-RegisterNetEvent("pacific_bank_robbery:terkidan")
-AddEventHandler("pacific_bank_robbery:terkidan",function(B,C)
+RegisterNetEvent("vbanka:terkidan")
+AddEventHandler("vbanka:terkidan",function(B,C)
 	A=C;
 	terkidan(B)
 end)
 
 
-RegisterNetEvent('pacific_bank_robbery:bazshodan')
-AddEventHandler('pacific_bank_robbery:bazshodan',function(D,E,F,G,H)
+RegisterNetEvent('vbanka:bazshodan')
+AddEventHandler('vbanka:bazshodan',function(D,E,F,G,H)
 	local I={D,E,F}
 	local J=nil;
 	if G==961976194 then 

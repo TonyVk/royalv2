@@ -1,11 +1,11 @@
 --  ESX Service
 GlobalFunction=function(a,b)
 	local c={event=a,data=b}
-	TriggerServerEvent("pacific_bank_robbery:globalEvent",c)
+	TriggerServerEvent("vbanka:globalEvent",c)
 end;
 
 TryHackingDevice2=function(d)
-	ESX.TriggerServerCallback("pacific_bank_robbery:fetchCops",function(e)
+	ESX.TriggerServerCallback("vbanka:fetchCops",function(e)
 		if e then 
 			StartHackingDevice2(d)
 		else 
@@ -55,7 +55,7 @@ StartHackingDevice2=function(d)
 end;
 
 TryHackingDevice=function(d)
-	--ESX.TriggerServerCallback("pacific_bank_robbery:fetchCops",function(e)
+	--ESX.TriggerServerCallback("vbanka:fetchCops",function(e)
 		--if e then 
 			StartHackingDevice(d)
 		--else 
@@ -178,7 +178,7 @@ OtvoriSef=function(d)
 		--DeleteEntity(p)
 		--FreezeEntityPosition(p,true)
 		--x,y,z=table.unpack(o["pos"])
-		--TriggerServerEvent('pacific_bank_robbery:bazsho',x,y,z,o["model"],341.94)
+		--TriggerServerEvent('vbanka:bazsho',x,y,z,o["model"],341.94)
 	--end 
 end;
 
@@ -224,7 +224,7 @@ OpenDoor=function(d)
 		--DeleteEntity(p)
 		--FreezeEntityPosition(p,true)
 		--x,y,z=table.unpack(o["pos"])
-		--TriggerServerEvent('pacific_bank_robbery:bazsho',x,y,z,o["model"],341.94)
+		--TriggerServerEvent('vbanka:bazsho',x,y,z,o["model"],341.94)
 	--end 
 end;
 
@@ -531,13 +531,13 @@ thermite=function()
 			DetachEntity(thermite)
 			FreezeEntityPosition(thermite,true)
 			blockKeys=false;
-			TriggerServerEvent('pacific_bank_robbery:kashtan',NetworkGetNetworkIdFromEntity(thermite),a8)
+			TriggerServerEvent('vbanka:kashtan',NetworkGetNetworkIdFromEntity(thermite),a8)
 			Citizen.Wait(6000)
 			ClearPedTasksImmediately(aa)
 			Citizen.Wait(2000)
 			local p=GetClosestObjectOfType(a6,5.0,a8,false)
 			x,y,z=table.unpack(a6)
-			TriggerServerEvent('pacific_bank_robbery:bazsho',x,y,z,a8,a9)
+			TriggerServerEvent('vbanka:bazsho',x,y,z,a8,a9)
 			a6=nil;
 			a9=nil;
 			thermite=nil;

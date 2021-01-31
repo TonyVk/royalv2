@@ -37,10 +37,12 @@ AddEventHandler("Heroin:get", function(torba)
 end)
 
 ESX.RegisterUsableItem('heroin', function(source)
-	
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local quantity = xPlayer.getInventoryItem(item).count
+	if quantity >= 1 then
 		TriggerClientEvent('esx_koristiHeroin:useItem', source, 'heroin')
-
 		Citizen.Wait(1000)
+	end
 end)
 
 ESX.RegisterServerCallback('esx_koristiHeroin:getItemAmount', function(source, cb, item)
