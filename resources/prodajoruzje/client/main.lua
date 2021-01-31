@@ -238,40 +238,6 @@ AddEventHandler('prodajoruzje:petarde', function()
 			DeleteEntity(prop)
 end)
 
-local VBlip = nil
-	
-RegisterCommand("testblip", function(source, args, rawCommandString)
-	if VBlip == nil then
-		local coords = GetEntityCoords(PlayerPedId())
-		local retval = GetEntityRotation(PlayerPedId(), 2)
-		VBlip = AddBlipForArea(coords.x, coords.y, coords.z, tonumber(args[1]), tonumber(args[1]))
-		SetBlipRotation(VBlip, Ceil(retval.z))
-		SetBlipColour (VBlip, 27)
-		SetBlipAlpha(VBlip, 215)
-		SetBlipAsShortRange(VBlip, true)
-		SetBlipHighDetail(VBlip, true)
-		SetBlipDisplay(VBlip, 8)
-		--SetBlipSprite(VBlip, 5)
-		--SetBlipFlashes(VBlip, true)
-		Citizen.CreateThread(function()
-			while VBlip ~= nil do
-				local korda = GetEntityCoords(PlayerPedId())
-				if #(korda-coords)  <= tonumber(args[1])/2 then
-					print("unutra")
-					SetBlipDisplay(VBlip, 8)
-				else
-					print("izaso")
-					SetBlipDisplay(VBlip, 3)
-				end
-				Wait(5000)
-			end
-		end)
-	else
-		RemoveBlip(VBlip)
-		VBlip = nil
-	end
-end, false)
-
 RegisterCommand("lc", function(source, args, rawCommandString)
 	if IsPedInAnyVehicle(PlayerPedId(), false) then
 		local deri = true

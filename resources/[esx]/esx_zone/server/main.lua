@@ -5,6 +5,9 @@ local Mafije = {}
 local Zauzeta = {}
 local BrZone = 1
 local Vrijeme = 0
+local Min = 0
+local Sat = 0
+local Zauzimanje = 0
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -16,7 +19,7 @@ RegisterServerEvent('zone:DodajZonu')
 AddEventHandler('zone:DodajZonu', function(koord, vel, rot)
 	local str = "zona"..BrZone
 	BrZone = BrZone+1
-	table.insert(Zone, {ID = nil, Ime = str, Koord = koord, Velicina = vel, Rotacija = rot, Boja = 0, Vlasnik = nil, Vrijeme = 0})
+	table.insert(Zone, {ID = nil, Ime = str, Koord = koord, Velicina = vel, Rotacija = rot, Boja = 0, Vlasnik = nil, Label = nil, Vrijeme = 0, Vrijednost = 30000})
 	TriggerClientEvent("zone:SpawnZonu", -1, str, koord, vel, rot)
 	MySQL.Async.fetchScalar('SELECT idzone FROM zpostavke', {}, function(result)
 		if result == nil then
@@ -70,6 +73,73 @@ AddEventHandler('zone:UrediVrijeme', function(br)
     end)
 end)
 
+RegisterServerEvent('zone:UrediNovacVrijeme')
+AddEventHandler('zone:UrediNovacVrijeme', function(sat, minuta)
+	MySQL.Async.fetchScalar('SELECT idzone FROM zpostavke', {}, function(result)
+		if result == nil then
+			MySQL.Async.execute('INSERT INTO zpostavke (idzone, mafije, vrijeme, sat, minuta) VALUES (1, "{}", 1, @sat, @min)',{
+				['@sat'] = sat,
+				['@min'] = minuta
+			})
+		else
+			MySQL.Async.execute('UPDATE zpostavke SET sat = @sat, minuta = @min',{
+				['@sat'] = sat,
+				['@min'] = minuta
+			})
+		end
+    end)
+end)
+
+RegisterServerEvent('zone:UrediOsvajanje')
+AddEventHandler('zone:UrediOsvajanje', function(br)
+	MySQL.Async.fetchScalar('SELECT idzone FROM zpostavke', {}, function(result)
+		if result == nil then
+			MySQL.Async.execute('INSERT INTO zpostavke (idzone, mafije, vrijeme, sat, minuta, zauzimanje) VALUES (1, "{}", 1, 0, 0, @br)',{
+				['@br'] = br
+			})
+		else
+			MySQL.Async.execute('UPDATE zpostavke SET zauzimanje = @br',{
+				['@br'] = br
+			})
+		end
+    end)
+	Zauzimanje = br
+	TriggerClientEvent("zone:VratiOsvajanje", -1, br)
+end)
+
+RegisterServerEvent('zone:UrediVrijednost')
+AddEventHandler('zone:UrediVrijednost', function(ime, br)
+	for i=1, #Zone, 1 do
+		if Zone[i] ~= nil then
+			if Zone[i].Ime == ime then
+				Zone[i].Vrijednost = br
+				break
+			end
+		end
+	end
+	MySQL.Async.execute('UPDATE zone SET vrijednost = @vr WHERE ime = @ime',{
+		['@ime'] = ime,
+		['@vr'] = br
+	})
+	TriggerClientEvent("zone:UpdateVrijednost", ime, br)
+end)
+
+RegisterServerEvent('zone:SpremiBoju')
+AddEventHandler('zone:SpremiBoju', function(ime, br)
+	for i=1, #Zone, 1 do
+		if Zone[i] ~= nil then
+			if Zone[i].Ime == ime then
+				Zone[i].Boja = br
+				break
+			end
+		end
+	end
+	MySQL.Async.execute('UPDATE zone SET boja = @vr WHERE ime = @ime',{
+		['@ime'] = ime,
+		['@vr'] = br
+	})
+end)
+
 RegisterServerEvent('zone:ZapocniZauzimanje')
 AddEventHandler('zone:ZapocniZauzimanje', function(ime)
 	local src = source
@@ -96,6 +166,10 @@ ESX.RegisterServerCallback('zone:JelZauzeta', function(source, cb, ime)
 	end
 end)
 
+ESX.RegisterServerCallback('zone:DajOsvajanje', function(source, cb)
+	cb(Zauzimanje)
+end)
+
 RegisterServerEvent('zone:ZavrsiZauzimanje')
 AddEventHandler('zone:ZavrsiZauzimanje', function(ime)
 	for i=1, #Zauzeta, 1 do
@@ -120,6 +194,7 @@ end)
 AddEventHandler('playerDropped', function()
 	for i=1, #Zauzeta, 1 do
 		if Zauzeta[i].ID == source then
+			TriggerClientEvent("zone:NapadnutaZona", -1, Zauzeta[i].Ime, false, Vrijeme)
 			table.remove(Zauzeta, i)
 			break
 		end
@@ -127,7 +202,7 @@ AddEventHandler('playerDropped', function()
 end)
 
 RegisterServerEvent('zone:UpdateBoju')
-AddEventHandler('zone:UpdateBoju', function(ime, boja, maf)
+AddEventHandler('zone:UpdateBoju', function(ime, boja, maf, label)
 	for i=1, #Zone, 1 do
 		if Zone[i].Ime == ime then
 			Zone[i].Boja = boja
@@ -135,11 +210,12 @@ AddEventHandler('zone:UpdateBoju', function(ime, boja, maf)
 			break
 		end
 	end
-	TriggerClientEvent("zone:UpdateBoju", -1, ime, boja, maf)
-	MySQL.Async.execute('UPDATE zone SET boja = @boja, vlasnik = @maf WHERE ime = @ime',{
+	TriggerClientEvent("zone:UpdateBoju", -1, ime, boja, maf, label)
+	MySQL.Async.execute('UPDATE zone SET boja = @boja, vlasnik = @maf, label = @lab WHERE ime = @ime',{
 		['@ime'] = ime,
 		['@boja'] = boja,
-		['@maf'] = maf
+		['@maf'] = maf,
+		['@lab'] = label
 	})
 end)
 
@@ -195,6 +271,10 @@ function UcitajZone()
     for i=1, #postavke, 1 do
 		BrZone = postavke[i].idzone
 		Vrijeme = postavke[i].vrijeme
+		Sat = postavke[i].sat
+		Min = postavke[i].minuta
+		Zauzimanje = postavke[i].zauzimanje
+		TriggerClientEvent("zone:VratiOsvajanje", -1, Zauzimanje)
 		local data = json.decode(postavke[i].mafije)
 		if data ~= nil then
 			for a=1, #data do
@@ -210,11 +290,26 @@ function UcitajZone()
         for i=1, #result, 1 do
 			local tabla = json.decode(result[i].koord)
 			local a = vector3(tabla.x, tabla.y, tabla.z)
-			table.insert(Zone, {ID = nil, Ime = result[i].ime, Koord = a, Velicina = result[i].velicina, Rotacija = result[i].rotacija, Boja = result[i].boja, Vlasnik = result[i].vlasnik, Vrijeme = result[i].vrijeme})
+			table.insert(Zone, {ID = nil, Ime = result[i].ime, Koord = a, Velicina = result[i].velicina, Rotacija = result[i].rotacija, Boja = result[i].boja, Vlasnik = result[i].vlasnik, Label = result[i].label, Vrijeme = result[i].vrijeme, Vrijednost = result[i].vrijednost})
 			TriggerClientEvent("zone:SpawnZonu", -1, result[i].ime, a, result[i].velicina, result[i].rotacija)
         end
       end
     )
+	TriggerEvent('cron:runAt', Sat, Min, DajPare)
+end
+
+function DajPare(d, h, m)
+	for i=1, #Zone, 1 do
+		if Zone[i] ~= nil and Zone[i].Vlasnik ~= nil then
+			local societyAccount = nil
+			local sime = "society_"..Zone[i].Vlasnik
+			TriggerEvent('esx_addonaccount:getSharedAccount', sime, function(account)
+				societyAccount = account
+			end)
+			societyAccount.addMoney(Zone[i].Vrijednost)
+			societyAccount.save()
+		end
+	end
 end
 
 ESX.RegisterServerCallback('zone:DohvatiZone', function(source, cb)

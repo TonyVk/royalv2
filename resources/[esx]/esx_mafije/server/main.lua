@@ -785,6 +785,11 @@ ESX.RegisterServerCallback('mafije:DohvatiMafijev2', function(source, cb)
 	cb(Mafije)
 end)
 
+ESX.RegisterServerCallback('mafije:DohvatiMafijev3', function(source, cb)
+	local vracaj = {maf = Mafije, boj = Boje}
+	cb(vracaj)
+end)
+
 ESX.RegisterServerCallback('mafije:DohvatiKutiju', function(source, cb, maf)
 	local naso = 0
 	for i=1, #Kutije, 1 do

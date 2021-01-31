@@ -11,8 +11,9 @@ local CurrentActionData         = {}
 local Zone						= {}
 local Mafije 					= {}
 local Mere 						= false
-local Osvajam 					= Config.VrijemeZauzimanja --minute do osvajanja
+local Osvajam 					= 0
 local Zauzima					= false
+local Boje 						= {}
 
 ESX                             = nil
 GUI.Time                        = 0
@@ -33,10 +34,44 @@ function ProvjeriPosao()
 	PlayerData = ESX.GetPlayerData()
 	ESX.TriggerServerCallback('zone:DohvatiZone', function(data)
 		Zone = data.zone
-		Mafije = data.maf
+		if not Config.DinamicneMafije then
+			Mafije = data.maf
+		end
 	end)
+	if Config.DinamicneMafije then
+		ESX.TriggerServerCallback('mafije:DohvatiMafijev3', function(data)
+			Mafije = data.maf
+			Boje = data.boj
+		end)
+	end
 	Wait(5000)
 	SpawnBlipove()
+end
+
+if Config.DinamicneMafije then
+	RegisterNetEvent('mafije:UpdateMafije')
+	AddEventHandler('mafije:UpdateMafije', function(maf)
+		Mafije = maf
+	end)
+	
+	RegisterNetEvent('mafije:UpdateBoje')
+	AddEventHandler('mafije:UpdateBoje', function(br, maf, boj)
+		Boje = boj
+		for i=1, #Zone, 1 do
+			if Zone[i] ~= nil then
+				if Zone[i].Vlasnik ~= nil and Zone[i].Vlasnik == maf then
+					for a=1, #Boje, 1 do
+						if Zone[i].Vlasnik == Boje[a].Mafija and Boje[a].Ime == "Blip" then
+							Zone[i].Boja = Boje[a].Boja
+							SetBlipColour (Zone[i].ID, Boje[a].Boja)
+							TriggerServerEvent("zone:SpremiBoju", Zone[i].Ime, Boje[a].Boja)
+							break
+						end
+					end
+				end
+			end
+		end
+	end)
 end
 
 function SpawnBlipove()
@@ -68,6 +103,11 @@ function SpawnBlipove()
 		end
 	end
 end
+
+RegisterNetEvent("zone:VratiOsvajanje")
+AddEventHandler('zone:VratiOsvajanje', function(br)
+	Osvajam = br
+end)
 
 RegisterNetEvent("zone:SpawnZonu")
 AddEventHandler('zone:SpawnZonu', function(ime, koord, vel, rot)
@@ -144,12 +184,13 @@ AddEventHandler('zone:NapadnutaZona', function(ime, br, vr)
 end)
 
 RegisterNetEvent("zone:UpdateBoju")
-AddEventHandler('zone:UpdateBoju', function(ime, boja, maf)
+AddEventHandler('zone:UpdateBoju', function(ime, boja, maf, lab)
 	for i=1, #Zone, 1 do
 		if Zone[i] ~= nil then
 			if Zone[i].Ime == ime then
 				Zone[i].Boja = boja
 				Zone[i].Vlasnik = maf
+				Zone[i].Label = lab
 				local naso = false
 				for a=1, #Mafije, 1 do
 					if PlayerData.job.name == Mafije[a].Ime then
@@ -160,6 +201,18 @@ AddEventHandler('zone:UpdateBoju', function(ime, boja, maf)
 				if naso then
 					SetBlipColour(Zone[i].ID, boja)
 				end
+				break
+			end
+		end
+	end
+end)
+
+RegisterNetEvent("zone:UpdateVrijednost")
+AddEventHandler('zone:UpdateVrijednost', function(ime, br)
+	for i=1, #Zone, 1 do
+		if Zone[i] ~= nil then
+			if Zone[i].Ime == ime then
+				Zone[i].Vrijednost = br
 				break
 			end
 		end
@@ -262,6 +315,7 @@ RegisterCommand("uredizone", function(source, args, raw)
 							function(data2, menu2)
 								local elements = {
 									{label = "Premjesti zonu", value = "premj"},
+									{label = "Promjeni vrijednost", value = "vrij"},
 									{label = "Obrisi zonu", value = "brisi"}
 								}
 								ESX.UI.Menu.Open(
@@ -278,11 +332,27 @@ RegisterCommand("uredizone", function(source, args, raw)
 											TriggerServerEvent("zone:Premjesti", data2.current.value, korda, Ceil(retval.z))
 											menu3.close()
 											ESX.ShowNotification("Premjestili ste zonu "..data2.current.value)
-										else
+										elseif data3.current.value == "brisi" then
 											TriggerServerEvent("zone:Obrisi", data2.current.value)
 											menu3.close()
 											menu2.close()
 											ESX.ShowNotification("Obrisali ste zonu "..data2.current.value)
+										else
+											menu3.close()
+											ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'vrzone', {
+												title = "Upisite vrijednost zone u dolarima(npr. 50000)",
+											}, function (datari69, menuri69)
+												local vrZone = datari69.value
+												if vrZone == nil or tonumber(vrZone) <= 0 then
+													ESX.ShowNotification('Greska.')
+												else
+													TriggerServerEvent("zone:UrediVrijednost", data2.current.value, vrZone)
+													ESX.ShowNotification("Promjenili ste vrijednost teritorija "..data2.current.value.." na $"..vrZone)
+													menuri69.close()
+												end
+											end, function (datari69, menuri69)
+												menuri69.close()
+											end)
 										end
 									end,
 									function(data3, menu3)
@@ -295,10 +365,14 @@ RegisterCommand("uredizone", function(source, args, raw)
 							end
 						)
 					else
-						local elements = {
-							{label = "Uredi mafije", value = "maf"},
-							{label = "Uredi vrijeme do ponovnog osvajanja", value = "vrij"}
-						}
+						
+						local elements = {}
+						if not Config.DinamicneMafije then
+							table.insert(elements, {label = "Uredi mafije", value = "maf"})
+						end
+						table.insert(elements, {label = "Uredi vrijeme do ponovnog osvajanja", value = "vrij"})
+						table.insert(elements, {label = "Uredi vrijeme trajanja osvajanja", value = "osvv"})
+						table.insert(elements, {label = "Uredi vrijeme dobijanja novca", value = "nvrij"})
 						ESX.UI.Menu.Open(
 							'default', GetCurrentResourceName(), 'pzone',
 							{
@@ -376,7 +450,7 @@ RegisterCommand("uredizone", function(source, args, raw)
 											menu7.close()
 										end
 									)
-								else
+								elseif data4.current.value == "vrij" then
 									ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'pvzone', {
 										title = "Upisite sate do ponovnog osvajanja",
 									}, function (data6, menu6)
@@ -390,6 +464,48 @@ RegisterCommand("uredizone", function(source, args, raw)
 										end
 									end, function (data6, menu6)
 										menu6.close()
+									end)
+								elseif data4.current.value == "osvv" then
+									ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'pvrrrzone', {
+										title = "Upisite broj minuta potrebnih za osvojit zonu (npr. 10)",
+									}, function (data32, menu32)
+										local vMinara = data32.value
+										if vMinara == nil or tonumber(vMinara) <= 0 then
+											ESX.ShowNotification('Greska.')
+										else
+											TriggerServerEvent("zone:UrediOsvajanje", vMinara)
+											ESX.ShowNotification("Promjenili ste vrijeme potrebno za osvojit zonu na "..vMinara.." minuta!")
+											menu32.close()
+										end
+									end, function (data32, menu32)
+										menu32.close()
+									end)
+								elseif data4.current.value == "nvrij" then
+									ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'pvrzone', {
+										title = "Upisite sat kada ce novac dolaziti svaki dan (npr. 14)",
+									}, function (data61, menu61)
+										local vSat = data61.value
+										if vSat == nil or tonumber(vSat) <= 0 or tonumber(vSat) > 23 then
+											ESX.ShowNotification('Greska.')
+										else
+											ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'pvrzone2', {
+												title = "Upisite minute kada ce novac dolaziti svaki dan (npr. 45)",
+											}, function (data62, menu62)
+												local vMin = data62.value
+												if vMin == nil or tonumber(vMin) < 0 or tonumber(vMin) > 59 then
+													ESX.ShowNotification('Greska.')
+												else
+													TriggerServerEvent("zone:UrediNovacVrijeme", vSat, vMin)
+													ESX.ShowNotification("Promjenili ste vrijeme dolaska novca mafijama na "..vSat.." sati i "..vMin.." minuta!")
+													menu62.close()
+												end
+											end, function (data62, menu62)
+												menu62.close()
+											end)
+											menu61.close()
+										end
+									end, function (data61, menu61)
+										menu61.close()
 									end)
 								end
 							end,
@@ -458,7 +574,7 @@ Citizen.CreateThread(function()
 			for i=1, #Zone, 1 do
 				if Zone[i] ~= nil then
 					local korda = GetEntityCoords(PlayerPedId())
-					if #(korda-Zone[i].Koord) <= tonumber(Zone[i].Velicina)/2 then
+					if #(korda-Zone[i].Koord) <= tonumber(Zone[i].Velicina) then
 						SetBlipDisplay(Zone[i].ID, 8)
 					else
 						SetBlipDisplay(Zone[i].ID, 3)
@@ -484,6 +600,28 @@ AddEventHandler('zone:hasExitedMarker', function(station, part, partNum)
   CurrentAction = nil
 end)
 
+function Draw3DText(x,y,z,textInput,fontId,scaleX,scaleY)
+    local px,py,pz=table.unpack(GetGameplayCamCoords())
+    local dist = GetDistanceBetweenCoords(px,py,pz, x,y,z, 1)    
+	local scale = (1/dist)*20
+    local fov = (1/GetGameplayCamFov())*100
+    local scale = scale*fov   
+    SetTextScale(scaleX*scale, scaleY*scale)
+	SetTextFont(fontId)
+    SetTextProportional(1)
+    SetTextColour(250, 250, 250, 255)		-- You can change the text color here
+    SetTextDropshadow(1, 1, 1, 1, 255)
+    SetTextEdge(2, 0, 0, 0, 150)
+	SetTextDropShadow()
+    SetTextOutline()
+    SetTextEntry("STRING")
+    SetTextCentre(1)
+    AddTextComponentString(textInput)
+    SetDrawOrigin(x,y,z+2, 0)
+    DrawText(0.0, 0.0)
+    ClearDrawOrigin()
+end
+
 -- Display markers
 Citizen.CreateThread(function()
   local waitara = 500
@@ -506,7 +644,9 @@ Citizen.CreateThread(function()
 					if not br then
 						if Zone[id].Vlasnik == nil or Zone[id].Vlasnik ~= PlayerData.job.name then
 							if Zone[id].Vrijeme == 0 then
-								Osvajam = Config.VrijemeZauzimanja
+								ESX.TriggerServerCallback('zone:DajOsvajanje', function(br)
+									Osvajam = br
+								end)
 								TriggerServerEvent("zone:ZapocniZauzimanje", Zone[id].Ime)
 								Zauzima = true
 								ESX.ShowNotification("Zapoceli ste sa zauzimanjem teritorija!")
@@ -527,16 +667,30 @@ Citizen.CreateThread(function()
 									end
 									if not IsEntityDead(PlayerPedId()) and #(GetEntityCoords(PlayerPedId())-Zone[id].Koord) <= tonumber(Zone[id].Velicina)/2 then
 										local boja = 0
-										for i=1, #Mafije, 1 do
-											if PlayerData.job.name == Mafije[i].Ime then
-												boja = Mafije[i].Boja
-												break
+										if not Config.DinamicneMafije then
+											for i=1, #Mafije, 1 do
+												if PlayerData.job.name == Mafije[i].Ime then
+													boja = Mafije[i].Boja
+													break
+												end
+											end
+										else
+											for i=1, #Mafije, 1 do
+												if PlayerData.job.name == Mafije[i].Ime then
+													for a=1, #Boje, 1 do
+														if Mafije[i].Ime == Boje[a].Mafija and Boje[a].Ime == "Blip" then
+															boja = Boje[a].Boja
+															break
+														end
+													end
+													break
+												end
 											end
 										end
 										Zauzima = false
 										TriggerServerEvent("zone:ZavrsiZauzimanje", Zone[id].Ime)
 										ESX.ShowNotification("Uspjesno ste osvojili teritorij!")
-										TriggerServerEvent("zone:UpdateBoju", Zone[id].Ime, boja, PlayerData.job.name)
+										TriggerServerEvent("zone:UpdateBoju", Zone[id].Ime, boja, PlayerData.job.name, PlayerData.job.label)
 									else
 										Zauzima = false
 										ESX.ShowNotification("Niste uspjeli osvojiti teritorij!")
@@ -574,6 +728,12 @@ Citizen.CreateThread(function()
 						waitara = 0
 						naso = 1
 						DrawMarker(31, Zone[i].Koord.x, Zone[i].Koord.y, Zone[i].Koord.z+0.5, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 50, 50, 204, 100, false, true, 2, false, false, false, false)
+						Draw3DText(Zone[i].Koord.x, Zone[i].Koord.y, Zone[i].Koord.z-1.400, "Zona "..i, 4, 0.1, 0.1)
+						if Zone[i].Vlasnik == nil then
+							Draw3DText(Zone[i].Koord.x, Zone[i].Koord.y, Zone[i].Koord.z-1.600, "Vlasnik teritorija: Nitko", 4, 0.1, 0.1)
+						else
+							Draw3DText(Zone[i].Koord.x, Zone[i].Koord.y, Zone[i].Koord.z-1.600, "Vlasnik teritorija: "..Zone[i].Label, 4, 0.1, 0.1)
+						end
 					end
 					if #(coords-Zone[i].Koord) < 1.5 then
 						isInMarker     = true
