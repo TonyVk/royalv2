@@ -1,14 +1,17 @@
 ESX						= nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-RegisterServerEvent('route68_blackjack:removemoney')
-AddEventHandler('route68_blackjack:removemoney', function(amount)
+RegisterServerEvent('bleki:brisituljana')
+AddEventHandler('bleki:brisituljana', function(amount)
 	local amount = amount
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
-	xPlayer.removeInventoryItem('zeton', amount)
-	TriggerClientEvent('pNotify:SendNotification', _source, {text = "Kladili ste se sa "..amount.." zetona u BlackJacku.", layout = "bottomCenter"})
-	TriggerEvent("DiscordBot:Zetoni", xPlayer.name.."["..xPlayer.source.."] se kladio na blackjacku sa "..amount.." zetona. Sada ima kod sebe "..xPlayer.getInventoryItem('zeton').count.." zetona.")
+	local quantity = xPlayer.getInventoryItem('zeton').count
+	if quantity >= amount then
+		xPlayer.removeInventoryItem('zeton', amount)
+		TriggerClientEvent('pNotify:SendNotification', _source, {text = "Kladili ste se sa "..amount.." zetona u BlackJacku.", layout = "bottomCenter"})
+		TriggerEvent("DiscordBot:Zetoni", xPlayer.name.."["..xPlayer.source.."] se kladio na blackjacku sa "..amount.." zetona. Sada ima kod sebe "..xPlayer.getInventoryItem('zeton').count.." zetona.")
+	end
 	--TriggerClientEvent('route68_blackjack:start', _source)
 end)
 

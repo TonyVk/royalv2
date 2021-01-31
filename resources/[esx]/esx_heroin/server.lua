@@ -54,8 +54,10 @@ RegisterServerEvent('esx_koristiHeroin:removeItem')
 AddEventHandler('esx_koristiHeroin:removeItem', function(item)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
-
-	xPlayer.removeInventoryItem(item, 1)
+	local quantity = xPlayer.getInventoryItem(item).count
+	if quantity >= item then
+		xPlayer.removeInventoryItem(item, 1)
+	end
 end)
 
 function CancelProcessing(id)

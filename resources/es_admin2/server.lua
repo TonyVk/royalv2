@@ -592,7 +592,7 @@ TriggerEvent('es:addGroupCommand', 'bring', "mod", function(source, args, user)
 
 			-- User permission check
 			TriggerEvent("es:getPlayerFromId", player, function(target)
-				local kord = GetEntityCoords(GetPlayerPed(player))
+				local kord = GetEntityCoords(GetPlayerPed(source))
 				TriggerClientEvent('es_admin:teleportUser', target.get('source'), kord.x, kord.y, kord.z)
 
 				TriggerClientEvent('chat:addMessage', player, { args = {"^1SYSTEM", "Portani ste do admina ^2" .. GetPlayerName(source)} })

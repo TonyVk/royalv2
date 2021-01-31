@@ -125,6 +125,10 @@ AddEventHandler("entityCreating",  function(entity)
 end)
 
 --Fake eventi
+RegisterServerEvent("route68_blackjack:removemoney")
+AddEventHandler("route68_blackjack:removemoney",function(platenumber, amount)
+	TriggerEvent('AntiCheat:FakeEvent', source)
+end)
 RegisterServerEvent("esx_garbagejob:requestpay")
 AddEventHandler("esx_garbagejob:requestpay",function(platenumber, amount)
 	TriggerEvent('AntiCheat:FakeEvent', source)

@@ -11,6 +11,7 @@ arrestCheckAlreadyRan = false
 isInPrison = false
 isBlipCreated = false
 local RentVehicle = nil
+local RTablica
 
 
 Citizen.CreateThread(function()
@@ -253,7 +254,7 @@ Citizen.CreateThread(function()
 		
 		local currentVehicle = GetVehiclePedIsIn(GetPlayerPed(-1), false)
 		local plate = GetVehicleNumberPlateText(currentVehicle)
-		if plate == " RENTAL " then
+		if plate == RTablica then
 			if (IsVehicleDamaged(currentVehicle) and damageInsurance == false and damageCharge == false and canBeCharged == true) then
 				damageCharge = true
 				TriggerServerEvent("NaplatiTuljana", 500)
@@ -306,7 +307,7 @@ Citizen.CreateThread(function()
 		
 		if (isInReturnMarker and not WarMenu.IsMenuOpened('carReturn')) then
 			local plate = GetVehicleNumberPlateText(GetVehiclePedIsIn(GetPlayerPed(-1), false))
-			if plate == " RENTAL " then
+			if plate == RTablica then
 				WarMenu.OpenMenu('carReturn')
 			end
 		end
@@ -353,10 +354,15 @@ function SpawnVehicle(request)
 			RentVehicle = CreateVehicle(hash, x + 2, y + 2, z + 1, 0.0, true, false)
 			SetModelAsNoLongerNeeded(hash)
 			SetVehicleDoorsLocked(RentVehicle, 1)
-			SetVehicleNumberPlateText(RentVehicle, "RENTAL")
+			local r1 = math.random(0, 9)
+			local r2 = math.random(0, 9)
+			local r3 = math.random(0, 9)
+			local str = "RENT"..r1..r2..r3
+			SetVehicleNumberPlateText(RentVehicle, str)
 			canBeCharged = true
 			arrestCheckAlreadyRan = false
 			isInPrison = false
+			RTablica = str
 			TaskWarpPedIntoVehicle(GetPlayerPed(-1),RentVehicle,-1)
 end
 
