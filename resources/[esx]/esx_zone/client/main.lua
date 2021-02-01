@@ -698,7 +698,7 @@ Citizen.CreateThread(function()
 									end
 								end)
 							else
-								ESX.ShowNotification("Ova zona se ne može zauzimati još "..Zone[id].Vrijeme.." minuta!")
+								ESX.ShowNotification("Ova zona se ne može zauzimati još "..Zone[id].Vrijeme.." sati!")
 							end
 						else
 							ESX.ShowNotification("Ovo je vasa zona!")
