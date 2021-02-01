@@ -2,7 +2,7 @@ Config = {}
 
 Config.ItemNeeded = "net_cracker"
 Config.MaxLives = 3 -- this is the max lives in hacking thing don't set more than 5. thank you
-Config.CopsNeeded = 7 -- number of cops required to start the robbery
+Config.CopsNeeded = 0 -- number of cops required to start the robbery
 Config.BlackMoney = false -- true for black_money and false for cash
 Config.AlertInChat = false -- true or false only
 Config.AlertInChatMessage = "'NEWS' ^7 Robbery in progress at ^1"

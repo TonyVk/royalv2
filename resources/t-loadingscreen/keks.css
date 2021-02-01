@@ -26,19 +26,20 @@ strong {
 }
 
 .enable_music {
-	z-index: 1;
-    position: relative;
+	margin: auto;
+    margin-top: 35px;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
     color: #cbaa59;
     font-family: 'Raleway', sans-serif;
     text-align: center;
-
     font-size: 12px;
     letter-spacing: 2px;
     text-transform: uppercase;
-
     font-weight: 400;
-
-    margin: 50px auto;
     animation: music 3s;
 }
 

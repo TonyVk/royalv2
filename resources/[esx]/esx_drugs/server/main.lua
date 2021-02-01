@@ -4,6 +4,7 @@ local Droga = {}
 local Sadnice = {}
 local Kuce = {}
 local StariID = {}
+local Brojac = 0
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -114,7 +115,9 @@ RegisterServerEvent('esx_drugs:MakniSeed')
 AddEventHandler('esx_drugs:MakniSeed', function()
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local xItem = xPlayer.getInventoryItem('seed')
-	xPlayer.removeInventoryItem(xItem.name, 1)
+	if xItem.count >= 1 then
+		xPlayer.removeInventoryItem(xItem.name, 1)
+	end
 end)
 
 RegisterServerEvent('esx_drugs:EoTiKanabisa')
@@ -175,13 +178,35 @@ function CancelProcessing(playerID)
 end
 
 RegisterServerEvent('trava:Izrasti')
-AddEventHandler('trava:Izrasti', function(stanje, koord)
-	Izrasti(source, stanje, koord)
+AddEventHandler('trava:Izrasti', function(stanje, koord, br)
+	Izrasti(source, stanje, koord, br)
+end)
+
+RegisterServerEvent('trava:ObrisiTravu')
+AddEventHandler('trava:ObrisiTravu', function(src, br)
+	for i=1, #Sadnice, 1 do
+		if Sadnice[i] ~= nil and Sadnice[i].ID == src and Sadnice[i].Brojac == br then
+			TriggerClientEvent("trava:ObrisiObj", -1, src, br)
+			table.remove(Sadnice, i)
+			break
+		end
+	end
+	local xPlayer = ESX.GetPlayerFromId(src)
+	local Temp = {}
+	for i=1, #Sadnice, 1 do
+		if Sadnice[i] ~= nil and Sadnice[i].ID == src then
+			table.insert(Temp, {Stanje = Sadnice[i].Stanje, Koord = Sadnice[i].Koord})
+		end
+	end
+	MySQL.Async.execute('UPDATE users SET sadnice = @sad WHERE identifier = @id', {
+		['@sad'] = json.encode(Temp),
+		['@id'] = xPlayer.identifier
+	})
 end)
 
 RegisterServerEvent('trava:MakniBranje')
-AddEventHandler('trava:MakniBranje', function(nid, co)
-	TriggerClientEvent("trava:NemosBrati", -1, nid, co)
+AddEventHandler('trava:MakniBranje', function(br)
+	TriggerClientEvent("trava:NemosBrati", -1, br)
 end)
 
 function distanceFrom(x1,y1,x2,y2) return math.sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2) end
@@ -199,6 +224,9 @@ function PosadiTravu(src)
 				if Sadnice[i].ID == src then
 					broj = broj+1
 				end
+				if distanceFrom(Sadnice[i].Koord.x, Sadnice[i].Koord.y, playerCoords.x, playerCoords.y) < 2.0 then
+					dist = true
+				end
 			end
 		end
 		local xSeed = xPlayer.getInventoryItem('seed')
@@ -212,8 +240,9 @@ function PosadiTravu(src)
 					xPlayer.removeInventoryItem('zemlja', 1)
 					local xe,ye,ze = table.unpack(playerCoords)
 					local korde = vector3(xe,ye,ze-1.0)
-					TriggerClientEvent("trava:SpawnObjekt", -1, korde, 1, src, "bkr_prop_weed_01_small_01a")
-					table.insert(Sadnice, {ID = src, Stanje = 1, Koord = korde})
+					TriggerClientEvent("trava:SpawnObjekt", -1, korde, 1, src, "bkr_prop_weed_01_small_01a", Brojac)
+					table.insert(Sadnice, {ID = src, Stanje = 1, Koord = korde, Brojac = Brojac})
+					Brojac = Brojac+1
 					local Temp = {}
 					for i=1, #Sadnice, 1 do
 						if Sadnice[i] ~= nil and Sadnice[i].ID == src then
@@ -248,18 +277,25 @@ function PosadiTravu2(src, co, stanje)
 	else
 		mara = "bkr_prop_weed_lrg_01a"
 	end
-	local Marih
-	Marih = CreateObjectNoOffset(GetHashKey(mara), co.x,  co.y,  co.z,true,false)
-	while not DoesEntityExist(Marih) do
-		Wait(100)
+	TriggerClientEvent("trava:SpawnObjekt", -1, korda, 1, src, mara, Brojac)
+	table.insert(Sadnice, {ID = src, Stanje = stanje, Koord = korda, Brojac = Brojac})
+	Brojac = Brojac+1
+	for a=1, #Sadnice, 1 do
+		if Sadnice[a] ~= nil then
+			local mare
+			if Sadnice[a].Stanje == 1 then
+				mare = "bkr_prop_weed_01_small_01a"
+			elseif Sadnice[a].Stanje == 2 then
+				mare = "bkr_prop_weed_med_01a"
+			else
+				mare = "bkr_prop_weed_lrg_01a"
+			end
+			TriggerClientEvent("trava:SpawnObjekt", -1, Sadnice[a].Koord, Sadnice[a].Stanje, Sadnice[a].ID, mare, Sadnice[a].Brojac)
+		end
 	end
-	local netid = NetworkGetNetworkIdFromEntity(Marih)
-	table.insert(Sadnice, {ID = src, Objekt = Marih, Stanje = stanje, NetID = netid, Koord = korda})
-	TriggerClientEvent("trava:EoTiNetID", -1, netid, korda, stanje, src)
-	TriggerClientEvent("trava:PratiRast", src, netid, stanje, korda)
 end
 
-function Izrasti(src, stanje, koord) 
+function Izrasti(src, stanje, koord, br) 
 	local xPlayer = ESX.GetPlayerFromId(src)
 	local mara
 	if stanje == 2 then
@@ -269,13 +305,14 @@ function Izrasti(src, stanje, koord)
 	end
 	for i=1, #Sadnice, 1 do
 		if Sadnice[i] ~= nil then
-			if Sadnice[i].ID == src and Sadnice[i].Koord == koord then
+			if Sadnice[i].ID == src and Sadnice[i].Brojac == br then
 				--if DoesEntityExist(ObjID) then
 					Sadnice[i].Stanje = stanje
 					if stanje == 3 then
 						xPlayer.showNotification("[Marihuana] Stabljika je spremna za branje!")
 					end
-					TriggerClientEvent("trava:SpawnObjekt", -1, koord, stanje, src, mara)
+					TriggerClientEvent("trava:ObrisiObj", -1, src, br)
+					TriggerClientEvent("trava:SpawnObjekt", -1, koord, stanje, src, mara, br)
 					local Temp = {}
 					for a=1, #Sadnice, 1 do
 						if Sadnice[a] ~= nil and Sadnice[a].ID == src then
@@ -301,13 +338,11 @@ end)
 AddEventHandler('esx:playerDropped', function(playerID, reason)
 	CancelProcessing(playerID)
 	for i=#Sadnice, 1, -1 do
-		if Sadnice[i] ~= nil and Sadnice[i].ID == playerID then
-			local ObjID = NetworkGetEntityFromNetworkId(Sadnice[i].NetID)
-			if DoesEntityExist(ObjID) then
-				DeleteEntity(ObjID)
-			end
+		if Sadnice[i] ~= nil and Sadnice[i].ID == tonumber(playerID) then
+			TriggerClientEvent("trava:ObrisiObj", -1, Sadnice[i].ID, Sadnice[i].Brojac)
 			table.remove(Sadnice, i)
 		end
+		Wait(100)
 	end
 end)
 

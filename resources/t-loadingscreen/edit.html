@@ -8,38 +8,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
     <link rel="stylesheet" type="text/css" media="screen" href="keks.css">
     <link href="https://fonts.googleapis.com/css?family=Raleway:400,400i,700" rel="stylesheet">
-	<style>
-		#myVideo {
-		  position: fixed;
-		  right: 0;
-		  bottom: 0;
-		  min-width: 100%;
-		  min-height: 100%;
-		}
-	</style>
 </head>
 <body>
+	<img src="pozadina.png" style="width: 100%; height: 100%;">
     <h1 class="enable_music"> Pritisni<strong> SPACE </strong> da ugasiš muziku </h1>
 	
-	<video autoplay loop id="myVideo">
-	  <source src="videoold.webm" type="video/webm">
-	</video>
-    <!--<audio id="leson" src="music.mp3" autoplay="true" hidden="true" loop="true"/>-->
+	
+    <audio id="leson" src="pjesma.mp3" hidden="true" loop="true"/>
     <script>
 
     var play = true;
-    var myAudio = document.getElementById("myVideo");
+    var myAudio = document.getElementById("leson");
     
-    myAudio.volume = 0.2;
-
+    myAudio.volume = 0.1;
+	myAudio.currentTime = 10;
+	myAudio.play();
+	
     function onKeyDown(event) {
             switch (event.keyCode) {
                 case 32: //SpaceBar                    
                     if (play) {
-                        myAudio.volume=0.0;
+                        myAudio.pause();
                         play = false;
                     } else {
-                       myAudio.volume=0.2;
+                        myAudio.play();
                         play = true;
                     }
                     break;

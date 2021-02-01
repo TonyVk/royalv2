@@ -53,7 +53,7 @@ AddEventHandler("playerSpawned", function()
 		while ESX.PlayerData.job == nil do
 			Citizen.Wait(100)
 		end
-		--TriggerServerEvent("trava:ProvjeriSadnice")
+		TriggerServerEvent("trava:ProvjeriSadnice")
 		connected = true
 	end
 end)
@@ -274,7 +274,7 @@ function OpenBuyLicenseMenu(licenseName)
 end
 
 RegisterNetEvent("trava:SpawnObjekt")
-AddEventHandler('trava:SpawnObjekt', function(koord, stanje, src, obj)
+AddEventHandler('trava:SpawnObjekt', function(koord, stanje, src, obj, br)
 	local mara = obj
 	RequestModel(mara)
 	while not HasModelLoaded(mara) do
@@ -282,24 +282,54 @@ AddEventHandler('trava:SpawnObjekt', function(koord, stanje, src, obj)
 	end
 	local Marih = CreateObjectNoOffset(GetHashKey(mara), koord.x,  koord.y,  koord.z, false, false, false)
 	FreezeEntityPosition(Marih, true)
-	table.insert(Sadnice, {NetID = Marih, Stanje = stanje, Koord = koord, ID = src})
-	table.insert(Travica, {NetID = Marih, ID = src, Koord = koord})
-	TriggerEvent("trava:PratiRast", Marih, stanje, koord)
+	table.insert(Sadnice, {NetID = Marih, Stanje = stanje, Koord = koord, ID = src, Brojac = br})
+	table.insert(Travica, {NetID = Marih, ID = src, Koord = koord, Brojac = br})
+	if stanje == 3 then
+		table.insert(weedPlants, {NetID = Marih, Koord = koord, Brojac = br})
+	end
+	if GetPlayerServerId(PlayerId()) == src and stanje ~= 3 then
+		TriggerEvent("trava:PratiRast", Marih, stanje, koord, br)
+	end
 end)
 
 RegisterNetEvent("trava:PratiRast")
-AddEventHandler('trava:PratiRast', function(netid, stanje, co)
+AddEventHandler('trava:PratiRast', function(netid, stanje, co, br)
 	if stanje == 3 then
-		table.insert(weedPlants, {NetID = netid, Koord = co})
 		ESX.ShowNotification("[Marihuana] Stabljika je spremna za branje!")
 	else
 		Citizen.CreateThread(function()
 			local Idic = netid
 			local stanjic = stanje
 			Citizen.Wait(10000)
-			DeleteEntity(Idic)
-			TriggerServerEvent("trava:Izrasti", stanjic+1, co)
+			TriggerServerEvent("trava:Izrasti", stanjic+1, co, br)
 		end)
+	end
+end)
+
+RegisterNetEvent("trava:ObrisiObj")
+AddEventHandler('trava:ObrisiObj', function(src, br)
+	for i=1, #Sadnice, 1 do
+		if Sadnice[i] ~= nil then
+			if Sadnice[i].ID == src and Sadnice[i].Brojac == br then
+				DeleteEntity(Sadnice[i].NetID)
+				table.remove(Sadnice, i)
+				break
+			end
+		end
+	end
+	for i=1, #Travica, 1 do
+		if Travica[i] ~= nil then
+			if Travica[i].ID == src and Travica[i].Brojac == br then
+				table.remove(Travica, i)
+				break
+			end
+		end
+	end
+	for b=1, #weedPlants, 1 do
+		if weedPlants[b].Brojac == br then
+			table.remove(weedPlants, b)
+			break
+		end
 	end
 end)
 
@@ -381,6 +411,16 @@ function ProcessWeed()
 	isProcessing = false
 end
 
+RegisterNetEvent("trava:NemosBrati")
+AddEventHandler('trava:NemosBrati', function(br)
+	for b=1, #weedPlants, 1 do
+		if weedPlants[b].Brojac == br then
+			table.remove(weedPlants, b)
+			break
+		end
+	end
+end)
+
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
@@ -413,9 +453,6 @@ Citizen.CreateThread(function()
 		end
 
 		if nearbyObject and IsPedOnFoot(playerPed) and nearbyObject ~= nil then
-			local kordara = GetEntityCoords(nearbyObject)
-			local xa,ya,za = table.unpack(kordara)
-			local kordara2 = vector3(xa,ya,za)
 			if not isPickingUp then
 				if ESX.PlayerData.job.name == "police" or ESX.PlayerData.job.name == "sipa" then
 					ESX.ShowHelpNotification('Pritisnite ~INPUT_CONTEXT~ da zapljenite stabljiku ~g~kanabisa~s~.')
@@ -433,13 +470,14 @@ Citizen.CreateThread(function()
 					ClearPedTasks(playerPed)
 					Citizen.Wait(1500)
 					FreezeEntityPosition(playerPed, false)
-					DeleteEntity(nearbyObject)
+					--DeleteEntity(nearbyObject)
+					TriggerServerEvent("trava:ObrisiTravu", Travica[nearbyID].ID, Travica[nearbyID].Brojac)
 					isPickingUp = false
 				else
 					ESX.TriggerServerCallback('esx_drugs:canPickUp', function(canPickUp)
 
 						if canPickUp then
-							--TriggerServerEvent("trava:MakniBranje", netid, kordara2)
+							TriggerServerEvent("trava:MakniBranje", Travica[nearbyID].Brojac)
 							FreezeEntityPosition(playerPed, true)
 							TaskStartScenarioInPlace(playerPed, 'world_human_gardener_plant', 0, false)
 
@@ -448,7 +486,8 @@ Citizen.CreateThread(function()
 							Citizen.Wait(1500)
 							FreezeEntityPosition(playerPed, false)
 			
-							DeleteEntity(nearbyObject)
+							--DeleteEntity(nearbyObject)
+							TriggerServerEvent("trava:ObrisiTravu", Travica[nearbyID].ID, Travica[nearbyID].Brojac)
 			
 							TriggerServerEvent('esx_drugs:EoTiKanabisa')
 						else
