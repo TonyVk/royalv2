@@ -298,10 +298,11 @@ AddEventHandler('trava:PratiRast', function(netid, stanje, co, br)
 		ESX.ShowNotification("[Marihuana] Stabljika je spremna za branje!")
 	else
 		Citizen.CreateThread(function()
-			local Idic = netid
 			local stanjic = stanje
+			local brojic = br
+			local kordic = co
 			Citizen.Wait(3600000)
-			TriggerServerEvent("trava:Izrasti", stanjic+1, co, br)
+			TriggerServerEvent("trava:Izrasti", stanjic+1, kordic, brojic)
 		end)
 	end
 end)
@@ -311,7 +312,7 @@ AddEventHandler('trava:ObrisiObj', function(src, br)
 	for i=1, #Sadnice, 1 do
 		if Sadnice[i] ~= nil then
 			if Sadnice[i].ID == src and Sadnice[i].Brojac == br then
-				DeleteEntity(Sadnice[i].NetID)
+				ESX.Game.DeleteObject(Sadnice[i].NetID)
 				table.remove(Sadnice, i)
 				break
 			end

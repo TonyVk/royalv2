@@ -277,20 +277,22 @@ function PosadiTravu2(src, co, stanje)
 	else
 		mara = "bkr_prop_weed_lrg_01a"
 	end
-	TriggerClientEvent("trava:SpawnObjekt", -1, korda, 1, src, mara, Brojac)
+	TriggerClientEvent("trava:SpawnObjekt", -1, korda, stanje, src, mara, Brojac)
 	table.insert(Sadnice, {ID = src, Stanje = stanje, Koord = korda, Brojac = Brojac})
 	Brojac = Brojac+1
 	for a=1, #Sadnice, 1 do
 		if Sadnice[a] ~= nil then
-			local mare
-			if Sadnice[a].Stanje == 1 then
-				mare = "bkr_prop_weed_01_small_01a"
-			elseif Sadnice[a].Stanje == 2 then
-				mare = "bkr_prop_weed_med_01a"
-			else
-				mare = "bkr_prop_weed_lrg_01a"
+			if Sadnice[a].ID ~= src then
+				local mare
+				if Sadnice[a].Stanje == 1 then
+					mare = "bkr_prop_weed_01_small_01a"
+				elseif Sadnice[a].Stanje == 2 then
+					mare = "bkr_prop_weed_med_01a"
+				else
+					mare = "bkr_prop_weed_lrg_01a"
+				end
+				TriggerClientEvent("trava:SpawnObjekt", src, Sadnice[a].Koord, Sadnice[a].Stanje, Sadnice[a].ID, mare, Sadnice[a].Brojac)
 			end
-			TriggerClientEvent("trava:SpawnObjekt", -1, Sadnice[a].Koord, Sadnice[a].Stanje, Sadnice[a].ID, mare, Sadnice[a].Brojac)
 		end
 	end
 end
