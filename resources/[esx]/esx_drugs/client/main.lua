@@ -327,9 +327,11 @@ AddEventHandler('trava:ObrisiObj', function(src, br)
 		end
 	end
 	for b=1, #weedPlants, 1 do
-		if weedPlants[b].Brojac == br then
-			table.remove(weedPlants, b)
-			break
+		if weedPlants[b] ~= nil then
+			if weedPlants[b].Brojac == br then
+				table.remove(weedPlants, b)
+				break
+			end
 		end
 	end
 end)
@@ -415,9 +417,11 @@ end
 RegisterNetEvent("trava:NemosBrati")
 AddEventHandler('trava:NemosBrati', function(br)
 	for b=1, #weedPlants, 1 do
-		if weedPlants[b].Brojac == br then
-			table.remove(weedPlants, b)
-			break
+		if weedPlants[b] ~= nil then
+			if weedPlants[b].Brojac == br then
+				table.remove(weedPlants, b)
+				break
+			end
 		end
 	end
 end)
@@ -485,6 +489,8 @@ Citizen.CreateThread(function()
 
 						if canPickUp then
 							if weedPlants[nearbyID] ~= nil then
+								local idic = weedPlants[nearbyID].ID
+								local brojcic = weedPlants[nearbyID].Brojac
 								TriggerServerEvent("trava:MakniBranje", weedPlants[nearbyID].Brojac)
 								FreezeEntityPosition(playerPed, true)
 								TaskStartScenarioInPlace(playerPed, 'world_human_gardener_plant', 0, false)
@@ -495,7 +501,7 @@ Citizen.CreateThread(function()
 								FreezeEntityPosition(playerPed, false)
 				
 								--DeleteEntity(nearbyObject)
-								TriggerServerEvent("trava:ObrisiTravu", weedPlants[nearbyID].ID, weedPlants[nearbyID].Brojac)
+								TriggerServerEvent("trava:ObrisiTravu", idic, brojcic)
 				
 								TriggerServerEvent('esx_drugs:EoTiKanabisa')
 							end
