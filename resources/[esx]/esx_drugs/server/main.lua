@@ -257,7 +257,7 @@ function PosadiTravu(src)
 					xPlayer.showNotification("Preblizu ste drugoj sadnici!")
 				end
 			else
-				xPlayer.showNotification("Vec imate posadjeno 20 sadnica")
+				xPlayer.showNotification("Vec imate posadjeno 10 sadnica")
 			end
 		else
 			xPlayer.showNotification("Nemate dovoljno sjemena/saksija/zemlje!")
