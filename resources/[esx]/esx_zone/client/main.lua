@@ -647,6 +647,9 @@ Citizen.CreateThread(function()
 								ESX.TriggerServerCallback('zone:DajOsvajanje', function(br)
 									Osvajam = br
 								end)
+								while Osvajam == 0 do
+									Wait(100)
+								end
 								TriggerServerEvent("zone:ZapocniZauzimanje", Zone[id].Ime)
 								Zauzima = true
 								ESX.ShowNotification("Zapoceli ste sa zauzimanjem teritorija!")

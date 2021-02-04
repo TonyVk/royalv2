@@ -485,33 +485,35 @@ Citizen.CreateThread(function()
 						isPickingUp = false
 					end
 				else
-					ESX.TriggerServerCallback('esx_drugs:canPickUp', function(canPickUp)
+					local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
+					if IsPedOnFoot(playerPed) and (closestDistance == -1 or closestDistance > 3) then
+						ESX.TriggerServerCallback('esx_drugs:canPickUp', function(canPickUp)
+							if canPickUp then
+								if weedPlants[nearbyID] ~= nil then
+									local idic = weedPlants[nearbyID].ID
+									local brojcic = weedPlants[nearbyID].Brojac
+									TriggerServerEvent("trava:MakniBranje", weedPlants[nearbyID].Brojac)
+									FreezeEntityPosition(playerPed, true)
+									TaskStartScenarioInPlace(playerPed, 'world_human_gardener_plant', 0, false)
 
-						if canPickUp then
-							if weedPlants[nearbyID] ~= nil then
-								local idic = weedPlants[nearbyID].ID
-								local brojcic = weedPlants[nearbyID].Brojac
-								TriggerServerEvent("trava:MakniBranje", weedPlants[nearbyID].Brojac)
-								FreezeEntityPosition(playerPed, true)
-								TaskStartScenarioInPlace(playerPed, 'world_human_gardener_plant', 0, false)
-
-								Citizen.Wait(2000)
-								ClearPedTasks(playerPed)
-								Citizen.Wait(1500)
-								FreezeEntityPosition(playerPed, false)
-				
-								--DeleteEntity(nearbyObject)
-								TriggerServerEvent("trava:ObrisiTravu", idic, brojcic)
-				
-								TriggerServerEvent('esx_drugs:EoTiKanabisa')
+									Citizen.Wait(2000)
+									ClearPedTasks(playerPed)
+									Citizen.Wait(1500)
+									FreezeEntityPosition(playerPed, false)
+					
+									--DeleteEntity(nearbyObject)
+									TriggerServerEvent("trava:ObrisiTravu", idic, brojcic)
+					
+									TriggerServerEvent('esx_drugs:EoTiKanabisa')
+								end
+							else
+								ESX.ShowNotification(_U('weed_inventoryfull'))
 							end
-						else
-							ESX.ShowNotification(_U('weed_inventoryfull'))
-						end
 
-						isPickingUp = false
+							isPickingUp = false
 
-					end, 'cannabis')
+						end, 'cannabis')
+					end
 				end
 			end
 
