@@ -58,7 +58,7 @@ AddEventHandler("playerSpawned", function()
 	end
 end)
 
---[[Citizen.CreateThread(function()
+Citizen.CreateThread(function()
 	local waitara = 500
 	while true do
 		Citizen.Wait(waitara)
@@ -97,6 +97,7 @@ end)
 	end
 end)
 
+--[[
 Citizen.CreateThread(function()
 	local waitara = 500
 	while true do
@@ -290,6 +291,7 @@ AddEventHandler('trava:SpawnObjekt', function(koord, stanje, src, obj, br)
 	if GetPlayerServerId(PlayerId()) == src and stanje ~= 3 then
 		TriggerEvent("trava:PratiRast", Marih, stanje, koord, br)
 	end
+	SetModelAsNoLongerNeeded(GetHashKey(mara))
 end)
 
 RegisterNetEvent("trava:PratiRast")

@@ -14,13 +14,13 @@
     <h1 class="enable_music"> Pritisni<strong> SPACE </strong> da ugasiš muziku </h1>
 	
 	
-    <audio id="leson" src="pjesma.mp3" hidden="true" loop="true"/>
+    <audio id="leson" src="pjesma.mp3" hidden="true" loop="true" autoplay="true" />
     <script>
 
     var play = true;
     var myAudio = document.getElementById("leson");
     
-    myAudio.volume = 0.1;
+    myAudio.volume = 0.3;
 	myAudio.currentTime = 10;
 	myAudio.play();
 	
