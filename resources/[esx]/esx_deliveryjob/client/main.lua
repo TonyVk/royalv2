@@ -264,7 +264,7 @@ AddEventHandler('esx_delivererjob:hasEnteredMarker', function(zone)
 	end
 	
 	if zone == 'Istovari' then
-		if isInService and IsJobTrucker() then
+		if isInService and IsJobTrucker() and LokDos ~= nil then
 			CurrentAction     = 'Istovari'
             CurrentActionMsg  = "Pritisnite E da ostavite robu!"
 		end
@@ -565,7 +565,7 @@ Citizen.CreateThread(function()
 				waitara = 0
 			end
 			
-			if(GetDistanceBetweenCoords(coords, LokDos, true) < 2) and IstovarioTo == 0 then
+			if LokDos ~= nil and (GetDistanceBetweenCoords(coords, LokDos, true) < 2) and IstovarioTo == 0 then
 				isInMarker  = true
 				currentZone = "Istovari"
 				naso = 1
@@ -664,6 +664,7 @@ Citizen.CreateThread(function()
 					end
 					
 					if CurrentAction == 'Istovari' then
+						LokDos = nil
 						ClearPedSecondaryTask(PlayerPedId())
 						DetachEntity(prop_ent, false, false)
 						DeleteObject(prop_ent)
