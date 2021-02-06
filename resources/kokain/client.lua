@@ -4,6 +4,7 @@ local hasAlreadyEnteredMarker = false
 local lastZone                = nil
 local CurrentAction           = nil
 local CurrentActionMsg        = ''
+local Mafije = {}
 local runspeed = 1.20 --(Change the run speed here !!! MAXIMUM IS 1.49 !!! )
 local onDrugs = false
 
@@ -101,6 +102,10 @@ end)
 function PostaviPosao()
 	ESX.PlayerData = ESX.GetPlayerData()
 	
+	ESX.TriggerServerCallback('mafije:DohvatiMafijev2', function(mafija)
+		Mafije = mafija
+	end)
+	
 	local model = GetHashKey("s_m_y_dealer_01")
     RequestModel(model)
 	
@@ -140,18 +145,27 @@ Citizen.CreateThread( function()
 		--if GetDistanceBetweenCoords(Config.PickupBlip.x,Config.PickupBlip.y,Config.PickupBlip.z, GetEntityCoords(GetPlayerPed(-1))) <= 200 then
 			if spawned == false then
 				if ESX.PlayerData.job ~= nil then
-					TriggerEvent('KCoke:start')
-					TriggerEvent('KCoke:start')
-					TriggerEvent('KCoke:start')
-					TriggerEvent('KCoke:start')
-					TriggerEvent('KCoke:start')
-					TriggerEvent('KCoke:start')
-					TriggerEvent('KCoke:start')
-					TriggerEvent('KCoke:start')
-					TriggerEvent('KCoke:start')
-					TriggerEvent('KCoke:start')
-					TriggerEvent('KCoke:start')
-					spawned = true
+					local naso = 0
+					for i=1, #Mafije, 1 do
+						if Mafije[i] ~= nil and Mafije[i].Ime == ESX.PlayerData.job.name then
+							naso = 1
+							break
+						end
+					end
+					if naso == 1 then
+						TriggerEvent('KCoke:start')
+						TriggerEvent('KCoke:start')
+						TriggerEvent('KCoke:start')
+						TriggerEvent('KCoke:start')
+						TriggerEvent('KCoke:start')
+						TriggerEvent('KCoke:start')
+						TriggerEvent('KCoke:start')
+						TriggerEvent('KCoke:start')
+						TriggerEvent('KCoke:start')
+						TriggerEvent('KCoke:start')
+						TriggerEvent('KCoke:start')
+						spawned = true
+					end
 				end
 			end
 		else
@@ -162,6 +176,11 @@ Citizen.CreateThread( function()
 			
 		end
 	end
+end)
+
+RegisterNetEvent('mafije:UpdateMafije')
+AddEventHandler('mafije:UpdateMafije', function(maf)
+	Mafije = maf
 end)
 
 RegisterNetEvent('esx:setJob')
@@ -191,6 +210,13 @@ Citizen.CreateThread(function()
 	local waitara = 500
     while true do
 			Citizen.Wait(waitara)
+			local naso = 0
+			for i=1, #Mafije, 1 do
+				if Mafije[i] ~= nil and Mafije[i].Ime == ESX.PlayerData.job.name then
+					naso = 1
+					break
+				end
+			end
 			local naso2 = 0
 			local kordic = GetEntityCoords(PlayerPedId())
 			if (#(kordic-prodaja) <= 50.0) then
@@ -220,7 +246,7 @@ Citizen.CreateThread(function()
 			end
 			if ESX ~= nil then
 				if ESX.PlayerData.job ~= nil then
-					--if naso == 1 then
+					if naso == 1 then
 						for k in pairs(locations) do
 							if #(kordic-locations[k]) < 150 then
 							--if GetDistanceBetweenCoords(locations[k].x, locations[k].y, locations[k].z, GetEntityCoords(GetPlayerPed(-1))) < 150 then
@@ -266,7 +292,7 @@ Citizen.CreateThread(function()
 									process = false
 								end
 						end
-					--end
+					end
 				end	
 			end
 			if CurrentAction ~= nil then

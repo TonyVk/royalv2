@@ -253,7 +253,12 @@ AddEventHandler('esx_vodoinstalater:hasEnteredMarker', function(zone)
 			TriggerServerEvent("vodaa:platituljanu")
 			TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.job.name)
 			RemoveBlip(Blipara)
-			TriggerServerEvent("vodoinstalater:MaknutKvar", GetPlayerServerId(PlayerId()))
+			--TriggerServerEvent("vodoinstalater:MaknutKvar", GetPlayerServerId(PlayerId()))
+			ESX.Game.DeleteObject(NoviObj)
+			ESX.Game.DeleteObject(NoviObj2)
+			ESX.Game.DeleteObject(NoviObj3)
+			ESX.Game.DeleteObject(NoviObj4)
+			ESX.Game.DeleteObject(NoviObj5)
 			NoviObj = nil
 			NoviObj2 = nil
 			NoviObj3 = nil
@@ -389,6 +394,11 @@ function MakniKvar()
 	TrajeIntervencija = false
 	Radis = false
 	RemoveBlip(Blipara)
+	ESX.Game.DeleteObject(NoviObj)
+	ESX.Game.DeleteObject(NoviObj2)
+	ESX.Game.DeleteObject(NoviObj3)
+	ESX.Game.DeleteObject(NoviObj4)
+	ESX.Game.DeleteObject(NoviObj5)
 	NoviObj = nil
 	NoviObj2 = nil
 	NoviObj3 = nil
@@ -401,7 +411,7 @@ function MakniKvar()
 		ESX.Game.DeleteVehicle(Vozilo)
 		Vozilo = nil
 	end
-	TriggerServerEvent("vodoinstalater:MaknutKvar", GetPlayerServerId(PlayerId()))
+	--TriggerServerEvent("vodoinstalater:MaknutKvar", GetPlayerServerId(PlayerId()))
 end
 
 function SpawnajKvar()
@@ -438,61 +448,40 @@ function SpawnajKvar()
 			
 			local x,y,z = table.unpack(outPosition)
 			AddExplosion(x, y, z, 13, 1.0, true, false, 0.0, true)
-			ESX.Game.SpawnObject('prop_cs_dildo_01', 
-			{
-				x = x,
-				y = y,
-				z = z-1.0
-			}, function(obj)
-				FreezeEntityPosition(obj, true)
-				NoviObj = obj
-			end)
-			while NoviObj == nil do
+			local model = GetHashKey('prop_cs_dildo_01')
+			RequestModel(model)
+			while not HasModelLoaded(model) do
 				Wait(1)
 			end
+			local model2 = GetHashKey('prop_barrier_work06b')
+			RequestModel(model2)
+			while not HasModelLoaded(model2) do
+				Wait(1)
+			end
+			NoviObj = CreateObject(model, x, y, z-1.0, false, false, false)
+			FreezeEntityPosition(NoviObj, true)
 			local prvioffset = GetOffsetFromEntityInWorldCoords(NoviObj, 0.0, 2.0, 1.0)
 			local drugioffset = GetOffsetFromEntityInWorldCoords(NoviObj, 0.0, -2.0, 1.0)
 			local trecioffset = GetOffsetFromEntityInWorldCoords(NoviObj, 2.0, 0.0, 1.0)
 			local cetvrtioffset = GetOffsetFromEntityInWorldCoords(NoviObj, -2.0, 0.0, 1.0)
 			local heading = GetEntityHeading(NoviObj)
-			ESX.Game.SpawnObject('prop_barrier_work06b', prvioffset, function(obj)
-				--PlaceObjectOnGroundProperly_2(obj)
-				FreezeEntityPosition(obj, true)
-				SetEntityHeading(obj, heading+180)
-				NoviObj2 = obj
-			end)
-			ESX.Game.SpawnObject('prop_barrier_work06b', drugioffset, function(obj)
-				--PlaceObjectOnGroundProperly_2(obj)
-				FreezeEntityPosition(obj, true)
-				NoviObj3 = obj
-			end)
-			ESX.Game.SpawnObject('prop_barrier_work06b', trecioffset, function(obj)
-				--PlaceObjectOnGroundProperly_2(obj)
-				FreezeEntityPosition(obj, true)
-				SetEntityHeading(obj, heading+90)
-				NoviObj4 = obj
-			end)
-			ESX.Game.SpawnObject('prop_barrier_work06b', cetvrtioffset, function(obj)
-				--PlaceObjectOnGroundProperly_2(obj)
-				FreezeEntityPosition(obj, true)
-				SetEntityHeading(obj, heading-90)
-				NoviObj5 = obj
-			end)
+			NoviObj2 = CreateObject(model2, prvioffset.x, prvioffset.y, prvioffset.z, false, false, false)
+			FreezeEntityPosition(NoviObj2, true)
+			SetEntityHeading(NoviObj2, heading+180)
+
+			NoviObj3 = CreateObject(model2, drugioffset.x, drugioffset.y, drugioffset.z, false, false, false)
+			FreezeEntityPosition(NoviObj3, true)
+
+			NoviObj4 = CreateObject(model2, trecioffset.x, trecioffset.y, trecioffset.z, false, false, false)
+			FreezeEntityPosition(NoviObj4, true)
+			SetEntityHeading(NoviObj4, heading+90)
+
+			NoviObj5 = CreateObject(model2, cetvrtioffset.x, cetvrtioffset.y, cetvrtioffset.z, false, false, false)
+			FreezeEntityPosition(NoviObj5, true)
+			SetEntityHeading(NoviObj5, heading-90)
 			Wait(200)
-			SetNetworkIdExistsOnAllMachines(ObjToNet(NoviObj), true)
-			SetNetworkIdExistsOnAllMachines(ObjToNet(NoviObj2), true)
-			SetNetworkIdExistsOnAllMachines(ObjToNet(NoviObj3), true)
-			SetNetworkIdExistsOnAllMachines(ObjToNet(NoviObj4), true)
-			SetNetworkIdExistsOnAllMachines(ObjToNet(NoviObj5), true)
-			SetNetworkIdCanMigrate(ObjToNet(NoviObj), true)
-			SetNetworkIdCanMigrate(ObjToNet(NoviObj2), true)
-			SetNetworkIdCanMigrate(ObjToNet(NoviObj3), true)
-			SetNetworkIdCanMigrate(ObjToNet(NoviObj4), true)
-			SetNetworkIdCanMigrate(ObjToNet(NoviObj5), true)
-			local Obj = {}
-			table.insert(Obj, {ID = GetPlayerServerId(PlayerId()), Obj1 = ObjToNet(NoviObj), Obj2 = ObjToNet(NoviObj2), Obj3 = ObjToNet(NoviObj3), Obj4 = ObjToNet(NoviObj4), Obj5 = ObjToNet(NoviObj5)})
-			TriggerServerEvent("vodoinstalater:PosaljiObjekte", Obj)
-			
+			SetModelAsNoLongerNeeded(model)
+			SetModelAsNoLongerNeeded(model2)
 			TrajeIntervencija = true
 			
 			Citizen.CreateThread(function()

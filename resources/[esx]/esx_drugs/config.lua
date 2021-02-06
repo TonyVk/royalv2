@@ -19,7 +19,7 @@ Config.LicensePrices = {
 Config.GiveBlack = false -- give black money? if disabled it'll give regular cash.
 
 Config.CircleZones = {
-	Prodaja = {coords = vector3(1341.7979736328, 4391.8989257812, 43.364612579346), name = _U('blip_weedfield'), color = 6, sprite = 378, radius = 25.0},
-	WeedProcessing = {coords = vector3(-2166.6772460938, 5198.7021484375, 15.880407333374), name = _U('blip_weedprocessing'), color = 25, sprite = 496, radius = 100.0},
+	Prodaja = {coords = vector3(1341.7979736328, 4391.8989257812, 44.364612579346), name = _U('blip_weedfield'), color = 6, sprite = 378, radius = 25.0},
+	WeedProcessing = {coords = vector3(-2166.6772460938, 5198.7021484375, 16.880407333374), name = _U('blip_weedprocessing'), color = 25, sprite = 496, radius = 100.0},
 	DrugDealer = {coords = vector3(-1172.02, -1571.98, 4.66), name = _U('blip_drugdealer'), color = 6, sprite = 378, radius = 25.0}
 }
