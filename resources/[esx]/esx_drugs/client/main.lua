@@ -97,7 +97,6 @@ Citizen.CreateThread(function()
 	end
 end)
 
---[[
 Citizen.CreateThread(function()
 	local waitara = 500
 	while true do
@@ -135,7 +134,7 @@ Citizen.CreateThread(function()
 			waitara = 500
 		end
 	end
-end)]]
+end)
 
 function OpenDrugShop()
 	ESX.UI.Menu.CloseAll()
@@ -350,7 +349,7 @@ AddEventHandler('esx_drugs:Animacija', function()
 	ClearPedTasks(PlayerPedId())
 end)
 
---[[Citizen.CreateThread(function()
+Citizen.CreateThread(function()
 	local waitara = 500
 	while true do
 		Citizen.Wait(waitara)
@@ -392,7 +391,7 @@ end)
 			waitara = 500
 		end
 	end
-end)]]
+end)
 
 function ProcessWeed()
 	isProcessing = true

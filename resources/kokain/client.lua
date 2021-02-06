@@ -4,7 +4,6 @@ local hasAlreadyEnteredMarker = false
 local lastZone                = nil
 local CurrentAction           = nil
 local CurrentActionMsg        = ''
-local Mafije = {}
 local runspeed = 1.20 --(Change the run speed here !!! MAXIMUM IS 1.49 !!! )
 local onDrugs = false
 
@@ -101,9 +100,6 @@ end)
 
 function PostaviPosao()
 	ESX.PlayerData = ESX.GetPlayerData()
-	ESX.TriggerServerCallback('mafije:DohvatiMafijev2', function(mafija)
-		Mafije = mafija
-	end)
 	
 	local model = GetHashKey("s_m_y_dealer_01")
     RequestModel(model)
@@ -112,10 +108,10 @@ function PostaviPosao()
         Wait(1)
     end
 	
-	local npc = CreatePed(4, model, -1155.025390625, -1521.6463623047, 9.63272857666, 132.74, false, true)
+	local npc = CreatePed(4, model, -2076.9714355468, -1019.7077636718, 7.9714832305908, 221.32, false, true)
 	SetModelAsNoLongerNeeded(model)
 			
-	SetEntityHeading(npc, 132.74)
+	SetEntityHeading(npc, 221.32)
 	FreezeEntityPosition(npc, true)
 	SetEntityInvincible(npc, true)
 	SetBlockingOfNonTemporaryEvents(npc, true)
@@ -144,27 +140,18 @@ Citizen.CreateThread( function()
 		--if GetDistanceBetweenCoords(Config.PickupBlip.x,Config.PickupBlip.y,Config.PickupBlip.z, GetEntityCoords(GetPlayerPed(-1))) <= 200 then
 			if spawned == false then
 				if ESX.PlayerData.job ~= nil then
-					local naso = 0
-					for i=1, #Mafije, 1 do
-						if Mafije[i] ~= nil and Mafije[i].Ime == ESX.PlayerData.job.name then
-							naso = 1
-							break
-						end
-					end
-					if naso == 1 then
-						TriggerEvent('KCoke:start')
-						TriggerEvent('KCoke:start')
-						TriggerEvent('KCoke:start')
-						TriggerEvent('KCoke:start')
-						TriggerEvent('KCoke:start')
-						TriggerEvent('KCoke:start')
-						TriggerEvent('KCoke:start')
-						TriggerEvent('KCoke:start')
-						TriggerEvent('KCoke:start')
-						TriggerEvent('KCoke:start')
-						TriggerEvent('KCoke:start')
-						spawned = true
-					end
+					TriggerEvent('KCoke:start')
+					TriggerEvent('KCoke:start')
+					TriggerEvent('KCoke:start')
+					TriggerEvent('KCoke:start')
+					TriggerEvent('KCoke:start')
+					TriggerEvent('KCoke:start')
+					TriggerEvent('KCoke:start')
+					TriggerEvent('KCoke:start')
+					TriggerEvent('KCoke:start')
+					TriggerEvent('KCoke:start')
+					TriggerEvent('KCoke:start')
+					spawned = true
 				end
 			end
 		else
@@ -180,11 +167,6 @@ end)
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
   ESX.PlayerData.job = job
-end)
-
-RegisterNetEvent('mafije:UpdateMafije')
-AddEventHandler('mafije:UpdateMafije', function(maf)
-	Mafije = maf
 end)
 
 local displayed = false
@@ -204,21 +186,14 @@ AddEventHandler('kokain:hasExitedMarker', function(zone)
 end)
 
 local process = true
-local prodaja = vector3(-1156.2723388672, -1522.8728027344, 9.63272857666)
+local prodaja = vector3(-2076.9714355468, -1019.7077636718, 7.9714832305908)
 Citizen.CreateThread(function()
 	local waitara = 500
     while true do
 			Citizen.Wait(waitara)
-			local naso = 0
-			for i=1, #Mafije, 1 do
-				if Mafije[i] ~= nil and Mafije[i].Ime == ESX.PlayerData.job.name then
-					naso = 1
-					break
-				end
-			end
 			local naso2 = 0
 			local kordic = GetEntityCoords(PlayerPedId())
-			if (#(kordic-prodaja) <= 50.0) and naso == 0 then
+			if (#(kordic-prodaja) <= 50.0) then
 			--if (GetDistanceBetweenCoords(-1156.2723388672, -1522.8728027344, 9.63272857666,  kordic.x,  kordic.y,  kordic.z,  true) <= 50.0) and naso == 0 then
 				waitara = 0
 				naso2 = 1
@@ -228,7 +203,7 @@ Citizen.CreateThread(function()
 			local isInMarker  = false
 			local currentZone = nil
 
-			if (#(kordic-prodaja) < 2.25) and naso == 0 then
+			if (#(kordic-prodaja) < 2.25) then
 			--if(GetDistanceBetweenCoords(kordic, -1156.2723388672, -1522.8728027344, 9.63272857666, true) < 2.25) and naso == 0 then
 				isInMarker  = true
 				currentZone = "prodaja"
@@ -245,7 +220,7 @@ Citizen.CreateThread(function()
 			end
 			if ESX ~= nil then
 				if ESX.PlayerData.job ~= nil then
-					if naso == 1 then
+					--if naso == 1 then
 						for k in pairs(locations) do
 							if #(kordic-locations[k]) < 150 then
 							--if GetDistanceBetweenCoords(locations[k].x, locations[k].y, locations[k].z, GetEntityCoords(GetPlayerPed(-1))) < 150 then
@@ -291,7 +266,7 @@ Citizen.CreateThread(function()
 									process = false
 								end
 						end
-					end
+					--end
 				end	
 			end
 			if CurrentAction ~= nil then

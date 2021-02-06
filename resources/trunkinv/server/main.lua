@@ -1,5 +1,5 @@
 ESX = nil
-local arrayWeight = Config.localWeight
+local arrayWeight = {}
 local VehicleList = {}
 local Tablice = {}
 
@@ -179,6 +179,10 @@ AddEventHandler('gepeke:addInventoryItem', function(type, model, plate, item, qt
     end
 end)
 
+ESX.RegisterServerCallback('gepek:DohvatiTezine', function(source, cb)
+    cb(arrayWeight)
+end)
+
 ESX.RegisterServerCallback('esx_truck:checkvehicle', function(source, cb, vehicleplate)
     local isFound = false
     local _source = source
@@ -251,6 +255,20 @@ AddEventHandler('onMySQLReady', function()
     MySQL.Async.execute('DELETE FROM `truck_inventory` WHERE `count` = 0 AND `itemt` != "item_weapon" ', {})
 end)
 
+MySQL.ready(function()
+	MySQL.Async.fetchAll(
+        'SELECT name, weight FROM items', {},
+        function(result)
+            if result ~= nil and #result > 0 then
+                for _, v in pairs(result) do
+					table.insert(arrayWeight, {Item = v.name, Tezina = v.weight})
+                end
+				TriggerClientEvent("gepek:EoTiTezine", -1, arrayWeight)
+            end
+		end
+	)
+end)
+
 function getInventoryWeight(inventory)
     local weight = 0
     local itemWeight = 0
@@ -259,9 +277,11 @@ function getInventoryWeight(inventory)
         for i = 1, #inventory, 1 do
             if inventory[i] ~= nil then
                 itemWeight = Config.DefaultWeight
-                if arrayWeight[inventory[i].name] ~= nil then
-                    itemWeight = arrayWeight[inventory[i].name]
-                end
+				for a = 1, #arrayWeight, 1 do
+					if arrayWeight[a].Item == inventory[i].name and arrayWeight[a].Tezina > 0 then
+						itemWeight = arrayWeight[a].Tezina
+					end
+				end
                 weight = weight + (itemWeight * inventory[i].count)
             end
         end

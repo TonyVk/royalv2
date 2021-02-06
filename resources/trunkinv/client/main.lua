@@ -18,7 +18,7 @@ local lastVehicle = nil
 local lastOpen = false
 GUI.Time                      = 0
 local vehiclePlate = {}
-local arrayWeight = Config.localWeight
+local arrayWeight = {}
 local CloseToVehicle = false
 local entityWorld = nil
 local globalplate = nil
@@ -29,16 +29,18 @@ usingKeyPress = false -- Allow use of a key press combo (default Ctrl + E) to op
 togKey = 38 -- E
 
 function getItemyWeight(item)
-  local weight = 0
-  local itemWeight = 0
+	local weight = 0
+	local itemWeight = 0
 
-  if item ~= nil then
-	   itemWeight = Config.DefaultWeight
-	   if arrayWeight[item] ~= nil then
-	        itemWeight = arrayWeight[item]
-	   end
+	if item ~= nil then
+		itemWeight = Config.DefaultWeight
+		for i = 1, #arrayWeight, 1 do
+			if arrayWeight[i].Item == item and arrayWeight[i].Tezina > 0 then
+				itemWeight = arrayWeight[i].Tezina
+			end
+		end
 	end
-  return itemWeight
+	return itemWeight
 end
 
 --- Code ---
@@ -71,7 +73,12 @@ RegisterCommand("gepek", function(source, args, raw)
             else
 				if not locked then
 					SetVehicleDoorOpen(closecar, door, false, false)
-					TriggerEvent("gepeke:OtvoriGa", closecar)
+					local vehFront = VehicleInFront()
+					if vehFront ~= 0 then
+						TriggerEvent("gepeke:OtvoriGa", closecar)
+					else
+						ESX.ShowNotification("Neuspjesna detekcija vozila, vas karakter mora gledati prema vozilu da vam se otvori menu za gepek!")
+					end
 				else
 					ShowInfo("Vozilo je zakljucano.")
 				end
@@ -231,6 +238,14 @@ RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
   	PlayerData = xPlayer
     TriggerServerEvent("gepeke:getOwnedVehicule")
+	ESX.TriggerServerCallback('gepek:DohvatiTezine',function(tez)
+		arrayWeight = tez
+	end)
+end)
+
+RegisterNetEvent('gepek:EoTiTezine')
+AddEventHandler('gepek:EoTiTezine', function(nest)
+  	arrayWeight = nest
 end)
 
 RegisterNetEvent('esx:setJob')
@@ -256,7 +271,7 @@ end)
 function VehicleInFront()
     local pos = GetEntityCoords(GetPlayerPed(-1))
     local entityWorld = GetOffsetFromEntityInWorldCoords(GetPlayerPed(-1), 0.0, 4.0, 0.0)
-    local rayHandle = CastRayPointToPoint(pos.x, pos.y, pos.z, entityWorld.x, entityWorld.y, entityWorld.z, 10, GetPlayerPed(-1), 0)
+    local rayHandle = CastRayPointToPoint(pos.x, pos.y, pos.z-0.4, entityWorld.x, entityWorld.y, entityWorld.z, 10, GetPlayerPed(-1), 0)
     local a, b, c, d, result = GetRaycastResult(rayHandle)
     return result
 end
@@ -451,17 +466,21 @@ AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
             local playerPed = GetPlayerPed(player)
 			if DoesEntityExist(playerPed) then
 				if not IsEntityAttached(playerPed) or GetDistanceBetweenCoords(GetEntityCoords(playerPed), GetEntityCoords(PlayerPedId()), true) >= 5.0 then
-					menu.close()
-					SetCarBootOpen(vehFrontBack)
-					Wait(350)
-					AttachEntityToEntity(PlayerPedId(), vehFrontBack, -1, 0.0, -2.2, 0.5, 0.0, 0.0, 0.0, false, false, false, false, 20, true)	
-					loadDict('timetable@floyd@cryingonbed@base')
-					TaskPlayAnim(PlayerPedId(), 'timetable@floyd@cryingonbed@base', 'base', 8.0, -8.0, -1, 1, 0, false, false, false)
-					Wait(50)
-					inTrunk = true
-					Wait(1500)
-					SetVehicleDoorShut(vehFrontBack, 5)
-					ESX.ShowNotification("Pritisnite E kako bih ste izasli iz gepeka!")
+					if GetVehicleClass(vehFrontBack) ~= 8 and GetVehicleClass(vehFrontBack) ~= 13 and GetVehicleClass(vehFrontBack) ~= 14 and GetVehicleClass(vehFrontBack) ~= 15 and GetVehicleClass(vehFrontBack) ~= 16 and GetVehicleClass(vehFrontBack) ~= 20 and GetVehicleClass(vehFrontBack) ~= 21 then
+						menu.close()
+						SetCarBootOpen(vehFrontBack)
+						Wait(350)
+						AttachEntityToEntity(PlayerPedId(), vehFrontBack, -1, 0.0, -2.2, 0.5, 0.0, 0.0, 0.0, false, false, false, false, 20, true)	
+						loadDict('timetable@floyd@cryingonbed@base')
+						TaskPlayAnim(PlayerPedId(), 'timetable@floyd@cryingonbed@base', 'base', 8.0, -8.0, -1, 1, 0, false, false, false)
+						Wait(50)
+						inTrunk = true
+						Wait(1500)
+						SetVehicleDoorShut(vehFrontBack, 5)
+						ESX.ShowNotification("Pritisnite E kako bih ste izasli iz gepeka!")
+					else
+						ESX.ShowNotification("Ne mozete se sakriti u ovom vozilu!")
+					end
 				else
 					ESX.ShowNotification('Netko je vec u gepeku vozila!')
 				end
@@ -558,7 +577,6 @@ AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
             end
 
             --fin test
-
             if quantity > 0 and quantity <= tonumber(data3.current.count) and vehFront > 0  then
               local MaxVh =(tonumber(Config.VehicleLimit[typeVeh])/1000)
               local Kgweight =  totalweight/1000

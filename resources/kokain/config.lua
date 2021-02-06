@@ -1,6 +1,6 @@
 Config = {}
 
-Config.PickupBlip = vector3(-1833.4, 2176.7, 107.2)
+Config.PickupBlip = vector3(2579.185546875, 6187.90234375, 163.55838012696)
 Config.Processing = vector3(978.2, -92.6, 73.85)
 
 

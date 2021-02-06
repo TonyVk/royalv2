@@ -11,7 +11,6 @@ Config.Limit = 25000
 Config.DefaultWeight = 0
 
 
-
 -- If true, ignore rest of file
 Config.WeightSqlBased = false
 
