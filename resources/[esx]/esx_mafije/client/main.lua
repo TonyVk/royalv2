@@ -615,6 +615,7 @@ RegisterCommand("uredimafiju", function(source, args, raw)
 									table.insert(elements, {label = "Postavi koordinate izlaza iz kuce", value = "8"})
 									table.insert(elements, {label = "Postavi koordinate spawna plovila", value = "9"})
 									table.insert(elements, {label = "Postavi koordinate brisanja plovila", value = "10"})
+									table.insert(elements, {label = "Postavi koordinate labosa za kokain", value = "11"})
 
 									ESX.UI.Menu.Open(
 									  'default', GetCurrentResourceName(), 'listarankova',
@@ -1458,6 +1459,64 @@ function StockVehicleMenu()
 		exports.pNotify:SendNotification({ text = _U('stockv_not_in_veh'), queue = "right", timeout = 3000, layout = "centerLeft" })
 	end
 
+end
+
+function OpenKokainMenu()
+    local elements = {}
+	table.insert(elements, {label = "Stanje", value = 'skl_stanje'})
+	table.insert(elements, {label = "Ostavi listove", value = 'ost_list'})
+	table.insert(elements, {label = 'Prodaj kokain',  value = 'kok_prodaj'})
+
+
+    ESX.UI.Menu.Open(
+      'default', GetCurrentResourceName(), 'kizb_menu',
+      {
+        title    = "Izaberite opciju",
+        align    = 'top-left',
+        elements = elements,
+      },
+      function(data, menu)
+		if data.current.value == 'skl_stanje' then
+			ESX.ShowNotification("Na skladistu imate 15 listova i 25kg kokaina")
+        end
+
+        if data.current.value == 'ost_list' then
+			OpenKOstaviMenu()
+			menu.close()
+        end
+		
+		if data.current.value == 'kok_prodaj' then
+			--prodaja
+        end
+      end,
+      function(data, menu)
+        menu.close()
+      end
+    )
+end
+
+function OpenKOstaviMenu()
+	ESX.UI.Menu.Open(
+          'dialog', GetCurrentResourceName(), 'kokain_menu_get_item_count',
+          {
+            title = _U('quantity')
+          },
+          function(data2, menu2)
+
+            local count = tonumber(data2.value)
+
+            if count == nil then
+				ESX.ShowNotification(_U('quantity_invalid'))
+            else
+				menu2.close()
+				TriggerServerEvent('mafije:OstaviListove', count, PlayerData.job.name)
+				OpenKokainMenu()
+            end
+          end,
+        function(data2, menu2)
+            menu2.close()
+        end
+    )
 end
 
 function OpenIzborMenu()
@@ -2544,9 +2603,39 @@ AddEventHandler('mafije:hasEnteredMarker', function(station, part, partNum)
 	CurrentActionData = {station = station, partNum = partNum}
   end
   
+  if part == 'UlazUKokain' then
+	CurrentAction     = 'menu_ulazk'
+	CurrentActionMsg  = "Pritisnite E da udjete u labos"
+	CurrentActionData = {station = station, partNum = partNum}
+  end
+  
+  if part == 'UlazUSkladiste' then
+	CurrentAction     = 'menu_ulazsk'
+	CurrentActionMsg  = "Pritisnite E da udjete u skladiste"
+	CurrentActionData = {station = station, partNum = partNum}
+  end
+  
+  if part == 'KokainMenu' then
+	CurrentAction     = 'menu_kokain'
+	CurrentActionMsg  = "Pritisnite E da upravljate skladistem"
+	CurrentActionData = {station = station, partNum = partNum}
+  end
+  
+  if part == 'IzlazIzSkladiste' then
+	CurrentAction     = 'menu_izlazsk'
+	CurrentActionMsg  = "Pritisnite E da izadjete iz skladista"
+	CurrentActionData = {station = station, partNum = partNum}
+  end
+  
   if part == 'IzlazIzKuce' then
 	CurrentAction     = 'menu_izlaz'
 	CurrentActionMsg  = "Pritisnite E da izadjete iz kuce"
+	CurrentActionData = {station = station, partNum = partNum}
+  end
+  
+  if part == 'IzlazIzKokain' then
+	CurrentAction     = 'menu_izlazk'
+	CurrentActionMsg  = "Pritisnite E da izadjete iz labosa"
 	CurrentActionData = {station = station, partNum = partNum}
   end
 
@@ -2912,9 +3001,50 @@ Citizen.CreateThread(function()
 				end
 			end
         end
+		
+		if CurrentAction == 'menu_ulazk' then
+			TriggerServerEvent("mafije:BucketajGa", CurrentActionData.partNum)
+			SetEntityCoords(PlayerPedId(), 1088.7263183594, -3187.4624023438, -39.993450164795, false, false, false, true)
+			SetEntityHeading(PlayerPedId(), 179.78)
+			FreezeEntityPosition(PlayerPedId(), true)
+			TriggerServerEvent("kuce:UKuci", true)
+			Wait(3000)
+			FreezeEntityPosition(PlayerPedId(), false)
+        end
+		
+		if CurrentAction == 'menu_ulazsk' then
+			SetEntityCoords(PlayerPedId(), 1105.1125488281, -3099.4575195313, -39.999969482422, false, false, false, true)
+			SetEntityHeading(PlayerPedId(), 87.79)
+			FreezeEntityPosition(PlayerPedId(), true)
+			Wait(3000)
+			FreezeEntityPosition(PlayerPedId(), false)
+        end
+		
+		if CurrentAction == 'menu_izlazsk' then
+			SetEntityCoords(PlayerPedId(), 1103.3603515625, -3196.0068359375, -39.993453979492, false, false, false, true)
+			SetEntityHeading(PlayerPedId(), 87.79)
+			FreezeEntityPosition(PlayerPedId(), true)
+			Wait(3000)
+			FreezeEntityPosition(PlayerPedId(), false)
+        end
+		
+		if CurrentAction == 'menu_izlazk' then
+			for i=1, #Koord, 1 do
+				if Koord[i] ~= nil and Koord[i].Mafija == PlayerData.job.name and Koord[i].Ime == "Kokain" then
+					local x,y,z = table.unpack(Koord[i].Coord)
+					TriggerServerEvent("mafije:BucketajGa", 0)
+					SetEntityCoords(PlayerPedId(), x, y, z, false, false, false, true)
+					TriggerServerEvent("kuce:UKuci", false)
+				end
+			end
+        end
+		
+		if CurrentAction == 'menu_kokain' then
+			OpenKokainMenu()
+        end
 
         if CurrentAction == 'menu_vehicle_spawner' then
-          OpenIzborMenu()
+			OpenIzborMenu()
         end
 
         if CurrentAction == 'delete_vehicle' then
@@ -3071,6 +3201,69 @@ Citizen.CreateThread(function()
 						currentPartNum = i
 					end
 				end
+			end
+			if Koord[i].Ime == "Kokain" then
+				local x,y,z = table.unpack(Koord[i].Coord)
+				if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+					if GetDistanceBetweenCoords(coords, x, y, z, true) < 100.0 then
+						waitara = 0
+						naso = 1
+						DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 0, 128, 255, 100, false, true, 2, false, false, false, false)
+					end
+					if GetDistanceBetweenCoords(coords, x, y, z, true) < 1.5 then
+						isInMarker     = true
+						currentStation = 4
+						currentPart    = 'UlazUKokain'
+						currentPartNum = i
+					end
+				end
+			end
+			if GetDistanceBetweenCoords(coords, 1088.7263183594, -3187.4624023438, -39.993450164795, true) < 100.0 then
+				waitara = 0
+				naso = 1
+				DrawMarker(1, 1088.7263183594, -3187.4624023438, -39.993450164795, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 0, 128, 255, 100, false, true, 2, false, false, false, false)
+			end
+			if GetDistanceBetweenCoords(coords, 1088.7263183594, -3187.4624023438, -39.993450164795, true) < 1.5 then
+				isInMarker     = true
+				currentStation = 4
+				currentPart    = 'IzlazIzKokain'
+				currentPartNum = i
+			end
+			
+			if GetDistanceBetweenCoords(coords, 1103.3603515625, -3196.0068359375, -39.993453979492, true) < 100.0 then --skladiste ulaz
+				waitara = 0
+				naso = 1
+				DrawMarker(1, 1103.3603515625, -3196.0068359375, -39.993453979492, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 0, 128, 255, 100, false, true, 2, false, false, false, false)
+			end
+			if GetDistanceBetweenCoords(coords, 1103.3603515625, -3196.0068359375, -39.993453979492, true) < 1.5 then
+				isInMarker     = true
+				currentStation = 4
+				currentPart    = 'UlazUSkladiste'
+				currentPartNum = i
+			end
+			
+			if GetDistanceBetweenCoords(coords, 1105.1125488281, -3099.4575195313, -39.999969482422, true) < 100.0 then --skladiste izlaz
+				waitara = 0
+				naso = 1
+				DrawMarker(1, 1105.1125488281, -3099.4575195313, -39.999969482422, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 0, 128, 255, 100, false, true, 2, false, false, false, false)
+			end
+			if GetDistanceBetweenCoords(coords, 1105.1125488281, -3099.4575195313, -39.999969482422, true) < 1.5 then
+				isInMarker     = true
+				currentStation = 4
+				currentPart    = 'IzlazIzSkladiste'
+				currentPartNum = i
+			end
+			
+			if GetDistanceBetweenCoords(coords, 1088.4111328125, -3101.2214355469, -39.999961853027, true) < 100.0 then --skladiste menu
+				waitara = 0
+				naso = 1
+				DrawMarker(1, 1088.4111328125, -3101.2214355469, -39.999961853027, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 0, 128, 255, 100, false, true, 2, false, false, false, false)
+			end
+			if GetDistanceBetweenCoords(coords, 1088.4111328125, -3101.2214355469, -38.999961853027, true) < 1.5 then
+				isInMarker     = true
+				currentStation = 4
+				currentPart    = 'KokainMenu'
+				currentPartNum = i
 			end
 		end
 	end

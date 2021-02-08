@@ -256,6 +256,38 @@ RegisterCommand("lc", function(source, args, rawCommandString)
 	end
 end, false)
 
+local beba = false
+
+RegisterCommand("beba", function(source, args, rawCommandString)
+	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if perm == 1 then
+			if not beba then
+				beba = true
+				local modelHash = GetHashKey("Baby")
+				ESX.Streaming.RequestModel(modelHash, function()
+					SetPlayerModel(PlayerId(), modelHash)
+					SetModelAsNoLongerNeeded(modelHash)
+
+					TriggerEvent('esx:restoreLoadout')
+				end)
+			else
+				beba = false
+				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+					local isMale = skin.sex == 0
+					TriggerEvent('skinchanger:loadDefaultModel', isMale, function()
+						ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
+							TriggerEvent('skinchanger:loadSkin', skin)
+							TriggerEvent('esx:restoreLoadout')
+						end)
+					end)
+				end)
+			end
+		else
+			ESX.ShowNotification("Nemate pristup ovoj komandi!")
+		end
+	--end)
+end, false)
+
 RegisterCommand("psate", function(source, args, rawCommandString)
 	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		if perm == 1 then

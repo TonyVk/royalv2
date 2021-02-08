@@ -62,6 +62,8 @@ function UcitajMafije()
 			table.insert(Koord, {Mafija = result[i].Ime, Ime = "DeleteV", Coord = data2})
 			data2 = json.decode(result[i].DeleteV2)
 			table.insert(Koord, {Mafija = result[i].Ime, Ime = "DeleteV2", Coord = data2})
+			data2 = json.decode(result[i].Kokain)
+			table.insert(Koord, {Mafija = result[i].Ime, Ime = "Kokain", Coord = data2})
 			data2 = json.decode(result[i].LokVozila)
 			table.insert(Koord, {Mafija = result[i].Ime, Ime = "LokVozila", Coord = data2})
 			data2 = json.decode(result[i].CrateDrop)
@@ -102,6 +104,12 @@ end
 RegisterNetEvent('mafije:ImalKoga')
 AddEventHandler('mafije:ImalKoga', function(id, id2)
 	TriggerClientEvent("mafije:JelTiOtvoren", id2, id)
+end)
+
+RegisterNetEvent('mafije:BucketajGa')
+AddEventHandler('mafije:BucketajGa', function(br)
+	local src = source
+	SetPlayerRoutingBucket(src, br)
 end)
 
 for i=1, #Config.Weapons, 1 do
@@ -1001,6 +1009,23 @@ AddEventHandler('mafije:SpremiCoord', function(ime, coord, br, head)
 			table.insert(Koord, {Mafija = ime, Ime = "DeleteV2", Coord = cordara})
 		end
 		TriggerClientEvent('esx:showNotification', source, 'Koordinate brisanja plovila su uspjesno spremljene za mafiju '..ime..'!')
+		TriggerClientEvent("mafije:UpdateKoord", -1, Koord)
+	elseif br == 11 then
+		MySQL.Async.execute('UPDATE mafije SET Kokain = @cor WHERE Ime = @im', {
+			['@cor'] = json.encode(cordara),
+			['@im'] = ime
+		})
+		local Postoji = 0
+		for i=1, #Koord, 1 do
+			if Koord[i] ~= nil and Koord[i].Mafija == ime and Koord[i].Ime == "Kokain" then
+				Koord[i].Coord = cordara
+				Postoji = 1
+			end
+		end
+		if Postoji == 0 then
+			table.insert(Koord, {Mafija = ime, Ime = "Kokain", Coord = cordara})
+		end
+		TriggerClientEvent('esx:showNotification', source, 'Koordinate labosa za kokain su uspjesno spremljene za mafiju '..ime..'!')
 		TriggerClientEvent("mafije:UpdateKoord", -1, Koord)
 	end
 end)
