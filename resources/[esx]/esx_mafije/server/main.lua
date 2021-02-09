@@ -9,6 +9,7 @@ local Boje = {}
 local EnableESXIdentity = true
 local EnableLicenses = true
 local Kutije = {}
+local Skladiste = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -64,6 +65,8 @@ function UcitajMafije()
 			table.insert(Koord, {Mafija = result[i].Ime, Ime = "DeleteV2", Coord = data2})
 			data2 = json.decode(result[i].Kokain)
 			table.insert(Koord, {Mafija = result[i].Ime, Ime = "Kokain", Coord = data2})
+			data2 = json.decode(result[i].KamionK)
+			table.insert(Koord, {Mafija = result[i].Ime, Ime = "KamionK", Coord = data2})
 			data2 = json.decode(result[i].LokVozila)
 			table.insert(Koord, {Mafija = result[i].Ime, Ime = "LokVozila", Coord = data2})
 			data2 = json.decode(result[i].CrateDrop)
@@ -99,6 +102,15 @@ function UcitajMafije()
         end
       end
     )
+	MySQL.Async.fetchAll(
+      'SELECT * FROM mskladiste',
+      {},
+      function(result)
+		for i=1, #result, 1 do
+			table.insert(Skladiste, {Mafija = result[i].ime, Listovi = result[i].listovi, Kokain = result[i].kokain})
+        end
+      end
+    )
 end
 
 RegisterNetEvent('mafije:ImalKoga')
@@ -110,6 +122,80 @@ RegisterNetEvent('mafije:BucketajGa')
 AddEventHandler('mafije:BucketajGa', function(br)
 	local src = source
 	SetPlayerRoutingBucket(src, br)
+end)
+
+RegisterNetEvent('mafije:StanjeSkladista')
+AddEventHandler('mafije:StanjeSkladista', function(maf)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	for i=1, #Skladiste, 1 do
+		if Skladiste[i].Mafija == maf then
+			xPlayer.showNotification("U skladistu imate "..Skladiste[i].Listovi.." listova i "..Skladiste[i].Kokain.."kg kokaina")
+			break
+		end
+	end
+end)
+
+function PreradiListove()
+	for i=1, #Skladiste, 1 do
+		if Skladiste[i] ~= nil and Skladiste[i].Listovi >= 100 then
+			Skladiste[i].Listovi = Skladiste[i].Listovi-100
+			Skladiste[i].Kokain = Skladiste[i].Kokain+50
+			MySQL.Async.execute('UPDATE mskladiste SET listovi = @list, kokain = @kok WHERE ime = @maf',{
+				['@list'] = Skladiste[i].Listovi,
+				['@kok'] = Skladiste[i].Kokain,
+				['@maf'] = Skladiste[i].Mafija
+			})
+			TriggerClientEvent("mafije:PosaljiObavijest", -1, Skladiste[i].Mafija, "[Skladiste] 100 listova vam je uspjesno preradjeno u kokain!")
+		end
+		Wait(100)
+	end
+	SetTimeout(20000, PreradiListove)
+end
+
+SetTimeout(20000, PreradiListove)
+
+RegisterNetEvent('mafije:OstaviListove')
+AddEventHandler('mafije:OstaviListove', function(br, maf)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local item = xPlayer.getInventoryItem("coke")
+	if item.count >= br and br > 0 then
+		local naso = false
+		for i=1, #Skladiste, 1 do
+			if Skladiste[i].Mafija == maf then
+				naso = true
+				xPlayer.removeInventoryItem("coke", br)
+				Skladiste[i].Listovi = Skladiste[i].Listovi+br
+				xPlayer.showNotification("Ostavili ste "..br.." listova kokaina u labosu!")
+				MySQL.Async.fetchScalar('SELECT listovi FROM mskladiste WHERE ime = @maf', {
+					['@maf'] = maf
+				}, function(result)
+					if result == nil then
+						MySQL.Async.execute('INSERT INTO mskladiste (ime, listovi, kokain) VALUES (@maf, @list, 0)',{
+							['@maf'] = maf,
+							['@list'] = Skladiste[i].Listovi
+						})
+					else
+						MySQL.Async.execute('UPDATE mskladiste SET listovi = @list WHERE ime = @maf',{
+							['@list'] = Skladiste[i].Listovi,
+							['@maf'] = maf
+						})
+					end
+				end)
+				break
+			end
+		end
+		if not naso then
+			xPlayer.removeInventoryItem("coke", br)
+			table.insert(Skladiste, {Mafija = maf, Listovi = br, Kokain = 0})
+			xPlayer.showNotification("Ostavili ste "..br.." listova kokaina u labosu!")
+			MySQL.Async.execute('INSERT INTO mskladiste (ime, listovi, kokain) VALUES (@maf, @list, 0)',{
+				['@maf'] = maf,
+				['@list'] = br
+			})
+		end
+	else
+		xPlayer.showNotification("Nemate toliko listova!")
+	end
 end)
 
 for i=1, #Config.Weapons, 1 do
@@ -1026,6 +1112,28 @@ AddEventHandler('mafije:SpremiCoord', function(ime, coord, br, head)
 			table.insert(Koord, {Mafija = ime, Ime = "Kokain", Coord = cordara})
 		end
 		TriggerClientEvent('esx:showNotification', source, 'Koordinate labosa za kokain su uspjesno spremljene za mafiju '..ime..'!')
+		TriggerClientEvent("mafije:UpdateKoord", -1, Koord)
+	elseif br == 12 then
+		local cordare = {}
+		table.insert(cordare, x)
+		table.insert(cordare, y)
+		table.insert(cordare, z)
+		table.insert(cordare, head)
+		MySQL.Async.execute('UPDATE mafije SET KamionK = @cor WHERE Ime = @im', {
+			['@cor'] = json.encode(cordare),
+			['@im'] = ime
+		})
+		local Postoji = 0
+		for i=1, #Koord, 1 do
+			if Koord[i] ~= nil and Koord[i].Mafija == ime and Koord[i].Ime == "KamionK" then
+				Koord[i].Coord = cordare
+				Postoji = 1
+			end
+		end
+		if Postoji == 0 then
+			table.insert(Koord, {Mafija = ime, Ime = "KamionK", Coord = cordare})
+		end
+		TriggerClientEvent('esx:showNotification', source, 'Koordinate spawna kamiona za kokain su uspjesno spremljene za mafiju '..ime..'!')
 		TriggerClientEvent("mafije:UpdateKoord", -1, Koord)
 	end
 end)

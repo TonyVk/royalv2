@@ -427,6 +427,9 @@
 				completedLights[selector - 1] = 1;
 				if (completedLights[0] === 1 && completedLights[1] === 1 && completedLights[2] === 1 && completedLights[3] === 1) {
 				  audioTask.play();
+				  $.post("http://esx_elektricar/kraj", JSON.stringify({
+					win: true
+				  }));
 				  window.setTimeout(() => {
 					reset('.drag-1', '.line-1', 70, 185);
 					reset('.drag-2', '.line-2', 60, 375);
@@ -436,9 +439,6 @@
 					toggleLight(1, false);
 					toggleLight(3, false);
 					toggleLight(4, false);
-					$.post("http://esx_elektricar/kraj", JSON.stringify({
-						win: true
-					}));
 				  }, 2000);
 				}
 			  } else {

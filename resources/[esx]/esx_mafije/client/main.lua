@@ -41,6 +41,22 @@ local OruzarnicaMenu = false
 local Vratio = nil
 local GarazaV 					= nil
 local Vblip 					= nil
+local KVozilo					= nil
+local ProdajeKokain 			= false
+local DostavaID 				= 0
+local KBlip 					= nil
+
+local dostave = 
+{
+    vector3(907.12414550781, -1732.8756103516, 30.062334060669),
+	vector3(976.80212402344, -1825.0364990234, 30.636585235596),
+	vector3(955.66595458984, -2110.9118652344, 30.031211853027),
+	vector3(845.36651611328, -2362.0415039063, 29.824703216553),
+	vector3(1244.3372802734, -3142.044921875, 5.0414257049561),
+	vector3(1216.5462646484, -3002.2944335938, 5.3450527191162),
+	vector3(34.788818359375, -2650.1391601563, 5.4856877326965),
+	vector3(-525.09619140625, -2901.0568847656, 5.4814658164978)
+}
 
 local parachute, crate, pickup, blipa, soundID
 local requiredModels = {"p_cargo_chute_s", "ex_prop_adv_case_sm", "prop_box_wood05a"} -- parachute, pickup case, plane, pilot, crate
@@ -181,6 +197,18 @@ function SetVehicleMaxMods(vehicle)
   ESX.Game.SetVehicleProperties(vehicle, props)
 
 end
+
+RegisterNetEvent("mafije:PosaljiObavijest")
+AddEventHandler('mafije:PosaljiObavijest', function(posao, odg)
+	if PlayerData.job ~= nil then
+		if PlayerData.job.name == posao then
+			TriggerEvent('chat:addMessage', {
+				template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(255, 204, 0, 0.6); border-radius: 3px;"><i class="fas fa-info-circle"></i>Obavijest<br> {0}</div>',
+				args = { odg }
+			})
+		end
+	end
+end)
 
 RegisterNetEvent("esx_mafije:PosaljiMafia")
 AddEventHandler('esx_mafije:PosaljiMafia', function(odg, ime, posao)
@@ -616,6 +644,7 @@ RegisterCommand("uredimafiju", function(source, args, raw)
 									table.insert(elements, {label = "Postavi koordinate spawna plovila", value = "9"})
 									table.insert(elements, {label = "Postavi koordinate brisanja plovila", value = "10"})
 									table.insert(elements, {label = "Postavi koordinate labosa za kokain", value = "11"})
+									table.insert(elements, {label = "Postavi koordinate spawna kamiona za prodaju", value = "12"})
 
 									ESX.UI.Menu.Open(
 									  'default', GetCurrentResourceName(), 'listarankova',
@@ -1477,7 +1506,7 @@ function OpenKokainMenu()
       },
       function(data, menu)
 		if data.current.value == 'skl_stanje' then
-			ESX.ShowNotification("Na skladistu imate 15 listova i 25kg kokaina")
+			TriggerServerEvent("mafije:StanjeSkladista", PlayerData.job.name)
         end
 
         if data.current.value == 'ost_list' then
@@ -1486,7 +1515,40 @@ function OpenKokainMenu()
         end
 		
 		if data.current.value == 'kok_prodaj' then
-			--prodaja
+			if not ProdajeKokain then
+				for i=1, #Koord, 1 do
+					if Koord[i] ~= nil and Koord[i].Mafija == PlayerData.job.name then
+						if Koord[i].Ime == "KamionK" then
+							local x,y,z,h = table.unpack(Koord[i].Coord)
+							if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+								TriggerServerEvent("mafije:BucketajGa", 0)
+								local model = GetHashKey("benson")
+								RequestModel(model)
+								while not HasModelLoaded(model) do
+									Wait(1)
+								end
+								KVozilo = CreateVehicle(model, x, y, z, h, true, true)
+								SetModelAsNoLongerNeeded(model)
+								TaskWarpPedIntoVehicle(PlayerPedId(), KVozilo, -1)
+								ESX.ShowNotification("Zapoceli ste prodaju kokaina!")
+								ESX.ShowNotification("Odvezite kokain na oznacenu lokaciju kako bi ste ga prodali!")
+								ProdajeKokain = true
+								DostavaID = math.random(1,#dostave)
+								KBlip = AddBlipForCoord(dostave[DostavaID].x, dostave[DostavaID].y, dostave[DostavaID].z)
+								SetBlipSprite(KBlip, 1)
+								SetBlipColour (KBlip, 5)
+								SetBlipAlpha(KBlip, 255)
+								SetBlipRoute(KBlip,  true)
+								break
+							else
+								ESX.ShowNotification("Nisu vam jos postavljene koordinate spawna kamiona, javite se adminima!")
+							end
+						end
+					end
+				end
+			else
+				ESX.ShowNotification("Vec prodajete kokain!")
+			end
         end
       end,
       function(data, menu)
@@ -2561,6 +2623,28 @@ AddEventHandler('mafije:hasEnteredMarker', function(station, part, partNum)
     CurrentActionData = {station = station}
   end
   
+  if part == 'Dostava' then
+		if KVozilo == GetVehiclePedIsIn(PlayerPedId(), false) then
+			if DoesBlipExist(KBlip) then
+				RemoveBlip(KBlip)
+				KBlip = nil
+			end
+			ProdajeKokain = false
+			DostavaID = 0
+			FreezeEntityPosition(GetVehiclePedIsIn(PlayerPedId(), false), true)
+			ESX.ShowNotification("Istovar..")
+			Wait(5000)
+			FreezeEntityPosition(GetVehiclePedIsIn(PlayerPedId(), false), false)
+			TriggerServerEvent("mafije:IsplatiSve", PlayerData.job.name)
+			ESX.ShowNotification("Zavrsili ste prodaju kokaina!")
+			if DoesEntityExist(KVozilo) then
+				ESX.Game.DeleteVehicle(KVozilo)
+			end
+		else
+			ESX.ShowNotification("Niste u vozilu za prodaju kokaina!")
+		end
+  end
+  
   if part == 'Drop' then
 	if IsPedInAnyVehicle(PlayerPedId(), false) then
 		local vehara = GetVehiclePedIsUsing(PlayerPedId())
@@ -3218,55 +3302,71 @@ Citizen.CreateThread(function()
 					end
 				end
 			end
-			if GetDistanceBetweenCoords(coords, 1088.7263183594, -3187.4624023438, -39.993450164795, true) < 100.0 then
-				waitara = 0
-				naso = 1
-				DrawMarker(1, 1088.7263183594, -3187.4624023438, -39.993450164795, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 0, 128, 255, 100, false, true, 2, false, false, false, false)
-			end
-			if GetDistanceBetweenCoords(coords, 1088.7263183594, -3187.4624023438, -39.993450164795, true) < 1.5 then
-				isInMarker     = true
-				currentStation = 4
-				currentPart    = 'IzlazIzKokain'
-				currentPartNum = i
-			end
-			
-			if GetDistanceBetweenCoords(coords, 1103.3603515625, -3196.0068359375, -39.993453979492, true) < 100.0 then --skladiste ulaz
-				waitara = 0
-				naso = 1
-				DrawMarker(1, 1103.3603515625, -3196.0068359375, -39.993453979492, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 0, 128, 255, 100, false, true, 2, false, false, false, false)
-			end
-			if GetDistanceBetweenCoords(coords, 1103.3603515625, -3196.0068359375, -39.993453979492, true) < 1.5 then
-				isInMarker     = true
-				currentStation = 4
-				currentPart    = 'UlazUSkladiste'
-				currentPartNum = i
-			end
-			
-			if GetDistanceBetweenCoords(coords, 1105.1125488281, -3099.4575195313, -39.999969482422, true) < 100.0 then --skladiste izlaz
-				waitara = 0
-				naso = 1
-				DrawMarker(1, 1105.1125488281, -3099.4575195313, -39.999969482422, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 0, 128, 255, 100, false, true, 2, false, false, false, false)
-			end
-			if GetDistanceBetweenCoords(coords, 1105.1125488281, -3099.4575195313, -39.999969482422, true) < 1.5 then
-				isInMarker     = true
-				currentStation = 4
-				currentPart    = 'IzlazIzSkladiste'
-				currentPartNum = i
-			end
-			
-			if GetDistanceBetweenCoords(coords, 1088.4111328125, -3101.2214355469, -39.999961853027, true) < 100.0 then --skladiste menu
-				waitara = 0
-				naso = 1
-				DrawMarker(1, 1088.4111328125, -3101.2214355469, -39.999961853027, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 0, 128, 255, 100, false, true, 2, false, false, false, false)
-			end
-			if GetDistanceBetweenCoords(coords, 1088.4111328125, -3101.2214355469, -38.999961853027, true) < 1.5 then
-				isInMarker     = true
-				currentStation = 4
-				currentPart    = 'KokainMenu'
-				currentPartNum = i
-			end
 		end
 	end
+	
+	if ProdajeKokain and DostavaID ~= 0 then
+		if #(coords-dostave[DostavaID]) < 100 then
+			waitara = 0
+			naso = 1
+			DrawMarker(1, dostave[DostavaID].x, dostave[DostavaID].y, dostave[DostavaID].z-0.5, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
+		end
+		if #(coords-dostave[DostavaID]) < 3.0 then
+			isInMarker  = true
+			currentPart = "Dostava"
+			currentStation = 4
+			currentPartNum = 1
+		end
+	end
+	
+	if GetDistanceBetweenCoords(coords, 1088.7263183594, -3187.4624023438, -39.993450164795, true) < 100.0 then
+		waitara = 0
+		naso = 1
+		DrawMarker(1, 1088.7263183594, -3187.4624023438, -39.993450164795, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 0, 128, 255, 100, false, true, 2, false, false, false, false)
+	end
+	if GetDistanceBetweenCoords(coords, 1088.7263183594, -3187.4624023438, -39.993450164795, true) < 1.5 then
+		isInMarker     = true
+		currentStation = 4
+		currentPart    = 'IzlazIzKokain'
+		currentPartNum = 1
+	end
+			
+	if GetDistanceBetweenCoords(coords, 1103.3603515625, -3196.0068359375, -39.993453979492, true) < 100.0 then --skladiste ulaz
+		waitara = 0
+		naso = 1
+		DrawMarker(1, 1103.3603515625, -3196.0068359375, -39.993453979492, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 0, 128, 255, 100, false, true, 2, false, false, false, false)
+	end
+	if GetDistanceBetweenCoords(coords, 1103.3603515625, -3196.0068359375, -39.993453979492, true) < 1.5 then
+		isInMarker     = true
+		currentStation = 4
+		currentPart    = 'UlazUSkladiste'
+		currentPartNum = 1
+	end
+			
+	if GetDistanceBetweenCoords(coords, 1105.1125488281, -3099.4575195313, -39.999969482422, true) < 100.0 then --skladiste izlaz
+		waitara = 0
+		naso = 1
+		DrawMarker(1, 1105.1125488281, -3099.4575195313, -39.999969482422, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 0, 128, 255, 100, false, true, 2, false, false, false, false)
+	end
+	if GetDistanceBetweenCoords(coords, 1105.1125488281, -3099.4575195313, -39.999969482422, true) < 1.5 then
+		isInMarker     = true
+		currentStation = 4
+		currentPart    = 'IzlazIzSkladiste'
+		currentPartNum = 1
+	end
+			
+	if GetDistanceBetweenCoords(coords, 1088.4111328125, -3101.2214355469, -39.999961853027, true) < 100.0 then --skladiste menu
+		waitara = 0
+		naso = 1
+		DrawMarker(1, 1088.4111328125, -3101.2214355469, -39.999961853027, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 0, 128, 255, 100, false, true, 2, false, false, false, false)
+	end
+	if GetDistanceBetweenCoords(coords, 1088.4111328125, -3101.2214355469, -38.999961853027, true) < 1.5 then
+		isInMarker     = true
+		currentStation = 4
+		currentPart    = 'KokainMenu'
+		currentPartNum = 1
+	end
+	
 
     if PlayerData.job ~= nil then
 
