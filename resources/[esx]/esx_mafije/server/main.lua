@@ -10,6 +10,7 @@ local EnableESXIdentity = true
 local EnableLicenses = true
 local Kutije = {}
 local Skladiste = {}
+local Kamioni = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -118,10 +119,35 @@ AddEventHandler('mafije:ImalKoga', function(id, id2)
 	TriggerClientEvent("mafije:JelTiOtvoren", id2, id)
 end)
 
+RegisterNetEvent('mafije:ProsljediKamion')
+AddEventHandler('mafije:ProsljediKamion', function(netid, dostid)
+	table.insert(Kamioni, {NetID = netid, Dostava = dostid})
+	TriggerClientEvent("mafije:VratiKamione", -1, Kamioni)
+end)
+
+RegisterNetEvent('mafije:MakniKamion')
+AddEventHandler('mafije:MakniKamion', function(netid)
+	for i=1, #Kamioni, 1 do
+		if Kamioni[i] ~= nil then
+			if Kamioni[i].NetID == netid then
+				table.remove(Kamioni, i)
+				break
+			end
+		end
+	end
+	TriggerClientEvent("mafije:VratiKamione", -1, Kamioni)
+end)
+
 RegisterNetEvent('mafije:BucketajGa')
 AddEventHandler('mafije:BucketajGa', function(br)
 	local src = source
 	SetPlayerRoutingBucket(src, br)
+	if br == 0 then
+		while GetPlayerRoutingBucket(src) ~= 0 do
+			Wait(100)
+		end
+		TriggerClientEvent("mafije:OdradioBucket", src)
+	end
 end)
 
 RegisterNetEvent('mafije:StanjeSkladista')

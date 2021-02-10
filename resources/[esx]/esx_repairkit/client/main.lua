@@ -46,34 +46,37 @@ AddEventHandler('esx_repairkit:onUse', function()
 		end
 
 		if DoesEntityExist(vehicle) then
-			if Config.IgnoreAbort then
-				TriggerServerEvent('esx_repairkit:removeKit')
-			end
-			TaskStartScenarioInPlace(playerPed, "PROP_HUMAN_BUM_BIN", 0, true)
-
-			Citizen.CreateThread(function()
-				ThreadID = GetIdOfThisThread()
-				CurrentAction = 'repair'
-
-				Citizen.Wait(Config.RepairTime * 1000)
-
-				if CurrentAction ~= nil then
-					SetVehicleFixed(vehicle)
-					SetVehicleDeformationFixed(vehicle)
-					SetVehicleUndriveable(vehicle, false)
-					SetVehicleEngineOn(vehicle, true, true)
-					ClearPedTasksImmediately(playerPed)
-
-					ESX.ShowNotification(_U('finished_repair'))
-				end
-
-				if not Config.IgnoreAbort then
+			NetworkRequestControlOfEntity(vehicle)
+			if GetVehicleEngineHealth(vehicle) > 0 then
+				if Config.IgnoreAbort then
 					TriggerServerEvent('esx_repairkit:removeKit')
 				end
+				TaskStartScenarioInPlace(playerPed, "PROP_HUMAN_BUM_BIN", 0, true)
 
-				CurrentAction = nil
-				TerminateThisThread()
-			end)
+				Citizen.CreateThread(function()
+					ThreadID = GetIdOfThisThread()
+					CurrentAction = 'repair'
+
+					Citizen.Wait(Config.RepairTime * 1000)
+
+					if CurrentAction ~= nil then
+						SetVehicleFixed(vehicle)
+						SetVehicleDeformationFixed(vehicle)
+						SetVehicleUndriveable(vehicle, false)
+						SetVehicleEngineOn(vehicle, true, true)
+						ClearPedTasksImmediately(playerPed)
+
+						ESX.ShowNotification(_U('finished_repair'))
+					end
+
+					if not Config.IgnoreAbort then
+						TriggerServerEvent('esx_repairkit:removeKit')
+					end
+
+					CurrentAction = nil
+					TerminateThisThread()
+				end)
+			end
 		end
 
 		Citizen.CreateThread(function()
