@@ -47,7 +47,7 @@ function UcitajMafije()
 			TriggerEvent("RefreshAddone")
 			TriggerEvent("RefreshSociety")
 			TriggerEvent('esx_society:registerSociety', result[i].Ime, result[i].Label, soc, soc, soc, {type = 'public'})
-			table.insert(Mafije, {Ime = result[i].Ime, Label = result[i].Label, Gradonacelnik = result[i].Gradonacelnik})
+			table.insert(Mafije, {Ime = result[i].Ime, Label = result[i].Label, Gradonacelnik = result[i].Gradonacelnik, Skladiste = result[i].Skladiste})
 			local data = json.decode(result[i].Rankovi)
 			if data ~= nil then
 				for a=1, #data do
@@ -120,8 +120,8 @@ AddEventHandler('mafije:ImalKoga', function(id, id2)
 end)
 
 RegisterNetEvent('mafije:ProsljediKamion')
-AddEventHandler('mafije:ProsljediKamion', function(netid, dostid)
-	table.insert(Kamioni, {NetID = netid, Dostava = dostid})
+AddEventHandler('mafije:ProsljediKamion', function(netid, dostid, ob1, ob2, ob3)
+	table.insert(Kamioni, {NetID = netid, Dostava = dostid, Obj1 = ob1, Obj2 = ob2, Obj3 = ob3})
 	TriggerClientEvent("mafije:VratiKamione", -1, Kamioni)
 end)
 
@@ -164,17 +164,27 @@ end)
 function PreradiListove()
 	for i=1, #Skladiste, 1 do
 		if Skladiste[i] ~= nil and Skladiste[i].Listovi >= 100 then
-			Skladiste[i].Listovi = Skladiste[i].Listovi-100
-			Skladiste[i].Kokain = Skladiste[i].Kokain+50
-			MySQL.Async.execute('UPDATE mskladiste SET listovi = @list, kokain = @kok WHERE ime = @maf',{
-				['@list'] = Skladiste[i].Listovi,
-				['@kok'] = Skladiste[i].Kokain,
-				['@maf'] = Skladiste[i].Mafija
-			})
-			TriggerClientEvent("mafije:PosaljiObavijest", -1, Skladiste[i].Mafija, "[Skladiste] 100 listova vam je uspjesno preradjeno u kokain!")
+			local societyAccount = nil
+			local soc = "society_"..Skladiste[i].Mafija
+			TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
+				societyAccount = account
+			end)
+			if societyAccount.money >= 3500 then
+				societyAccount.removeMoney(3500)
+				societyAccount.save()
+				Skladiste[i].Listovi = Skladiste[i].Listovi-100
+				Skladiste[i].Kokain = Skladiste[i].Kokain+50
+				MySQL.Async.execute('UPDATE mskladiste SET listovi = @list, kokain = @kok WHERE ime = @maf',{
+					['@list'] = Skladiste[i].Listovi,
+					['@kok'] = Skladiste[i].Kokain,
+					['@maf'] = Skladiste[i].Mafija
+				})
+				TriggerClientEvent("mafije:PosaljiObavijest", -1, Skladiste[i].Mafija, "[Skladiste] 100 listova vam je uspjesno preradjeno u kokain (3500$)!")
+			end
 		end
 		Wait(100)
 	end
+	TriggerClientEvent("mafije:UpdateSkladista", -1, Skladiste)
 	SetTimeout(20000, PreradiListove)
 end
 
@@ -192,6 +202,7 @@ AddEventHandler('mafije:OstaviListove', function(br, maf)
 				xPlayer.removeInventoryItem("coke", br)
 				Skladiste[i].Listovi = Skladiste[i].Listovi+br
 				xPlayer.showNotification("Ostavili ste "..br.." listova kokaina u labosu!")
+				TriggerClientEvent("mafije:UpdateSkladista", -1, Skladiste)
 				MySQL.Async.fetchScalar('SELECT listovi FROM mskladiste WHERE ime = @maf', {
 					['@maf'] = maf
 				}, function(result)
@@ -213,6 +224,7 @@ AddEventHandler('mafije:OstaviListove', function(br, maf)
 		if not naso then
 			xPlayer.removeInventoryItem("coke", br)
 			table.insert(Skladiste, {Mafija = maf, Listovi = br, Kokain = 0})
+			TriggerClientEvent("mafije:UpdateSkladista", -1, Skladiste)
 			xPlayer.showNotification("Ostavili ste "..br.." listova kokaina u labosu!")
 			MySQL.Async.execute('INSERT INTO mskladiste (ime, listovi, kokain) VALUES (@maf, @list, 0)',{
 				['@maf'] = maf,
@@ -896,8 +908,63 @@ AddEventHandler('mafije:NapraviRank', function(maf, id, ime, lab)
 		end
 end)
 
+ESX.RegisterServerCallback('mafije:MorelProdaja', function(source, cb, maf)
+	local naso = false
+	for i=1, #Skladiste, 1 do
+		if Skladiste[i].Mafija == maf then
+			if Skladiste[i].Kokain >= 300 then
+				naso = true
+				Skladiste[i].Kokain = Skladiste[i].Kokain-300
+				MySQL.Async.execute('UPDATE mskladiste SET kokain = @kok WHERE ime = @maf',{
+					['@kok'] = Skladiste[i].Kokain,
+					['@maf'] = Skladiste[i].Mafija
+				})
+				TriggerClientEvent("mafije:UpdateSkladista", -1, Skladiste)
+				cb(true)
+			end
+			break
+		end
+	end
+	if not naso then
+		cb(false)
+	end
+end)
+
+ESX.RegisterServerCallback('mafije:KupiSkladiste', function(source, cb, maf)
+	local naso = false
+	local societyAccount = nil
+	local soc = "society_"..maf
+	TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
+		societyAccount = account
+	end)
+	if societyAccount.money >= 500000 then
+		societyAccount.removeMoney(500000)
+		societyAccount.save()
+		for i=1, #Mafije, 1 do
+			if Mafije[i].Ime == maf then
+				if Mafije[i].Skladiste == 0 then
+					naso = true
+					Mafije[i].Skladiste = 1
+					MySQL.Async.execute('UPDATE mafije SET Skladiste = 1 WHERE Ime = @maf',{
+						['@maf'] = maf
+					})
+					TriggerClientEvent("mafije:UpdateMafije", -1, Mafije)
+					TriggerClientEvent("mafije:UpdateSBlip", -1, maf)
+					cb(true)
+				end
+				break
+			end
+		end
+		if not naso then
+			cb(false)
+		end
+	else
+		cb(false)
+	end
+end)
+
 ESX.RegisterServerCallback('mafije:DohvatiMafije', function(source, cb)
-	local vracaj = {maf = Mafije, kor = Koord, voz = Vozila, oruz = Oruzja, boj = Boje, rank = Rankovi}
+	local vracaj = {maf = Mafije, kor = Koord, voz = Vozila, oruz = Oruzja, boj = Boje, rank = Rankovi, sklad = Skladiste}
 	cb(vracaj)
 end)
 
@@ -975,7 +1042,7 @@ AddEventHandler('mafije:SpremiCoord', function(ime, coord, br, head)
 		end
 		TriggerClientEvent('esx:showNotification', source, 'Koordinate lider menua su uspjesno spremljene za mafiju '..ime..'!')
 		TriggerClientEvent("mafije:UpdateKoord", -1, Koord)
-		TriggerClientEvent("mafije:KreirajBlip", -1, cordara, ime)
+		TriggerClientEvent("mafije:KreirajBlip", -1, cordara, ime, 1)
 	elseif br == 3 then
 		MySQL.Async.execute('UPDATE mafije SET SpawnV = @cor WHERE Ime = @im', {
 			['@cor'] = json.encode(cordara),
@@ -1139,6 +1206,7 @@ AddEventHandler('mafije:SpremiCoord', function(ime, coord, br, head)
 		end
 		TriggerClientEvent('esx:showNotification', source, 'Koordinate labosa za kokain su uspjesno spremljene za mafiju '..ime..'!')
 		TriggerClientEvent("mafije:UpdateKoord", -1, Koord)
+		TriggerClientEvent("mafije:KreirajBlip", -1, cordara, ime, 2)
 	elseif br == 12 then
 		local cordare = {}
 		table.insert(cordare, x)
@@ -1378,7 +1446,6 @@ end)
 
 RegisterServerEvent('mafije:SaljiCrate')
 AddEventHandler('mafije:SaljiCrate', function(par, job)
-	print("primio")
     TriggerClientEvent('mafije:VratiCrate', -1, par, job)
 end)
 
