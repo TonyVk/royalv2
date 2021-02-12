@@ -411,7 +411,19 @@ AddEventHandler('esx:deleteVehicle', function(radius)
 			end
 
 			if DoesEntityExist(entity) and NetworkHasControlOfEntity(entity) then
-				ESX.Game.DeleteVehicle(entity)
+				ESX.TriggerServerCallback('mafije:DohvatiKamion', function(odg)
+					if odg ~= false then
+						NetworkRequestControlOfEntity(NetToObj(odg.Obj1))
+						NetworkRequestControlOfEntity(NetToObj(odg.Obj2))
+						NetworkRequestControlOfEntity(NetToObj(odg.Obj3))
+						ESX.Game.DeleteObject(NetToObj(odg.Obj1))
+						ESX.Game.DeleteObject(NetToObj(odg.Obj2))
+						ESX.Game.DeleteObject(NetToObj(odg.Obj3))
+						ESX.Game.DeleteVehicle(entity)
+					else
+						ESX.Game.DeleteVehicle(entity)
+					end
+				end, VehToNet(entity))
 			end
 		end
 	else
@@ -428,7 +440,19 @@ AddEventHandler('esx:deleteVehicle', function(radius)
 		end
 
 		if DoesEntityExist(vehicle) and NetworkHasControlOfEntity(vehicle) then
-			ESX.Game.DeleteVehicle(vehicle)
+			ESX.TriggerServerCallback('mafije:DohvatiKamion', function(odg)
+				if odg ~= false then
+					NetworkRequestControlOfEntity(NetToObj(odg.Obj1))
+					NetworkRequestControlOfEntity(NetToObj(odg.Obj2))
+					NetworkRequestControlOfEntity(NetToObj(odg.Obj3))
+					ESX.Game.DeleteObject(NetToObj(odg.Obj1))
+					ESX.Game.DeleteObject(NetToObj(odg.Obj2))
+					ESX.Game.DeleteObject(NetToObj(odg.Obj3))
+					ESX.Game.DeleteVehicle(vehicle)
+				else
+					ESX.Game.DeleteVehicle(vehicle)
+				end
+			end, VehToNet(vehicle))
 		end
 	end
 end)

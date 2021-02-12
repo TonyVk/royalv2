@@ -2707,7 +2707,22 @@ end
 --   - message owner that his vehicle has been impounded
 function ImpoundVehicle(vehicle)
 	--local vehicleName = GetLabelText(GetDisplayNameFromVehicleModel(GetEntityModel(vehicle)))
-	ESX.Game.DeleteVehicle(vehicle)
-	ESX.ShowNotification(_U('impound_successful'))
-	currentTask.busy = false
+	NetworkRequestControlOfEntity(vehicle)
+	ESX.TriggerServerCallback('mafije:DohvatiKamion', function(odg)
+		if odg ~= false then
+			NetworkRequestControlOfEntity(NetToObj(odg.Obj1))
+			NetworkRequestControlOfEntity(NetToObj(odg.Obj2))
+			NetworkRequestControlOfEntity(NetToObj(odg.Obj3))
+			ESX.Game.DeleteObject(NetToObj(odg.Obj1))
+			ESX.Game.DeleteObject(NetToObj(odg.Obj2))
+			ESX.Game.DeleteObject(NetToObj(odg.Obj3))
+			ESX.Game.DeleteVehicle(vehicle)
+			ESX.ShowNotification(_U('impound_successful'))
+			currentTask.busy = false
+		else
+			ESX.Game.DeleteVehicle(vehicle)
+			ESX.ShowNotification(_U('impound_successful'))
+			currentTask.busy = false
+		end
+	end, VehToNet(vehicle))
 end

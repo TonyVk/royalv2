@@ -973,7 +973,19 @@ function ObrisiBlizu()
 			end
 
 			if DoesEntityExist(closestVehicle) and NetworkHasControlOfEntity(closestVehicle) then
-				ESX.Game.DeleteVehicle(closestVehicle)
+				ESX.TriggerServerCallback('mafije:DohvatiKamion', function(odg)
+					if odg ~= false then
+						NetworkRequestControlOfEntity(NetToObj(odg.Obj1))
+						NetworkRequestControlOfEntity(NetToObj(odg.Obj2))
+						NetworkRequestControlOfEntity(NetToObj(odg.Obj3))
+						ESX.Game.DeleteObject(NetToObj(odg.Obj1))
+						ESX.Game.DeleteObject(NetToObj(odg.Obj2))
+						ESX.Game.DeleteObject(NetToObj(odg.Obj3))
+						ESX.Game.DeleteVehicle(closestVehicle)
+					else
+						ESX.Game.DeleteVehicle(closestVehicle)
+					end
+				end, VehToNet(closestVehicle))
 			end
 		end
 	end
@@ -985,8 +997,21 @@ function ObrisiUnisten()
 	if closestVehicle ~= nil then
 		if Distance <= 8.0 then
 			if GetEntityHealth(closestVehicle) == 0 then
-				SetEntityAsNoLongerNeeded(closestVehicle)
-               	ESX.Game.DeleteVehicle(closestVehicle)
+				ESX.TriggerServerCallback('mafije:DohvatiKamion', function(odg)
+					if odg ~= false then
+						NetworkRequestControlOfEntity(NetToObj(odg.Obj1))
+						NetworkRequestControlOfEntity(NetToObj(odg.Obj2))
+						NetworkRequestControlOfEntity(NetToObj(odg.Obj3))
+						ESX.Game.DeleteObject(NetToObj(odg.Obj1))
+						ESX.Game.DeleteObject(NetToObj(odg.Obj2))
+						ESX.Game.DeleteObject(NetToObj(odg.Obj3))
+						SetEntityAsNoLongerNeeded(closestVehicle)
+						ESX.Game.DeleteVehicle(closestVehicle)
+					else
+						SetEntityAsNoLongerNeeded(closestVehicle)
+						ESX.Game.DeleteVehicle(closestVehicle)
+					end
+				end, VehToNet(closestVehicle))
             end				
 		end
 	end

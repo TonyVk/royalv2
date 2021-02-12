@@ -881,6 +881,7 @@ AddEventHandler('mafije:IsplatiSve', function(maf)
 			societyAccount = account
 		end)
 		societyAccount.addMoney(80000)
+		societyAccount.save()
 		xPlayer.showNotification("Vasa mafija je dobila 80000$ od prodaje 300kg kokaina!")
 	end
 end)
@@ -995,6 +996,24 @@ AddEventHandler('mafije:NapraviRank', function(maf, id, ime, lab)
 				end
 			end
 		end
+end)
+
+ESX.RegisterServerCallback('mafije:DohvatiKamion', function(source, cb, netid)
+	local naso = false
+	for i=1, #Kamioni, 1 do
+		if Kamioni[i] ~= nil then
+			if Kamioni[i].NetID == netid then
+				naso = true
+				cb(Kamioni[i])
+				table.remove(Kamioni, i)
+				TriggerClientEvent("mafije:VratiKamione", -1, Kamioni)
+				break
+			end
+		end
+	end
+	if not naso then
+		cb(false)
+	end
 end)
 
 ESX.RegisterServerCallback('mafije:MorelProdaja', function(source, cb, maf)

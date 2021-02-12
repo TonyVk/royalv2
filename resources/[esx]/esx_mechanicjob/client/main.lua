@@ -506,10 +506,23 @@ function OpenMobileMechanicActionsMenu()
 
 			if IsPedSittingInAnyVehicle(playerPed) then
 				local vehicle = GetVehiclePedIsIn(playerPed, false)
-
 				if GetPedInVehicleSeat(vehicle, -1) == playerPed then
-					ESX.ShowNotification(_U('vehicle_impounded'))
-					ESX.Game.DeleteVehicle(vehicle)
+					NetworkRequestControlOfEntity(vehicle)
+					ESX.TriggerServerCallback('mafije:DohvatiKamion', function(odg)
+						if odg ~= false then
+							NetworkRequestControlOfEntity(NetToObj(odg.Obj1))
+							NetworkRequestControlOfEntity(NetToObj(odg.Obj2))
+							NetworkRequestControlOfEntity(NetToObj(odg.Obj3))
+							ESX.Game.DeleteObject(NetToObj(odg.Obj1))
+							ESX.Game.DeleteObject(NetToObj(odg.Obj2))
+							ESX.Game.DeleteObject(NetToObj(odg.Obj3))
+							ESX.Game.DeleteVehicle(vehicle)
+							ESX.ShowNotification(_U('vehicle_impounded'))
+						else
+							ESX.ShowNotification(_U('vehicle_impounded'))
+							ESX.Game.DeleteVehicle(vehicle)
+						end
+					end, VehToNet(vehicle))
 				else
 					ESX.ShowNotification(_U('must_seat_driver'))
 				end
@@ -517,8 +530,22 @@ function OpenMobileMechanicActionsMenu()
 				local vehicle = ESX.Game.GetVehicleInDirection()
 
 				if DoesEntityExist(vehicle) then
-					ESX.ShowNotification(_U('vehicle_impounded'))
-					ESX.Game.DeleteVehicle(vehicle)
+					NetworkRequestControlOfEntity(vehicle)
+					ESX.TriggerServerCallback('mafije:DohvatiKamion', function(odg)
+						if odg ~= false then
+							NetworkRequestControlOfEntity(NetToObj(odg.Obj1))
+							NetworkRequestControlOfEntity(NetToObj(odg.Obj2))
+							NetworkRequestControlOfEntity(NetToObj(odg.Obj3))
+							ESX.Game.DeleteObject(NetToObj(odg.Obj1))
+							ESX.Game.DeleteObject(NetToObj(odg.Obj2))
+							ESX.Game.DeleteObject(NetToObj(odg.Obj3))
+							ESX.Game.DeleteVehicle(vehicle)
+							ESX.ShowNotification(_U('vehicle_impounded'))
+						else
+							ESX.ShowNotification(_U('vehicle_impounded'))
+							ESX.Game.DeleteVehicle(vehicle)
+						end
+					end, VehToNet(vehicle))
 				else
 					ESX.ShowNotification(_U('must_near'))
 				end
