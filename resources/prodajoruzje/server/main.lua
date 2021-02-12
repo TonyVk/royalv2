@@ -34,12 +34,17 @@ end)
 
 RegisterNetEvent("ObrisiSociety")
 AddEventHandler('ObrisiSociety', function(soc, broj)
+	local xPlayer = ESX.GetPlayerFromId(source)
 	local societyAccount = nil
 	TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
 		societyAccount = account
 	end)
-	societyAccount.removeMoney(broj)
-	societyAccount.save()
+	if societyAccount ~= nil then
+		societyAccount.removeMoney(broj)
+		societyAccount.save()
+	else
+		xPlayer.showNotification("Unesena mafija ne postoji!")
+	end
 end)
 
 RegisterNetEvent("EoTiSkinara")

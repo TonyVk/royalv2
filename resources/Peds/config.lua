@@ -162,14 +162,14 @@ Config.Locations14 = { -- Biker Guards
 	{ x = 1090.08,   y = -3191.25, z = -39.99, heading = 22.10 },	-- Guard1 Coca
 	{ x = 1087.06,   y = -3187.90, z = -39.99, heading = 212.00 },	-- Guard2
 	{ x = 1097.42,   y = -3198.71, z = -39.99, heading = 61.72 },	-- Guard3
-	{ x = 1065.86,   y = -3185.16, z = -40.16, heading = 55.12 },	-- Guard4 Weed
+	--[[{ x = 1065.86,   y = -3185.16, z = -40.16, heading = 55.12 },	-- Guard4 Weed
 	{ x = 1053.91,   y = -3192.39, z = -40.16, heading = 236.00 },	-- Guard5
 	{ x = 1039.30,   y = -3196.09, z = -39.17, heading = 237.02 },	-- Guard6
 	{ x = 2436.27,   y = 4976.72,  z = 45.57,  heading = 55.40 },	-- Guard7 Opium
 	{ x = 2432.61,   y = 4961.56,  z = 45.82,  heading = 277.35 },	-- Guard8
 	{ x = 997.14,    y = -3201.97, z = -37.39, heading = 322.08 },	-- Guard9 Meth
 	{ x = 1001.31,   y = -3197.73, z = -39.99, heading = 293.75 },	-- Guard10
-	{ x = 1014.44,   y = -3201.72, z = -39.99, heading = 36.63 }	-- Guard11
+	{ x = 1014.44,   y = -3201.72, z = -39.99, heading = 36.63 }	-- Guard11]]
 }
 
 Config.Locations15 = { -- Biker Meth Cook

@@ -100,12 +100,7 @@ end)
 
 RegisterNetEvent('mafije:VratiKamione')
 AddEventHandler('mafije:VratiKamione', function(kam)
-	for i=1, #Mafije, 1 do
-		if Mafije[i] ~= nil and Mafije[i].Ime == PlayerData.job.name then
-			Kamioni = kam
-			break
-		end
-	end
+	Kamioni = kam
 end)
 
 RegisterNetEvent('mafije:OdradioBucket')
@@ -119,36 +114,38 @@ AddEventHandler('baseevents:enteredVehicle', function(currentVehicle, currentSea
 		if Kamioni[i] ~= nil then
 			if NetworkDoesEntityExistWithNetworkId(Kamioni[i].NetID) then
 				if currentVehicle == NetToVeh(Kamioni[i].NetID) then
-					print("Uso u kamion")
-					ProdajeKokain = true
-					KVozilo = currentVehicle
-					tObj = NetToObj(Kamioni[i].Obj1)
-					tObj2 = NetToObj(Kamioni[i].Obj2)
-					tObj3 = NetToObj(Kamioni[i].Obj3)
-					DostavaID = Kamioni[i].Dostava
-					if DoesBlipExist(KBlip) then
-						RemoveBlip(KBlip)
-						KBlip = nil
-					end
-					KBlip = AddBlipForCoord(dostave[DostavaID].x, dostave[DostavaID].y, dostave[DostavaID].z)
-					SetBlipSprite(KBlip, 1)
-					SetBlipColour (KBlip, 5)
-					SetBlipAlpha(KBlip, 255)
-					SetBlipRoute(KBlip,  true)
-					Citizen.CreateThread(function()
-						while ProdajeKokain and KVozilo ~= nil do
-							Citizen.Wait(1000)
-							if GetVehicleEngineHealth(KVozilo) <= 0 then
-								ESX.Game.DeleteVehicle(KVozilo)
-								KVozilo = nil
-								ProdajeKokain = false
-								if DoesBlipExist(KBlip) then
-									RemoveBlip(KBlip)
-									KBlip = nil
+					if PlayerData.job.name ~= "police" and PlayerData.job.name ~= "ambulance" and PlayerData.job.name ~= "mechanic" then
+						ESX.ShowNotification("Ostavite kamion na oznacenu lokaciju kako bih ste prodali kokain!")
+						ProdajeKokain = true
+						KVozilo = currentVehicle
+						tObj = NetToObj(Kamioni[i].Obj1)
+						tObj2 = NetToObj(Kamioni[i].Obj2)
+						tObj3 = NetToObj(Kamioni[i].Obj3)
+						DostavaID = Kamioni[i].Dostava
+						if DoesBlipExist(KBlip) then
+							RemoveBlip(KBlip)
+							KBlip = nil
+						end
+						KBlip = AddBlipForCoord(dostave[DostavaID].x, dostave[DostavaID].y, dostave[DostavaID].z)
+						SetBlipSprite(KBlip, 1)
+						SetBlipColour (KBlip, 5)
+						SetBlipAlpha(KBlip, 255)
+						SetBlipRoute(KBlip,  true)
+						Citizen.CreateThread(function()
+							while ProdajeKokain and KVozilo ~= nil do
+								Citizen.Wait(1000)
+								if GetVehicleEngineHealth(KVozilo) <= 0 then
+									ESX.Game.DeleteVehicle(KVozilo)
+									KVozilo = nil
+									ProdajeKokain = false
+									if DoesBlipExist(KBlip) then
+										RemoveBlip(KBlip)
+										KBlip = nil
+									end
 								end
 							end
-						end
-					end)
+						end)
+					end
 					break
 				end
 			end
@@ -162,7 +159,6 @@ AddEventHandler('baseevents:leftVehicle', function(currentVehicle, currentSeat, 
 		if Kamioni[i] ~= nil then
 			if NetworkDoesEntityExistWithNetworkId(Kamioni[i].NetID) then
 				if currentVehicle == NetToVeh(Kamioni[i].NetID) then
-					print("Izaso iz kamiona")
 					if DoesBlipExist(KBlip) then
 						RemoveBlip(KBlip)
 						KBlip = nil
@@ -314,7 +310,6 @@ function SpawnBlip()
 					--AddTextComponentString(firstToUpper(Koord[i].Mafija))
 					EndTextCommandSetBlipName(Blipovi[Koord[i].Mafija])
 				end
-				break
 			end
 		end
 		if Koord[i] ~= nil and Koord[i].Ime == "Kokain" then
@@ -1745,6 +1740,7 @@ function OpenKokainMenu()
     local elements = {}
 	table.insert(elements, {label = "Stanje", value = 'skl_stanje'})
 	table.insert(elements, {label = "Ostavi listove", value = 'ost_list'})
+	table.insert(elements, {label = "Ostavi kokain", value = 'ost_koka'})
 	table.insert(elements, {label = 'Prodaj kokain',  value = 'kok_prodaj'})
 
 
@@ -1762,6 +1758,11 @@ function OpenKokainMenu()
 
         if data.current.value == 'ost_list' then
 			OpenKOstaviMenu()
+			menu.close()
+        end
+		
+		if data.current.value == 'ost_koka' then
+			OpenKOstaviKMenu()
 			menu.close()
         end
 		
@@ -1870,6 +1871,30 @@ function OpenKOstaviMenu()
             else
 				menu2.close()
 				TriggerServerEvent('mafije:OstaviListove', count, PlayerData.job.name)
+				OpenKokainMenu()
+            end
+          end,
+        function(data2, menu2)
+            menu2.close()
+        end
+    )
+end
+
+function OpenKOstaviKMenu()
+	ESX.UI.Menu.Open(
+          'dialog', GetCurrentResourceName(), 'kokain2_menu_get_item_count',
+          {
+            title = _U('quantity')
+          },
+          function(data2, menu2)
+
+            local count = tonumber(data2.value)
+
+            if count == nil then
+				ESX.ShowNotification(_U('quantity_invalid'))
+            else
+				menu2.close()
+				TriggerServerEvent('mafije:OstaviKoku', count, PlayerData.job.name)
 				OpenKokainMenu()
             end
           end,
@@ -2933,7 +2958,17 @@ AddEventHandler('mafije:hasEnteredMarker', function(station, part, partNum)
 			ESX.ShowNotification("Istovar..")
 			Wait(5000)
 			FreezeEntityPosition(GetVehiclePedIsIn(PlayerPedId(), false), false)
-			TriggerServerEvent("mafije:IsplatiSve", PlayerData.job.name)
+			local naso = false
+			for i=1, #Mafije, 1 do
+				if Mafije[i] ~= nil and Mafije[i].Ime == PlayerData.job.name then
+					TriggerServerEvent("mafije:IsplatiSve", PlayerData.job.name)
+					naso = true
+					break
+				end
+			end
+			if not naso then
+				TriggerServerEvent("mafije:IsplatiSve", nil)
+			end
 			ESX.ShowNotification("Zavrsili ste prodaju kokaina!")
 			TriggerServerEvent("mafije:MakniKamion", VehToNet(KVozilo))
 			if DoesEntityExist(tObj) then
@@ -3332,7 +3367,7 @@ AddEventHandler('mafije:KreirajBlip', function(co, maf, br)
 				if x ~= 0 and x ~= nil then
 					local kupljeno = false
 					for j=1, #Mafije, 1 do
-						if Mafije[j] ~= nil and Mafije[j].Ime == Koord[i].Mafija then
+						if Mafije[j] ~= nil and Mafije[j].Ime == maf then
 							if Mafije[j].Skladiste == 1 then
 								kupljeno = true
 							end
@@ -3340,39 +3375,39 @@ AddEventHandler('mafije:KreirajBlip', function(co, maf, br)
 						end
 					end
 					if kupljeno then
-						SBlipovi[Koord[i].Mafija] = AddBlipForCoord(x,y,z)
+						SBlipovi[maf] = AddBlipForCoord(x,y,z)
 
-						SetBlipSprite (SBlipovi[Koord[i].Mafija], 357)
-						SetBlipDisplay(SBlipovi[Koord[i].Mafija], 4)
-						SetBlipScale  (SBlipovi[Koord[i].Mafija], 1.2)
+						SetBlipSprite (SBlipovi[maf], 357)
+						SetBlipDisplay(SBlipovi[maf], 4)
+						SetBlipScale  (SBlipovi[maf], 1.2)
 						for a=1, #Boje, 1 do
-							if Boje[a] ~= nil and Boje[a].Mafija == Koord[i].Mafija and Boje[a].Ime == "Blip" then
-								SetBlipColour(SBlipovi[Koord[i].Mafija], tonumber(Boje[a].Boja))
+							if Boje[a] ~= nil and Boje[a].Mafija == maf and Boje[a].Ime == "Blip" then
+								SetBlipColour(SBlipovi[maf], tonumber(Boje[a].Boja))
 								break
 							end
 						end
-						SetBlipAsShortRange(SBlipovi[Koord[i].Mafija], true)
+						SetBlipAsShortRange(SBlipovi[maf], true)
 
 						BeginTextCommandSetBlipName("STRING")
 						AddTextComponentString("Kokain lab")
-						EndTextCommandSetBlipName(SBlipovi[Koord[i].Mafija])
+						EndTextCommandSetBlipName(SBlipovi[maf])
 					else
-						SBlipovi[Koord[i].Mafija] = AddBlipForCoord(x,y,z)
+						SBlipovi[maf] = AddBlipForCoord(x,y,z)
 
-						SetBlipSprite (SBlipovi[Koord[i].Mafija], 369)
-						SetBlipDisplay(SBlipovi[Koord[i].Mafija], 4)
-						SetBlipScale  (SBlipovi[Koord[i].Mafija], 1.2)
+						SetBlipSprite (SBlipovi[maf], 369)
+						SetBlipDisplay(SBlipovi[maf], 4)
+						SetBlipScale  (SBlipovi[maf], 1.2)
 						for a=1, #Boje, 1 do
-							if Boje[a] ~= nil and Boje[a].Mafija == Koord[i].Mafija and Boje[a].Ime == "Blip" then
-								SetBlipColour(SBlipovi[Koord[i].Mafija], tonumber(Boje[a].Boja))
+							if Boje[a] ~= nil and Boje[a].Mafija == maf and Boje[a].Ime == "Blip" then
+								SetBlipColour(SBlipovi[maf], tonumber(Boje[a].Boja))
 								break
 							end
 						end
-						SetBlipAsShortRange(SBlipovi[Koord[i].Mafija], true)
+						SetBlipAsShortRange(SBlipovi[maf], true)
 
 						BeginTextCommandSetBlipName("STRING")
 						AddTextComponentString("Kokain lab na prodaju!")
-						EndTextCommandSetBlipName(SBlipovi[Koord[i].Mafija])
+						EndTextCommandSetBlipName(SBlipovi[maf])
 					end
 				end
 			end
