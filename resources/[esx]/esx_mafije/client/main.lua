@@ -1,6 +1,6 @@
 --[[
 	TODO:
-	-Cijena prodaje
+	-Cijena prodaje(korekcija?)
 ]]
 
 local Keys = {
@@ -61,14 +61,12 @@ local JebenaKanta				= nil
 
 local dostave = 
 {
-    vector3(907.12414550781, -1732.8756103516, 30.062334060669),
-	vector3(976.80212402344, -1825.0364990234, 30.636585235596),
-	vector3(955.66595458984, -2110.9118652344, 30.031211853027),
-	vector3(845.36651611328, -2362.0415039063, 29.824703216553),
-	vector3(1244.3372802734, -3142.044921875, 5.0414257049561),
-	vector3(1216.5462646484, -3002.2944335938, 5.3450527191162),
-	vector3(34.788818359375, -2650.1391601563, 5.4856877326965),
-	vector3(-525.09619140625, -2901.0568847656, 5.4814658164978)
+    vector3(-1107.837524414, 4891.6513671875, 215.53938293458),
+	vector3(-284.25085449218, 2545.6098632812, 74.252235412598),
+	vector3(-1661.032836914, 3120.3474121094, 31.694063186646),
+	vector3(2316.876953125, 2520.1318359375, 46.643600463868),
+	vector3(748.51580810546, 1301.3503417968, 360.27239990234),
+	vector3(1545.7540283204, 1729.2635498046, 110.0136795044)
 }
 
 local Kutije = {
@@ -428,7 +426,7 @@ AddEventHandler('mafije:PosaljiObavijest', function(posao, odg)
 				Kutijice = {}
 				for i=1, #Skladiste, 1 do
 					if Skladiste[i] ~= nil and Skladiste[i].Mafija == PlayerData.job.name then
-						local brojic = math.ceil(Skladiste[i].Kokain/300)
+						local brojic = math.floor((Skladiste[i].Kokain/300)+0.5)
 						local model = GetHashKey('ex_prop_crate_narc_bc')
 						RequestModel(model)
 						while not HasModelLoaded(model) do
@@ -3320,7 +3318,7 @@ AddEventHandler('mafije:UpdateSkladista', function(skl)
 		Kutijice = {}
 		for i=1, #Skladiste, 1 do
 			if Skladiste[i] ~= nil and Skladiste[i].Mafija == PlayerData.job.name then
-				local brojic = math.ceil(Skladiste[i].Kokain/300)
+				local brojic = math.floor((Skladiste[i].Kokain/300)+0.5)
 				local model = GetHashKey('ex_prop_crate_narc_bc')
 				RequestModel(model)
 				while not HasModelLoaded(model) do
@@ -3630,7 +3628,7 @@ Citizen.CreateThread(function()
 			while not HasModelLoaded(model2) do
 				Wait(1)
 			end
-			JebenaKanta = CreateObject(model2, 1102.112, -3198.685, -39.51907-0.8, false, false, false)
+			JebenaKanta = CreateObject(model2, 1102.112, -3198.685, -39.51907-0.83, false, false, false)
 			SetModelAsNoLongerNeeded(model2)
 			for i = 1, #Kutijice, 1 do
 				if Kutijice[i] ~= nil then
@@ -3640,7 +3638,7 @@ Citizen.CreateThread(function()
 			Kutijice = {}
 			for i=1, #Skladiste, 1 do
 				if Skladiste[i] ~= nil and Skladiste[i].Mafija == PlayerData.job.name then
-					local brojic = math.ceil(Skladiste[i].Kokain/300)
+					local brojic = math.floor((Skladiste[i].Kokain/300)+0.5)
 					local model = GetHashKey('ex_prop_crate_narc_bc')
 					RequestModel(model)
 					while not HasModelLoaded(model) do

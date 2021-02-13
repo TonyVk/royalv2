@@ -238,46 +238,6 @@ AddEventHandler('prodajoruzje:petarde', function()
 			DeleteEntity(prop)
 end)
 
-local Kutije = {
-	vector3(1088.719, -3096.676, -39.87434),
-	vector3(1091.282, -3096.667, -39.87434),
-	vector3(1095.059, -3096.656, -39.87434),
-	vector3(1097.569, -3096.648, -39.87434),
-	vector3(1101.311, -3096.636, -39.87434),
-	vector3(1103.781, -3096.629, -39.87434),
-	vector3(1103.781, -3096.629, -37.70496),
-	vector3(1101.397, -3096.636, -37.70496),
-	vector3(1097.665, -3096.648, -37.70496),
-	vector3(1095.126, -3096.656, -37.70496),
-	vector3(1091.279, -3096.668, -37.70496),
-	vector3(1088.781, -3096.676, -37.70496)
-}
-
-local Kutijice = {}
-RegisterCommand("ktest", function(source, args, rawCommandString)
-	if #Kutijice == 0 then
-		local model = GetHashKey('ex_prop_crate_narc_bc')
-		RequestModel(model)
-		while not HasModelLoaded(model) do
-			Wait(1)
-		end
-		for i = 1, #Kutije, 1 do
-			if Kutije[i] ~= nil then
-				local objikt = CreateObject(model, Kutije[i].x, Kutije[i].y, Kutije[i].z-0.2, false, false, false)
-				table.insert(Kutijice, objikt)
-			end
-		end
-		SetModelAsNoLongerNeeded(model)
-	else
-		for i = 1, #Kutijice, 1 do
-			if Kutijice[i] ~= nil then
-				DeleteEntity(Kutijice[i])
-			end
-		end
-		Kutijice = {}
-	end
-end, false)
-
 RegisterCommand("lc", function(source, args, rawCommandString)
 	if IsPedInAnyVehicle(PlayerPedId(), false) then
 		local deri = true
