@@ -10,6 +10,9 @@ AddEventHandler('kamiooon:platituljanu', function()
 	if xPlayer.job.name == "kamion" then
 		xPlayer.addMoney(1450)
 		TriggerEvent("biznis:StaviUSef", "kamion", math.ceil(1450*0.30))
+	else
+        TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac kamiondzije, a nije zaposlen kao kamiondzija!")
+	    TriggerEvent("AntiCheat:Citer", _source)
 	end
 end)
 

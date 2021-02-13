@@ -104,17 +104,15 @@ AddEventHandler("esx-qalle-jail:jailPlayer", function(targetSrc, jailTime, jailR
 		Vrati = 0
 	end
 	if xPlayer.job.name == 'police' or xPlayer.job.name == "sipa" or Vrati == 1 then
-
-	JailPlayer(targetSrc, jailTime)
-
-	GetRPName(targetSrc, function(Firstname, Lastname)
-		TriggerClientEvent('chat:addMessage', -1, { args = { "SUDAC",  Firstname .. " " .. Lastname .. " je zavrsio u zatvoru zbog: " .. jailReason }, color = { 249, 166, 0 } })
-	end)
-
-	TriggerClientEvent("esx:showNotification", src, GetPlayerName(targetSrc) .. " je zatvorit na " .. jailTime .. " minuta!")
+		JailPlayer(targetSrc, jailTime)
+		GetRPName(targetSrc, function(Firstname, Lastname)
+			TriggerClientEvent('chat:addMessage', -1, { args = { "SUDAC",  Firstname .. " " .. Lastname .. " je zavrsio u zatvoru zbog: " .. jailReason }, color = { 249, 166, 0 } })
+		end)
+		TriggerClientEvent("esx:showNotification", src, GetPlayerName(targetSrc) .. " je zatvorit na " .. jailTime .. " minuta!")
 	else
 		print(('esx_jail: %s attempted to jail!'):format(xPlayer.identifier))
-		DropPlayer(src, "Citer")
+		TriggerEvent("DiscordBot:Anticheat", GetPlayerName(src).."["..src.."] je pokusao pozvati event za stavljanje u zatvor, a nije zaposlen kao policajac!")
+	    TriggerEvent("AntiCheat:Citer", src)
 	end
 end)
 

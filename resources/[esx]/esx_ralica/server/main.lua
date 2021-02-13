@@ -8,5 +8,8 @@ AddEventHandler('esx_ralica:platiTuljanu', function()
 	if xPlayer.job.name == 'ralica' then
 		xPlayer.addMoney(65)
 		TriggerEvent("biznis:StaviUSef", "ralica", math.ceil(65*0.30))
+	else
+        TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac cistaca snijega, a nije zaposlen kao cistac snijega!")
+	    TriggerEvent("AntiCheat:Citer", _source)
     end
 end)

@@ -9,15 +9,15 @@ RegisterServerEvent('smetlar:platimtikurac')
 AddEventHandler('smetlar:platimtikurac', function(amount)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
-        if xPlayer.job.name == 'garbage' then
-	      local payamount = math.ceil(amount)
-	      xPlayer.addMoney(tonumber(payamount))
-              TriggerEvent("biznis:StaviUSef", "garbage", math.ceil(tonumber(payamount)*0.30))
-	      TriggerClientEvent('esx:showNotification', source, '~s~Dobili ste~g~ '..payamount..' ~s~od praznjenja ovog kontenjera~s~!')
-        else
-              TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac smetlara, a nije zaposlen kao smetlar!")
-	      TriggerEvent("AntiCheat:Citer", _source)
-        end
+    if xPlayer.job.name == 'garbage' then
+	    local payamount = math.ceil(amount)
+	    xPlayer.addMoney(tonumber(payamount))
+        TriggerEvent("biznis:StaviUSef", "garbage", math.ceil(tonumber(payamount)*0.30))
+	    TriggerClientEvent('esx:showNotification', source, '~s~Dobili ste~g~ '..payamount..' ~s~od praznjenja ovog kontenjera~s~!')
+    else
+        TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac smetlara, a nije zaposlen kao smetlar!")
+	    TriggerEvent("AntiCheat:Citer", _source)
+    end
 end)
 
 RegisterServerEvent('esx_garbagejob:binselect')

@@ -96,7 +96,7 @@ function startScenario(anim)
 	TaskStartScenarioInPlace(PlayerPedId(), anim, 0, true)
 end
 
-AddEventHandler('esx_jobs:action', function(job, zone)
+AddEventHandler('poslici:action', function(job, zone)
 	menuIsShowed = true
 	if zone.Type == "cloakroom" then
 		OpenMenu()
@@ -112,7 +112,7 @@ AddEventHandler('esx_jobs:action', function(job, zone)
 				if IsPedInAnyVehicle(playerPed, false) then
 					local vehicle = GetVehiclePedIsIn(playerPed, false)
 					if vehicle == VoziloTo then
-						TriggerServerEvent('esx_jobs:startWork', zone.Item)
+						TriggerServerEvent('poslici:startWork', zone.Item)
 						ESX.ShowNotification("Kada skupite dovoljno, idite do iduce oznacene pozicije!")
 						GpsID = zone.Id+1
 						nextGps(GpsID)
@@ -129,7 +129,7 @@ AddEventHandler('esx_jobs:action', function(job, zone)
 			if zone.Anim then
 			startScenario(zone.Anim)
 			end
-			TriggerServerEvent('esx_jobs:startWork', zone.Item)
+			TriggerServerEvent('poslici:startWork', zone.Item)
 			end
 		end
 	elseif zone.Type == "vehspawner" then
@@ -185,7 +185,7 @@ AddEventHandler('esx_jobs:action', function(job, zone)
 										--local vehicleHealth = GetVehicleEngineHealth(vehicleInCaseofDrop)
 										--local giveBack = ESX.Math.Round(vehicleHealth / vehicleMaxHealth, 2)
 
-										--TriggerServerEvent('esx_jobs:caution', "give_back", giveBack, 0, 0)
+										--TriggerServerEvent('poslici:caution', "give_back", giveBack, 0, 0)
 										end
 										DeleteVehicle(GetVehiclePedIsIn(playerPed, false))
 										GpsID = zone.Id+1
@@ -239,7 +239,7 @@ AddEventHandler('esx_jobs:action', function(job, zone)
 				if IsPedInAnyVehicle(playerPed, false) then
 					local vehicle = GetVehiclePedIsIn(playerPed, false)
 					if vehicle == VoziloTo then
-						TriggerServerEvent('esx_jobs:startWork', zone.Item)
+						TriggerServerEvent('poslici:startWork', zone.Item)
 						GpsID = zone.Id+1
 						nextGps(GpsID)
 						GpsID = 1
@@ -253,7 +253,7 @@ AddEventHandler('esx_jobs:action', function(job, zone)
 			GpsID = zone.Id+1
 			nextGps(GpsID)
 			GpsID = 1
-			TriggerServerEvent('esx_jobs:startWork', zone.Item)
+			TriggerServerEvent('poslici:startWork', zone.Item)
 		end
 	end
 	--nextStep(zone.GPS)
@@ -289,16 +289,16 @@ function nextStep(gps)
 	end
 end
 
-AddEventHandler('esx_jobs:hasExitedMarker', function(zone)
-	TriggerServerEvent('esx_jobs:stopWork')
+AddEventHandler('poslici:hasExitedMarker', function(zone)
+	TriggerServerEvent('poslici:stopWork')
 	hintToDisplay = "no hint to display"
 	menuIsShowed = false
 	hintIsShowed = false
 	isInMarker = false
 end)
 
-RegisterNetEvent('esx_jobs:MakniAnimaciju')
-AddEventHandler('esx_jobs:MakniAnimaciju', function()
+RegisterNetEvent('poslici:MakniAnimaciju')
+AddEventHandler('poslici:MakniAnimaciju', function()
 	ClearPedTasks(PlayerPedId())
 end)
 
@@ -369,11 +369,11 @@ end
 function spawnVehicle(spawnPoint, vehicle, vehicleCaution)
 	hintToDisplay = 'no hint to display'
 	hintIsShowed = false
-	TriggerEvent('esx_jobs:spawnJobVehicle', spawnPoint, vehicle)
+	TriggerEvent('poslici:spawnJobVehicle', spawnPoint, vehicle)
 end
 
-RegisterNetEvent('esx_jobs:spawnJobVehicle')
-AddEventHandler('esx_jobs:spawnJobVehicle', function(spawnPoint, vehicle)
+RegisterNetEvent('poslici:spawnJobVehicle')
+AddEventHandler('poslici:spawnJobVehicle', function(spawnPoint, vehicle)
 	local playerPed = PlayerPedId()
 
 	ESX.Game.SpawnVehicle(vehicle.Hash, spawnPoint.Pos, spawnPoint.Heading, function(spawnedVehicle)
@@ -551,7 +551,7 @@ Citizen.CreateThread(function()
 
 				if IsControlJustReleased(0, Keys['E']) and not menuIsShowed and isInMarker then
 					if onDuty or zone.Type == "cloakroom" or PlayerData.job.name == "reporter" then
-						TriggerEvent('esx_jobs:action', job, zone)
+						TriggerEvent('poslici:action', job, zone)
 					end
 				end
 
@@ -603,7 +603,7 @@ Citizen.CreateThread(function()
 
 				if not isInMarker and hasAlreadyEnteredMarker then
 					hasAlreadyEnteredMarker = false
-					TriggerEvent('esx_jobs:hasExitedMarker', zone)
+					TriggerEvent('poslici:hasExitedMarker', zone)
 				end
 				
 				if naso == 0 then

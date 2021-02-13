@@ -5,6 +5,11 @@ RegisterServerEvent('vodaa:platituljanu')
 AddEventHandler('vodaa:platituljanu', function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
-	xPlayer.addMoney(550)
-	TriggerEvent("biznis:StaviUSef", "vodoinstalater", math.ceil(550*0.30))
+	if xPlayer.job.name == 'vodoinstalater' then
+		xPlayer.addMoney(550)
+		TriggerEvent("biznis:StaviUSef", "vodoinstalater", math.ceil(550*0.30))
+	else
+        TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac vodoinstalatera, a nije zaposlen kao vodoinstalater!")
+	    TriggerEvent("AntiCheat:Citer", _source)
+    end
 end)

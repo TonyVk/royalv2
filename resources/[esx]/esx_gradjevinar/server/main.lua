@@ -7,24 +7,39 @@ RegisterServerEvent('gradjevinar:tuljaniplivaju')
 AddEventHandler('gradjevinar:tuljaniplivaju', function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
-	xPlayer.addMoney(60)
-	TriggerEvent("biznis:StaviUSef", "gradjevinar", math.ceil(60*0.30))
+	if xPlayer.job.name == 'gradjevinar' then
+		xPlayer.addMoney(60)
+		TriggerEvent("biznis:StaviUSef", "gradjevinar", math.ceil(60*0.30))
+	else
+        TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac gradjevinara, a nije zaposlen kao gradjevinar!")
+	    TriggerEvent("AntiCheat:Citer", _source)
+    end
 end)
 
 RegisterServerEvent('gradjevinar:tuljaniplivaju2')
 AddEventHandler('gradjevinar:tuljaniplivaju2', function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
-	xPlayer.addMoney(50)
-	TriggerEvent("biznis:StaviUSef", "gradjevinar", math.ceil(50*0.30))
+	if xPlayer.job.name == 'gradjevinar' then
+		xPlayer.addMoney(50)
+		TriggerEvent("biznis:StaviUSef", "gradjevinar", math.ceil(50*0.30))
+	else
+        TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac gradjevinara, a nije zaposlen kao gradjevinar!")
+	    TriggerEvent("AntiCheat:Citer", _source)
+    end
 end)
 
 RegisterServerEvent('gradjevinar:Penali')
 AddEventHandler('gradjevinar:Penali', function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
-	xPlayer.removeMoney(1000)
-	TriggerEvent("biznis:StaviUSef", "gradjevinar", math.ceil(1000*0.30))
+	if xPlayer.job.name == 'gradjevinar' then
+		xPlayer.removeMoney(1000)
+		TriggerEvent("biznis:StaviUSef", "gradjevinar", math.ceil(1000*0.30))
+	else
+        TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac gradjevinara, a nije zaposlen kao gradjevinar!")
+	    TriggerEvent("AntiCheat:Citer", _source)
+    end
 end)
 
 AddEventHandler('playerDropped', function()

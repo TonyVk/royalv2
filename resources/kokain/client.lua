@@ -105,21 +105,6 @@ function PostaviPosao()
 	ESX.TriggerServerCallback('mafije:DohvatiMafijev2', function(mafija)
 		Mafije = mafija
 	end)
-	
-	local model = GetHashKey("s_m_y_dealer_01")
-    RequestModel(model)
-	
-    while not HasModelLoaded(model) do
-        Wait(1)
-    end
-	
-	local npc = CreatePed(4, model, -2076.9714355468, -1019.7077636718, 7.9714832305908, 221.32, false, true)
-	SetModelAsNoLongerNeeded(model)
-			
-	SetEntityHeading(npc, 221.32)
-	FreezeEntityPosition(npc, true)
-	SetEntityInvincible(npc, true)
-	SetBlockingOfNonTemporaryEvents(npc, true)
 end
 
 local locations = {}
@@ -140,7 +125,7 @@ local spawned = false
 Citizen.CreateThread( function()
 	Citizen.Wait(10000)
 	while true do
-	Citizen.Wait(1000)
+		Citizen.Wait(1000)
 		if #(GetEntityCoords(PlayerPedId())-Config.PickupBlip) <= 200 then
 		--if GetDistanceBetweenCoords(Config.PickupBlip.x,Config.PickupBlip.y,Config.PickupBlip.z, GetEntityCoords(GetPlayerPed(-1))) <= 200 then
 			if spawned == false then
@@ -153,17 +138,17 @@ Citizen.CreateThread( function()
 						end
 					end
 					if naso == 1 then
-						TriggerEvent('KCoke:start')
-						TriggerEvent('KCoke:start')
-						TriggerEvent('KCoke:start')
-						TriggerEvent('KCoke:start')
-						TriggerEvent('KCoke:start')
-						TriggerEvent('KCoke:start')
-						TriggerEvent('KCoke:start')
-						TriggerEvent('KCoke:start')
-						TriggerEvent('KCoke:start')
-						TriggerEvent('KCoke:start')
-						TriggerEvent('KCoke:start')
+						TriggerEvent('esx_drogica:start')
+						TriggerEvent('esx_drogica:start')
+						TriggerEvent('esx_drogica:start')
+						TriggerEvent('esx_drogica:start')
+						TriggerEvent('esx_drogica:start')
+						TriggerEvent('esx_drogica:start')
+						TriggerEvent('esx_drogica:start')
+						TriggerEvent('esx_drogica:start')
+						TriggerEvent('esx_drogica:start')
+						TriggerEvent('esx_drogica:start')
+						TriggerEvent('esx_drogica:start')
 						spawned = true
 					end
 				end
@@ -173,7 +158,6 @@ Citizen.CreateThread( function()
 				locations = {}
 			end
 			spawned = false
-			
 		end
 	end
 end)
@@ -188,178 +172,58 @@ AddEventHandler('esx:setJob', function(job)
   ESX.PlayerData.job = job
 end)
 
-local displayed = false
-local menuOpen = false
-			
-AddEventHandler('kokain:hasEnteredMarker', function(zone)
-	if zone == 'prodaja' then
-		CurrentAction     = 'prodaj'
-        CurrentActionMsg  = "Pritisnite E da prodate kokain!"
-	end
-end)
-
-AddEventHandler('kokain:hasExitedMarker', function(zone)
-	ESX.UI.Menu.CloseAll()    
-    CurrentAction = nil
-    CurrentActionMsg = ''
-end)
-
-local process = true
-local prodaja = vector3(-2076.9714355468, -1019.7077636718, 7.9714832305908)
 Citizen.CreateThread(function()
 	local waitara = 500
     while true do
-			Citizen.Wait(waitara)
-			local naso = 0
-			for i=1, #Mafije, 1 do
-				if Mafije[i] ~= nil and Mafije[i].Ime == ESX.PlayerData.job.name then
-					naso = 1
-					break
+		Citizen.Wait(waitara)
+		if ESX ~= nil then
+			if ESX.PlayerData.job ~= nil then
+				local naso = 0
+				for i=1, #Mafije, 1 do
+					if Mafije[i] ~= nil and Mafije[i].Ime == ESX.PlayerData.job.name then
+						naso = 1
+						break
+					end
 				end
-			end
-			local naso2 = 0
-			local kordic = GetEntityCoords(PlayerPedId())
-			if (#(kordic-prodaja) <= 50.0) then
-			--if (GetDistanceBetweenCoords(-1156.2723388672, -1522.8728027344, 9.63272857666,  kordic.x,  kordic.y,  kordic.z,  true) <= 50.0) and naso == 0 then
-				waitara = 0
-				naso2 = 1
-				DrawMarker(27, prodaja, 0, 0, 0, 0, 0, 0, 2.25, 2.25, 1.0001, 0, 128, 0, 200, 0, 0, 0, 0)
-			end
-			
-			local isInMarker  = false
-			local currentZone = nil
-
-			if (#(kordic-prodaja) < 2.25) then
-			--if(GetDistanceBetweenCoords(kordic, -1156.2723388672, -1522.8728027344, 9.63272857666, true) < 2.25) and naso == 0 then
-				isInMarker  = true
-				currentZone = "prodaja"
-			end
-			if isInMarker and not hasAlreadyEnteredMarker then
-				hasAlreadyEnteredMarker = true
-				lastZone                = currentZone
-				TriggerEvent('kokain:hasEnteredMarker', currentZone)
-			end
-
-			if not isInMarker and hasAlreadyEnteredMarker then
-				hasAlreadyEnteredMarker = false
-				TriggerEvent('kokain:hasExitedMarker', lastZone)
-			end
-			if ESX ~= nil then
-				if ESX.PlayerData.job ~= nil then
-					if naso == 1 then
-						for k in pairs(locations) do
-							if #(kordic-locations[k]) < 150 then
-							--if GetDistanceBetweenCoords(locations[k].x, locations[k].y, locations[k].z, GetEntityCoords(GetPlayerPed(-1))) < 150 then
-								waitara = 0
-								naso2 = 1
-								DrawMarker(3, locations[k], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0, 200, 0, 110, 0, 1, 0, 0)	
-								if #(kordic-locations[k]) < 1.0 then
-								--if GetDistanceBetweenCoords(locations[k].x, locations[k].y, locations[k].z, GetEntityCoords(GetPlayerPed(-1)), false) < 1.0 then	
-									TriggerEvent('KCoke:new', k)
-									TaskStartScenarioInPlace(PlayerPedId(), 'world_human_gardener_plant', 0, false)
-									Citizen.Wait(2000)
-									ClearPedTasks(PlayerPedId())
-									ClearPedTasksImmediately(PlayerPedId())
-									local torba = 0
-									TriggerEvent('skinchanger:getSkin', function(skin)
-										torba = skin['bags_1']
-									end)
-									if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
-										TriggerServerEvent('KCoke:get', true)
-									else
-										TriggerServerEvent('KCoke:get', false)
-									end
+				local naso2 = 0
+				if naso == 1 then
+					local kordic = GetEntityCoords(PlayerPedId())
+					for k in pairs(locations) do
+						if #(kordic-locations[k]) < 150 then
+						--if GetDistanceBetweenCoords(locations[k].x, locations[k].y, locations[k].z, GetEntityCoords(GetPlayerPed(-1))) < 150 then
+							waitara = 0
+							naso2 = 1
+							DrawMarker(3, locations[k], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0, 200, 0, 110, 0, 1, 0, 0)	
+							if #(kordic-locations[k]) < 1.0 then
+							--if GetDistanceBetweenCoords(locations[k].x, locations[k].y, locations[k].z, GetEntityCoords(GetPlayerPed(-1)), false) < 1.0 then	
+								TriggerEvent('esx_drogica:new', k)
+								TaskStartScenarioInPlace(PlayerPedId(), 'world_human_gardener_plant', 0, false)
+								Citizen.Wait(2000)
+								ClearPedTasks(PlayerPedId())
+								ClearPedTasksImmediately(PlayerPedId())
+								local torba = 0
+								TriggerEvent('skinchanger:getSkin', function(skin)
+									torba = skin['bags_1']
+								end)
+								if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+									TriggerServerEvent('esx_drogica:get', true)
+								else
+									TriggerServerEvent('esx_drogica:get', false)
 								end
-							
 							end
 						end
-						if #(kordic-Config.Processing) < 150 then
-						--if GetDistanceBetweenCoords(Config.Processing.x, Config.Processing.y, Config.Processing.z, GetEntityCoords(GetPlayerPed(-1))) < 150 then
-								waitara = 0
-								naso2 = 1
-								DrawMarker(1, Config.Processing, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.3, 1.3, 1.0, 0, 200, 0, 110, 0, 1, 0, 0)	
-								if #(kordic-Config.Processing) < 2 then
-								--if GetDistanceBetweenCoords(Config.Processing, GetEntityCoords(GetPlayerPed(-1)), true) < 2 then			
-									Draw3DText( Config.Processing.x, Config.Processing.y, Config.Processing.z , "~w~Proizvodnja kokaina~y~\nPritisnite [~b~E~y~] da krenete sa proizvodnjom",4,0.15,0.1)
-									if IsControlJustReleased(0, Keys['E']) then
-										Citizen.CreateThread(function()
-											Process()
-										end)
-									end
-								end
-								if (#(kordic-Config.Processing) < 5) and (#(kordic-Config.Processing) > 3) then
-								--if GetDistanceBetweenCoords(Config.Processing.x, Config.Processing.y, Config.Processing.z, GetEntityCoords(GetPlayerPed(-1)), true) < 5 and GetDistanceBetweenCoords(Config.Processing.x, Config.Processing.y, Config.Processing.z, GetEntityCoords(GetPlayerPed(-1)), true) > 3 then
-									process = false
-								end
-						end
 					end
-				end	
-			end
-			if CurrentAction ~= nil then
-				SetTextComponentFormat('STRING')
-				AddTextComponentString(CurrentActionMsg)
-				DisplayHelpTextFromStringLabel(0, 0, 1, -1)
-				if IsControlJustPressed(0, 38) then
-					if CurrentAction == 'prodaj' then
-						TriggerServerEvent("kokain:ProdajKoku")
-					end
-					CurrentAction = nil
 				end
-			end
-			if naso2 == 0 then
-				waitara = 500
-			end
+			end	
+		end
+		if naso2 == 0 then
+			waitara = 500
+		end
     end
 end)
 
-function Draw3DText(x,y,z,textInput,fontId,scaleX,scaleY)
-         local px,py,pz=table.unpack(GetGameplayCamCoords())
-         local dist = GetDistanceBetweenCoords(px,py,pz, x,y,z, 1)    
-         local scale = (1/dist)*20
-         local fov = (1/GetGameplayCamFov())*100
-         local scale = scale*fov   
-         SetTextScale(scaleX*scale, scaleY*scale)
-         SetTextFont(fontId)
-         SetTextProportional(1)
-		 if inDist then
-			SetTextColour(0, 190, 0, 220)		-- You can change the text color here
-		 else
-		 	SetTextColour(220, 0, 0, 220)		-- You can change the text color here
-		 end
-         SetTextDropshadow(1, 1, 1, 1, 255)
-         SetTextEdge(2, 0, 0, 0, 150)
-         SetTextDropShadow()
-         SetTextOutline()
-         SetTextEntry("STRING")
-         SetTextCentre(1)
-         AddTextComponentString(textInput)
-         SetDrawOrigin(x,y,z+2, 0)
-         DrawText(0.0, 0.0)
-         ClearDrawOrigin()
-end
-
-function Process()
-	ESX.Streaming.RequestAnimDict("mini@repair", function()
-            TaskPlayAnim(PlayerPedId(), "mini@repair", "fixing_a_ped", 8.0, -8.0, -1, 32, 0, false, false, false)
-	end)
-	process = true
-	local making = true
-	while making and process do
-		TriggerEvent('esx:showNotification', '~g~Pocetak ~g~proizvodnje ~w~kokaina')
-		local torba = 0
-		TriggerEvent('skinchanger:getSkin', function(skin)
-			torba = skin['bags_1']
-		end)
-		Citizen.Wait(5000)
-		ESX.TriggerServerCallback('KCoke:process', function(output)
-			making = output
-		end, torba)
-	end
-end
-
-
-RegisterNetEvent('KCoke:start')
-AddEventHandler('KCoke:start', function()
+RegisterNetEvent('esx_drogica:start')
+AddEventHandler('esx_drogica:start', function()
 	local set = false
 	Citizen.Wait(10)
 	
@@ -379,9 +243,8 @@ AddEventHandler('KCoke:start', function()
 
 end)
 
-
-RegisterNetEvent('KCoke:new')
-AddEventHandler('KCoke:new', function(id)
+RegisterNetEvent('esx_drogica:new')
+AddEventHandler('esx_drogica:new', function(id)
 	local set = false
 	Citizen.Wait(10)
 	
@@ -398,23 +261,3 @@ AddEventHandler('KCoke:new', function(id)
 	locations[id] = vect
 	ClearPedTasks(PlayerPedId())
 end)
-
-RegisterNetEvent('KCoke:message')
-AddEventHandler('KCoke:message', function(message)
-	ESX.ShowNotification(message)
-end)
-			
-function DisplayHelpText(str)
-	SetTextComponentFormat("STRING")
-	AddTextComponentString(str)
-	DisplayHelpTextFromStringLabel(0, 0, 1, -1)
-end
-
-
-
-
-
-
-
-
-

@@ -27,7 +27,7 @@ local function Work(source, item)
 
 				if item[i].name ~= _U('delivery') and itemQtty >= item[i].max then
 					TriggerClientEvent('esx:showNotification', source, _U('max_limit', item[i].name))
-					TriggerClientEvent('esx_jobs:MakniAnimaciju', source)
+					TriggerClientEvent('poslici:MakniAnimaciju', source)
 				elseif item[i].requires ~= "nothing" and requiredItemQtty <= 0 then
 					TriggerClientEvent('esx:showNotification', source, _U('not_enough', item[1].requires_name))
 				else
@@ -60,8 +60,8 @@ local function Work(source, item)
 	end)
 end
 
-RegisterServerEvent('esx_jobs:startWork')
-AddEventHandler('esx_jobs:startWork', function(item)
+RegisterServerEvent('poslici:startWork')
+AddEventHandler('poslici:startWork', function(item)
 	if not PlayersWorking[source] then
 		PlayersWorking[source] = true
 		Work(source, item)
@@ -70,7 +70,7 @@ AddEventHandler('esx_jobs:startWork', function(item)
 	end
 end)
 
-RegisterServerEvent('esx_jobs:stopWork')
-AddEventHandler('esx_jobs:stopWork', function()
+RegisterServerEvent('poslici:stopWork')
+AddEventHandler('poslici:stopWork', function()
 	PlayersWorking[source] = false
 end)

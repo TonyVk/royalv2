@@ -8,5 +8,8 @@ AddEventHandler('esx_vlak:platiTuljanu', function()
 	if xPlayer.job.name == 'vlak' then
 		xPlayer.addMoney(500)
 		TriggerEvent("biznis:StaviUSef", "vlak", math.ceil(500*0.30))
+	else
+        TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac vlakovodje, a nije zaposlen kao vlakovodja!")
+	    TriggerEvent("AntiCheat:Citer", _source)
     end
 end)
