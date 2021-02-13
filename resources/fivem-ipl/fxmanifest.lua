@@ -1,6 +1,6 @@
-fx_version 'bodacious'
-game 'gta5'
+fx_version 'adamant'
 
+game 'gta5'
 
 description 'The ultimate IPL loader for FiveM'
 

@@ -56,6 +56,8 @@ local Bucketo 					= false
 local tObj 						= nil
 local tObj2 					= nil
 local tObj3 					= nil
+local UnutarLabosa 				= false
+local JebenaKanta				= nil
 
 local dostave = 
 {
@@ -68,6 +70,23 @@ local dostave =
 	vector3(34.788818359375, -2650.1391601563, 5.4856877326965),
 	vector3(-525.09619140625, -2901.0568847656, 5.4814658164978)
 }
+
+local Kutije = {
+	vector3(1088.719, -3096.676, -39.87434),
+	vector3(1091.282, -3096.667, -39.87434),
+	vector3(1095.059, -3096.656, -39.87434),
+	vector3(1097.569, -3096.648, -39.87434),
+	vector3(1101.311, -3096.636, -39.87434),
+	vector3(1103.781, -3096.629, -39.87434),
+	vector3(1103.781, -3096.629, -37.70496),
+	vector3(1101.397, -3096.636, -37.70496),
+	vector3(1097.665, -3096.648, -37.70496),
+	vector3(1095.126, -3096.656, -37.70496),
+	vector3(1091.279, -3096.668, -37.70496),
+	vector3(1088.781, -3096.676, -37.70496)
+}
+
+local Kutijice = {}
 
 local parachute, crate, pickup, blipa, soundID
 local requiredModels = {"p_cargo_chute_s", "ex_prop_adv_case_sm", "prop_box_wood05a"} -- parachute, pickup case, plane, pilot, crate
@@ -400,6 +419,32 @@ AddEventHandler('mafije:PosaljiObavijest', function(posao, odg)
 				template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(255, 204, 0, 0.6); border-radius: 3px;"><i class="fas fa-info-circle"></i>Obavijest<br> {0}</div>',
 				args = { odg }
 			})
+			if UnutarLabosa then
+				for i = 1, #Kutijice, 1 do
+					if Kutijice[i] ~= nil then
+						DeleteEntity(Kutijice[i])
+					end
+				end
+				Kutijice = {}
+				for i=1, #Skladiste, 1 do
+					if Skladiste[i] ~= nil and Skladiste[i].Mafija == PlayerData.job.name then
+						local brojic = math.ceil(Skladiste[i].Kokain/300)
+						local model = GetHashKey('ex_prop_crate_narc_bc')
+						RequestModel(model)
+						while not HasModelLoaded(model) do
+							Wait(1)
+						end
+						for i = 1, brojic, 1 do
+							if Kutije[i] ~= nil then
+								local objikt = CreateObject(model, Kutije[i].x, Kutije[i].y, Kutije[i].z-0.2, false, false, false)
+								table.insert(Kutijice, objikt)
+							end
+						end
+						SetModelAsNoLongerNeeded(model)
+						break
+					end
+				end
+			end
 		end
 	end
 end)
@@ -1036,7 +1081,7 @@ function OpenSPitajMenu()
 						ESX.ShowNotification("Kupili ste skladiste za $500000!")
 						CurrentAction     = 'menu_ulazk'
 						CurrentActionMsg  = "Pritisnite E da udjete u labos"
-						CurrentActionData = {station = station, partNum = partNum}
+						CurrentActionData = {}
 						
 						
 					else
@@ -1780,6 +1825,16 @@ function OpenKokainMenu()
 										TriggerServerEvent("mafije:BucketajGa", 0)
 										while Bucketo == false do
 											Wait(100)
+										end
+										for i = 1, #Kutijice, 1 do
+											if Kutijice[i] ~= nil then
+												DeleteEntity(Kutijice[i])
+											end
+										end
+										Kutijice = {}
+										if JebenaKanta ~= nil then
+											DeleteEntity(JebenaKanta)
+											JebenaKanta = nil
 										end
 										local model = GetHashKey("benson")
 										RequestModel(model)
@@ -3256,6 +3311,32 @@ end)
 RegisterNetEvent('mafije:UpdateSkladista')
 AddEventHandler('mafije:UpdateSkladista', function(skl)
 	Skladiste = skl
+	if UnutarLabosa then
+		for i = 1, #Kutijice, 1 do
+			if Kutijice[i] ~= nil then
+				DeleteEntity(Kutijice[i])
+			end
+		end
+		Kutijice = {}
+		for i=1, #Skladiste, 1 do
+			if Skladiste[i] ~= nil and Skladiste[i].Mafija == PlayerData.job.name then
+				local brojic = math.ceil(Skladiste[i].Kokain/300)
+				local model = GetHashKey('ex_prop_crate_narc_bc')
+				RequestModel(model)
+				while not HasModelLoaded(model) do
+					Wait(1)
+				end
+				for i = 1, brojic, 1 do
+					if Kutije[i] ~= nil then
+						local objikt = CreateObject(model, Kutije[i].x, Kutije[i].y, Kutije[i].z-0.2, false, false, false)
+						table.insert(Kutijice, objikt)
+					end
+				end
+				SetModelAsNoLongerNeeded(model)
+				break
+			end
+		end
+	end
 end)
 
 RegisterNetEvent('mafije:UpdateMafije')
@@ -3537,8 +3618,44 @@ Citizen.CreateThread(function()
 			SetEntityHeading(PlayerPedId(), 179.78)
 			FreezeEntityPosition(PlayerPedId(), true)
 			TriggerServerEvent("kuce:UKuci", true)
+			UnutarLabosa = true
 			Wait(3000)
 			FreezeEntityPosition(PlayerPedId(), false)
+			if JebenaKanta ~= nil then
+				DeleteEntity(JebenaKanta)
+				JebenaKanta = nil
+			end
+			local model2 = GetHashKey('bkr_ware03_bin2')
+			RequestModel(model2)
+			while not HasModelLoaded(model2) do
+				Wait(1)
+			end
+			JebenaKanta = CreateObject(model2, 1102.112, -3198.685, -39.51907-0.8, false, false, false)
+			SetModelAsNoLongerNeeded(model2)
+			for i = 1, #Kutijice, 1 do
+				if Kutijice[i] ~= nil then
+					DeleteEntity(Kutijice[i])
+				end
+			end
+			Kutijice = {}
+			for i=1, #Skladiste, 1 do
+				if Skladiste[i] ~= nil and Skladiste[i].Mafija == PlayerData.job.name then
+					local brojic = math.ceil(Skladiste[i].Kokain/300)
+					local model = GetHashKey('ex_prop_crate_narc_bc')
+					RequestModel(model)
+					while not HasModelLoaded(model) do
+						Wait(1)
+					end
+					for i = 1, brojic, 1 do
+						if Kutije[i] ~= nil then
+							local objikt = CreateObject(model, Kutije[i].x, Kutije[i].y, Kutije[i].z-0.2, false, false, false)
+							table.insert(Kutijice, objikt)
+						end
+					end
+					SetModelAsNoLongerNeeded(model)
+					break
+				end
+			end
         end
 		
 		if CurrentAction == 'menu_ulazsk' then
@@ -3564,6 +3681,17 @@ Citizen.CreateThread(function()
 					TriggerServerEvent("mafije:BucketajGa", 0)
 					SetEntityCoords(PlayerPedId(), x, y, z, false, false, false, true)
 					TriggerServerEvent("kuce:UKuci", false)
+					UnutarLabosa = false
+					for i = 1, #Kutijice, 1 do
+						if Kutijice[i] ~= nil then
+							DeleteEntity(Kutijice[i])
+						end
+					end
+					Kutijice = {}
+					if JebenaKanta ~= nil then
+						DeleteEntity(JebenaKanta)
+						JebenaKanta = nil
+					end
 					break
 				end
 			end
