@@ -426,7 +426,7 @@ AddEventHandler('mafije:PosaljiObavijest', function(posao, odg)
 				Kutijice = {}
 				for i=1, #Skladiste, 1 do
 					if Skladiste[i] ~= nil and Skladiste[i].Mafija == PlayerData.job.name then
-						local brojic = math.floor((Skladiste[i].Kokain/300)+0.5)
+						local brojic = math.floor((Skladiste[i].Kokain/100)+0.5)
 						local model = GetHashKey('ex_prop_crate_narc_bc')
 						RequestModel(model)
 						while not HasModelLoaded(model) do
@@ -3318,7 +3318,7 @@ AddEventHandler('mafije:UpdateSkladista', function(skl)
 		Kutijice = {}
 		for i=1, #Skladiste, 1 do
 			if Skladiste[i] ~= nil and Skladiste[i].Mafija == PlayerData.job.name then
-				local brojic = math.floor((Skladiste[i].Kokain/300)+0.5)
+				local brojic = math.floor((Skladiste[i].Kokain/100)+0.5)
 				local model = GetHashKey('ex_prop_crate_narc_bc')
 				RequestModel(model)
 				while not HasModelLoaded(model) do
@@ -3638,7 +3638,7 @@ Citizen.CreateThread(function()
 			Kutijice = {}
 			for i=1, #Skladiste, 1 do
 				if Skladiste[i] ~= nil and Skladiste[i].Mafija == PlayerData.job.name then
-					local brojic = math.floor((Skladiste[i].Kokain/300)+0.5)
+					local brojic = math.floor((Skladiste[i].Kokain/100)+0.5)
 					local model = GetHashKey('ex_prop_crate_narc_bc')
 					RequestModel(model)
 					while not HasModelLoaded(model) do
