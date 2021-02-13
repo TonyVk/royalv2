@@ -42,7 +42,7 @@ AddEventHandler("playerSpawned", function()
 	StatSetInt(GetHashKey('MP0_STAMINA'), 20, true)
 	local coords = GetEntityCoords(PlayerPedId())
 	if GetDistanceBetweenCoords(coords, 0, 0, 0, true) <= 10.0 then
-		SetEntityCoords(PlayerPedId(), 222.41250610352, -805.18627929688, 30.663234710693)
+		SetEntityCoords(PlayerPedId(), -825.510, -440.8749, 35.6722)
 	end
 	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		perm = br
