@@ -213,7 +213,7 @@ Citizen.CreateThread(function()
 				end
 			end
 			
-			if #(coords-Config.Stanice[Odradio]) < 3.0 then
+			if #(coords-Config.Stanice[Odradio]) < 3.0 and Radis then
 			--if(GetDistanceBetweenCoords(coords, Config.Stanice[Odradio].x,  Config.Stanice[Odradio].y,  Config.Stanice[Odradio].z, true) < 3.0) then
 				waitara = 0
 				naso = 1

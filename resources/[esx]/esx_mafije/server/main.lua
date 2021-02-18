@@ -295,6 +295,77 @@ AddEventHandler('mafije:OstaviKoku', function(br, maf)
 	end
 end)
 
+RegisterServerEvent('mafije:UzmiKoku')
+AddEventHandler('mafije:UzmiKoku', function(count, maf, torba)
+  	local itemName = "cocaine"
+  	local xPlayer = ESX.GetPlayerFromId(source)
+  	local sourceItem = xPlayer.getInventoryItem(itemName)
+
+	local naso = false
+	for i=1, #Skladiste, 1 do
+		if Skladiste[i].Mafija == maf then
+			  naso = true
+			  if Skladiste[i].Kokain >= count then
+				if torba then
+					if sourceItem.limit ~= -1 and (sourceItem.count + count) <= sourceItem.limit*2 then
+						xPlayer.addInventoryItem("cocaine", count)
+						Skladiste[i].Kokain = Skladiste[i].Kokain-count
+						xPlayer.showNotification("Uzeli ste "..count.."kg kokaina iz labosa!")
+						TriggerClientEvent("mafije:UpdateSkladista", -1, Skladiste)
+						MySQL.Async.execute('UPDATE mskladiste SET kokain = @kok WHERE ime = @maf',{
+							['@kok'] = Skladiste[i].Kokain,
+							['@maf'] = maf
+						})
+					else
+						if sourceItem.limit == -1 then
+							xPlayer.addInventoryItem("cocaine", count)
+							Skladiste[i].Kokain = Skladiste[i].Kokain-count
+							xPlayer.showNotification("Uzeli ste "..count.."kg kokaina iz labosa!")
+							TriggerClientEvent("mafije:UpdateSkladista", -1, Skladiste)
+							MySQL.Async.execute('UPDATE mskladiste SET kokain = @kok WHERE ime = @maf',{
+								['@kok'] = Skladiste[i].Kokain,
+								['@maf'] = maf
+							})
+						else
+							TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise u inventory!")
+						end
+					end
+				else
+					if sourceItem.limit ~= -1 and (sourceItem.count + count) <= sourceItem.limit then
+						xPlayer.addInventoryItem("cocaine", count)
+						Skladiste[i].Kokain = Skladiste[i].Kokain-count
+						xPlayer.showNotification("Uzeli ste "..count.."kg kokaina iz labosa!")
+						TriggerClientEvent("mafije:UpdateSkladista", -1, Skladiste)
+						MySQL.Async.execute('UPDATE mskladiste SET kokain = @kok WHERE ime = @maf',{
+							['@kok'] = Skladiste[i].Kokain,
+							['@maf'] = maf
+						})
+					else
+						if sourceItem.limit == -1 then
+							xPlayer.addInventoryItem("cocaine", count)
+							Skladiste[i].Kokain = Skladiste[i].Kokain-count
+							xPlayer.showNotification("Uzeli ste "..count.."kg kokaina iz labosa!")
+							TriggerClientEvent("mafije:UpdateSkladista", -1, Skladiste)
+							MySQL.Async.execute('UPDATE mskladiste SET kokain = @kok WHERE ime = @maf',{
+								['@kok'] = Skladiste[i].Kokain,
+								['@maf'] = maf
+							})
+						else
+							TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise u inventory!")
+						end
+					end
+				end
+			  else
+				  xPlayer.showNotification("Nemate toliko u skladistu!")
+			  end
+			  break
+		end
+	end
+	if not naso then
+		xPlayer.showNotification("Nemate toliko u skladistu!")
+	end
+end)
+
 for i=1, #Config.Weapons, 1 do
 	ESX.RegisterUsableItem(string.lower(Config.Weapons[i].name), function(source)
 		local xPlayer = ESX.GetPlayerFromId(source)

@@ -1,8 +1,3 @@
---[[
-	TODO:
-	-Cijena prodaje(korekcija?)
-]]
-
 local Keys = {
   ["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
   ["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177,
@@ -1784,6 +1779,7 @@ function OpenKokainMenu()
 	table.insert(elements, {label = "Stanje", value = 'skl_stanje'})
 	table.insert(elements, {label = "Ostavi listove", value = 'ost_list'})
 	table.insert(elements, {label = "Ostavi kokain", value = 'ost_koka'})
+        table.insert(elements, {label = "Uzmi kokain", value = 'uzm_koka'})
 	table.insert(elements, {label = 'Prodaj kokain',  value = 'kok_prodaj'})
 
 
@@ -1806,6 +1802,11 @@ function OpenKokainMenu()
 		
 		if data.current.value == 'ost_koka' then
 			OpenKOstaviKMenu()
+			menu.close()
+        end
+
+if data.current.value == 'uzm_koka' then
+			OpenKUzmiKMenu()
 			menu.close()
         end
 		
@@ -1948,6 +1949,39 @@ function OpenKOstaviKMenu()
             else
 				menu2.close()
 				TriggerServerEvent('mafije:OstaviKoku', count, PlayerData.job.name)
+				OpenKokainMenu()
+            end
+          end,
+        function(data2, menu2)
+            menu2.close()
+        end
+    )
+end
+
+function OpenKUzmiKMenu()
+	ESX.UI.Menu.Open(
+          'dialog', GetCurrentResourceName(), 'kokain3_menu_get_item_count',
+          {
+            title = _U('quantity')
+          },
+          function(data2, menu2)
+
+            local count = tonumber(data2.value)
+
+            if count == nil then
+				ESX.ShowNotification(_U('quantity_invalid'))
+            else
+				menu2.close()
+                                local torba = 0
+				TriggerEvent('skinchanger:getSkin', function(skin)
+				  torba = skin['bags_1']
+				end)
+				if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+				   TriggerServerEvent('esx_biser:startHarvestKoda', true)
+                                   TriggerServerEvent('mafije:UzmiKoku', count, PlayerData.job.name, true)
+				else
+			            TriggerServerEvent('mafije:UzmiKoku', count, PlayerData.job.name, false)
+				end
 				OpenKokainMenu()
             end
           end,
@@ -4000,3 +4034,4 @@ RegisterNetEvent('NB:openMenuMafia')
 AddEventHandler('NB:openMenuMafia', function()
 	OpenMafiaActionsMenu()
 end)
+			

@@ -35,12 +35,12 @@ end)
 
 -- player join messages
 AddEventHandler('chat:init', function()
-    TriggerClientEvent('chatMessage', -1, '', { 255, 255, 255 }, '^2* ' .. GetPlayerName(source) .. ' se spojio na server.')
+    --TriggerClientEvent('chatMessage', -1, '', { 255, 255, 255 }, '^2* ' .. GetPlayerName(source) .. ' se spojio na server.')
 end)
 
 AddEventHandler('playerDropped', function(reason)
     if reason ~= "Reconnecting" then
-    	TriggerClientEvent('chatMessage', -1, '', { 255, 255, 255 }, '^2* ' .. GetPlayerName(source) ..' je napustio server (' .. reason .. ')')
+    	--TriggerClientEvent('chatMessage', -1, '', { 255, 255, 255 }, '^2* ' .. GetPlayerName(source) ..' je napustio server (' .. reason .. ')')
     end
 end)
 

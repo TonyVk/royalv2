@@ -6,8 +6,8 @@ AddEventHandler('kosaaac:platituljanu', function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
     if xPlayer.job.name == 'kosac' then
-		xPlayer.addMoney(24)
-		TriggerEvent("biznis:StaviUSef", "kosac", math.ceil(24*0.30))
+		xPlayer.addMoney(44)
+		TriggerEvent("biznis:StaviUSef", "kosac", math.ceil(44*0.30))
 	else
         TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac kosaca, a nije zaposlen kao kosac!")
 	    TriggerEvent("AntiCheat:Citer", _source)
@@ -19,8 +19,8 @@ AddEventHandler('kosaaac:platituljanu2', function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	if xPlayer.job.name == 'kosac' then
-		xPlayer.addMoney(10)
-		TriggerEvent("biznis:StaviUSef", "kosac", math.ceil(10*0.30))
+		xPlayer.addMoney(20)
+		TriggerEvent("biznis:StaviUSef", "kosac", math.ceil(20*0.30))
 	else
         TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac kosaca, a nije zaposlen kao kosac!")
 	    TriggerEvent("AntiCheat:Citer", _source)
@@ -32,8 +32,8 @@ AddEventHandler('kosaaac:platituljanu3', function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	if xPlayer.job.name == 'kosac' then
-		xPlayer.addMoney(2)
-		TriggerEvent("biznis:StaviUSef", "kosac", math.ceil(2*0.30))
+		xPlayer.addMoney(5)
+		TriggerEvent("biznis:StaviUSef", "kosac", math.ceil(5*0.30))
 	else
         TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac kosaca, a nije zaposlen kao kosac!")
 	    TriggerEvent("AntiCheat:Citer", _source)

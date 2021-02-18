@@ -19,6 +19,12 @@ CREATE TABLE IF NOT EXISTS `mafije` (
   `Boje` varchar(255) NOT NULL DEFAULT '{}',
   `Ulaz` varchar(250) NOT NULL DEFAULT '{}',
   `Izlaz` varchar(250) NOT NULL DEFAULT '{}',
+  `Gradonacelnik` int(11) NOT NULL DEFAULT 0,
+  `DeleteV2` varchar(255) NOT NULL DEFAULT '{}',
+  `LokVozila2` varchar(250) NOT NULL DEFAULT '{}',
+  `Kokain` varchar(255) NOT NULL DEFAULT '{}',
+  `KamionK` varchar(255) NOT NULL DEFAULT '{}',
+  `Skladiste` int(5) NOT NULL DEFAULT 0,
   PRIMARY KEY (`ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 COMMIT;
