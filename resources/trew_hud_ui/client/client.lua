@@ -1030,7 +1030,7 @@ AddEventHandler("SaljiGear", function(gr)
 		status = true,
 		gear = gr,
 		speed = vehicleSpeed,
-		seatbelt = {},
+		seatbelt = { status = seatbeltIsOn },
 		config = {
 			speedUnit = Config.vehicle.speedUnit,
 			maxSpeed = Config.vehicle.maxSpeed
