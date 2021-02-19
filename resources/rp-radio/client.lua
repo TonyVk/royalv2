@@ -448,210 +448,214 @@ Citizen.CreateThread(function()
 
 	while true do
 		Citizen.Wait(0)
-		-- Init local vars
-		local playerPed = PlayerPedId()
-		local isActivatorPressed = IsControlJustPressed(0, radioConfig.Controls.Activator.Key)
-		local isSecondaryPressed = (radioConfig.Controls.Secondary.Enabled == false and true or IsControlPressed(0, radioConfig.Controls.Secondary.Key))
-		local isFalling = IsPedFalling(playerPed)
-		local isDead = IsEntityDead(playerPed)
-		local minFrequency = radioConfig.Frequency.List[1]
-		local broadcastType = 3 + (radioConfig.AllowRadioWhenClosed and 1 or 0) + ((Radio.Open and radioConfig.AllowRadioWhenClosed) and -1 or 0)
-		local broadcastDictionary = Radio.Dictionary[broadcastType]
-		local broadcastAnimation = Radio.Animation[broadcastType]
-		local isBroadcasting = IsControlPressed(0, radioConfig.Controls.Broadcast.Key)
-		local isPlayingBroadcastAnim = IsEntityPlayingAnim(playerPed, broadcastDictionary, broadcastAnimation, 3)
+		if Radio.Has then
+			-- Init local vars
+			local playerPed = PlayerPedId()
+			local isActivatorPressed = IsControlJustPressed(0, radioConfig.Controls.Activator.Key)
+			local isSecondaryPressed = (radioConfig.Controls.Secondary.Enabled == false and true or IsControlPressed(0, radioConfig.Controls.Secondary.Key))
+			local isFalling = IsPedFalling(playerPed)
+			local isDead = IsEntityDead(playerPed)
+			local minFrequency = radioConfig.Frequency.List[1]
+			local broadcastType = 3 + (radioConfig.AllowRadioWhenClosed and 1 or 0) + ((Radio.Open and radioConfig.AllowRadioWhenClosed) and -1 or 0)
+			local broadcastDictionary = Radio.Dictionary[broadcastType]
+			local broadcastAnimation = Radio.Animation[broadcastType]
+			local isBroadcasting = IsControlPressed(0, radioConfig.Controls.Broadcast.Key)
+			local isPlayingBroadcastAnim = IsEntityPlayingAnim(playerPed, broadcastDictionary, broadcastAnimation, 3)
 
-		-- Open radio settings
-		if isActivatorPressed and isSecondaryPressed and not isFalling and Radio.Enabled and Radio.Has and not isDead then
-			Radio:Toggle(not Radio.Open)
-		elseif (Radio.Open or Radio.On) and ((not Radio.Enabled) or (not Radio.Has) or isDead) then
-			Radio:Remove()
-			exports["mumble-voip"]:SetMumbleProperty("radioEnabled", false)
-			Radio:Toggle(false)
-			Radio.On = false
-		elseif Radio.Open and isFalling then
-			Radio:Toggle(false)
-		end
-		
-		-- Remove player from private frequency that they don't have access to
-		if not radioConfig.Frequency.Access[radioConfig.Frequency.Current] and radioConfig.Frequency.Private[radioConfig.Frequency.Current] then
-			if Radio.On then
+			-- Open radio settings
+			if isActivatorPressed and isSecondaryPressed and not isFalling and Radio.Enabled and Radio.Has and not isDead then
+				Radio:Toggle(not Radio.Open)
+			elseif (Radio.Open or Radio.On) and ((not Radio.Enabled) or (not Radio.Has) or isDead) then
 				Radio:Remove()
+				exports["mumble-voip"]:SetMumbleProperty("radioEnabled", false)
+				Radio:Toggle(false)
+				Radio.On = false
+			elseif Radio.Open and isFalling then
+				Radio:Toggle(false)
 			end
-
-			radioConfig.Frequency.CurrentIndex = 1
-			radioConfig.Frequency.Current = minFrequency
-
-			if Radio.On then
-				Radio:Add(radioConfig.Frequency.Current)
-			end
-		end
-
-		-- Check if player is holding radio
-		if Radio.Open then
-			local dictionaryType = 1 + (IsPedInAnyVehicle(playerPed, false) and 1 or 0)
-			local openDictionary = Radio.Dictionary[dictionaryType]
-			local openAnimation = Radio.Animation[1]
-			local isPlayingOpenAnim = IsEntityPlayingAnim(playerPed, openDictionary, openAnimation, 3)
-			local hasWeapon, currentWeapon = GetCurrentPedWeapon(playerPed, 1)
-
-			-- Remove weapon in hand as we are using the radio
-			if currentWeapon ~= `weapon_unarmed` then
-				SetCurrentPedWeapon(playerPed, `weapon_unarmed`, true)
-			end
-
-			-- Display help text
-			BeginTextCommandDisplayHelp(Radio.Labels[Radio.On and 2 or 1][1])
-
-			if not Radio.On then
-				AddTextComponentSubstringPlayerName(Radio.Clicks and "~r~ugasite~w~" or "~g~upalite~w~")
-			end
-
-			AddTextComponentInteger(radioConfig.Frequency.Current)
-			EndTextCommandDisplayHelp(false, false, false, -1)
-
-			-- Play animation if player is broadcasting to radio
-			if Radio.On then
-				if isBroadcasting and not isPlayingBroadcastAnim then
-					RequestAnimDict(broadcastDictionary)
-		
-					while not HasAnimDictLoaded(broadcastDictionary) do
-						Citizen.Wait(150)
-					end
-		
-					TaskPlayAnim(playerPed, broadcastDictionary, broadcastAnimation, 8.0, -8, -1, 49, 0, 0, 0, 0)
-				elseif not isBroadcasting and isPlayingBroadcastAnim then
-					StopAnimTask(playerPed, broadcastDictionary, broadcastAnimation, -4.0)
-				end
-			end
-
-			-- Play default animation if not broadcasting
-			if not isBroadcasting and not isPlayingOpenAnim then
-				RequestAnimDict(openDictionary)
-	
-				while not HasAnimDictLoaded(openDictionary) do
-					Citizen.Wait(150)
-				end
-
-				TaskPlayAnim(playerPed, openDictionary, openAnimation, 4.0, -1, -1, 50, 0, false, false, false)
-			end
-
-			-- Turn radio on/off
-			if IsControlJustPressed(0, radioConfig.Controls.Toggle.Key) then
-				Radio.On = not Radio.On
-
-				exports["mumble-voip"]:SetMumbleProperty("radioEnabled", Radio.On)
-
+			
+			-- Remove player from private frequency that they don't have access to
+			if not radioConfig.Frequency.Access[radioConfig.Frequency.Current] and radioConfig.Frequency.Private[radioConfig.Frequency.Current] then
 				if Radio.On then
-					SendNUIMessage({ sound = "audio_on", volume = 0.3})
-					Radio:Add(radioConfig.Frequency.Current)
-				else
-					SendNUIMessage({ sound = "audio_off", volume = 0.5})
 					Radio:Remove()
 				end
+
+				radioConfig.Frequency.CurrentIndex = 1
+				radioConfig.Frequency.Current = minFrequency
+
+				if Radio.On then
+					Radio:Add(radioConfig.Frequency.Current)
+				end
 			end
 
-			-- Change radio frequency
-			if not Radio.On then
-				DisableControlAction(0, radioConfig.Controls.ToggleClicks.Key, false)
+			-- Check if player is holding radio
+			if Radio.Open then
+				local dictionaryType = 1 + (IsPedInAnyVehicle(playerPed, false) and 1 or 0)
+				local openDictionary = Radio.Dictionary[dictionaryType]
+				local openAnimation = Radio.Animation[1]
+				local isPlayingOpenAnim = IsEntityPlayingAnim(playerPed, openDictionary, openAnimation, 3)
+				local hasWeapon, currentWeapon = GetCurrentPedWeapon(playerPed, 1)
 
-				if not radioConfig.Controls.Decrease.Pressed then
-					if IsControlJustPressed(0, radioConfig.Controls.Decrease.Key) then
-						radioConfig.Controls.Decrease.Pressed = true
-						Citizen.CreateThread(function()
-							while IsControlPressed(0, radioConfig.Controls.Decrease.Key) do
-								Radio:Decrease()
-								Citizen.Wait(125)
-							end
+				-- Remove weapon in hand as we are using the radio
+				if currentWeapon ~= `weapon_unarmed` then
+					SetCurrentPedWeapon(playerPed, `weapon_unarmed`, true)
+				end
 
-							radioConfig.Controls.Decrease.Pressed = false
-						end)
+				-- Display help text
+				BeginTextCommandDisplayHelp(Radio.Labels[Radio.On and 2 or 1][1])
+
+				if not Radio.On then
+					AddTextComponentSubstringPlayerName(Radio.Clicks and "~r~ugasite~w~" or "~g~upalite~w~")
+				end
+
+				AddTextComponentInteger(radioConfig.Frequency.Current)
+				EndTextCommandDisplayHelp(false, false, false, -1)
+
+				-- Play animation if player is broadcasting to radio
+				if Radio.On then
+					if isBroadcasting and not isPlayingBroadcastAnim then
+						RequestAnimDict(broadcastDictionary)
+			
+						while not HasAnimDictLoaded(broadcastDictionary) do
+							Citizen.Wait(150)
+						end
+			
+						TaskPlayAnim(playerPed, broadcastDictionary, broadcastAnimation, 8.0, -8, -1, 49, 0, 0, 0, 0)
+					elseif not isBroadcasting and isPlayingBroadcastAnim then
+						StopAnimTask(playerPed, broadcastDictionary, broadcastAnimation, -4.0)
 					end
 				end
 
-				if not radioConfig.Controls.Increase.Pressed then
-					if IsControlJustPressed(0, radioConfig.Controls.Increase.Key) then
-						radioConfig.Controls.Increase.Pressed = true
-						Citizen.CreateThread(function()
-							while IsControlPressed(0, radioConfig.Controls.Increase.Key) do
-								Radio:Increase()
-								Citizen.Wait(125)
-							end
+				-- Play default animation if not broadcasting
+				if not isBroadcasting and not isPlayingOpenAnim then
+					RequestAnimDict(openDictionary)
+		
+					while not HasAnimDictLoaded(openDictionary) do
+						Citizen.Wait(150)
+					end
 
-							radioConfig.Controls.Increase.Pressed = false
-						end)
+					TaskPlayAnim(playerPed, openDictionary, openAnimation, 4.0, -1, -1, 50, 0, false, false, false)
+				end
+
+				-- Turn radio on/off
+				if IsControlJustPressed(0, radioConfig.Controls.Toggle.Key) then
+					Radio.On = not Radio.On
+
+					exports["mumble-voip"]:SetMumbleProperty("radioEnabled", Radio.On)
+
+					if Radio.On then
+						SendNUIMessage({ sound = "audio_on", volume = 0.3})
+						Radio:Add(radioConfig.Frequency.Current)
+					else
+						SendNUIMessage({ sound = "audio_off", volume = 0.5})
+						Radio:Remove()
 					end
 				end
 
-				if not radioConfig.Controls.Input.Pressed then
-					if IsControlJustPressed(0, radioConfig.Controls.Input.Key) then
-						radioConfig.Controls.Input.Pressed = true
-						Citizen.CreateThread(function()
-							DisplayOnscreenKeyboard(1, Radio.Labels[3][1], "", radioConfig.Frequency.Current, "", "", "", 3)
+				-- Change radio frequency
+				if not Radio.On then
+					DisableControlAction(0, radioConfig.Controls.ToggleClicks.Key, false)
 
-							while UpdateOnscreenKeyboard() ~= 1 and UpdateOnscreenKeyboard() ~= 2 do
-								Citizen.Wait(150)
-							end
+					if not radioConfig.Controls.Decrease.Pressed then
+						if IsControlJustPressed(0, radioConfig.Controls.Decrease.Key) then
+							radioConfig.Controls.Decrease.Pressed = true
+							Citizen.CreateThread(function()
+								while IsControlPressed(0, radioConfig.Controls.Decrease.Key) do
+									Radio:Decrease()
+									Citizen.Wait(125)
+								end
 
-							local input = nil
+								radioConfig.Controls.Decrease.Pressed = false
+							end)
+						end
+					end
 
-							if UpdateOnscreenKeyboard() ~= 2 then
-								input = GetOnscreenKeyboardResult()
-							end
+					if not radioConfig.Controls.Increase.Pressed then
+						if IsControlJustPressed(0, radioConfig.Controls.Increase.Key) then
+							radioConfig.Controls.Increase.Pressed = true
+							Citizen.CreateThread(function()
+								while IsControlPressed(0, radioConfig.Controls.Increase.Key) do
+									Radio:Increase()
+									Citizen.Wait(125)
+								end
 
-							Citizen.Wait(500)
-							
-							input = tonumber(input)
+								radioConfig.Controls.Increase.Pressed = false
+							end)
+						end
+					end
 
-							if input ~= nil then
-								if input >= minFrequency and input <= radioConfig.Frequency.List[#radioConfig.Frequency.List] and input == math.floor(input) then
-									if not radioConfig.Frequency.Private[input] or radioConfig.Frequency.Access[input] then
-										local idx = nil
+					if not radioConfig.Controls.Input.Pressed then
+						if IsControlJustPressed(0, radioConfig.Controls.Input.Key) then
+							radioConfig.Controls.Input.Pressed = true
+							Citizen.CreateThread(function()
+								DisplayOnscreenKeyboard(1, Radio.Labels[3][1], "", radioConfig.Frequency.Current, "", "", "", 3)
 
-										for i = 1, #radioConfig.Frequency.List do
-											if radioConfig.Frequency.List[i] == input then
-												idx = i
-												break
+								while UpdateOnscreenKeyboard() ~= 1 and UpdateOnscreenKeyboard() ~= 2 do
+									Citizen.Wait(150)
+								end
+
+								local input = nil
+
+								if UpdateOnscreenKeyboard() ~= 2 then
+									input = GetOnscreenKeyboardResult()
+								end
+
+								Citizen.Wait(500)
+								
+								input = tonumber(input)
+
+								if input ~= nil then
+									if input >= minFrequency and input <= radioConfig.Frequency.List[#radioConfig.Frequency.List] and input == math.floor(input) then
+										if not radioConfig.Frequency.Private[input] or radioConfig.Frequency.Access[input] then
+											local idx = nil
+
+											for i = 1, #radioConfig.Frequency.List do
+												if radioConfig.Frequency.List[i] == input then
+													idx = i
+													break
+												end
 											end
-										end
 
-										if idx ~= nil then
-											radioConfig.Frequency.CurrentIndex = idx
-											radioConfig.Frequency.Current = input
+											if idx ~= nil then
+												radioConfig.Frequency.CurrentIndex = idx
+												radioConfig.Frequency.Current = input
+											end
 										end
 									end
 								end
-							end
-							
-							radioConfig.Controls.Input.Pressed = false
-						end)
+								
+								radioConfig.Controls.Input.Pressed = false
+							end)
+						end
+					end
+					
+					-- Turn radio mic clicks on/off
+					if IsDisabledControlJustPressed(0, radioConfig.Controls.ToggleClicks.Key) then
+						Radio.Clicks = not Radio.Clicks
+
+						SendNUIMessage({ sound = "audio_off", volume = 0.5})
+						
+						exports["mumble-voip"]:SetMumbleProperty("micClicks", Radio.Clicks)
 					end
 				end
-				
-				-- Turn radio mic clicks on/off
-				if IsDisabledControlJustPressed(0, radioConfig.Controls.ToggleClicks.Key) then
-					Radio.Clicks = not Radio.Clicks
-
-					SendNUIMessage({ sound = "audio_off", volume = 0.5})
-					
-					exports["mumble-voip"]:SetMumbleProperty("micClicks", Radio.Clicks)
+			else
+				-- Play emergency services radio animation
+				if radioConfig.AllowRadioWhenClosed then
+					if Radio.Has and Radio.On and isBroadcasting and not isPlayingBroadcastAnim then
+						RequestAnimDict(broadcastDictionary)
+		
+						while not HasAnimDictLoaded(broadcastDictionary) do
+							Citizen.Wait(150)
+						end
+			
+						TaskPlayAnim(playerPed, broadcastDictionary, broadcastAnimation, 8.0, 0.0, -1, 49, 0, 0, 0, 0)                    
+					elseif not isBroadcasting and isPlayingBroadcastAnim then
+						StopAnimTask(playerPed, broadcastDictionary, broadcastAnimation, -4.0)
+					end
 				end
 			end
 		else
-			-- Play emergency services radio animation
-			if radioConfig.AllowRadioWhenClosed then
-				if Radio.Has and Radio.On and isBroadcasting and not isPlayingBroadcastAnim then
-					RequestAnimDict(broadcastDictionary)
-	
-					while not HasAnimDictLoaded(broadcastDictionary) do
-						Citizen.Wait(150)
-					end
-		
-					TaskPlayAnim(playerPed, broadcastDictionary, broadcastAnimation, 8.0, 0.0, -1, 49, 0, 0, 0, 0)                    
-				elseif not isBroadcasting and isPlayingBroadcastAnim then
-					StopAnimTask(playerPed, broadcastDictionary, broadcastAnimation, -4.0)
-				end
-			end
+			Citizen.Wait(500)
 		end
 	end
 end)

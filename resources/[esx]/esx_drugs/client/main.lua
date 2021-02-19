@@ -442,22 +442,24 @@ Citizen.CreateThread(function()
 			for i=1, #Travica, 1 do
 				if Travica[i] ~= nil then
 					local ObjID = Travica[i].NetID
-					if IsEntityAnObject(ObjID) and (GetEntityModel(ObjID) == GetHashKey("bkr_prop_weed_lrg_01a") or GetEntityModel(ObjID) == GetHashKey("bkr_prop_weed_med_01a") or GetEntityModel(ObjID) == GetHashKey("bkr_prop_weed_01_small_01a")) then
+					--if IsEntityAnObject(ObjID) and (GetEntityModel(ObjID) == GetHashKey("bkr_prop_weed_lrg_01a") or GetEntityModel(ObjID) == GetHashKey("bkr_prop_weed_med_01a") or GetEntityModel(ObjID) == GetHashKey("bkr_prop_weed_01_small_01a")) then
 						if #(coords-GetEntityCoords(ObjID)) < 2 then
 							nearbyObject, nearbyID = ObjID, i
+							break
 						end
-					end
+					--end
 				end
 			end
 		else
 			for i=1, #weedPlants, 1 do
 				if weedPlants[i] ~= nil then
 					local ObjID = weedPlants[i].NetID
-					if IsEntityAnObject(ObjID) and GetEntityModel(ObjID) == GetHashKey("bkr_prop_weed_lrg_01a") then
+					--if IsEntityAnObject(ObjID) and GetEntityModel(ObjID) == GetHashKey("bkr_prop_weed_lrg_01a") then
 						if #(coords-GetEntityCoords(ObjID)) < 2 then
 							nearbyObject, nearbyID = ObjID, i
+							break
 						end
-					end
+					--end
 				end
 			end
 		end
@@ -519,9 +521,7 @@ Citizen.CreateThread(function()
 			end
 
 		else
-			Citizen.Wait(500)
+			Citizen.Wait(1000)
 		end
-
 	end
-
 end)
