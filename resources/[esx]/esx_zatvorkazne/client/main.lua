@@ -109,10 +109,10 @@ end)
 
 function PokreniPetlju()
 	Citizen.CreateThread(function()
-		while true do
+		while isSentenced do
 			Citizen.Wait(1)
 
-			if actionsRemaining > 0 and isSentenced then
+			if actionsRemaining > 0 then
 				draw2dText( _U('remaining_msg', ESX.Math.Round(actionsRemaining)), { 0.175, 0.955 } )
 				DrawAvailableActions()
 				DisableViolentActions()
@@ -134,7 +134,6 @@ function PokreniPetlju()
 								disable_actions = true
 
 								TriggerServerEvent('esx_markeras:completeService')
-								actionsRemaining = actionsRemaining - 1
 
 								if (tmp_action.type == "cleaning") then
 									local cSCoords = GetOffsetFromEntityInWorldCoords(GetPlayerPed(PlayerId()), 0.0, 0.0, -5.0)
@@ -204,18 +203,16 @@ function PokreniPetlju()
 						end
 					end
 				end
-			else
-				if communityServiceFinished then
-					communityServiceFinished = false
-					ESX.Game.Teleport(PlayerPedId(), Config.ReleaseLocation)
-					isSentenced = false
-					actionsRemaining = 0
-					ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
-						TriggerEvent('skinchanger:loadSkin', skin)
-					end)
-				end
-				Citizen.Wait(1000)
 			end
+		end
+		if communityServiceFinished then
+			communityServiceFinished = false
+			ESX.Game.Teleport(PlayerPedId(), Config.ReleaseLocation)
+			isSentenced = false
+			actionsRemaining = 0
+			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
+				TriggerEvent('skinchanger:loadSkin', skin)
+			end)
 		end
 	end)
 end

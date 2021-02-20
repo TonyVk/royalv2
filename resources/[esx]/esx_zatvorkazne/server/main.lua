@@ -1,6 +1,7 @@
 ESX = nil
 
 local Metle = {}
+local Markeri = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -65,6 +66,14 @@ AddEventHandler('playerDropped', function()
 			end
 		end
 	end
+	for i=1, #Markeri, 1 do
+		if Markeri[i] ~= nil then
+			if Markeri[i].ID == src then
+				table.remove(Markeri, i)
+				break
+			end
+		end
+	end
 end)
 
 RegisterServerEvent('esx_markeras:endCommunityServiceCommand')
@@ -89,19 +98,38 @@ AddEventHandler('esx_markeras:completeService', function()
 
 	local _source = source
 	local identifier = GetPlayerIdentifiers(_source)[1]
-
-	MySQL.Async.fetchScalar('SELECT actions_remaining FROM communityservice WHERE identifier = @identifier', {
-		['@identifier'] = identifier
-	}, function(result)
-
-		if result then
-			MySQL.Async.execute('UPDATE communityservice SET actions_remaining = actions_remaining - 1 WHERE identifier = @identifier', {
-				['@identifier'] = identifier
-			})
-		else
-			print ("esx_markeras :: Problem matching player identifier in database to reduce actions.")
+	
+	local br = 0
+	local naso = false
+	
+	for i=1, #Markeri, 1 do
+		if Markeri[i] ~= nil then
+			if Markeri[i].ID == _source then
+				naso = true
+				Markeri[i].Broj = Markeri[i].Broj-1
+				br = Markeri[i].Broj
+				break
+			end
 		end
-	end)
+	end
+
+	if naso then
+		MySQL.Async.fetchScalar('SELECT actions_remaining FROM communityservice WHERE identifier = @identifier', {
+			['@identifier'] = identifier
+		}, function(result)
+
+			if result then
+				MySQL.Async.execute('UPDATE communityservice SET actions_remaining = @broj WHERE identifier = @identifier', {
+					['@broj'] = br,
+					['@identifier'] = identifier
+				})
+			else
+				print ("esx_markeras :: Problem matching player identifier in database to reduce actions.")
+			end
+		end)
+	else
+		print("Markeri: Problem sa pronalaskom igraca u tablici: "..identifier)
+	end
 end)
 
 
@@ -158,6 +186,19 @@ AddEventHandler('esx_markeras:sendToCommunityService', function(target, actions_
 	TriggerClientEvent('chat:addMessage', target, { args = { _U('judge'), "Razlog osudjivanja: "..razlog }, color = { 147, 196, 109 } })
 	TriggerClientEvent('esx_policejob:unrestrain', target)
 	TriggerClientEvent('esx_markeras:inCommunityService', target, actions_count)
+	local naso = false
+	for i=1, #Markeri, 1 do
+		if Markeri[i] ~= nil then
+			if Markeri[i].ID == target then
+				Markeri[i].Broj = actions_count
+				naso = true
+				break
+			end
+		end
+	end
+	if not naso then
+		table.insert(Markeri, {ID = target, Broj = actions_count})
+	end
 end)
 
 
@@ -187,6 +228,19 @@ AddEventHandler('esx_markeras:checkIfSentenced', function()
 	}, function(result)
 		if result ~= nil and result > 0 then
 			--TriggerClientEvent('chat:addMessage', -1, { args = { _U('judge'), _U('jailed_msg', GetPlayerName(_source), ESX.Math.Round(result[1].jail_time / 60)) }, color = { 147, 196, 109 } })
+			local naso = false
+			for i=1, #Markeri, 1 do
+				if Markeri[i] ~= nil then
+					if Markeri[i].ID == _source then
+						Markeri[i].Broj = tonumber(result)
+						naso = true
+						break
+					end
+				end
+			end
+			if not naso then
+				table.insert(Markeri, {ID = _source, Broj = tonumber(result)})
+			end
 			TriggerClientEvent('esx_markeras:inCommunityService', _source, tonumber(result))
 		end
 	end)
@@ -196,17 +250,15 @@ end)
 
 ESX.RegisterServerCallback('esx_markeras:ProvjeriMarkere', function(source, cb)
 	local _source = source -- cannot parse source to client trigger for some weird reason
-	local identifier = GetPlayerIdentifiers(_source)[1] -- get steam identifier
 
-	MySQL.Async.fetchScalar('SELECT actions_remaining FROM communityservice WHERE identifier = @identifier', {
-		['@identifier'] = identifier
-	}, function(result)
-		if result ~= nil and result > 0 then
-			cb(true)
-		else
-			cb(false)
+	for i=1, #Markeri, 1 do
+		if Markeri[i] ~= nil then
+			if Markeri[i].ID == _source then
+				cb(Markeri[i].Broj)
+				break
+			end
 		end
-	end)
+	end
 end)
 
 ESX.RegisterServerCallback('esx_markeras:DohvatiMarkere', function(source, cb)
@@ -240,4 +292,13 @@ function releaseFromCommunityService(target)
 	end)
 
 	TriggerClientEvent('esx_markeras:finishCommunityService', target)
+	
+	for i=1, #Markeri, 1 do
+		if Markeri[i] ~= nil then
+			if Markeri[i].ID == target then
+				table.remove(Markeri, i)
+				break
+			end
+		end
+	end
 end
