@@ -1,6 +1,7 @@
 ESX             = nil
 local ShopItems = {}
 local Shopovi = {}
+local NoveCijene = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -32,10 +33,15 @@ MySQL.ready(function()
 			table.insert(Shopovi, { store = result[i].store, owner = result[i].owner, sef = result[i].sef })
 		end
 	end)
+	MySQL.Async.fetchAll('SELECT trgovina, item, cijena FROM shops_itemi', {}, function(result)
+		for i=1, #result, 1 do
+			table.insert(NoveCijene, { store = result[i].trgovina, item = result[i].item, cijena = result[i].cijena })
+		end
+	end)
 end)
 
 ESX.RegisterServerCallback('esx_shops:requestDBItems', function(source, cb)
-	cb(ShopItems)
+	cb(ShopItems, NoveCijene)
 end)
 
 ESX.RegisterServerCallback('esx_shops:DajDostupnost', function(source, cb, store)
@@ -76,6 +82,65 @@ ESX.RegisterServerCallback('esx_shops:DalJeVlasnik', function(source, cb, zona)
 	end
 	if not naso then
 		cb(0)
+	end
+end)
+
+RegisterServerEvent('esx_shops:PromjeniCijenu')
+AddEventHandler('esx_shops:PromjeniCijenu', function(store, ime, item, cijena)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	local mere = false
+	local ciji = 0
+	
+	for i=1, #ShopItems[store], 1 do
+		if ShopItems[store][i].item == item then
+			ciji = ShopItems[store][i].price
+			if cijena >= ShopItems[store][i].price then
+				mere = true
+			end
+			break
+		end
+	end
+
+	if mere then
+		local pronaso = false
+		for i=1, #NoveCijene, 1 do
+			if NoveCijene[i] ~= nil then
+				if NoveCijene[i].item == item and NoveCijene[i].store == ime then
+					pronaso = true
+					NoveCijene[i].cijena = cijena
+					break
+				end
+			end
+		end
+		if not pronaso then
+			table.insert(NoveCijene, { store = ime, item = item, cijena = cijena })
+		end
+		
+		TriggerClientEvent("esx_shops:UpdateCijene", -1, NoveCijene)
+		
+		MySQL.Async.fetchScalar('SELECT item FROM shops_itemi WHERE trgovina = @trg AND item = @item', {
+			['@trg'] = ime,
+			['@item'] = item
+		}, function(result)
+			if result == nil then
+				MySQL.Async.execute('INSERT INTO shops_itemi (trgovina, item, cijena) VALUES (@trg, @it, @cij)',{
+					['@trg'] = ime,
+					['@it'] = item,
+					['@cij'] = cijena
+				})
+			else
+				MySQL.Async.execute('UPDATE shops_itemi SET `cijena` = @cij WHERE trgovina = @store AND item = @item', {
+					['@cij'] = cijena,
+					['@store'] = ime,
+					['@item'] = item
+				})
+			end
+		end)
+		
+		xPlayer.showNotification("Uspjesno ste promjenili cijenu proizvoda na $"..cijena)
+	else
+		xPlayer.showNotification("Greska! Cijena mora biti veca ili jednaka $"..ciji)
 	end
 end)
 
@@ -183,12 +248,29 @@ AddEventHandler('ducan:piku', function(itemName, amount, zone, id, torba)
 	-- get price
 	local price = 0
 	local itemLabel = ''
-
+	
 	for i=1, #ShopItems[zone], 1 do
 		if ShopItems[zone][i].item == itemName then
-			price = ShopItems[zone][i].price
-			itemLabel = ShopItems[zone][i].label
-			break
+			if #NoveCijene > 0 then
+				local naso = false
+				for j=1, #NoveCijene, 1 do
+					if NoveCijene[j].store == (zone..id) and NoveCijene[j].item == itemName then
+						naso = true
+						price = NoveCijene[j].cijena
+						itemLabel = ShopItems[zone][i].label
+						break
+					end
+				end
+				if not naso then
+					price = ShopItems[zone][i].price
+					itemLabel = ShopItems[zone][i].label
+				end
+				break
+			else
+				price = ShopItems[zone][i].price
+				itemLabel = ShopItems[zone][i].label
+				break
+			end
 		end
 	end
 

@@ -18,6 +18,7 @@ local CurrentActionMsg        = ''
 local CurrentActionData       = {}
 local CurrentID 			  = nil
 local blip = {}
+local NoveCijene = {}
 local PrviSpawn = false
 
 Citizen.CreateThread(function()
@@ -28,41 +29,144 @@ Citizen.CreateThread(function()
 
 	Citizen.Wait(5000)
 
-	ESX.TriggerServerCallback('esx_shops:requestDBItems', function(ShopItems)
+	ESX.TriggerServerCallback('esx_shops:requestDBItems', function(ShopItems, kjurac)
 		for k,v in pairs(ShopItems) do
 			--if k ~= "Bar" then
 				Config.Zones[k].Items = v
 			--end
 		end
+		NoveCijene = kjurac
 	end)
 	Citizen.Wait(1000)
 	ReloadBlip()
 end)
 
+function OpenCijeneMenu(zone, st)
+			local elements2 = {}
+			for i=1, #Config.Zones[zone].Items, 1 do
+				local item = Config.Zones[zone].Items[i]
+				
+				if #NoveCijene > 0 then
+					local naso = false
+					for j=1, #NoveCijene, 1 do
+						if NoveCijene[j].store == st and NoveCijene[j].item == item.item then
+							naso = true
+							table.insert(elements2, {
+								label      = ('%s - <span style="color:green;">%s</span>'):format(item.label, _U('shop_item', ESX.Math.GroupDigits(NoveCijene[j].cijena))),
+								item       = item.item,
+								price      = NoveCijene[j].cijena,
+							})
+						end
+					end
+					if not naso then
+						table.insert(elements2, {
+							label      = ('%s - <span style="color:green;">%s</span>'):format(item.label, _U('shop_item', ESX.Math.GroupDigits(item.price))),
+							item       = item.item,
+							price      = item.price,
+						})
+					end
+				else
+					table.insert(elements2, {
+						label      = ('%s - <span style="color:green;">%s</span>'):format(item.label, _U('shop_item', ESX.Math.GroupDigits(item.price))),
+						item       = item.item,
+						price      = item.price,
+					})
+				end
+			end
+			ESX.UI.Menu.CloseAll()
+			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shopc', {
+				title    = "Izaberite proizvod",
+				align    = 'bottom-right',
+				elements = elements2
+			}, function(data5, menu5)
+				ESX.UI.Menu.Open(
+				  'dialog', GetCurrentResourceName(), 'shops_pr_cijenu',
+				  {
+					title = "Unesite novu cijenu proizvoda"
+				  },
+				  function(data6, menu6)
+					menu5.close()
+					local count = tonumber(data6.value)
+
+					if count == nil then
+						ESX.ShowNotification("Kriva vrijednost!")
+					else
+						menu6.close()
+						TriggerServerEvent("esx_shops:PromjeniCijenu", zone, st, data5.current.item, count)
+						Wait(1000)
+						OpenCijeneMenu(zone, st)
+					end
+				  end,
+				  function(data6, menu6)
+					menu6.close()
+				  end
+				)
+			end, function(data5, menu5)
+				menu5.close()
+				CurrentAction     = 'shop_menu'
+				CurrentActionMsg  = _U('press_menu')
+				CurrentActionData = {zone = zone}
+			end)
+end
 
 function OpenShopMenu(zone)
 	local elements = {}
+	local st = zone..CurrentID
 	for i=1, #Config.Zones[zone].Items, 1 do
 		local item = Config.Zones[zone].Items[i]
 
 		if item.limit == -1 then
 			item.limit = 100
 		end
+		
+		if #NoveCijene > 0 then
+			local naso = false
+			for j=1, #NoveCijene, 1 do
+				if NoveCijene[j].store == st and NoveCijene[j].item == item.item then
+					naso = true
+					table.insert(elements, {
+						label      = ('%s - <span style="color:green;">%s</span>'):format(item.label, _U('shop_item', ESX.Math.GroupDigits(NoveCijene[j].cijena))),
+						label_real = item.label,
+						item       = item.item,
+						price      = NoveCijene[j].cijena,
 
-		table.insert(elements, {
-			label      = ('%s - <span style="color:green;">%s</span>'):format(item.label, _U('shop_item', ESX.Math.GroupDigits(item.price))),
-			label_real = item.label,
-			item       = item.item,
-			price      = item.price,
+						-- menu properties
+						value      = 1,
+						type       = 'slider',
+						min        = 1,
+						max        = item.limit
+					})
+				end
+			end
+			if not naso then
+				table.insert(elements, {
+					label      = ('%s - <span style="color:green;">%s</span>'):format(item.label, _U('shop_item', ESX.Math.GroupDigits(item.price))),
+					label_real = item.label,
+					item       = item.item,
+					price      = item.price,
 
-			-- menu properties
-			value      = 1,
-			type       = 'slider',
-			min        = 1,
-			max        = item.limit
-		})
+					-- menu properties
+					value      = 1,
+					type       = 'slider',
+					min        = 1,
+					max        = item.limit
+				})
+			end
+		else
+			table.insert(elements, {
+				label      = ('%s - <span style="color:green;">%s</span>'):format(item.label, _U('shop_item', ESX.Math.GroupDigits(item.price))),
+				label_real = item.label,
+				item       = item.item,
+				price      = item.price,
+
+				-- menu properties
+				value      = 1,
+				type       = 'slider',
+				min        = 1,
+				max        = item.limit
+			})
+		end
 	end
-	local st = zone..CurrentID
 	local lova = 0
 	ESX.TriggerServerCallback('esx_shops:DajSef', function(lov)
 		lova = lov
@@ -83,6 +187,12 @@ function OpenShopMenu(zone)
 								label      = "Podignite novac $"..lova,
 								label_real = "podigni",
 								item       = "podignin",
+								price      = 0,
+							})
+							table.insert(elements, {
+								label      = "Promjenite cijene proizvoda",
+								label_real = "prcijene",
+								item       = "prc",
 								price      = 0,
 							})
 							table.insert(elements, {
@@ -140,6 +250,9 @@ function OpenShopMenu(zone)
 		elseif data.current.item == 'prodajt' then
 			menu.close()
 			TriggerServerEvent("esx_shops:ProdajFirmu", st)
+		elseif data.current.item == 'prc' then
+			menu.close()
+			OpenCijeneMenu(zone, st)
 		else
 			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop_confirm', {
 				title    = _U('shop_confirm', data.current.value, data.current.label_real, ESX.Math.GroupDigits(data.current.price * data.current.value)),
@@ -239,6 +352,11 @@ end
 RegisterNetEvent('esx_shops:ReloadBlip')
 AddEventHandler('esx_shops:ReloadBlip', function()
 	ReloadBlip()
+end)
+
+RegisterNetEvent('esx_shops:UpdateCijene')
+AddEventHandler('esx_shops:UpdateCijene', function(cij)
+	NoveCijene = cij
 end)
 
 -- Enter / Exit marker events
