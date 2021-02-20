@@ -12,10 +12,16 @@ AddEventHandler('esx_lov:dajtuljana', function()
 	
     if Weight >= 1 and Weight < 9 then
         xPlayer.addInventoryItem('meso', 1)
+		local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..xPlayer.identifier..") je dobio item meso x 1"
+		TriggerEvent("SpremiLog", por)
     elseif Weight >= 9 and Weight < 15 then
         xPlayer.addInventoryItem('meso', 2)
+		local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..xPlayer.identifier..") je dobio item meso x 2"
+		TriggerEvent("SpremiLog", por)
     elseif Weight >= 15 then
         xPlayer.addInventoryItem('meso', 3)
+		local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..xPlayer.identifier..") je dobio item meso x 3"
+		TriggerEvent("SpremiLog", por)
     end
 
     xPlayer.addInventoryItem('koza', math.random(1, 4))

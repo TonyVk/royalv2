@@ -17,6 +17,8 @@ AddEventHandler('pkuca:DajItem', function()
 	local kolic = itemi[rand].kolicina
 	xPlayer.addInventoryItem(itemi[rand].ime, kolic)
 	TriggerClientEvent('esx:showNotification', xPlayer.source, "Pronasli ste "..kolic.."x "..itemi[rand].label..".")
+	local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(src).."("..xPlayer.identifier..") je dobio item "..itemi[rand].ime.." x "..kolic
+	TriggerEvent("SpremiLog", por)
 end)
 
 RegisterNetEvent('pkuca:ProdajStvari')

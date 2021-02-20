@@ -35,6 +35,8 @@ AddEventHandler('droge:prodajih', function(itemName, amount, torba)
 			else
 				xPlayer.removeMoney(price)
 				xPlayer.addInventoryItem(itemName, amount)
+				local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..xPlayer.identifier..") je dobio item "..itemName.." x "..amount
+				TriggerEvent("SpremiLog", por)
 			end
 		else
 			if xItem.limit ~= -1 and (xItem.count + amount) > xItem.limit then
@@ -42,6 +44,8 @@ AddEventHandler('droge:prodajih', function(itemName, amount, torba)
 			else
 				xPlayer.removeMoney(price)
 				xPlayer.addInventoryItem(itemName, amount)
+				local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..xPlayer.identifier..") je dobio item "..itemName.." x "..amount
+				TriggerEvent("SpremiLog", por)
 			end
 		end
 	else
@@ -129,6 +133,8 @@ AddEventHandler('esx_drugs:EoTiKanabisa', function()
 		TriggerClientEvent('esx:showNotification', _source, _U('weed_inventoryfull'))
 	else
 		xPlayer.addInventoryItem(xItem.name, 1)
+		local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..xPlayer.identifier..") je dobio item "..xItem.name.." x 1"
+		TriggerEvent("SpremiLog", por)
 	end
 end)
 
@@ -159,6 +165,8 @@ AddEventHandler('esx_drugs:PreradiGa', function()
 			else
 				xPlayer.removeInventoryItem('cannabis', 2)
 				xPlayer.addInventoryItem('marijuana', 1)
+				local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio item marijuana x 1"
+				TriggerEvent("SpremiLog", por)
 
 				TriggerClientEvent('esx:showNotification', _source, _U('weed_processed'))
 			end

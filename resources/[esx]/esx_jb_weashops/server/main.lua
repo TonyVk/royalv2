@@ -243,6 +243,8 @@ AddEventHandler('wesh:KuPi', function(itemName, price, zone, id)
 		if itemName == "clip" then
 			xPlayer.addInventoryItem(itemName, 1)
 			TriggerClientEvent('esx:showNotification', _source, _U('buy') .. "sarzer")
+			local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio item "..itemName.." x 1"
+			TriggerEvent("SpremiLog", por)
 		else
 			xPlayer.addWeapon(itemName, 42)
 			TriggerClientEvent('esx:showNotification', _source, _U('buy') .. ESX.GetWeaponLabel(itemName))
@@ -255,7 +257,9 @@ AddEventHandler('wesh:KuPi', function(itemName, price, zone, id)
   else if xPlayer.get('money') >= price then
 		if itemName == "clip" then
 			xPlayer.addInventoryItem(itemName, 1)
-			TriggerClientEvent('esx:showNotification', _source, _U('buy') .. "chargeur")
+			TriggerClientEvent('esx:showNotification', _source, _U('buy') .. "sarzer")
+			local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio item "..itemName.." x 1"
+			TriggerEvent("SpremiLog", por)
 		else
 			
 			xPlayer.addWeapon(itemName, 42)

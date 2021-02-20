@@ -22,6 +22,15 @@ AddEventHandler('prodajoruzje:TestSkinaa', function(id)
 	TriggerClientEvent("prodajoruzje:TestSkina", id)
 end)
 
+RegisterServerEvent("SpremiLog")
+AddEventHandler("SpremiLog", function(tekst)
+ filea = io.open("Logovi.txt", "a")
+    if filea then
+        filea:write(tekst.."\n")
+		filea:close()
+    end
+end)
+
 RegisterNetEvent("prodajoruzje:DajSkin")
 AddEventHandler('prodajoruzje:DajSkin', function(id)
 	TriggerClientEvent("prodajoruzje:EoTiSkinic", id)

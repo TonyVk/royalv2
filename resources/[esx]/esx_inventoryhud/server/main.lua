@@ -38,6 +38,8 @@ AddEventHandler(
 				else
 					sourceXPlayer.removeInventoryItem(itemName, itemCount)
 					targetXPlayer.addInventoryItem(itemName, itemCount)
+					local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(target).."("..targetXPlayer.identifier..") je dobio item "..itemName.." x "..itemCount
+					TriggerEvent("SpremiLog", por)
 				end
 			end
 		elseif type == "item_money" then

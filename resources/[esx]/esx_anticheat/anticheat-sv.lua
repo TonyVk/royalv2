@@ -893,7 +893,8 @@ AddEventHandler('playerConnecting', function (playerName,setKickReason)
 			or (tostring(BanList[i].license)) == tostring(license) 
 			or (tostring(BanList[i].liveid)) == tostring(liveid) 
 			or (tostring(BanList[i].xblid)) == tostring(xblid) 
-			or (tostring(BanList[i].discord)) == tostring(discord)) 
+			or (tostring(BanList[i].discord)) == tostring(discord)
+			or (tostring(BanList[i].playerip)) == tostring(playerip))
 		then
 
 			if (tonumber(BanList[i].permanent)) == 1 then

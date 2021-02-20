@@ -35,10 +35,14 @@ local function Work(source, item)
 						-- Chances to drop the item
 						if item[i].drop == 100 then
 							xPlayer.addInventoryItem(item[i].db_name, item[i].add)
+							local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..xPlayer.identifier..") je dobio item "..item[i].db_name.." x "..item[i].add
+							TriggerEvent("SpremiLog", por)
 						else
 							local chanceToDrop = math.random(100)
 							if chanceToDrop <= item[i].drop then
 								xPlayer.addInventoryItem(item[i].db_name, item[i].add)
+								local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..xPlayer.identifier..") je dobio item "..item[i].db_name.." x "..item[i].add
+								TriggerEvent("SpremiLog", por)
 							end
 						end
 					else

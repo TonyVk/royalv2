@@ -113,7 +113,10 @@ AddEventHandler('esx_vangelico_robbery:PitajBogaStaRadi', function()
     local src = source
     if(robbers[src])then
 		local xPlayer = ESX.GetPlayerFromId(src)
-		xPlayer.addInventoryItem('jewels', math.random(Config.MinJewels, Config.MaxJewels))
+		local randa = math.random(Config.MinJewels, Config.MaxJewels)
+		xPlayer.addInventoryItem('jewels', randa)
+		local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(src).."("..xPlayer.identifier..") je dobio item jewels x "..randa
+		TriggerEvent("SpremiLog", por)
     else
         TriggerEvent("DiscordBot:Anticheat", GetPlayerName(src).."("..src..") je pokusao dodati si nakit, a nije na pljacki zlatare!")
     end

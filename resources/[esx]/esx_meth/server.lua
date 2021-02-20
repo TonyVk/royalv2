@@ -57,7 +57,8 @@ AddEventHandler('esx_methcar:finish', function(qualtiy)
 	local rnd = math.random(-5, 5)
 	TriggerEvent('KLevels:addXP', _source, 20)
 	xPlayer.addInventoryItem('meth', math.floor(qualtiy / 2) + rnd)
-	
+	local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio item meth x "..math.floor(qualtiy / 2) + rnd
+	TriggerEvent("SpremiLog", por)
 end)
 
 RegisterServerEvent('esx_methcar:blow')
@@ -110,6 +111,8 @@ AddEventHandler('meth:KupiMeth', function(torba)
 		if torba then
 			if xPlayer.getInventoryItem('methlab').count < 1*2 then
 				xPlayer.addInventoryItem('methlab', 1)
+				local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio item methlab x 1"
+				TriggerEvent("SpremiLog", por)
 				xPlayer.removeMoney(5000)
 			else
 				TriggerClientEvent('esx:showNotification', source, '~r~Vec imate prijenosni laboratorij za meth!')
@@ -117,6 +120,8 @@ AddEventHandler('meth:KupiMeth', function(torba)
 		else
 			if xPlayer.getInventoryItem('methlab').count < 1 then
 				xPlayer.addInventoryItem('methlab', 1)
+				local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio item methlab x 1"
+				TriggerEvent("SpremiLog", por)
 				xPlayer.removeMoney(5000)
 			else
 				TriggerClientEvent('esx:showNotification', source, '~r~Vec imate prijenosni laboratorij za meth!')

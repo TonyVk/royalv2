@@ -3,7 +3,7 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 RegisterServerEvent("esx_drogica:get")
 AddEventHandler("esx_drogica:get", function(torba)
-    local _source = source	
+    local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	local list = xPlayer.getInventoryItem('coke')
 	if torba then
@@ -11,8 +11,12 @@ AddEventHandler("esx_drogica:get", function(torba)
 			local randa = math.random(1,2)
 			if list.count+randa > list.limit*2 then
 				xPlayer.addInventoryItem("coke", 1)
+				local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio item coke x 1"
+				TriggerEvent("SpremiLog", por)
 			else
 				xPlayer.addInventoryItem("coke", randa)
+				local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio item coke x "..randa
+				TriggerEvent("SpremiLog", por)
 			end
 		else
 			TriggerClientEvent('esx:showNotification', source, '~r~Ne mozete imati vise listova koke')
@@ -22,8 +26,12 @@ AddEventHandler("esx_drogica:get", function(torba)
 			local randa = math.random(1,2)
 			if list.count+randa > list.limit then
 				xPlayer.addInventoryItem("coke", 1)
+				local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio item coke x 1"
+				TriggerEvent("SpremiLog", por)
 			else
 				xPlayer.addInventoryItem("coke", randa)
+				local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio item coke x "..randa
+				TriggerEvent("SpremiLog", por)
 			end
 		else
 			TriggerClientEvent('esx:showNotification', source, '~r~Ne mozete imati vise listova koke')

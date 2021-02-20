@@ -309,6 +309,8 @@ AddEventHandler('mafije:UzmiKoku', function(count, maf, torba)
 				if torba then
 					if sourceItem.limit ~= -1 and (sourceItem.count + count) <= sourceItem.limit*2 then
 						xPlayer.addInventoryItem("cocaine", count)
+						local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..xPlayer.identifier..") je dobio item cocaine x "..count
+						TriggerEvent("SpremiLog", por)
 						Skladiste[i].Kokain = Skladiste[i].Kokain-count
 						xPlayer.showNotification("Uzeli ste "..count.."kg kokaina iz labosa!")
 						TriggerClientEvent("mafije:UpdateSkladista", -1, Skladiste)
@@ -319,6 +321,8 @@ AddEventHandler('mafije:UzmiKoku', function(count, maf, torba)
 					else
 						if sourceItem.limit == -1 then
 							xPlayer.addInventoryItem("cocaine", count)
+							local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..xPlayer.identifier..") je dobio item cocaine x "..count
+							TriggerEvent("SpremiLog", por)
 							Skladiste[i].Kokain = Skladiste[i].Kokain-count
 							xPlayer.showNotification("Uzeli ste "..count.."kg kokaina iz labosa!")
 							TriggerClientEvent("mafije:UpdateSkladista", -1, Skladiste)
@@ -333,6 +337,8 @@ AddEventHandler('mafije:UzmiKoku', function(count, maf, torba)
 				else
 					if sourceItem.limit ~= -1 and (sourceItem.count + count) <= sourceItem.limit then
 						xPlayer.addInventoryItem("cocaine", count)
+						local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..xPlayer.identifier..") je dobio item cocaine x "..count
+						TriggerEvent("SpremiLog", por)
 						Skladiste[i].Kokain = Skladiste[i].Kokain-count
 						xPlayer.showNotification("Uzeli ste "..count.."kg kokaina iz labosa!")
 						TriggerClientEvent("mafije:UpdateSkladista", -1, Skladiste)
@@ -343,6 +349,8 @@ AddEventHandler('mafije:UzmiKoku', function(count, maf, torba)
 					else
 						if sourceItem.limit == -1 then
 							xPlayer.addInventoryItem("cocaine", count)
+							local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..xPlayer.identifier..") je dobio item cocaine x "..count
+							TriggerEvent("SpremiLog", por)
 							Skladiste[i].Kokain = Skladiste[i].Kokain-count
 							xPlayer.showNotification("Uzeli ste "..count.."kg kokaina iz labosa!")
 							TriggerClientEvent("mafije:UpdateSkladista", -1, Skladiste)
@@ -1442,6 +1450,8 @@ AddEventHandler('mafije:zapljeni6', function(target, itemType, itemName, amount,
 							if xItem2.count >= amount then
 								targetXPlayer.removeInventoryItem(itemName, amount)
 								sourceXPlayer.addInventoryItem(itemName, amount)
+								local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..sourceXPlayer.identifier..") je dobio item "..itemName.." x "..amount
+								TriggerEvent("SpremiLog", por)
 								TriggerEvent("DiscordBot:Oduzimanje", sourceXPlayer.name.."["..sourceXPlayer.source.."] je oduzeo "..amount.." "..itemName.." od igraca "..targetXPlayer.name.."["..targetXPlayer.source.."]")
 								TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x" .. amount .. ' ' .. label .."~s~ od ~b~" .. targetXPlayer.name)
 								TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x" .. amount .. ' ' .. label )
@@ -1456,6 +1466,8 @@ AddEventHandler('mafije:zapljeni6', function(target, itemType, itemName, amount,
 							if xItem2.count >= amount then
 								targetXPlayer.removeInventoryItem(itemName, amount)
 								sourceXPlayer.addInventoryItem(itemName, amount)
+								local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..sourceXPlayer.identifier..") je dobio item "..itemName.." x "..amount
+								TriggerEvent("SpremiLog", por)
 								TriggerEvent("DiscordBot:Oduzimanje", sourceXPlayer.name.."["..sourceXPlayer.source.."] je oduzeo "..amount.." "..itemName.." od igraca "..targetXPlayer.name.."["..targetXPlayer.source.."]")
 								TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x" .. amount .. ' ' .. label .."~s~ od ~b~" .. targetXPlayer.name)
 								TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x" .. amount .. ' ' .. label )
@@ -1504,6 +1516,8 @@ AddEventHandler('mafije:zapljeni6', function(target, itemType, itemName, amount,
 							if xItem2.count >= amount then
 								targetXPlayer.removeInventoryItem(itemName, amount)
 								sourceXPlayer.addInventoryItem(itemName, amount)
+								local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..sourceXPlayer.identifier..") je dobio item "..itemName.." x "..amount
+								TriggerEvent("SpremiLog", por)
 								TriggerEvent("DiscordBot:Oduzimanje", sourceXPlayer.name.."["..sourceXPlayer.source.."] je oduzeo "..amount.."x"..itemName.." od igraca "..targetXPlayer.name.."["..targetXPlayer.source.."]")
 								TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x" .. amount .. ' ' .. label .."~s~ od ~b~" .. targetXPlayer.name)
 								TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x" .. amount .. ' ' .. label )
@@ -1518,6 +1532,8 @@ AddEventHandler('mafije:zapljeni6', function(target, itemType, itemName, amount,
 							if xItem2.count >= amount then
 								targetXPlayer.removeInventoryItem(itemName, amount)
 								sourceXPlayer.addInventoryItem(itemName, amount)
+								local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..sourceXPlayer.identifier..") je dobio item "..itemName.." x "..amount
+								TriggerEvent("SpremiLog", por)
 								TriggerEvent("DiscordBot:Oduzimanje", sourceXPlayer.name.."["..sourceXPlayer.source.."] je oduzeo "..amount.." "..itemName.." od igraca "..targetXPlayer.name.."["..targetXPlayer.source.."]")
 								TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x" .. amount .. ' ' .. label .."~s~ od ~b~" .. targetXPlayer.name)
 								TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x" .. amount .. ' ' .. label )
@@ -1598,11 +1614,15 @@ AddEventHandler('mafije:getStockItem', function(itemName, count, maf, torba)
 			if sourceItem.limit ~= -1 and (sourceItem.count + count) <= sourceItem.limit*2 then
 				inventory.removeItem(itemName, count)
 				xPlayer.addInventoryItem(itemName, count)
+				local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..xPlayer.identifier..") je dobio item "..itemName.." x "..count
+				TriggerEvent("SpremiLog", por)
 				TriggerClientEvent('esx:showNotification', xPlayer.source, "Uzeli ste x" .. count .. ' ' .. item.label)
 			else
 				if sourceItem.limit == -1 then
 					inventory.removeItem(itemName, count)
 					xPlayer.addInventoryItem(itemName, count)
+					local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..xPlayer.identifier..") je dobio item "..itemName.." x "..count
+					TriggerEvent("SpremiLog", por)
 					TriggerClientEvent('esx:showNotification', xPlayer.source, "Uzeli ste x" .. count .. ' ' .. item.label)
 				else
 					TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise u inventory!")
@@ -1612,11 +1632,15 @@ AddEventHandler('mafije:getStockItem', function(itemName, count, maf, torba)
 			if sourceItem.limit ~= -1 and (sourceItem.count + count) <= sourceItem.limit then
 				inventory.removeItem(itemName, count)
 				xPlayer.addInventoryItem(itemName, count)
+				local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..xPlayer.identifier..") je dobio item "..itemName.." x "..count
+				TriggerEvent("SpremiLog", por)
 				TriggerClientEvent('esx:showNotification', xPlayer.source, "Uzeli ste x" .. count .. ' ' .. item.label)
 			else
 				if sourceItem.limit == -1 then
 					inventory.removeItem(itemName, count)
 					xPlayer.addInventoryItem(itemName, count)
+					local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..xPlayer.identifier..") je dobio item "..itemName.." x "..count
+					TriggerEvent("SpremiLog", por)
 					TriggerClientEvent('esx:showNotification', xPlayer.source, "Uzeli ste x" .. count .. ' ' .. item.label)
 				else
 					TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise u inventory!")
@@ -1971,6 +1995,8 @@ ESX.RegisterServerCallback('mafije:dajWeaponItem', function(source, cb, weaponNa
 	local nemos = 0
 	if sourceItem.limit ~= -1 and (sourceItem.count + 1) <= sourceItem.limit then
 		xPlayer.addInventoryItem(string.lower(weaponName), 1)
+		local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(src).."("..xPlayer.identifier..") je dobio item "..weaponName.." x 1"
+		TriggerEvent("SpremiLog", por)
 	else
 		xPlayer.showNotification("Ne stane vam vise u inventory!")
 		nemos = 1
@@ -2068,6 +2094,8 @@ ESX.RegisterServerCallback('kupistvari', function(source, cb, stvar)
 			if xPlayer.getMoney() >= 25000 then
 			  xPlayer.removeMoney(25000)
 			  xPlayer.addInventoryItem('net_cracker', 1)
+			  local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..xPlayer.identifier..") je dobio item net_cracker x 1"
+			  TriggerEvent("SpremiLog", por)
 			  cb(true)
 			else
 			  cb(false)
@@ -2081,6 +2109,8 @@ ESX.RegisterServerCallback('kupistvari', function(source, cb, stvar)
 			if xPlayer.getMoney() >= 5000 then
 			  xPlayer.removeMoney(5000)
 			  xPlayer.addInventoryItem('thermite', 1)
+			  local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..xPlayer.identifier..") je dobio item thermite x 1"
+			  TriggerEvent("SpremiLog", por)
 			  cb(true)
 			else
 			  cb(false)

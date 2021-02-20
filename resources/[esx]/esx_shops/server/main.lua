@@ -287,6 +287,8 @@ AddEventHandler('ducan:piku', function(itemName, amount, zone, id, torba)
 				DajFirmi(zone..id, price/2)
 				xPlayer.addInventoryItem(itemName, amount)
 				TriggerClientEvent('esx:showNotification', _source, _U('bought', amount, itemLabel, ESX.Math.GroupDigits(price)))
+				local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio item "..itemName.." x "..amount
+				TriggerEvent("SpremiLog", por)
 			end
 		else
 			if sourceItem.limit ~= -1 and (sourceItem.count + amount) > sourceItem.limit then
@@ -296,6 +298,8 @@ AddEventHandler('ducan:piku', function(itemName, amount, zone, id, torba)
 				DajFirmi(zone..id, price/2)
 				xPlayer.addInventoryItem(itemName, amount)
 				TriggerClientEvent('esx:showNotification', _source, _U('bought', amount, itemLabel, ESX.Math.GroupDigits(price)))
+				local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio item "..itemName.." x "..amount
+				TriggerEvent("SpremiLog", por)
 			end
 		end
 	else
