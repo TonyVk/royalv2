@@ -265,10 +265,11 @@ ESX.RegisterServerCallback('autosalon:sealion', function(source, cb, model, plat
 	if mjenjac == 1 then
 		if modelPrice and xPlayer.getMoney() >= (modelPrice+5000) then
 			xPlayer.removeMoney(modelPrice+5000)
-			MySQL.Async.execute('INSERT INTO owned_vehicles (owner, plate, vehicle, mjenjac) VALUES (@owner, @plate, @vehicle, @mj)', {
+			MySQL.Async.execute('INSERT INTO owned_vehicles (owner, plate, vehicle, model, mjenjac) VALUES (@owner, @plate, @vehicle, @model, @mj)', {
 				['@owner']   = xPlayer.identifier,
 				['@plate']   = plate,
 				['@vehicle'] = json.encode(vd),
+				['@model'] = GetHashKey(model),
 				['@mj'] = mjenjac
 			}, function(rowsChanged)
 				TriggerClientEvent('esx:showNotification', _source, _U('vehicle_belongs', plate))
@@ -281,10 +282,11 @@ ESX.RegisterServerCallback('autosalon:sealion', function(source, cb, model, plat
 	elseif mjenjac == 2 then
 		if modelPrice and xPlayer.getMoney() >= modelPrice then
 			xPlayer.removeMoney(modelPrice)
-			MySQL.Async.execute('INSERT INTO owned_vehicles (owner, plate, vehicle, mjenjac) VALUES (@owner, @plate, @vehicle, @mj)', {
+			MySQL.Async.execute('INSERT INTO owned_vehicles (owner, plate, vehicle, model, mjenjac) VALUES (@owner, @plate, @vehicle, @model, @mj)', {
 				['@owner']   = xPlayer.identifier,
 				['@plate']   = plate,
 				['@vehicle'] = json.encode(vd),
+				['@model'] = GetHashKey(model),
 				['@mj'] = mjenjac
 			}, function(rowsChanged)
 				TriggerClientEvent('esx:showNotification', _source, _U('vehicle_belongs', plate))
@@ -298,10 +300,11 @@ ESX.RegisterServerCallback('autosalon:sealion', function(source, cb, model, plat
 	elseif mjenjac == 3 then
 		if modelPrice and xPlayer.getMoney() >= modelPrice then
 			xPlayer.removeMoney(modelPrice)
-			MySQL.Async.execute('INSERT INTO owned_vehicles (owner, plate, vehicle, mjenjac, brod) VALUES (@owner, @plate, @vehicle, @mj, @br)', {
+			MySQL.Async.execute('INSERT INTO owned_vehicles (owner, plate, vehicle, model, mjenjac, brod) VALUES (@owner, @plate, @vehicle, @model, @mj, @br)', {
 				['@owner']   = xPlayer.identifier,
 				['@plate']   = plate,
 				['@vehicle'] = json.encode(vd),
+				['@model'] = GetHashKey(model),
 				['@mj'] = 1,
 				['@br'] = 1
 			}, function(rowsChanged)
@@ -509,27 +512,6 @@ ESX.RegisterServerCallback('esx_vehicleshop:retrieveJobVehicles', function(sourc
 		['@job'] = xPlayer.job.name
 	}, function(result)
 		cb(result)
-	end)
-end)
-
-ESX.RegisterServerCallback('esx_vehicleshop:DajGaVamo', function (source, cb, mod)
-	print(mod)
-	local xPlayer = ESX.GetPlayerFromId(source)
-	local test = 0
-	MySQL.Async.fetchAll('SELECT vehicle FROM owned_vehicles WHERE owner = @owner', {
-		['@owner'] = xPlayer.identifier
-	}, function (result)
-		for i = 1, #result, 1 do
-			local prop = json.decode(result[i]["vehicle"])
-			local model = prop["model"]
-			if model == mod then
-				cb(true)
-				test = 1
-			end
-		end
-		if test == 0 then
-			cb(false)
-		end
 	end)
 end)
 

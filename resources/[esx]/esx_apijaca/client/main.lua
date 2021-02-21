@@ -615,10 +615,21 @@ function OpenPijacaMenu()
 							else
 								menu.close()
 								local vehProps = ESX.Game.GetVehicleProperties(vehicle)
-								ESX.TriggerServerCallback('mjenjac:ProvjeriVozilo',function(mj)
-									ESX.Game.DeleteVehicle(vehicle)
-									TriggerServerEvent('pijaca:StaviNaProdaju', vehProps, amount, mj, i)
-								end, ESX.Math.Trim(GetVehicleNumberPlateText(vehicle)))
+								ESX.TriggerServerCallback('garaza:JelIstiModel2', function(dane)
+									if (dane == vehProps.model or dane == nil) then
+										ESX.TriggerServerCallback('mjenjac:ProvjeriVozilo',function(mj)
+											ESX.Game.DeleteVehicle(vehicle)
+											TriggerServerEvent('pijaca:StaviNaProdaju', vehProps, amount, mj, i)
+										end, ESX.Math.Trim(GetVehicleNumberPlateText(vehicle)))
+									else
+										--TriggerEvent("playradio", "https://www.youtube.com/watch?v=LIDKQmT0dCs")
+										--Wait(10000)
+										--TriggerEvent("stopradio")
+										--ESX.ShowNotification("Greska: "..vehicleProps.model)
+										--ESX.ShowNotification("Greska: "..dane)
+										TriggerServerEvent("ac:MjenjanjeModela")
+									end
+								end, vehProps.plate)
 							end
 						end, function(data, menu)
 						menu.close()

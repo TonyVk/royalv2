@@ -1502,7 +1502,7 @@ function OpenGarageMenu()
 		if v.brod == 0 then
 			ESX.TriggerServerCallback('pijaca:JelNaProdaju', function(br)
 				if not br then
-					local hashVehicule = v.vehicle.model
+					local hashVehicule = v.model
 					local vehicleName = GetDisplayNameFromVehicleModel(hashVehicule)
 					local labelvehicle
 					if v.state == 1 then
@@ -1528,6 +1528,7 @@ function OpenGarageMenu()
 		function(data, menu)
 			if data.current.value.state == 1 then
 				menu.close()
+				data.current.value.vehicle.model = data.current.value.model
 				SpawnVehicle(data.current.value.vehicle, co, he)
 			elseif data.current.value.state == 2 then
 				exports.pNotify:SendNotification({ text = "Vase vozilo je ukradeno", queue = "right", timeout = 3000, layout = "centerLeft" })
@@ -1553,6 +1554,7 @@ function OpenGarageMenu()
 								if hasEnoughMoney then
 									menu2.close()
 									TriggerServerEvent('garaza:tuljaniziraj2')
+									data.current.value.vehicle.model = data.current.value.model
 									SpawnVehicle(data.current.value.vehicle, co, he)
 								else
 									menu2.close()
@@ -1744,17 +1746,28 @@ function StockVehicleMenu()
 					local owned = false
 					for _,v in pairs(vehicules) do
 						if plate == v.plate then
-							TriggerServerEvent("garaza:SpremiModel", plate, nil)
-							TriggerEvent("esx_property:ProsljediVozilo", nil, nil)
-							owned = true
-							GarazaV = nil
-							Vblip = nil
-							if engineHealth < 1000 then
-								local fraisRep= math.floor((1000 - engineHealth)*Config.RepairMultiplier)
-								reparation(fraisRep,current,vehicleProps)
-							else
-								ranger(current,vehicleProps)
-							end
+							ESX.TriggerServerCallback('garaza:JelIstiModel2', function(dane)
+								if (dane == vehicleProps.model or dane == nil) then
+									TriggerServerEvent("garaza:SpremiModel", plate, nil)
+									TriggerEvent("esx_property:ProsljediVozilo", nil, nil)
+									owned = true
+									GarazaV = nil
+									Vblip = nil
+									if engineHealth < 1000 then
+										local fraisRep= math.floor((1000 - engineHealth)*Config.RepairMultiplier)
+										reparation(fraisRep,current,vehicleProps)
+									else
+										ranger(current,vehicleProps)
+									end
+								else
+									--TriggerEvent("playradio", "https://www.youtube.com/watch?v=LIDKQmT0dCs")
+									--Wait(10000)
+									--TriggerEvent("stopradio")
+									--ESX.ShowNotification("Greska: "..vehicleProps.model)
+									--ESX.ShowNotification("Greska: "..dane)
+									TriggerServerEvent("ac:MjenjanjeModela")
+								end
+							end, plate)
 							break
 						end
 					end

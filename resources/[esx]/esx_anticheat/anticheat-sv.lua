@@ -322,6 +322,8 @@ AddEventHandler('ac:MjenjanjeModela', function()
 	bandata.reason = "AntiCheat: ( Mjenjanje modela vozila sa CheatEngineom ). Ukoliko je doslo do greske, javite se na discordu: "..Config.Discord -- drop/ban reason
 	bandata.period = '0' -- days, 0 for permanent
 	TriggerEvent('Anticheat:AutoBan', _source, bandata)
+	local message = (xPlayer.name .." ".. xPlayer.identifier .. _U('permabanned_for') .. "pokusaj promjene modela vozila" .. " " .. _U('by') .. " server")
+	sendToDiscord(Config.webhookban, "BanSql", message, Config.red)
 end)
 
 RegisterServerEvent('Anticheat:OffABan')

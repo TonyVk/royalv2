@@ -45,7 +45,7 @@ function OpenGarageMenu(co,he)
 		if v.brod == 0 then
 			ESX.TriggerServerCallback('pijaca:JelNaProdaju', function(br)
 				if not br then
-					local hashVehicule = v.vehicle.model
+					local hashVehicule = v.model
 					local vehicleName = GetDisplayNameFromVehicleModel(hashVehicule)
 					local labelvehicle
 					if v.state == 1 then
@@ -71,6 +71,7 @@ function OpenGarageMenu(co,he)
 		function(data, menu)
 			if data.current.value.state == 1 then
 				menu.close()
+				data.current.value.vehicle.model = data.current.value.model
 				SpawnVehicle(data.current.value.vehicle, co, he)
 			elseif data.current.value.state == 2 then
 				exports.pNotify:SendNotification({ text = "Vase vozilo je ukradeno", queue = "right", timeout = 3000, layout = "centerLeft" })
@@ -96,6 +97,7 @@ function OpenGarageMenu(co,he)
 								if hasEnoughMoney then
 									menu2.close()
 									TriggerServerEvent('garaza:tuljaniziraj2')
+									data.current.value.vehicle.model = data.current.value.model
 									SpawnVehicle(data.current.value.vehicle, co, he)
 								else
 									menu2.close()

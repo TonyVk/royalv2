@@ -9,8 +9,6 @@ RegisterNetEvent('garaza:SpremiModel')
 
 ESX                = nil
 
-local VoziloModel = {}
-
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 -- Vehicle fetch
@@ -28,11 +26,20 @@ ESX.RegisterServerCallback('eden_garage:getVehicles', function(source, cb)
 	end)
 end)
 -- End vehicle fetch
-ESX.RegisterServerCallback('garaza:JelIstiModel',function(source,cb, model)
-	local sor = source
-	if VoziloModel[sor] == model or VoziloModel[sor] == nil then
-		cb(true)
-	else
+
+ESX.RegisterServerCallback('garaza:JelIstiModel',function(source,cb, plate, model)
+	local naso = false
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local vehicules = getPlayerVehicles(xPlayer.getIdentifier())
+	for _,v in pairs(vehicules) do
+		if(plate == v.plate)then
+			if(model == v.model) then
+				naso = true
+				cb(true)
+			end
+		end
+	end
+	if not naso then
 		cb(false)
 	end
 end)
@@ -91,7 +98,7 @@ AddEventHandler('garaza:ObrisiVozilo', function(nid)
 end)
 
 AddEventHandler('garaza:SpremiModel', function(id, mod)
-	VoziloModel[id] = mod
+	
 end)
 
 -- End vehicle store
@@ -191,9 +198,9 @@ end)
 function getPlayerVehicles(identifier)
 	
 	local vehicles = {}
-	local data = MySQL.Sync.fetchAll("SELECT plate FROM owned_vehicles WHERE owner=@identifier",{['@identifier'] = identifier})	
+	local data = MySQL.Sync.fetchAll("SELECT plate, model FROM owned_vehicles WHERE owner=@identifier",{['@identifier'] = identifier})	
 	for _,v in pairs(data) do
-		table.insert(vehicles, {plate = v.plate})
+		table.insert(vehicles, {plate = v.plate, model = tonumber(v.model)})
 	end
 	return vehicles
 end
