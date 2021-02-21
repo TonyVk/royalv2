@@ -327,6 +327,11 @@ Citizen.CreateThread(function()
 				Citizen.Wait(0)
 			end
 		end
+		if IsPedArmed(PlayerPedId(), 6) then
+			DisableControlAction(1, 140, true)
+			DisableControlAction(1, 141, true)
+			DisableControlAction(1, 142, true)
+		end
 		Citizen.Wait(0)
 	end
 end)

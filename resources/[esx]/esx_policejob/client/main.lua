@@ -2411,7 +2411,7 @@ Citizen.CreateThread(function()
 
 end)
 
-local pozicija = vector3(459.74523925782, -989.07751464844, 23.914861679078)
+local pozicija = vector3(459.74523925782, -989.07751464844, 24.914861679078)
 
 -- Display markers
 Citizen.CreateThread(function()
@@ -2496,9 +2496,6 @@ Citizen.CreateThread(function()
 					end
 				end
 			end
-			
-			
-			local distance = GetDistanceBetweenCoords(coords, pozicija, true)
 
 			if #(coords-pozicija) < Config.DrawDistance then
 				DrawMarker(22, pozicija, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
@@ -2506,7 +2503,7 @@ Citizen.CreateThread(function()
 			end
 
 			if #(coords-pozicija) < Config.MarkerSize.x then
-				isInMarker, currentStation, currentPart, currentPartNum = true, k, 'Centrala', i
+				isInMarker, currentStation, currentPart, currentPartNum = true, "Znj", 'Centrala', 1
 			end
 
 			if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastStation ~= currentStation or LastPart ~= currentPart or LastPartNum ~= currentPartNum)) then

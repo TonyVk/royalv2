@@ -177,6 +177,10 @@ AddEventHandler('esx:playerDropped', function(source)
   if PhoneNumbers[posao] ~= nil then
     TriggerEvent('esx_addons_xenknight:removeSource', posao, source)
   end
+  if IDIgraca == source then
+	Centrala = false
+	IDIgraca = nil
+  end
 end)
 
 

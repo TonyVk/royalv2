@@ -111,5 +111,6 @@ RegisterNUICallback(
     function()
 		SetNuiFocus(false)
 		Prikazi = false
+		TriggerServerEvent("murja:UCentrali", false)
     end
 )
