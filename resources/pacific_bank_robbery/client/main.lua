@@ -46,47 +46,49 @@ end)
 
 RegisterNetEvent("vbanka:eventHandler")
 AddEventHandler("vbanka:eventHandler",function(l,m)
-	if l=="start_robbery"then 
-		RobberyThread(m)
-	elseif l=="alarm_police"then 
-		if ESX.PlayerData["job"]and ESX.PlayerData["job"]["name"]=="police" then 
-			SetAudioFlag("LoadMPData",true)
-			PlaySoundFrontend(-1,"ATM_WINDOW","HUD_FRONTEND_DEFAULT_SOUNDSET")
-			ESX.ShowNotification("Netko pokusava ~r~hakirati ~s~sef banke - ~g~ "..m..". ~s~Lokacija vam je poslana.")
-			local n=Config.Bank[m]
-			SetNewWaypoint(n["start"]["pos"]["x"],n["start"]["pos"]["y"])
-			local o=AddBlipForCoord(n["start"]["pos"])
-			SetBlipSprite(o,161)
-			SetBlipScale(o,2.0)
-			SetBlipColour(o,8)
-			Citizen.CreateThread(function()
-				local p=GetGameTimer()
-				while GetGameTimer()-p<60000*5 do 
-					Citizen.Wait(0)
-				end;
-				RemoveBlip(o)
-			end)
-		end
-	elseif l=="alarm_fbi"then 
-		if ESX.PlayerData["job"]and ESX.PlayerData["job"]["name"]=="sipa" then 
-			SetAudioFlag("LoadMPData",true)
-			PlaySoundFrontend(-1,"ATM_WINDOW","HUD_FRONTEND_DEFAULT_SOUNDSET")
-			ESX.ShowNotification("Netko pokusava ~r~hakirati ~s~sef banke - ~g~ "..m..". ~s~Lokacija vam je poslana.")
-			local n=Config.Bank[m]
-			SetNewWaypoint(n["start"]["pos"]["x"],n["start"]["pos"]["y"])
-			local o=AddBlipForCoord(n["start"]["pos"])
-			SetBlipSprite(o,161)
-			SetBlipScale(o,2.0)
-			SetBlipColour(o,8)
-			Citizen.CreateThread(function()
-				local p=GetGameTimer()
-				while GetGameTimer()-p<60000*5 do 
-					Citizen.Wait(0)
-				end;
-				RemoveBlip(o)
-			end)
-		end
-	end 
+	if m ~= nil then
+		if l=="start_robbery"then 
+			RobberyThread(m)
+		elseif l=="alarm_police"then 
+			if ESX.PlayerData["job"]and ESX.PlayerData["job"]["name"]=="police" then 
+				SetAudioFlag("LoadMPData",true)
+				PlaySoundFrontend(-1,"ATM_WINDOW","HUD_FRONTEND_DEFAULT_SOUNDSET")
+				ESX.ShowNotification("Netko pokusava ~r~hakirati ~s~sef banke - ~g~ "..m..". ~s~Lokacija vam je poslana.")
+				local n=Config.Bank[m]
+				SetNewWaypoint(n["start"]["pos"]["x"],n["start"]["pos"]["y"])
+				local o=AddBlipForCoord(n["start"]["pos"])
+				SetBlipSprite(o,161)
+				SetBlipScale(o,2.0)
+				SetBlipColour(o,8)
+				Citizen.CreateThread(function()
+					local p=GetGameTimer()
+					while GetGameTimer()-p<60000*5 do 
+						Citizen.Wait(0)
+					end;
+					RemoveBlip(o)
+				end)
+			end
+		elseif l=="alarm_fbi"then 
+			if ESX.PlayerData["job"]and ESX.PlayerData["job"]["name"]=="sipa" then 
+				SetAudioFlag("LoadMPData",true)
+				PlaySoundFrontend(-1,"ATM_WINDOW","HUD_FRONTEND_DEFAULT_SOUNDSET")
+				ESX.ShowNotification("Netko pokusava ~r~hakirati ~s~sef banke - ~g~ "..m..". ~s~Lokacija vam je poslana.")
+				local n=Config.Bank[m]
+				SetNewWaypoint(n["start"]["pos"]["x"],n["start"]["pos"]["y"])
+				local o=AddBlipForCoord(n["start"]["pos"])
+				SetBlipSprite(o,161)
+				SetBlipScale(o,2.0)
+				SetBlipColour(o,8)
+				Citizen.CreateThread(function()
+					local p=GetGameTimer()
+					while GetGameTimer()-p<60000*5 do 
+						Citizen.Wait(0)
+					end;
+					RemoveBlip(o)
+				end)
+			end
+		end 
+	end
 end)
 
 Citizen.CreateThread(function()

@@ -1,4 +1,5 @@
 ESX = nil
+local UKuci = {}
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 local itemi = {
@@ -11,14 +12,19 @@ local itemi = {
 
 RegisterNetEvent('pkuca:DajItem')
 AddEventHandler('pkuca:DajItem', function()
-	local rand = math.random(1, 5)
 	local src = source
-	local xPlayer = ESX.GetPlayerFromId(src)
-	local kolic = itemi[rand].kolicina
-	xPlayer.addInventoryItem(itemi[rand].ime, kolic)
-	TriggerClientEvent('esx:showNotification', xPlayer.source, "Pronasli ste "..kolic.."x "..itemi[rand].label..".")
-	local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(src).."("..xPlayer.identifier..") je dobio item "..itemi[rand].ime.." x "..kolic
-	TriggerEvent("SpremiLog", por)
+	if UKuci[src] then
+		local rand = math.random(1, 5)
+		local xPlayer = ESX.GetPlayerFromId(src)
+		local kolic = itemi[rand].kolicina
+		xPlayer.addInventoryItem(itemi[rand].ime, kolic)
+		TriggerClientEvent('esx:showNotification', xPlayer.source, "Pronasli ste "..kolic.."x "..itemi[rand].label..".")
+		local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(src).."("..xPlayer.identifier..") je dobio item "..itemi[rand].ime.." x "..kolic
+		TriggerEvent("SpremiLog", por)
+	else
+		TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za dobijanje stvari od pljacke kuce, a ne pljacka kucu!")
+	    TriggerEvent("AntiCheat:Citer", _source)
+	end
 end)
 
 RegisterNetEvent('pkuca:ProdajStvari')
@@ -53,6 +59,12 @@ AddEventHandler('pkuca:ProdajStvari', function()
 	if naso == 0 then
 		TriggerClientEvent('esx:showNotification', xPlayer.source, "Nemate nakita za prodati!")
 	end
+end)
+
+RegisterNetEvent('pkuca:Uso')
+AddEventHandler('pkuca:Uso', function(br)
+	local src = source
+	UKuci[src] = br
 end)
 
 RegisterNetEvent('pkuca:SpremiVrijeme')

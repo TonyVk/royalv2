@@ -228,6 +228,7 @@ RegisterNetEvent('esx_methcar:startprod')
 AddEventHandler('esx_methcar:startprod', function()
 	DisplayHelpText("~g~Kuhanje zapoceto")
 	started = true
+	TriggerServerEvent("methara:Kuham", true)
 	FreezeEntityPosition(CurrentVehicle,true)
 	displayed = false
 	print('Kuhanje metha zapoceto')
@@ -313,6 +314,7 @@ AddEventHandler('baseevents:leftVehicle', function(currentVehicle, currentSeat, 
 	displayed = false
 	if started then
 		started = false
+		TriggerServerEvent("methara:Kuham", false)
 		displayed = false
 		TriggerEvent('esx_methcar:stop')
 		print('Zaustavljena kuhanje metha')
@@ -398,6 +400,7 @@ Citizen.CreateThread(function()
 						SetVehicleEngineHealth(CurrentVehicle, 0.0)
 						quality = 0
 						started = false
+						TriggerServerEvent("methara:Kuham", false)
 						displayed = false
 						ApplyDamageToPed(GetPlayerPed(-1), 10, false)
 						print('Zaustavljena proizvodnja metha')
@@ -645,6 +648,7 @@ Citizen.CreateThread(function()
 						SetVehicleEngineHealth(CurrentVehicle, 0.0)
 						quality = 0
 						started = false
+						TriggerServerEvent("methara:Kuham", false)
 						displayed = false
 						ApplyDamageToPed(GetPlayerPed(-1), 10, false)
 						print('Prestali ste kuhati meth')
@@ -815,6 +819,7 @@ Citizen.CreateThread(function()
 					end
 				else
 					TriggerEvent('esx_methcar:stop')
+					TriggerServerEvent("methara:Kuham", false)
 				end
 
 			else
@@ -822,8 +827,9 @@ Citizen.CreateThread(function()
 				progress = 100
 				ESX.ShowNotification('~r~Kuhanje metha: ~g~~h~' .. progress .. '%')
 				ESX.ShowNotification('~g~~h~Kuhanje zavrseno')
-				TriggerServerEvent('esx_methcar:finish', quality)
+				TriggerServerEvent('methara:finish', quality)
 				FreezeEntityPosition(LastCar, false)
+				TriggerServerEvent("methara:Kuham", false)
 			end	
 			
 		end

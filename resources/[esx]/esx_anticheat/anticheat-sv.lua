@@ -125,6 +125,10 @@ AddEventHandler("entityCreating",  function(entity)
 end)
 
 --Fake eventi
+RegisterServerEvent("esx_methcar:finish")
+AddEventHandler("esx_methcar:finish",function(qualtiy)
+	TriggerEvent('AntiCheat:FakeEvent', source)
+end)
 RegisterServerEvent("esx_jobs:stopWork")
 AddEventHandler("esx_jobs:stopWork",function()
 	TriggerEvent('AntiCheat:FakeEvent', source)

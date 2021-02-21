@@ -1,4 +1,5 @@
 ESX = nil
+local Kuha = {}
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 RegisterServerEvent('esx_methcar:start')
@@ -49,16 +50,27 @@ AddEventHandler('esx_methcar:make', function(posx,posy,posz)
 		TriggerClientEvent('esx_methcar:smoke',xPlayers[i],posx,posy,posz, 'a') 
 	end
 end)
-RegisterServerEvent('esx_methcar:finish')
-AddEventHandler('esx_methcar:finish', function(qualtiy)
+RegisterServerEvent('methara:finish')
+AddEventHandler('methara:finish', function(qualtiy)
 	local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
-	print(qualtiy)
-	local rnd = math.random(-5, 5)
-	TriggerEvent('KLevels:addXP', _source, 20)
-	xPlayer.addInventoryItem('meth', math.floor(qualtiy / 2) + rnd)
-	local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio item meth x "..math.floor(qualtiy / 2) + rnd
-	TriggerEvent("SpremiLog", por)
+	if Kuha[_source] then
+		local xPlayer = ESX.GetPlayerFromId(_source)
+		print(qualtiy)
+		local rnd = math.random(-5, 5)
+		TriggerEvent('KLevels:addXP', _source, 20)
+		xPlayer.addInventoryItem('meth', math.floor(qualtiy / 2) + rnd)
+		local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio item meth x "..math.floor(qualtiy / 2) + rnd
+		TriggerEvent("SpremiLog", por)
+	else
+		TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za dobijanje metha, a ne kuha meth!")
+	    TriggerEvent("AntiCheat:Citer", _source)
+	end
+end)
+
+RegisterServerEvent('methara:Kuham')
+AddEventHandler('methara:Kuham', function(br)
+	local src = source
+	Kuha[src] = br
 end)
 
 RegisterServerEvent('esx_methcar:blow')
