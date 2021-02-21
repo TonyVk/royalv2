@@ -1776,36 +1776,40 @@ AddEventHandler('esx_vehicleshop:hasEnteredMarker', function(zone)
 			local vehicleProps  = ESX.Game.GetVehicleProperties(vehicle)
 
 			if GetPedInVehicleSeat(vehicle, -1) == playerPed then
-				ESX.TriggerServerCallback('garaza:JelIstiModel', function(dane)
-					if (dane) then
-						for i=1, #Vehicles, 1 do
-							if GetHashKey(Vehicles[i].model) == GetEntityModel(vehicle) then
-								vehicleData = Vehicles[i]
-								break
+				ESX.TriggerServerCallback('esx_vehiclelock:requestPlayerCars', function(isOwnedVehicle)
+					if isOwnedVehicle then
+						ESX.TriggerServerCallback('garaza:JelIstiModel', function(dane)
+							if (dane) then
+								for i=1, #Vehicles, 1 do
+									if GetHashKey(Vehicles[i].model) == GetEntityModel(vehicle) then
+										vehicleData = Vehicles[i]
+										break
+									end
+								end
+								local koord = GetEntityCoords(PlayerPedId())
+								if GetDistanceBetweenCoords(koord, -44.569271087646, -1081.7122802734, 25.685205459595, true) <= 3.0 or GetDistanceBetweenCoords(koord, -731.54217529297, -1334.6604003906, 0.28573158383369, true) <= 3.0 then
+									resellPrice = ESX.Math.Round(vehicleData.price / 100 * Config.ResellPercentage)
+									model = GetEntityModel(vehicle)
+									plate = ESX.Math.Trim(GetVehicleNumberPlateText(vehicle))
+
+									CurrentAction     = 'resell_vehicle'
+									CurrentActionMsg  = _U('sell_menu', vehicleData.name, ESX.Math.GroupDigits(resellPrice))
+
+									CurrentActionData = {
+										vehicle = vehicle,
+										label = vehicleData.name,
+										price = resellPrice,
+										model = model,
+										plate = plate,
+										kategorija = vehicleData.category
+									}
+								end
+							else
+								TriggerServerEvent("ac:MjenjanjeModela")
 							end
-						end
-						local koord = GetEntityCoords(PlayerPedId())
-						if GetDistanceBetweenCoords(koord, -44.569271087646, -1081.7122802734, 25.685205459595, true) <= 3.0 or GetDistanceBetweenCoords(koord, -731.54217529297, -1334.6604003906, 0.28573158383369, true) <= 3.0 then
-							resellPrice = ESX.Math.Round(vehicleData.price / 100 * Config.ResellPercentage)
-							model = GetEntityModel(vehicle)
-							plate = ESX.Math.Trim(GetVehicleNumberPlateText(vehicle))
-
-							CurrentAction     = 'resell_vehicle'
-							CurrentActionMsg  = _U('sell_menu', vehicleData.name, ESX.Math.GroupDigits(resellPrice))
-
-							CurrentActionData = {
-								vehicle = vehicle,
-								label = vehicleData.name,
-								price = resellPrice,
-								model = model,
-								plate = plate,
-								kategorija = vehicleData.category
-							}
-						end
-					else
-						TriggerServerEvent("ac:MjenjanjeModela")
+						end, vehicleProps.plate, vehicleProps.model)
 					end
-				end, vehicleProps.plate, vehicleProps.model)
+				end, vehicleProps.plate)
 			end
 		end
 
