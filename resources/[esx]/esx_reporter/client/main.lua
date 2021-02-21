@@ -118,6 +118,8 @@ local speed_ud = 8.0
 local TvojaLokacija = nil
 local ImalLivea = 0
 local BrojGledatelja = 0
+local ZadnjiZoom = 0
+local ZadnjiFov = 0
 
 local camera = false
 local fov = (fov_max+fov_min)*0.5
@@ -136,13 +138,13 @@ RegisterCommand("live", function(source, args, raw)
 			AttachCamToEntity(Kamerica, lPed, 0.0,0.0,1.0, true)
 			SetCamRot(Kamerica, 2.0,1.0,GetEntityHeading(lPed))
 			SetCamFov(Kamerica, fov)
-			NetworkSetTalkerProximity(19.0)
+			--NetworkSetTalkerProximity(19.0)
 			TriggerServerEvent("PovecajLjude")
 			ESX.ShowNotification("Da napusite live upisite /live")
 			NarediLive()
 		else
 			SetEntityCoords(PlayerPedId(), TvojaLokacija, 1, 0, 0, 1)
-			NetworkSetTalkerProximity(12.0)
+			--NetworkSetTalkerProximity(12.0)
 			FreezeEntityPosition(PlayerPedId(), false)
 			TvojaLokacija = nil
 			RenderScriptCams(false, false, 0, 1, 0)
@@ -323,10 +325,6 @@ Citizen.CreateThread(function()
 			SetCurrentPedWeapon(GetPlayerPed(-1), GetHashKey("WEAPON_UNARMED"), true)
 		end
 		if Moze == 1 then
-			local player = PlayerId()
-            if NetworkIsPlayerTalking(player) then
-                SetPlayerTalkingOverride(player, false)
-            end
 			DisableControlAction(0, 249, true) -- disable talk
 		end
 	end
@@ -335,6 +333,7 @@ end)
 function NarediLive()
 	if Moze == 0 then
 		Moze = 1
+		MumbleSetVolumeOverrideByServerId(GetPlayerServerId(PlayerId()), 0.0)
 		--newscamera = true
 		SetTimecycleModifier("default")
 
@@ -387,7 +386,7 @@ function NarediLive()
 				Moze = 0
 				SetEntityCollision(PlayerPedId(), true, true)
 				SetEntityVisible(PlayerPedId(), true)
-				NetworkSetTalkerProximity(12.0)
+				--NetworkSetTalkerProximity(12.0)
 				FreezeEntityPosition(PlayerPedId(), false)
 				if TvojaLokacija ~= nil then
 					SetEntityCoords(PlayerPedId(), TvojaLokacija, 1, 0, 0, 1)
@@ -405,9 +404,10 @@ function NarediLive()
 			Citizen.Wait(0)
 		end
 	else
-		SetPlayerTalkingOverride(PlayerId(), true)
+		MumbleSetVolumeOverrideByServerId(GetPlayerServerId(PlayerId()), -1.0)
+		--SetPlayerTalkingOverride(PlayerId(), true)
 		Moze = 0
-		NetworkSetTalkerProximity(12.0)
+		--NetworkSetTalkerProximity(12.0)
 		FreezeEntityPosition(PlayerPedId(), false)
 		SetEntityCollision(PlayerPedId(), true, true)
 		SetEntityVisible(PlayerPedId(), true)
@@ -419,6 +419,19 @@ function NarediLive()
 		SetNightvision(false)
 		SetSeethrough(false)
 	end
+end
+
+function SpucajPrikaz(scaleform, scaleform2)
+	local lPed = PlayerPedId()
+	Citizen.CreateThread(function()
+		while newscamera and not IsEntityDead(lPed) do
+			HideHUDThisFrame()
+			DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255)
+			DrawScaleformMovie(scaleform2, 0.5, 0.63, 1.0, 1.0, 255, 255, 255, 255)
+			Breaking("BREAKING NEWS")
+			Citizen.Wait(0)
+		end
+	end)
 end
 
 ---------------------------------------------------------------------------
@@ -447,10 +460,7 @@ Citizen.CreateThread(function()
 			while not HasScaleformMovieLoaded(scaleform2) do
 				Citizen.Wait(10)
 			end
-
-
-			local lPed = GetPlayerPed(-1)
-			local vehicle = GetVehiclePedIsIn(lPed)
+			
 			local cam2 = CreateCam("DEFAULT_SCRIPTED_CAMERA", true)
 			
 			TriggerServerEvent("PrebaciIDKamere", PlayerId())
@@ -462,6 +472,8 @@ Citizen.CreateThread(function()
 			PushScaleformMovieFunction(scaleform, "SET_CAM_LOGO")
 			PushScaleformMovieFunction(scaleform2, "breaking_news")
 			PopScaleformMovieFunctionVoid()
+			
+			SpucajPrikaz(scaleform, scaleform2)
 
 			while newscamera and not IsEntityDead(lPed) and (GetVehiclePedIsIn(lPed) == vehicle) and true do
 				if IsControlJustPressed(1, 177) then
@@ -478,11 +490,6 @@ Citizen.CreateThread(function()
 				CheckInputRotation(cam2, zoomvalue)
 
 				HandleZoom(cam2)
-				HideHUDThisFrame()
-
-				DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255)
-				DrawScaleformMovie(scaleform2, 0.5, 0.63, 1.0, 1.0, 255, 255, 255, 255)
-				Breaking("BREAKING NEWS")
 				
 				local camHeading = GetGameplayCamRelativeHeading()
 				local camPitch = GetGameplayCamRelativePitch()
@@ -574,7 +581,10 @@ function CheckInputRotation(cam, zoomvalue)
 		new_z = rotation.z + rightAxisX*-1.0*(speed_ud)*(zoomvalue+0.1)
 		new_x = math.max(math.min(20.0, rotation.x + rightAxisY*-1.0*(speed_lr)*(zoomvalue+0.1)), -89.5)
 		SetCamRot(cam, new_x, 0.0, new_z, 2)
-		TriggerServerEvent("SaljiRotaciju", new_x, new_z, PlayerId())
+		if (new_x+new_z) ~= ZadnjiZoom then
+			ZadnjiZoom = new_x+new_z
+			TriggerServerEvent("SaljiRotaciju", new_x, new_z, PlayerId())
+		end
 	end
 end
 
@@ -602,7 +612,10 @@ function HandleZoom(cam)
 			fov = current_fov
 		end
 		SetCamFov(cam, current_fov + (fov - current_fov)*0.05)
-		TriggerServerEvent("PosaljiZoom", current_fov + (fov - current_fov)*0.05, PlayerId())
+		if (current_fov + (fov - current_fov)*0.05) ~= ZadnjiFov then
+			ZadnjiFov = current_fov + (fov - current_fov)*0.05
+			TriggerServerEvent("PosaljiZoom", current_fov + (fov - current_fov)*0.05, PlayerId())
+		end
 	else
 		if IsControlJustPressed(0,17) then
 			fov = math.max(fov - zoomspeed, fov_min)
@@ -615,7 +628,10 @@ function HandleZoom(cam)
 			fov = current_fov
 		end
 		SetCamFov(cam, current_fov + (fov - current_fov)*0.05)
-		TriggerServerEvent("PosaljiZoom", current_fov + (fov - current_fov)*0.05, PlayerId())
+		if (current_fov + (fov - current_fov)*0.05) ~= ZadnjiFov then
+			ZadnjiFov = current_fov + (fov - current_fov)*0.05
+			TriggerServerEvent("PosaljiZoom", current_fov + (fov - current_fov)*0.05, PlayerId())
+		end
 	end
 end
 

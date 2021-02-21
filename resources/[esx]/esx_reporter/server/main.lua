@@ -19,29 +19,37 @@ end)
 
 RegisterServerEvent('reporter:DajImPare')
 AddEventHandler('reporter:DajImPare', function(br)
-	local societyAccount = nil
-	TriggerEvent('esx_addonaccount:getSharedAccount', "society_reporter", function(account)
-		societyAccount = account
-	end)
-	local pare = br*200
-	if societyAccount ~= nil then
-		societyAccount.addMoney(pare)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	if xPlayer.job.name == "reporter" then
+		local societyAccount = nil
+		local pare = br*200
+		TriggerEvent('esx_addonaccount:getSharedAccount', "society_reporter", function(account)
+			societyAccount = account
+			societyAccount.addMoney(pare)
+		end)
+		local pare2 = br*100
+		xPlayer.addMoney(pare2)
+		TriggerClientEvent('esx:showNotification', xPlayer.source, "Vi ste dobili $"..pare2.." dok je vasa firma dobila $"..pare.."!")
+	else
+		TriggerEvent("DiscordBot:Anticheat", GetPlayerName(src).."["..src.."] je pokusao pozvati event za novac reportera, a nije zaposlen kao reporter!")
+	    TriggerEvent("AntiCheat:Citer", src)
 	end
-	local pare2 = br*100
-	local xPlayer = ESX.GetPlayerFromId(source)
-	xPlayer.addMoney(pare2)
-	TriggerClientEvent('esx:showNotification', xPlayer.source, "Vi ste dobili $"..pare2.." dok je vasa firma dobila $"..pare.."!")
 end)
 
 RegisterNetEvent("weazel:DodajClanak")
 AddEventHandler("weazel:DodajClanak", function(ime, naziv, clanak)
-	MySQL.Async.execute('INSERT INTO vijesti (Naziv, Clanak, Autor) VALUES (@naz, @cl, @au)',
-	{
-		['@naz'] = naziv,
-		['@cl']  = clanak,
-		['@au']  = ime
-	})
-	TriggerClientEvent("weazel:SaljiClanak", -1, Sanitize(ime), naziv, clanak)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	if xPlayer.job.name == "reporter" then
+		MySQL.Async.execute('INSERT INTO vijesti (Naziv, Clanak, Autor) VALUES (@naz, @cl, @au)',
+		{
+			['@naz'] = naziv,
+			['@cl']  = clanak,
+			['@au']  = ime
+		})
+		TriggerClientEvent("weazel:SaljiClanak", -1, Sanitize(ime), naziv, clanak)
+	end
 end)
 
 RegisterNetEvent("weazel:DohvatiVijesti")
