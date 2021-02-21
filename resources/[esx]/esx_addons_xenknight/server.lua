@@ -48,6 +48,20 @@ AddEventHandler('esx_phone:registerNumber', function(number, type, sharePos, has
 	}
 end)
 
+ESX.RegisterServerCallback('murja:JelSlobodnaCentrala', function(source, cb)
+	cb(Centrala)
+end)
+
+RegisterServerEvent('murja:UCentrali')
+AddEventHandler('murja:UCentrali', function(br)
+    if br then
+		Centrala = true
+		IDIgraca = source
+	else
+		Centrala = false
+		IDIgraca = nil
+	end
+end)
 
 AddEventHandler('esx:setJob', function(source, job, lastJob)
   if lastJob.name == "sipa" then
@@ -89,7 +103,19 @@ RegisterServerEvent('esx_addons_gcphone:startCall')
 AddEventHandler('esx_addons_gcphone:startCall', function (number, message, coords)
   local source = source
   if PhoneNumbers[number] ~= nil then
-	if number ~= "police" then
+	if number == "police" then
+		if not Centrala then
+			getPhoneNumber(source, function (phone) 
+			  notifyAlertSMS(number, {
+				message = message,
+				coords = coords,
+				numero = phone,
+			  }, PhoneNumbers[number].sources)
+			end)
+		else
+			TriggerClientEvent("mobitel:Testiraj", -1, number, message, coords)
+		end
+	else
 		getPhoneNumber(source, function (phone) 
 		  notifyAlertSMS(number, {
 			message = message,
@@ -97,8 +123,6 @@ AddEventHandler('esx_addons_gcphone:startCall', function (number, message, coord
 			numero = phone,
 		  }, PhoneNumbers[number].sources)
 		end)
-	else
-		TriggerClientEvent("mobitel:Testiraj", -1, number, message, coords)
 	end
   else
     print('= WARNING = Appels sur un service non enregistre => numero : ' .. number)

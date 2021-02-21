@@ -1,11 +1,20 @@
 ESX	= nil
+local PlayerData                = {}
 
 Citizen.CreateThread(function()
 	while ESX == nil do
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(0)
 	end
+	while ESX.GetPlayerData().job == nil do
+		Citizen.Wait(100)
+	end
+	ProvjeriPosao()
 end)
+
+function ProvjeriPosao()
+	PlayerData = ESX.GetPlayerData()
+end
 
 RegisterNetEvent('esx_addons_xenknight:call')
 AddEventHandler('esx_addons_xenknight:call', function(data)
@@ -47,18 +56,42 @@ AddEventHandler('mobitel:Testiraj', function(num, poruka, coords)
 	end
 end)
 
+local pozicija = vector3(459.74523925782, -989.07751464844, 24.914861679078)
+
 RegisterCommand("centrala", function(source, args, rawCommandString)
-	SendNUIMessage({
-		prikazi = true 
-	})
-	if Prikazi == false then
-		SetNuiFocus(true, true)
-		Prikazi = true
-	else
-		SetNuiFocus(false)
-		Prikazi = false
+	if PlayerData.job ~= nil and PlayerData.job.name == 'police' then
+		if #(GetEntityCoords(PlayerPedId())-pozicija) <= 3.0 then
+			ESX.TriggerServerCallback('murja:JelSlobodnaCentrala', function(br)
+				if not br then
+					SendNUIMessage({
+						prikazi = true 
+					})
+					if Prikazi == false then
+						SetNuiFocus(true, true)
+						Prikazi = true
+						TriggerServerEvent("murja:UCentrali", true)
+					else
+						SetNuiFocus(false)
+						Prikazi = false
+						TriggerServerEvent("murja:UCentrali", false)
+					end
+				else
+					ESX.ShowNotification("Vec je netko u centrali!")
+				end
+			end)
+		end
 	end
 end, false)
+
+RegisterNetEvent('esx:playerLoaded')
+AddEventHandler('esx:playerLoaded', function(xPlayer)
+  PlayerData = xPlayer
+end)
+
+RegisterNetEvent('esx:setJob')
+AddEventHandler('esx:setJob', function(job)
+  PlayerData.job = job
+end)
 
 RegisterNUICallback(
     "salji",

@@ -1936,6 +1936,10 @@ AddEventHandler('esx_policejob:hasEnteredMarker', function(station, part, partNu
 		CurrentAction     = 'menu_boss_actions'
 		CurrentActionMsg  = _U('open_bossmenu')
 		CurrentActionData = {}
+	elseif part == 'Centrala' then
+		CurrentAction     = 'centrala_action'
+		CurrentActionMsg  = "Pritisnite E da pocnete raditi u centrali"
+		CurrentActionData = {}
 	end
 end)
 
@@ -2407,6 +2411,8 @@ Citizen.CreateThread(function()
 
 end)
 
+local pozicija = vector3(459.74523925782, -989.07751464844, 23.914861679078)
+
 -- Display markers
 Citizen.CreateThread(function()
 	while true do
@@ -2489,6 +2495,18 @@ Citizen.CreateThread(function()
 						end
 					end
 				end
+			end
+			
+			
+			local distance = GetDistanceBetweenCoords(coords, pozicija, true)
+
+			if #(coords-pozicija) < Config.DrawDistance then
+				DrawMarker(22, pozicija, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
+				letSleep = false
+			end
+
+			if #(coords-pozicija) < Config.MarkerSize.x then
+				isInMarker, currentStation, currentPart, currentPartNum = true, k, 'Centrala', i
 			end
 
 			if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastStation ~= currentStation or LastPart ~= currentPart or LastPartNum ~= currentPartNum)) then
@@ -2581,6 +2599,8 @@ Citizen.CreateThread(function()
 					DeleteEntity(CurrentActionData.entity)
 					ESX.Game.DeleteObject(CurrentActionData.entity)
 					TriggerServerEvent("policija:MakniObjekt")
+				elseif CurrentAction == 'centrala_action' then
+					ExecuteCommand("centrala")
 				end
 
 				CurrentAction = nil
