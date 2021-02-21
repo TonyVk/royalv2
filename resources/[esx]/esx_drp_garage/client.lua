@@ -187,7 +187,7 @@ function ListVehiclesMenu()
 				if v.brod == 0 then
 					ESX.TriggerServerCallback('pijaca:JelNaProdaju', function(br)
 						if not br then
-							local hashVehicule = v.vehicle.model
+							local hashVehicule = v.model
 							local vehicleName = GetDisplayNameFromVehicleModel(hashVehicule)
 							local labelvehicle
 							if v.state == 1 then
@@ -203,7 +203,7 @@ function ListVehiclesMenu()
 				end
 			else
 				if v.brod == 1 then
-					local hashVehicule = v.vehicle.model
+					local hashVehicule = v.model
 					local vehicleName = GetDisplayNameFromVehicleModel(hashVehicule)
 					local labelvehicle
 					if v.state == 1 then
@@ -228,6 +228,7 @@ function ListVehiclesMenu()
 		function(data, menu)
 			if data.current.value.state == 1 then
 				menu.close()
+				data.current.value.vehicle.model = data.current.value.model
 				SpawnVehicle(data.current.value.vehicle)
 			elseif data.current.value.state == 2 then
 				exports.pNotify:SendNotification({ text = _U('notif_car_impounded'), queue = "right", timeout = 3000, layout = "centerLeft" })
@@ -253,6 +254,7 @@ function ListVehiclesMenu()
 								if hasEnoughMoney then
 									menu2.close()
 									TriggerServerEvent('garaza:tuljaniziraj2')
+									data.current.value.vehicle.model = data.current.value.model
 									SpawnVehicle(data.current.value.vehicle)
 								else
 									menu2.close()
@@ -389,7 +391,6 @@ function StockVehicleMenu()
 							for _,v in pairs(vehicules) do
 								if plate == v.plate then
 									ESX.TriggerServerCallback('garaza:JelIstiModel2', function(dane)
-										Wait(1000)
 										if (dane == vehicleProps.model or dane == nil) then
 											TriggerServerEvent("garaza:SpremiModel", plate, nil)
 											TriggerEvent("esx_property:ProsljediVozilo", nil, nil)
@@ -410,7 +411,7 @@ function StockVehicleMenu()
 											--ESX.ShowNotification("Greska: "..dane)
 											TriggerServerEvent("ac:MjenjanjeModela")
 										end
-									end)
+									end, plate)
 								end
 							end
 							Wait(1500)

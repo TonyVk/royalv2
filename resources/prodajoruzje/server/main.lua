@@ -177,6 +177,20 @@ end)
 		xPlayer.showNotification("Nemate opremu za ronjenje!")
 	end
 end)]]
+	
+RegisterCommand("prebacimodele", function(source, args, rawCommandString)
+	MySQL.Async.fetchAll("SELECT vehicle, state, plate FROM owned_vehicles",{}, function(data) 
+		for _,v in pairs(data) do
+			local vehicle = json.decode(v.vehicle)
+			MySQL.Async.execute('UPDATE owned_vehicles SET model = @mod WHERE plate = @tab', {
+				['@mod']   = vehicle.model,
+				['@tab']   = vehicle.plate,
+			}, function(rowsChanged)
+				print(rowsChanged)
+			end)
+		end
+	end)
+end, false)
 
 RegisterCommand("ispisip", function(source, args, rawCommandString)
 		local elements = {}

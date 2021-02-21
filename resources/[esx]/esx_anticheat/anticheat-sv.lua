@@ -400,6 +400,9 @@ AddEventHandler('Anticheat:AutoBan', function(source, args)
 			playerip = v
 		end
 	end
+	if targetplayername == nil then
+		targetplayername = "Glupo ime"
+	end
 	if duree > 0 then
 		local permanent = 0
 		ban(_source,identifier,license,liveid,xblid,discord,playerip,targetplayername,sourceplayername,duree,reason,permanent)
@@ -600,7 +603,9 @@ TriggerEvent('es:addGroupCommand', 'ban', Config.permission, function (source, a
 								playerip = v
 							end
 						end
-				
+					if targetplayername == nil then
+						targetplayername = "Glupo ime"
+					end
 					if duree > 0 then
 						ban(source,identifier,license,liveid,xblid,discord,playerip,targetplayername,sourceplayername,duree,reason,permanent)
 						DropPlayer(target, _U('you_have_been_banned') .. reason)

@@ -1,5 +1,8 @@
 
 ESX                       = nil
+
+local Centrala 			  = false
+local IDIgraca 			  = nil
 local PhoneNumbers        = {}
 
 -- PhoneNumbers = {
@@ -73,7 +76,6 @@ RegisterServerEvent('xenknight:sendMessage')
 AddEventHandler('xenknight:sendMessage', function(number, message)
     local sourcePlayer = tonumber(source)
     if PhoneNumbers[number] ~= nil then
-	  print(number)
       getPhoneNumber(source, function (phone) 
         notifyAlertSMS(number, {
           message = message,
@@ -87,19 +89,37 @@ RegisterServerEvent('esx_addons_gcphone:startCall')
 AddEventHandler('esx_addons_gcphone:startCall', function (number, message, coords)
   local source = source
   if PhoneNumbers[number] ~= nil then
-    print(number)
-    getPhoneNumber(source, function (phone) 
-      notifyAlertSMS(number, {
-        message = message,
-        coords = coords,
-        numero = phone,
-      }, PhoneNumbers[number].sources)
-    end)
+	if number ~= "police" then
+		getPhoneNumber(source, function (phone) 
+		  notifyAlertSMS(number, {
+			message = message,
+			coords = coords,
+			numero = phone,
+		  }, PhoneNumbers[number].sources)
+		end)
+	else
+		TriggerClientEvent("mobitel:Testiraj", -1, number, message, coords)
+	end
   else
     print('= WARNING = Appels sur un service non enregistre => numero : ' .. number)
   end
 end)
 
+RegisterServerEvent('murja:SaljiGa')
+AddEventHandler('murja:SaljiGa', function (number, message, coords)
+  local source = source
+  if PhoneNumbers[number] ~= nil then
+		getPhoneNumber(source, function (phone) 
+		  notifyAlertSMS(number, {
+			message = message,
+			coords = coords,
+			numero = phone,
+		  }, PhoneNumbers[number].sources)
+		end)
+  else
+    print('= WARNING = Appels sur un service non enregistre => numero : ' .. number)
+  end
+end)
 
 AddEventHandler('esx:playerLoaded', function(source)
 

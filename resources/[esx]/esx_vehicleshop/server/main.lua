@@ -461,7 +461,7 @@ ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function(source, cb,
 								if vehicle.plate == plate then
 									xPlayer.addMoney(resellPrice)
 									RemoveOwnedVehicle(plate)
-									TriggerEvent("DiscordBot:Vozila", GetPlayerName(source).." je prodao "..vime.." u salonu za $"..resellPrice)
+									TriggerEvent("DiscordBot:Vozila", GetPlayerName(source).." je prodao "..vime.."["..plate.."] u salonu za $"..resellPrice)
 									cb(true)
 								else
 									print(('[esx_vehicleshop] [^3WARNING^7] %s attempted to sell an vehicle with plate mismatch!'):format(xPlayer.identifier))

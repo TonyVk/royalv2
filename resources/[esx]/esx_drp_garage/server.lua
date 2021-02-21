@@ -19,10 +19,10 @@ ESX.RegisterServerCallback('eden_garage:getVehicles', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	local vehicules = {}
 
-	MySQL.Async.fetchAll("SELECT vehicle, state, plate, brod FROM owned_vehicles WHERE owner=@identifier",{['@identifier'] = xPlayer.getIdentifier()}, function(data) 
+	MySQL.Async.fetchAll("SELECT vehicle, model, state, plate, brod FROM owned_vehicles WHERE owner=@identifier",{['@identifier'] = xPlayer.getIdentifier()}, function(data) 
 		for _,v in pairs(data) do
 			local vehicle = json.decode(v.vehicle)
-			table.insert(vehicules, {vehicle = vehicle, state = v.state, plate = v.plate, brod = v.brod})
+			table.insert(vehicules, {vehicle = vehicle, state = v.state, plate = v.plate, brod = v.brod, model = tonumber(v.model)})
 		end
 		cb(vehicules)
 	end)
@@ -37,8 +37,19 @@ ESX.RegisterServerCallback('garaza:JelIstiModel',function(source,cb, model)
 	end
 end)
 
-ESX.RegisterServerCallback('garaza:JelIstiModel2',function(source,cb)
-	cb(VoziloModel[source])
+ESX.RegisterServerCallback('garaza:JelIstiModel2',function(source,cb, plate)
+	local naso = false
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local vehicules = getPlayerVehicles(xPlayer.getIdentifier())
+	for _,v in pairs(vehicules) do
+		if(plate == v.plate)then
+			naso = true
+			cb(v.model)
+		end
+	end
+	if not naso then
+		cb(nil)
+	end
 end)
 -- Store & update vehicle properties
 ESX.RegisterServerCallback('eden_garage:stockv',function(source,cb, vehicleProps)
@@ -49,7 +60,7 @@ ESX.RegisterServerCallback('eden_garage:stockv',function(source,cb, vehicleProps
 	local plate = vehicleProps.plate
 	
 		for _,v in pairs(vehicules) do
-			if(plate == plate)then
+			if(plate == v.plate)then
 				local vehprop = json.encode(vehicleProps)
 				MySQL.Sync.execute("UPDATE owned_vehicles SET vehicle=@vehprop WHERE plate=@plate",{['@vehprop'] = vehprop, ['@plate'] = plate})
 				isFound = true
