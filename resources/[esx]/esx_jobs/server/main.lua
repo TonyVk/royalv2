@@ -47,6 +47,8 @@ local function Work(source, item)
 						end
 					else
 						xPlayer.addMoney(item[i].price)
+                                                local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..xPlayer.identifier..") je dobio $"..item[i].price
+						TriggerEvent("SpremiLog", por)
 					end
 				end
 			end

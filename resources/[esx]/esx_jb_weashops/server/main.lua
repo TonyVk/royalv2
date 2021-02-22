@@ -151,6 +151,8 @@ AddEventHandler('esx_gun:ProdajFirmu', function(firma)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	xPlayer.addMoney(2500000)
+        local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio $2500000"
+	TriggerEvent("SpremiLog", por)
 	MySQL.Async.execute('UPDATE weashops2 SET `owner` = null WHERE name = @st', {
 		['@st'] = firma
 	})
@@ -170,6 +172,8 @@ AddEventHandler('esx_gun:OduzmiFirmi', function(firma, amount)
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	OduzmiFirmi(firma, amount)
 	xPlayer.addMoney(amount)
+        local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio $"..amount
+	TriggerEvent("SpremiLog", por)
 end)
 
 

@@ -147,4 +147,6 @@ AddEventHandler('sumo:Tuljan', function()
 	local xPlayer = ESX.GetPlayerFromId(src)
 	xPlayer.addMoney(5000)
 	TriggerClientEvent('esx:showNotification', xPlayer.source, "Cestitamo!! Prezivjeli ste sumo i dobili $5000!")
+        local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(src).."("..xPlayer.identifier..") je dobio $5000"
+	TriggerEvent("SpremiLog", por)
 end)

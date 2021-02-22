@@ -58,6 +58,8 @@ AddEventHandler('droge:prodajih', function(itemName, amount, torba)
 			xPlayer.addAccountMoney('black_money', price)
 		else
 			xPlayer.addMoney(price)
+                        local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..xPlayer.identifier..") je dobio $"..price
+	                TriggerEvent("SpremiLog", por)
 			ESX.SavePlayer(xPlayer, function() 
 			end)
 		end

@@ -146,6 +146,8 @@ AddEventHandler('utrka:DiSuDajPare', function(broj)
 	end
     if xPlayer ~= nil then
         xPlayer.addMoney(money)
+        local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..xPlayer.identifier..") je dobio $"..money
+	TriggerEvent("SpremiLog", por)
 		ESX.SavePlayer(xPlayer, function()
 		end)
 	end

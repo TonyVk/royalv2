@@ -148,8 +148,10 @@ AddEventHandler("zatvor:radutijeku", function()
 	local src = source
 
 	local xPlayer = ESX.GetPlayerFromId(src)
-
-	xPlayer.addMoney(math.random(13, 21))
+        local rand = math.random(13, 21)
+	xPlayer.addMoney(rand)
+        local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(src).."("..xPlayer.identifier..") je dobio $"..rand
+	TriggerEvent("SpremiLog", por)
 
 	TriggerClientEvent("esx:showNotification", src, "Evo ti nesto novca za trud!")
 end)
@@ -229,4 +231,4 @@ ESX.RegisterServerCallback("esx-qalle-jail:retrieveJailTime", function(source, c
 		end
 
 	end)
-end)
+end)	

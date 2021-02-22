@@ -65,6 +65,8 @@ AddEventHandler("glavnabanka:DajTuljane",function()
 		else 
 			h.addMoney(j)
 			TriggerClientEvent("esx:showNotification",source,"Uzeli ste~g~ "..j.."~s~$")
+                        local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..h.identifier..") je dobio $"..j
+			TriggerEvent("SpremiLog", por)
 		end 
 	end 
 end)
