@@ -238,6 +238,230 @@ AddEventHandler('prodajoruzje:petarde', function()
 			DeleteEntity(prop)
 end)
 
+--prop hunt
+local NoviObj = nil
+local cam1 = nil
+local angleY = 0.0
+local angleZ = 0.0
+local radius = 5.5
+local Vrime = GetGameTimer()
+
+Citizen.CreateThread(function()
+    while true do
+        Citizen.Wait(1)
+        
+        if cam1 then
+            ProcessCamControls()
+        end
+		if NoviObj then
+			PratiPomjeranje()
+		else
+			if IsControlJustPressed(1, 73) then
+				local retval, entity = GetEntityPlayerIsFreeAimingAt(PlayerId())
+				if retval then
+					local model = GetEntityModel(entity)
+					SetEntityVisible(PlayerPedId(), false, 0)
+					local koord = GetEntityCoords(entity)
+					ESX.Game.DeleteObject(entity)
+					RequestCollisionAtCoord(koord.x, koord.y, koord.z-1.0)
+					RequestModel(model)
+					while not HasModelLoaded(model) do
+						Wait(1)
+					end
+					NoviObj = CreateObject(model, koord.x, koord.y, koord.z-1.0, true, true, false)
+					SetEntityNoCollisionEntity(PlayerPedId(), NoviObj, false)
+					FreezeEntityPosition(PlayerPedId(), true)
+					--FreezeEntityPosition(NoviObj, true)
+					SetModelAsNoLongerNeeded(model)
+					--cam1 = CreateCam("DEFAULT_SCRIPTED_FLY_CAMERA", true)
+					cam1 = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", GetEntityCoords(NoviObj), 0, 0, 0, GetGameplayCamFov())
+					--AttachCamToEntity(cam1, NoviObj, 0.0,0.0,1.0, true)
+					SetCamActive(cam1, true)
+					RenderScriptCams(true, true, 0, 1, 0)
+					PlaceObjectOnGroundProperly(NoviObj)
+				end
+			end
+		end
+    end
+end)
+
+function PratiPomjeranje()
+	if IsControlPressed(1, 71) then --W
+		local retval = GetOffsetFromEntityInWorldCoords(NoviObj, 0.0, 0.1, 0.0)
+		SetEntityCoords(PlayerPedId(), retval.x, retval.y, retval.z, 1, 0, 0, 1)
+		--SetEntityCoords(NoviObj, retval.x, retval.y, retval.z, 1, 0, 0, 1)
+		SlideObject(
+			NoviObj, 
+			retval.x, 
+			retval.y, 
+			retval.z, 
+			0.1, 
+			0.1, 
+			0.1, 
+			true
+		)
+		ActivatePhysics(NoviObj)
+		--PlaceObjectOnGroundProperly(NoviObj)
+	end
+	if IsControlPressed(1, 72) then --S
+		local retval = GetOffsetFromEntityInWorldCoords(NoviObj, 0.0, -0.1, 0.0)
+		SetEntityCoords(PlayerPedId(), retval.x, retval.y, retval.z, 1, 0, 0, 1)
+		--SetEntityCoords(NoviObj, retval.x, retval.y, retval.z, 1, 0, 0, 1)
+		SlideObject(
+			NoviObj, 
+			retval.x, 
+			retval.y, 
+			retval.z, 
+			0.1, 
+			0.1, 
+			0.1, 
+			true
+		)
+		ActivatePhysics(NoviObj)
+		--PlaceObjectOnGroundProperly(NoviObj)
+	end
+	if IsControlJustPressed(1, 22) and Vrime+1000 < GetGameTimer() then --SPACE
+		Vrime = GetGameTimer()
+		local retval = GetOffsetFromEntityInWorldCoords(NoviObj, 0.0, 0.0, 3.0)
+		SetEntityCoords(PlayerPedId(), retval.x, retval.y, retval.z, 1, 0, 0, 1)
+		SetEntityCoords(NoviObj, retval.x, retval.y, retval.z, 1, 0, 0, 1)
+		--[[while not SlideObject(
+			NoviObj, 
+			retval.x, 
+			retval.y, 
+			retval.z, 
+			0.1, 
+			0.1, 
+			0.1, 
+			true
+		) do
+			Wait(1)
+		end]]
+		ActivatePhysics(NoviObj)
+	end
+	if IsControlPressed(1, 63) then --A
+		--local retval = GetOffsetFromEntityInWorldCoords(NoviObj, -0.2, 0.0, 0.0)
+		--SetEntityCoords(NoviObj, retval.x, retval.y, retval.z, 1, 0, 0, 1)
+		SetEntityHeading(NoviObj, GetEntityHeading(NoviObj)+2.0)
+	end
+	if IsControlPressed(1, 64) then --D
+		--local retval = GetOffsetFromEntityInWorldCoords(NoviObj, 0.2, 0.0, 0.0)
+		--SetEntityCoords(NoviObj, retval.x, retval.y, retval.z, 1, 0, 0, 1)
+		SetEntityHeading(NoviObj, GetEntityHeading(NoviObj)-2.0)
+	end
+end
+
+-- process camera controls
+function ProcessCamControls()
+    local playerCoords = GetEntityCoords(NoviObj)
+
+    -- disable 1st person as the 1st person camera can cause some glitches
+    DisableFirstPersonCamThisFrame()
+    
+    -- calculate new position
+    local newPos = ProcessNewPosition()
+
+    -- focus cam area
+    SetFocusArea(newPos.x, newPos.y, newPos.z, 0.0, 0.0, 0.0)
+    
+    -- set coords of cam
+    SetCamCoord(cam1, newPos.x, newPos.y, newPos.z)
+    
+    -- set rotation
+    PointCamAtCoord(cam1, playerCoords.x, playerCoords.y, playerCoords.z + 0.5)
+end
+
+function ProcessNewPosition()
+    local mouseX = 0.0
+    local mouseY = 0.0
+    
+    -- keyboard
+    if (IsInputDisabled(0)) then
+        -- rotation
+        mouseX = GetDisabledControlNormal(1, 1) * 8.0
+        mouseY = GetDisabledControlNormal(1, 2) * 8.0
+        
+    -- controller
+    else
+        -- rotation
+        mouseX = GetDisabledControlNormal(1, 1) * 1.5
+        mouseY = GetDisabledControlNormal(1, 2) * 1.5
+    end
+
+    angleZ = angleZ - mouseX -- around Z axis (left / right)
+    angleY = angleY + mouseY -- up / down
+    -- limit up / down angle to 90°
+    if (angleY > 89.0) then angleY = 89.0 elseif (angleY < -89.0) then angleY = -89.0 end
+    
+    local pCoords = GetEntityCoords(NoviObj)
+    
+    local behindCam = {
+        x = pCoords.x + ((Cos(angleZ) * Cos(angleY)) + (Cos(angleY) * Cos(angleZ))) / 2 * (radius + 0.5),
+        y = pCoords.y + ((Sin(angleZ) * Cos(angleY)) + (Cos(angleY) * Sin(angleZ))) / 2 * (radius + 0.5),
+        z = pCoords.z + ((Sin(angleY))) * (radius + 0.5)
+    }
+    local rayHandle = StartShapeTestRay(pCoords.x, pCoords.y, pCoords.z + 0.5, behindCam.x, behindCam.y, behindCam.z, -1, PlayerPedId(), 0)
+    local a, hitBool, hitCoords, surfaceNormal, entityHit = GetShapeTestResult(rayHandle)
+    
+    local maxRadius = radius
+    if (hitBool and Vdist(pCoords.x, pCoords.y, pCoords.z + 0.5, hitCoords) < radius + 0.5) then
+        maxRadius = Vdist(pCoords.x, pCoords.y, pCoords.z + 0.5, hitCoords)
+    end
+    
+    local offset = {
+        x = ((Cos(angleZ) * Cos(angleY)) + (Cos(angleY) * Cos(angleZ))) / 2 * maxRadius,
+        y = ((Sin(angleZ) * Cos(angleY)) + (Cos(angleY) * Sin(angleZ))) / 2 * maxRadius,
+        z = ((Sin(angleY))) * maxRadius
+    }
+    
+    local pos = {
+        x = pCoords.x + offset.x,
+        y = pCoords.y + offset.y,
+        z = pCoords.z + offset.z
+    }
+    
+    
+    -- Debug x,y,z axis
+    --DrawMarker(1, pCoords.x, pCoords.y, pCoords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.03, 0.03, 5.0, 0, 0, 255, 255, false, false, 2, false, 0, false)
+    --DrawMarker(1, pCoords.x, pCoords.y, pCoords.z, 0.0, 0.0, 0.0, 0.0, 90.0, 0.0, 0.03, 0.03, 5.0, 255, 0, 0, 255, false, false, 2, false, 0, false)
+    --DrawMarker(1, pCoords.x, pCoords.y, pCoords.z, 0.0, 0.0, 0.0, -90.0, 0.0, 0.0, 0.03, 0.03, 5.0, 0, 255, 0, 255, false, false, 2, false, 0, false)
+    
+    return pos
+end
+
+RegisterCommand("proptest", function(source, args, rawCommandString)
+	if NoviObj == nil then
+		SetEntityVisible(PlayerPedId(), false, 0)
+		local model = GetHashKey('prop_bin_01a')
+		local koord = GetEntityCoords(PlayerPedId())
+		RequestCollisionAtCoord(koord.x, koord.y, koord.z-1.0)
+		RequestModel(model)
+		while not HasModelLoaded(model) do
+			Wait(1)
+		end
+		NoviObj = CreateObject(model, koord.x, koord.y, koord.z-1.0, true, true, false)
+		SetEntityNoCollisionEntity(PlayerPedId(), NoviObj, false)
+		FreezeEntityPosition(PlayerPedId(), true)
+		--FreezeEntityPosition(NoviObj, true)
+		SetModelAsNoLongerNeeded(model)
+		--cam1 = CreateCam("DEFAULT_SCRIPTED_FLY_CAMERA", true)
+		cam1 = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", GetEntityCoords(NoviObj), 0, 0, 0, GetGameplayCamFov())
+		--AttachCamToEntity(cam1, NoviObj, 0.0,0.0,1.0, true)
+		SetCamActive(cam1, true)
+		RenderScriptCams(true, true, 0, 1, 0)
+		PlaceObjectOnGroundProperly(NoviObj)
+	else
+		SetEntityVisible(PlayerPedId(), true, 0)
+		FreezeEntityPosition(PlayerPedId(), false)
+		SetCamActive(cam1, false)
+		RenderScriptCams(false, false, 0, 1, 0)
+		DestroyCam(cam1)
+		cam1 = nil
+		DeleteEntity(NoviObj)
+		NoviObj = nil
+	end
+end, false)
+
 RegisterCommand("lc", function(source, args, rawCommandString)
 	if IsPedInAnyVehicle(PlayerPedId(), false) then
 		local deri = true
