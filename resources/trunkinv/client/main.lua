@@ -406,6 +406,16 @@ loadDict = function(dict)
     while not HasAnimDictLoaded(dict) do Wait(0) RequestAnimDict(dict) end
 end
 
+function DajTezinu(veh)
+	local model = GetEntityModel(veh)
+	local klasa = GetVehicleClass(veh)
+	if IsThisModelABike(model) or IsThisModelAQuadbike(model) then
+		return Config.VehicleLimit[8]
+	else
+		return Config.VehicleLimit[klasa]
+	end
+end
+
 RegisterNetEvent('gepeke:getInventoryLoaded')
 AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
 	local elements = {}
@@ -554,10 +564,8 @@ AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
             local Itemweight =tonumber(getItemyWeight(data3.current.value)) * quantity
             local totalweight = tonumber(weight) + Itemweight
             vehFront = VehicleInFront()
-
-            local typeVeh = GetVehicleClass(vehFront)
-
-            if totalweight > Config.VehicleLimit[typeVeh] then
+			
+            if totalweight > DajTezinu(vehFront) then
               max = true
             else
               max = false
@@ -578,7 +586,7 @@ AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
 
             --fin test
             if quantity > 0 and quantity <= tonumber(data3.current.count) and vehFront > 0  then
-              local MaxVh =(tonumber(Config.VehicleLimit[typeVeh])/1000)
+              local MaxVh =(tonumber(DajTezinu(vehFront))/1000)
               local Kgweight =  totalweight/1000
               if not max then
               	local x,y,z = table.unpack(GetEntityCoords(GetPlayerPed(-1),true))
@@ -625,9 +633,7 @@ AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
 					local totalweight = tonumber(weight) + Itemweight
 					vehFront = VehicleInFront()
 
-					local typeVeh = GetVehicleClass(vehFront)
-
-					if totalweight > Config.VehicleLimit[typeVeh] then
+					if totalweight > DajTezinu(vehFront) then
 					  max = true
 					else
 					  max = false
@@ -649,7 +655,7 @@ AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
 					--fin test
 
 					if vehFront > 3 then
-					  local MaxVh =(tonumber(Config.VehicleLimit[typeVeh])/1000)
+					  local MaxVh =(tonumber(DajTezinu(vehFront))/1000)
 					  local Kgweight =  totalweight/1000
 					  if not max then
 						local x,y,z = table.unpack(GetEntityCoords(GetPlayerPed(-1),true))
@@ -737,8 +743,7 @@ AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
 						local waitara = math.random(200,800)
 						Wait(waitara)
 						TriggerServerEvent('gepeke:removeInventoryItem', GetVehicleNumberPlateText(vehFront), data.current.value, data.current.type, quantity)
-						local typeVeh = GetVehicleClass(vehFront)
-						local MaxVh =(tonumber(Config.VehicleLimit[typeVeh])/1000)
+						local MaxVh =(tonumber(DajTezinu(vehFront))/1000)
 						local Itemweight =tonumber(getItemyWeight(data.current.value)) * quantity
 						local totalweight = tonumber(weight) - Itemweight
 						local Kgweight =  totalweight/1000
@@ -798,8 +803,7 @@ AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
 								local waitara = math.random(200,800)
 								Wait(waitara)
 								TriggerServerEvent('gepeke:removeInventoryItem', GetVehicleNumberPlateText(vehFront), data.current.value, data.current.type, quantity)
-								local typeVeh = GetVehicleClass(vehFront)
-								local MaxVh =(tonumber(Config.VehicleLimit[typeVeh])/1000)
+								local MaxVh =(tonumber(DajTezinu(vehFront))/1000)
 								local Itemweight =tonumber(getItemyWeight(data.current.value)) * quantity
 								local totalweight = tonumber(weight) - Itemweight
 								local Kgweight =  totalweight/1000

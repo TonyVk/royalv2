@@ -25,9 +25,16 @@ function ManageFuelUsage(vehicle)
 
 		fuelSynced = true
 	end
-
+	local limitic = 0
+	local model = GetEntityModel(vehicle)
+	local klasa = GetVehicleClass(vehicle)
+	if IsThisModelABike(model) or IsThisModelAQuadbike(model) then
+		limitic = Config.Classes[8]
+	else
+		limitic = Config.Classes[klasa]
+	end
 	if IsVehicleEngineOn(vehicle) then
-		SetFuel(vehicle, GetVehicleFuelLevel(vehicle) - Config.FuelUsage[Round(GetVehicleCurrentRpm(vehicle), 1)] * (Config.Classes[GetVehicleClass(vehicle)] or 1.0) / 10)
+		SetFuel(vehicle, GetVehicleFuelLevel(vehicle) - Config.FuelUsage[Round(GetVehicleCurrentRpm(vehicle), 1)] * (limitic or 1.0) / 10)
 	end
 end
 

@@ -878,7 +878,8 @@ function SetVehicleMaxMods(vehicle, tip)
 			modSuspension   = 3,
 			modTurbo        = true,
 			wheels 			= 7,
-			modFrontWheels  = 2
+			modFrontWheels  = 2,
+			modArmor 		= GetNumVehicleMods(vehicle, 16)
 		}
 	else
 		props = {
@@ -886,7 +887,8 @@ function SetVehicleMaxMods(vehicle, tip)
 			modBrakes       = 2,
 			modTransmission = 2,
 			modSuspension   = 3,
-			modTurbo        = true
+			modTurbo        = true,
+			modArmor 		= GetNumVehicleMods(vehicle, 16)
 		}
 	end
 
