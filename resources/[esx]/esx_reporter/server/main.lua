@@ -252,6 +252,13 @@ ESX.RegisterServerCallback('esx_reporter:getOtherPlayerData', function(source, c
 
 end)
 
+ESX.RegisterServerCallback('esx_reporter:DajMiKoord', function(source, cb, idigr)
+	print(idigr)
+	local koord = GetEntityCoords(GetPlayerPed(idigr))
+	print(koord)
+	cb(koord)
+end)
+
 ESX.RegisterServerCallback('esx_reporter:getFineList', function(source, cb, category)
 
   MySQL.Async.fetchAll(

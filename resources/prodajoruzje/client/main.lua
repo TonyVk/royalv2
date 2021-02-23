@@ -349,6 +349,17 @@ function PratiPomjeranje()
 		--SetEntityCoords(NoviObj, retval.x, retval.y, retval.z, 1, 0, 0, 1)
 		SetEntityHeading(NoviObj, GetEntityHeading(NoviObj)-2.0)
 	end
+	if HasEntityBeenDamagedByWeapon(NoviObj, 0, 2) then
+		print("Damagean")
+		SetEntityVisible(PlayerPedId(), true, 0)
+		FreezeEntityPosition(PlayerPedId(), false)
+		SetCamActive(cam1, false)
+		RenderScriptCams(false, false, 0, 1, 0)
+		DestroyCam(cam1)
+		cam1 = nil
+		DeleteEntity(NoviObj)
+		NoviObj = nil
+	end
 end
 
 -- process camera controls
@@ -434,7 +445,7 @@ RegisterCommand("proptest", function(source, args, rawCommandString)
 		SetEntityVisible(PlayerPedId(), false, 0)
 		local model = GetHashKey('prop_bin_01a')
 		local koord = GetEntityCoords(PlayerPedId())
-		RequestCollisionAtCoord(koord.x, koord.y, koord.z-1.0)
+		--RequestCollisionAtCoord(koord.x, koord.y, koord.z-1.0)
 		RequestModel(model)
 		while not HasModelLoaded(model) do
 			Wait(1)
@@ -448,13 +459,13 @@ RegisterCommand("proptest", function(source, args, rawCommandString)
 		cam1 = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", GetEntityCoords(NoviObj), 0, 0, 0, GetGameplayCamFov())
 		--AttachCamToEntity(cam1, NoviObj, 0.0,0.0,1.0, true)
 		SetCamActive(cam1, true)
-		RenderScriptCams(true, true, 0, 1, 0)
+		RenderScriptCams(true, false, 0, 1, true)
 		PlaceObjectOnGroundProperly(NoviObj)
 	else
 		SetEntityVisible(PlayerPedId(), true, 0)
 		FreezeEntityPosition(PlayerPedId(), false)
 		SetCamActive(cam1, false)
-		RenderScriptCams(false, false, 0, 1, 0)
+		RenderScriptCams(false, true, 0, true, true)
 		DestroyCam(cam1)
 		cam1 = nil
 		DeleteEntity(NoviObj)

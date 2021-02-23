@@ -94,14 +94,14 @@ end)
 
 RegisterNetEvent("VratiZoom")
 AddEventHandler("VratiZoom", function(nest, id)
-	if Kamerica ~= nil and id ~= PlayerId() then
+	if Kamerica ~= nil and id ~= GetPlayerServerId(PlayerId()) then
 		HandleZoom2(Kamerica, nest)
 	end
 end)
 
 RegisterNetEvent("VratiRotaciju")
 AddEventHandler("VratiRotaciju", function(x, z, id)
-	if Kamerica ~= nil and id ~= PlayerId() then
+	if Kamerica ~= nil and id ~= GetPlayerServerId(PlayerId()) then
 		CheckInputRotation2(x, z)
 	end
 end)
@@ -128,20 +128,24 @@ RegisterCommand("live", function(source, args, raw)
 	if not newscamera and ID_Igraca ~= nil then
 		if Moze == 0 then
 			TvojaLokacija = GetEntityCoords(PlayerPedId())
-			local lPed = GetPlayerPed(ID_Igraca)
-			Kamerica = CreateCam("DEFAULT_SCRIPTED_CAMERA", true)
-			while not DoesCamExist(Kamerica) do
+			ESX.TriggerServerCallback('esx_reporter:DajMiKoord', function(koord)
+				SetEntityCoords(PlayerPedId(), koord, 1, 0, 0, 1)
+				Wait(100)
+				local lPed = GetPlayerPed(GetPlayerFromServerId(ID_Igraca))
 				Kamerica = CreateCam("DEFAULT_SCRIPTED_CAMERA", true)
-				Wait(0)
-			end
-			local fov = (fov_max+fov_min)*0.5
-			AttachCamToEntity(Kamerica, lPed, 0.0,0.0,1.0, true)
-			SetCamRot(Kamerica, 2.0,1.0,GetEntityHeading(lPed))
-			SetCamFov(Kamerica, fov)
-			--NetworkSetTalkerProximity(19.0)
-			TriggerServerEvent("PovecajLjude")
-			ESX.ShowNotification("Da napusite live upisite /live")
-			NarediLive()
+				while not DoesCamExist(Kamerica) do
+					Kamerica = CreateCam("DEFAULT_SCRIPTED_CAMERA", true)
+					Wait(0)
+				end
+				local fov = (fov_max+fov_min)*0.5
+				AttachCamToEntity(Kamerica, lPed, 0.0,0.0,1.0, true)
+				SetCamRot(Kamerica, 2.0,1.0,GetEntityHeading(lPed))
+				SetCamFov(Kamerica, fov)
+				--NetworkSetTalkerProximity(19.0)
+				TriggerServerEvent("PovecajLjude")
+				ESX.ShowNotification("Da napusite live upisite /live")
+				NarediLive()
+			end, ID_Igraca)
 		else
 			SetEntityCoords(PlayerPedId(), TvojaLokacija, 1, 0, 0, 1)
 			--NetworkSetTalkerProximity(12.0)
@@ -333,7 +337,7 @@ end)
 function NarediLive()
 	if Moze == 0 then
 		Moze = 1
-		MumbleSetVolumeOverrideByServerId(GetPlayerServerId(PlayerId()), 0.0)
+		
 		--newscamera = true
 		SetTimecycleModifier("default")
 
@@ -352,7 +356,7 @@ function NarediLive()
 
 
 		local lPed = GetPlayerPed(-1)
-		local TajPed = GetPlayerPed(ID_Igraca)
+		local TajPed = GetPlayerPed(GetPlayerFromServerId(ID_Igraca))
 		local vehicle = GetVehiclePedIsIn(lPed)
 		--local cam2 = CreateCam("DEFAULT_SCRIPTED_CAMERA", true)
 
@@ -404,7 +408,6 @@ function NarediLive()
 			Citizen.Wait(0)
 		end
 	else
-		MumbleSetVolumeOverrideByServerId(GetPlayerServerId(PlayerId()), -1.0)
 		--SetPlayerTalkingOverride(PlayerId(), true)
 		Moze = 0
 		--NetworkSetTalkerProximity(12.0)
@@ -463,7 +466,7 @@ Citizen.CreateThread(function()
 			
 			local cam2 = CreateCam("DEFAULT_SCRIPTED_CAMERA", true)
 			
-			TriggerServerEvent("PrebaciIDKamere", PlayerId())
+			TriggerServerEvent("PrebaciIDKamere", GetPlayerServerId(PlayerId()))
 
 			AttachCamToEntity(cam2, lPed, 0.0,0.0,1.0, true)
 			SetCamRot(cam2, 2.0,1.0,GetEntityHeading(lPed))
@@ -583,7 +586,7 @@ function CheckInputRotation(cam, zoomvalue)
 		SetCamRot(cam, new_x, 0.0, new_z, 2)
 		if (new_x+new_z) ~= ZadnjiZoom then
 			ZadnjiZoom = new_x+new_z
-			TriggerServerEvent("SaljiRotaciju", new_x, new_z, PlayerId())
+			TriggerServerEvent("SaljiRotaciju", new_x, new_z, GetPlayerServerId(PlayerId()))
 		end
 	end
 end
@@ -614,7 +617,7 @@ function HandleZoom(cam)
 		SetCamFov(cam, current_fov + (fov - current_fov)*0.05)
 		if (current_fov + (fov - current_fov)*0.05) ~= ZadnjiFov then
 			ZadnjiFov = current_fov + (fov - current_fov)*0.05
-			TriggerServerEvent("PosaljiZoom", current_fov + (fov - current_fov)*0.05, PlayerId())
+			TriggerServerEvent("PosaljiZoom", (current_fov + (fov - current_fov)*0.05), GetPlayerServerId(PlayerId()))
 		end
 	else
 		if IsControlJustPressed(0,17) then
@@ -630,7 +633,7 @@ function HandleZoom(cam)
 		SetCamFov(cam, current_fov + (fov - current_fov)*0.05)
 		if (current_fov + (fov - current_fov)*0.05) ~= ZadnjiFov then
 			ZadnjiFov = current_fov + (fov - current_fov)*0.05
-			TriggerServerEvent("PosaljiZoom", current_fov + (fov - current_fov)*0.05, PlayerId())
+			TriggerServerEvent("PosaljiZoom", (current_fov + (fov - current_fov)*0.05), GetPlayerServerId(PlayerId()))
 		end
 	end
 end

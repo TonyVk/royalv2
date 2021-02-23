@@ -57,9 +57,10 @@ function spectate(target)
 			})	
 		end
 
-		Citizen.CreateThread(function()
-
-			if not DoesCamExist(cam) then
+		--Citizen.CreateThread(function()
+			while not DoesCamExist(cam) do
+			--if not DoesCamExist(cam) then
+				Wait(0)
 				cam = CreateCam('DEFAULT_SCRIPTED_CAMERA', true)
 			end
 
@@ -69,7 +70,7 @@ function spectate(target)
 
 			TargetSpectate  = target
 			InSpectatorMode = true
-		end)
+		--end)
 	end, target)
 
 end
@@ -92,11 +93,13 @@ function getPlayersList()
 	ESX.TriggerServerCallback('esx_spectate:DohvatiIgrace', function(igraci)
 		local data = {}
 		for i,igrac in ipairs(igraci) do
-			local _data = {
-				id = igrac.ID,
-				name = igrac.Ime
-			}
-			table.insert(data, _data)
+			if tonumber(igrac.ID) ~= GetPlayerServerId(PlayerId()) then
+				local _data = {
+					id = igrac.ID,
+					name = igrac.Ime
+				}
+				table.insert(data, _data)
+			end
 		end
 		SendNUIMessage({
 			type = 'show',

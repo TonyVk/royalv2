@@ -10,7 +10,7 @@ end)
 
 ESX.RegisterServerCallback('esx_spectate:getPlayerData', function(source, cb, id)
     local xPlayer = ESX.GetPlayerFromId(id)
-	local kord = GetEntityCoords(GetPlayerPed(id))
+	local kord = GetEntityCoords(GetPlayerPed(tonumber(id)))
     if xPlayer ~= nil then
         cb(xPlayer, kord)
     end
