@@ -123,7 +123,7 @@ AddEventHandler('esx_contract:getVehicle', function()
 								ESX.ShowNotification(_U('writingcontract', vehProps.plate))
 								TriggerServerEvent('ugovor:prodajtuljanu2', GetPlayerServerId(closestPlayer), vehProps.plate, amount, GarazaV)
 							end
-						end, vehProps.model)
+						end, vehProps.plate, vehProps.model)
 					end
 				end, function(data, menu)
 					menu.close()
