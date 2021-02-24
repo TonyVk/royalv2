@@ -168,17 +168,18 @@ RegisterCommand("npokreni", function(source, args, rawCommandString)
 			local vrijeme = tonumber(args[1])
 			if vrijeme ~= nil then
 				if vrijeme > 0 then
-					--[[local loptee = "p_ld_soc_ball_01"
+					local loptee = "p_ld_soc_ball_01"
 					ESX.Streaming.RequestModel(loptee)
 					NLopta = CreateObject(GetHashKey(loptee), 771.25549316406, -233.44470214844, 65.114479064941,true,true,false)
-					Wait(300)
-					NetworkRegisterEntityAsNetworked(NLopta)
+					while not DoesEntityExist(NLopta) do
+						Wait(100)
+					end
 					local netid = ObjToNet(NLopta)
 					NetworkSetNetworkIdDynamic(netid, false)
 					SetNetworkIdCanMigrate(netid, true)
 					SetNetworkIdExistsOnAllMachines(netid, true)
 					TriggerServerEvent("SpawnLoptu", netid)
-					SetModelAsNoLongerNeeded(GetHashKey(loptee))--]]
+					SetModelAsNoLongerNeeded(GetHashKey(loptee))
 					TriggerServerEvent("nogomet:pokreni", vrijeme*60)
 				else
 					name = "System"..":"
@@ -277,14 +278,8 @@ AddEventHandler('nogomet:VratiTimove', function(t1, t2)
 end)
 
 RegisterNetEvent("nogomet:start")
-AddEventHandler("nogomet:start", function(vr,nid)
+AddEventHandler("nogomet:start", function(vr)
 	if Tim > 0 then
-		Citizen.CreateThread(function()
-			while not NetworkDoesEntityExistWithNetworkId(nid) do
-				Citizen.Wait(100)
-			end
-			NLopta = NetworkGetEntityFromNetworkId(nid)
-		end)
 		MinutaKr = vr
 		SendNUIMessage({
 			vrijeme = true,
@@ -318,7 +313,12 @@ end)
 RegisterNetEvent("EoTiLopta")
 AddEventHandler("EoTiLopta", function(net)
 	if NetworkDoesNetworkIdExist(net) then
+		while not NetworkDoesEntityExistWithNetworkId(net) do
+			Wait(100)
+		end
 		NLopta = NetToObj(net)
+	else
+		print("Ne postoji lopta!")
 	end
 end)
 
