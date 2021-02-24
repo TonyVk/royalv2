@@ -154,7 +154,13 @@ Config = {
             {'Stol 29', 'prop_astro_table_01', 150}
         },
         ['electronics'] = {
-            {'Flat tv', 'prop_tv_flat_02', 750},
+			{'Flat tv 1', 'prop_tv_flat_01', 750},
+            {'Flat tv 2', 'prop_tv_flat_02', 750},
+			{'Flat tv 3', 'prop_tv_flat_michael', 750},
+			{'Flat tv 4', 'prop_trev_tv_01', 750},
+			{'Flat tv 5', 'prop_tv_flat_03b', 750},
+			{'Flat tv 6', 'prop_tv_flat_03', 750},
+			{'Flat tv 7', 'prop_tv_flat_02b', 750},
             {'Guzata tv', 'prop_tv_06', 350},
             {'Mala debela tv', 'prop_tv_02', 250},
             {'Radio', 'prop_portable_hifi_01', 100},
