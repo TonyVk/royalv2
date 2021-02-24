@@ -260,19 +260,19 @@ CreateThread(function()
     end
 end)
 
-RegisterCommand('tv', function(source, args)
-    if args[1] then
+RegisterCommand('tv', function(source, args, rawCommandString)
         for k, v in pairs(Config['Objects']) do
             local obj = GetClosestObjectOfType(GetEntityCoords(PlayerPedId()), 5.0, GetHashKey(v['Object']))
             if DoesEntityExist(obj) then
 				trovo = false
 				jednom = true
-				local vidid = args[1].match(args[1], "%?v=(.-)&")
+				local test = rawCommandString
+				test = string.gsub(test, "tv ", "")
+				local vidid = string.match(test, "v=(...........)")
                 TriggerServerEvent('loaf_tv:add', vidid, v['Object'], GetEntityCoords(obj), v['Scale'], v['Offset'])
                 break
             end
         end
-    end
 end)
 
 RegisterCommand('trovo', function(source, args)
@@ -289,7 +289,7 @@ RegisterCommand('trovo', function(source, args)
     end
 end)
 
-RegisterCommand('volume', function(src, args)
+RegisterCommand('glasnoca', function(src, args)
     if args[1] then
         local volume = tonumber(args[1])
         if volume then
@@ -309,7 +309,7 @@ RegisterCommand('volume', function(src, args)
     end
 end)
 
-RegisterCommand('destroy', function(src, args)
+RegisterCommand('ugasitv', function(src, args)
     for k, v in pairs(data) do
         if #(GetEntityCoords(PlayerPedId()) - v['Coords']) <= 5.0 then
             TriggerServerEvent('loaf_tv:destroy', k)

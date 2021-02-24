@@ -37,7 +37,6 @@ local time
 
 RegisterServerEvent('loaf_tv:add')
 AddEventHandler('loaf_tv:add', function(url, object, coords, scale, offset)
-	print(url)
     local id = GenerateId(20, true, true)
     for k, v in pairs(data) do
         if v['Object'] == object and v['Coords'] == coords then -- if it's the same tv, just update the video etc
