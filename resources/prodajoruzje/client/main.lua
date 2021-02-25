@@ -240,11 +240,13 @@ end)
 
 --prop hunt
 local NoviObj = nil
+local NoviObj2 = nil
 local cam1 = nil
 local angleY = 0.0
 local angleZ = 0.0
 local radius = 5.5
 local Vrime = GetGameTimer()
+local ZadnjeCoord = nil
 
 Citizen.CreateThread(function()
     while true do
@@ -259,26 +261,39 @@ Citizen.CreateThread(function()
 			if IsControlJustPressed(1, 73) then
 				local retval, entity = GetEntityPlayerIsFreeAimingAt(PlayerId())
 				if retval then
+					SetEntityCollision(PlayerPedId(), false, false)
 					local model = GetEntityModel(entity)
 					SetEntityVisible(PlayerPedId(), false, 0)
 					local koord = GetEntityCoords(entity)
+					ZadnjeCoord = koord
 					ESX.Game.DeleteObject(entity)
-					RequestCollisionAtCoord(koord.x, koord.y, koord.z-1.0)
+					--RequestCollisionAtCoord(koord.x, koord.y, koord.z-1.0)
+					local model2 = GetHashKey("prop_bin_01a")
+					RequestModel(model2)
+					while not HasModelLoaded(model2) do
+						Wait(1)
+					end
+					NoviObj = CreateObject(model2, koord.x, koord.y, koord.z, true, true, false)
+					SetEntityVisible(NoviObj, false, 0)
+					SetEntityNoCollisionEntity(PlayerPedId(), NoviObj, false)
 					RequestModel(model)
 					while not HasModelLoaded(model) do
 						Wait(1)
 					end
-					NoviObj = CreateObject(model, koord.x, koord.y, koord.z-1.0, true, true, false)
-					SetEntityNoCollisionEntity(PlayerPedId(), NoviObj, false)
+					NoviObj2 = CreateObject(model, koord.x, koord.y, koord.z-1.0, true, true, false)
+					SetEntityCollision(NoviObj2, false, false)
+					SetEntityNoCollisionEntity(NoviObj2, NoviObj, true)
+					SetEntityNoCollisionEntity(PlayerPedId(), NoviObj2, false)
 					FreezeEntityPosition(PlayerPedId(), true)
 					--FreezeEntityPosition(NoviObj, true)
 					SetModelAsNoLongerNeeded(model)
 					--cam1 = CreateCam("DEFAULT_SCRIPTED_FLY_CAMERA", true)
-					cam1 = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", GetEntityCoords(NoviObj), 0, 0, 0, GetGameplayCamFov())
+					cam1 = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", GetEntityCoords(NoviObj2), 0, 0, 0, GetGameplayCamFov())
 					--AttachCamToEntity(cam1, NoviObj, 0.0,0.0,1.0, true)
 					SetCamActive(cam1, true)
 					RenderScriptCams(true, true, 0, 1, 0)
 					PlaceObjectOnGroundProperly(NoviObj)
+					PlaceObjectOnGroundProperly(NoviObj2)
 				end
 			end
 		end
@@ -288,44 +303,53 @@ end)
 function PratiPomjeranje()
 	if IsControlPressed(1, 71) then --W
 		local retval = GetOffsetFromEntityInWorldCoords(NoviObj, 0.0, 0.1, 0.0)
-		SetEntityCoords(PlayerPedId(), retval.x, retval.y, retval.z, 1, 0, 0, 1)
-		--SetEntityCoords(NoviObj, retval.x, retval.y, retval.z, 1, 0, 0, 1)
-		SlideObject(
-			NoviObj, 
-			retval.x, 
-			retval.y, 
-			retval.z, 
-			0.1, 
-			0.1, 
-			0.1, 
-			true
-		)
-		ActivatePhysics(NoviObj)
-		--PlaceObjectOnGroundProperly(NoviObj)
+		if #(ZadnjeCoord-retval) > 0.08 then
+			ZadnjeCoord = retval
+			SetEntityCoords(PlayerPedId(), retval.x, retval.y, retval.z, 1, 0, 0, 1)
+			SetEntityCoords(NoviObj2, retval.x, retval.y, retval.z, 1, 0, 0, 1)
+			--SetEntityCoords(NoviObj, retval.x, retval.y, retval.z, 1, 0, 0, 1)
+			SlideObject(
+				NoviObj, 
+				retval.x, 
+				retval.y, 
+				retval.z, 
+				0.1, 
+				0.1, 
+				0.1, 
+				true
+			)
+			ActivatePhysics(NoviObj)
+			PlaceObjectOnGroundProperly(NoviObj2)
+		end
 	end
 	if IsControlPressed(1, 72) then --S
 		local retval = GetOffsetFromEntityInWorldCoords(NoviObj, 0.0, -0.1, 0.0)
-		SetEntityCoords(PlayerPedId(), retval.x, retval.y, retval.z, 1, 0, 0, 1)
-		--SetEntityCoords(NoviObj, retval.x, retval.y, retval.z, 1, 0, 0, 1)
-		SlideObject(
-			NoviObj, 
-			retval.x, 
-			retval.y, 
-			retval.z, 
-			0.1, 
-			0.1, 
-			0.1, 
-			true
-		)
-		ActivatePhysics(NoviObj)
-		--PlaceObjectOnGroundProperly(NoviObj)
+		if #(ZadnjeCoord-retval) > 0.08 then
+			ZadnjeCoord = retval
+			SetEntityCoords(PlayerPedId(), retval.x, retval.y, retval.z, 1, 0, 0, 1)
+			SetEntityCoords(NoviObj2, retval.x, retval.y, retval.z, 1, 0, 0, 1)
+			--SetEntityCoords(NoviObj, retval.x, retval.y, retval.z, 1, 0, 0, 1)
+			SlideObject(
+				NoviObj, 
+				retval.x, 
+				retval.y, 
+				retval.z, 
+				0.1, 
+				0.1, 
+				0.1, 
+				true
+			)
+			ActivatePhysics(NoviObj)
+			PlaceObjectOnGroundProperly(NoviObj2)
+		end
 	end
-	if IsControlJustPressed(1, 22) and Vrime+1000 < GetGameTimer() then --SPACE
+	--[[if IsControlJustPressed(1, 22) and Vrime+1000 < GetGameTimer() then --SPACE
 		Vrime = GetGameTimer()
 		local retval = GetOffsetFromEntityInWorldCoords(NoviObj, 0.0, 0.0, 3.0)
 		SetEntityCoords(PlayerPedId(), retval.x, retval.y, retval.z, 1, 0, 0, 1)
 		SetEntityCoords(NoviObj, retval.x, retval.y, retval.z, 1, 0, 0, 1)
-		--[[while not SlideObject(
+		SetEntityCoords(NoviObj2, retval.x, retval.y, retval.z, 1, 0, 0, 1)
+		while not SlideObject(
 			NoviObj, 
 			retval.x, 
 			retval.y, 
@@ -336,21 +360,26 @@ function PratiPomjeranje()
 			true
 		) do
 			Wait(1)
-		end]]
+		end
 		ActivatePhysics(NoviObj)
-	end
+		Wait(200)
+		PlaceObjectOnGroundProperly(NoviObj2)
+	end]]
 	if IsControlPressed(1, 63) then --A
 		--local retval = GetOffsetFromEntityInWorldCoords(NoviObj, -0.2, 0.0, 0.0)
 		--SetEntityCoords(NoviObj, retval.x, retval.y, retval.z, 1, 0, 0, 1)
 		SetEntityHeading(NoviObj, GetEntityHeading(NoviObj)+2.0)
+		SetEntityHeading(NoviObj2, GetEntityHeading(NoviObj)+2.0)
 	end
 	if IsControlPressed(1, 64) then --D
 		--local retval = GetOffsetFromEntityInWorldCoords(NoviObj, 0.2, 0.0, 0.0)
 		--SetEntityCoords(NoviObj, retval.x, retval.y, retval.z, 1, 0, 0, 1)
 		SetEntityHeading(NoviObj, GetEntityHeading(NoviObj)-2.0)
+		SetEntityHeading(NoviObj2, GetEntityHeading(NoviObj)-2.0)
 	end
-	if HasEntityBeenDamagedByWeapon(NoviObj, 0, 2) then
+	if HasEntityBeenDamagedByWeapon(NoviObj2, 0, 2) then
 		print("Damagean")
+		SetEntityCollision(PlayerPedId(), true, true)
 		SetEntityVisible(PlayerPedId(), true, 0)
 		FreezeEntityPosition(PlayerPedId(), false)
 		SetCamActive(cam1, false)
@@ -358,7 +387,9 @@ function PratiPomjeranje()
 		DestroyCam(cam1)
 		cam1 = nil
 		DeleteEntity(NoviObj)
+		DeleteEntity(NoviObj2)
 		NoviObj = nil
+		NoviObj2 = nil
 	end
 end
 
@@ -443,7 +474,7 @@ end
 RegisterCommand("proptest", function(source, args, rawCommandString)
 	if NoviObj == nil then
 		SetEntityVisible(PlayerPedId(), false, 0)
-		local model = GetHashKey('prop_bin_01a')
+		local model = GetHashKey(args[1])
 		local koord = GetEntityCoords(PlayerPedId())
 		--RequestCollisionAtCoord(koord.x, koord.y, koord.z-1.0)
 		RequestModel(model)
@@ -461,7 +492,9 @@ RegisterCommand("proptest", function(source, args, rawCommandString)
 		SetCamActive(cam1, true)
 		RenderScriptCams(true, false, 0, 1, true)
 		PlaceObjectOnGroundProperly(NoviObj)
+		SetEntityInvincible(NoviObj, true)
 	else
+		SetEntityCollision(PlayerPedId(), true, true)
 		SetEntityVisible(PlayerPedId(), true, 0)
 		FreezeEntityPosition(PlayerPedId(), false)
 		SetCamActive(cam1, false)

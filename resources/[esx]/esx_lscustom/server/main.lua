@@ -10,20 +10,20 @@ AddEventHandler('lscs:kupiPeraje', function(model, price, veh)
 
 	if Config.IsMechanicJobOnly then
 
-		local societyAccount = nil
-		TriggerEvent('esx_addonaccount:getSharedAccount', 'society_mechanic', function(account)
-			societyAccount = account
-		end)
-		if price < societyAccount.money then
+		--local societyAccount = nil
+		--TriggerEvent('esx_addonaccount:getSharedAccount', 'society_mechanic', function(account)
+			--societyAccount = account
+		--end)
+		--if price < societyAccount.money then
 			TriggerClientEvent('esx_lscustom:installMod', _source)
 			TriggerClientEvent('esx:showNotification', _source, _U('purchased'))
-			societyAccount.removeMoney(price)
+			--societyAccount.removeMoney(price)
 			price = 1.30*price
 			TriggerClientEvent('esx_meha:PucajCijenu', _source, veh, price)
-		else
-			TriggerClientEvent('esx_lscustom:cancelInstallMod', _source)
-			TriggerClientEvent('esx:showNotification', _source, _U('not_enough_money'))
-		end
+		--else
+			--TriggerClientEvent('esx_lscustom:cancelInstallMod', _source)
+			--TriggerClientEvent('esx:showNotification', _source, _U('not_enough_money'))
+		--end
 
 	else
 

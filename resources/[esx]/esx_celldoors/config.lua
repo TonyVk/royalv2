@@ -9,7 +9,7 @@ Config.DoorList = {
 	
 	{
 		textCoords = vector3(-1195.27, -897.07, 14.2),
-		authorizedJobs = { 'garda' },
+		authorizedJobs = { 'police' },
 		locked = true,
 		distance = 2.5,
 		doors = {
@@ -23,7 +23,7 @@ Config.DoorList = {
 	
 	{
 		textCoords = vector3(-1194.13, -899.87, 14.2),
-		authorizedJobs = { 'garda' },
+		authorizedJobs = { 'police' },
 		locked = true,
 		distance = 2.5,
 		doors = {
@@ -37,7 +37,7 @@ Config.DoorList = {
 	
 	{
 		textCoords = vector3(-1200.60, -892.01, 14.2),
-		authorizedJobs = { 'garda' },
+		authorizedJobs = { 'police' },
 		locked = true,
 		distance = 2.5,
 		doors = {
@@ -53,7 +53,7 @@ Config.DoorList = {
 	-- vanjska vrata
 	{
 		textCoords = vector3(-1178.65, -891.73, 14.2),
-		authorizedJobs = { 'garda' },
+		authorizedJobs = { 'police' },
 		locked = true,
 		distance = 2.5,
 		doors = {
