@@ -1,50 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<CVehicleModelInfoVarGlobal>     
+<CVehicleModelInfoVarGlobal>    
   <Kits>
-    <Item>
-      <kitName>8765_m4comp_modkit</kitName>
-      <id value="8765" />	 	  
+   <Item>
+      <kitName>2654_macanpd600m_modkit</kitName>
+      <id value="2654" />	 	  
       <kitType>MKT_SPECIAL</kitType>
       <visibleMods>
       </visibleMods>
-      <linkMods>
-      </linkMods>
+      <linkMods />
       <statMods>
         <Item>
           <identifier />
-          <modifier value="15" />
+          <modifier value="100" />
           <audioApply value="1.000000" />
           <weight value="20" />
           <type>VMT_ENGINE</type>
         </Item>
         <Item>
           <identifier />
-          <modifier value="20" />
+          <modifier value="150" />
           <audioApply value="1.000000" />
           <weight value="20" />
           <type>VMT_ENGINE</type>
         </Item>
         <Item>
           <identifier />
-          <modifier value="35" />
+          <modifier value="230" />
           <audioApply value="1.000000" />
           <weight value="20" />
           <type>VMT_ENGINE</type>
         </Item>
         <Item>
           <identifier />
-          <modifier value="50" />
+          <modifier value="300" />
           <audioApply value="1.000000" />
           <weight value="20" />
           <type>VMT_ENGINE</type>
-        </Item>
-        <Item>
-          <identifier />
-          <modifier value="15" />
-          <audioApply value="1.000000" />
-          <weight value="5" />
-          <type>VMT_BRAKES</type>
         </Item>
         <Item>
           <identifier />
@@ -62,21 +53,28 @@
         </Item>
         <Item>
           <identifier />
-          <modifier value="15" />
+          <modifier value="100" />
+          <audioApply value="1.000000" />
+          <weight value="5" />
+          <type>VMT_BRAKES</type>
+        </Item>
+        <Item>
+          <identifier />
+          <modifier value="25" />
           <audioApply value="1.000000" />
           <weight value="5" />
           <type>VMT_GEARBOX</type>
         </Item>
         <Item>
           <identifier />
-          <modifier value="20" />
+          <modifier value="50" />
           <audioApply value="1.000000" />
           <weight value="5" />
           <type>VMT_GEARBOX</type>
         </Item>
         <Item>
           <identifier />
-          <modifier value="80" />
+          <modifier value="100" />
           <audioApply value="1.000000" />
           <weight value="5" />
           <type>VMT_GEARBOX</type>
@@ -118,7 +116,7 @@
         </Item>
         <Item>
           <identifier>HORN_TRUCK</identifier>
-          <modifier value="1766676653" />
+          <modifier value="1766676233" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_HORN</type>
@@ -172,7 +170,7 @@
           <weight value="0" />
           <type>VMT_HORN</type>
         </Item>
-		    <Item>
+		<Item>
           <identifier>HORN_SAD_TROMBONE</identifier>
           <modifier value="632950117" />
           <audioApply value="1.000000" />
@@ -220,70 +218,70 @@
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_HORN</type>
-	    	</Item>
-	    	<Item>
+		</Item>
+		<Item>
           <identifier>MUSICAL_HORN_BUSINESS_7</identifier>
           <modifier value="3203290992" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_HORN</type>
-    		</Item>
-	    	<Item>
+		</Item>
+		<Item>
           <identifier>DLC_BUSI2_C_MAJOR_NOTES_C0</identifier>
           <modifier value="771284519" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_HORN</type>
-	    	</Item>
-	    	<Item>
+		</Item>
+		<Item>
           <identifier>DLC_BUSI2_C_MAJOR_NOTES_D0</identifier>
           <modifier value="2586621229" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_HORN</type>
-	    	</Item>
-	    	<Item>
+		</Item>
+		<Item>
           <identifier>DLC_BUSI2_C_MAJOR_NOTES_E0</identifier>
           <modifier value="283386134" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_HORN</type>
-	    	</Item>
-	    	<Item>
+		</Item>
+		<Item>
           <identifier>DLC_BUSI2_C_MAJOR_NOTES_F0</identifier>
           <modifier value="3884502400" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_HORN</type>
-    		</Item>
-    		<Item>
+		</Item>
+		<Item>
           <identifier>DLC_BUSI2_C_MAJOR_NOTES_G0</identifier>
           <modifier value="265723083" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_HORN</type>
-    		</Item>
-	    	<Item>
+		</Item>
+		<Item>
           <identifier>DLC_BUSI2_C_MAJOR_NOTES_A0</identifier>
           <modifier value="1746883687" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_HORN</type>
-    		</Item>
-	    	<Item>
+		</Item>
+		<Item>
           <identifier>DLC_BUSI2_C_MAJOR_NOTES_B0</identifier>
           <modifier value="1919870950" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_HORN</type>
-    		</Item>
-    		<Item>
+		</Item>
+		<Item>
           <identifier>DLC_BUSI2_C_MAJOR_NOTES_C1</identifier>
           <modifier value="1085277077" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_HORN</type>
-    		</Item>
+		</Item>
         <Item>
           <identifier>HIPSTER_HORN_1</identifier>
           <modifier value="444549672" />
@@ -340,21 +338,21 @@
           <weight value="0" />
           <type>VMT_HORN</type>
         </Item>
-	    	<Item>
+		<Item>
           <identifier>LUXE_HORN_1</identifier>
           <modifier value="3199657341" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_HORN</type>
         </Item>
-	    	<Item>
+		<Item>
           <identifier>LUXE_HORN_2</identifier>
           <modifier value="2900378064" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_HORN</type>
         </Item>
-	    	<Item>
+		<Item>
           <identifier>LUXE_HORN_3</identifier>
           <modifier value="3956195248" />
           <audioApply value="1.000000" />
@@ -362,7 +360,7 @@
           <type>VMT_HORN</type>
         </Item>
 		<!-- PREVIEW HORN - FOR MOD SHOP USE ONLY -->
-	    	<Item>
+		<Item>
           <identifier>LUXORY_HORN_1</identifier>
           <modifier value="676333254" />
           <audioApply value="1.000000" />
@@ -370,7 +368,7 @@
           <type>VMT_HORN</type>
         </Item>
 		<!-- PREVIEW HORN - FOR MOD SHOP USE ONLY -->
-    		<Item>
+		<Item>
           <identifier>LUXURY_HORN_2</identifier>
           <modifier value="2099578296" />
           <audioApply value="1.000000" />
@@ -378,57 +376,118 @@
           <type>VMT_HORN</type>
         </Item>
 		<!-- PREVIEW HORN - FOR MOD SHOP USE ONLY -->
-	    	<Item>
+		<Item>
           <identifier>LUXURY_HORN_3</identifier>
           <modifier value="1373384483" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_HORN</type>
         </Item>
-        <Item>
+		<Item>
+          <identifier>ORGAN_HORN_LOOP_01</identifier>
+          <modifier value="2916775806" />
+          <audioApply value="1.000000" />
+          <weight value="0" />
+          <type>VMT_HORN</type>
+        </Item>
+		<!-- PREVIEW HORN - FOR MOD SHOP USE ONLY -->
+		<Item>
+          <identifier>ORGAN_HORN_LOOP_01_PREVIEW</identifier>
+          <modifier value="3714706952" />
+          <audioApply value="1.000000" />
+          <weight value="0" />
+          <type>VMT_HORN</type>
+        </Item>
+		<Item>
+          <identifier>ORGAN_HORN_LOOP_02</identifier>
+          <modifier value="2611860261" />
+          <audioApply value="1.000000" />
+          <weight value="0" />
+          <type>VMT_HORN</type>
+        </Item>
+		<!-- PREVIEW HORN - FOR MOD SHOP USE ONLY -->
+		<Item>
+          <identifier>ORGAN_HORN_LOOP_02_PREVIEW</identifier>
+          <modifier value="3206770359" />
+          <audioApply value="1.000000" />
+          <weight value="0" />
+          <type>VMT_HORN</type>
+        </Item>
+		<Item>
+          <identifier>LOWRIDER_HORN_1</identifier>
+          <modifier value="310529291" />
+          <audioApply value="1.000000" />
+          <weight value="0" />
+          <type>VMT_HORN</type>
+        </Item>
+		<!-- PREVIEW HORN - FOR MOD SHOP USE ONLY -->
+		<Item>
+          <identifier>LOWRIDER_HORN_1_PREVIEW</identifier>
+          <modifier value="2965568987" />
+          <audioApply value="1.000000" />
+          <weight value="0" />
+          <type>VMT_HORN</type>
+        </Item>
+		<Item>
+          <identifier>LOWRIDER_HORN_2</identifier>
+          <modifier value="55291550" />
+          <audioApply value="1.000000" />
+          <weight value="0" />
+          <type>VMT_HORN</type>
+        </Item>
+		<!-- PREVIEW HORN - FOR MOD SHOP USE ONLY -->
+		<Item>
+          <identifier>LOWRIDER_HORN_2_PREVIEW</identifier>
+          <modifier value="965054819" />
+          <audioApply value="1.000000" />
+          <weight value="0" />
+          <type>VMT_HORN</type>
+        </Item>
+	<Item>
           <identifier />
-          <modifier value="5" />
+          <modifier value="6" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_SUSPENSION</type>
         </Item>
         <Item>
           <identifier />
-          <modifier value="10" />
+          <modifier value="11" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_SUSPENSION</type>
         </Item>
         <Item>
           <identifier />
-          <modifier value="15" />
+          <modifier value="16" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_SUSPENSION</type>
         </Item>
         <Item>
           <identifier />
-          <modifier value="20" />
+          <modifier value="22" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_SUSPENSION</type>
         </Item>
       </statMods>
       <slotNames />
-      <liveryNames />
+      <liveryNames>
+      </liveryNames>
     </Item>
   </Kits>
-  <Lights>
-    <Item>
-      <id value="7663" />	
+    <Lights>
+	<Item>
+      <id value="2654" />
       <indicator>
-        <intensity value="0.575000" />
+        <intensity value="0.900000" />
         <falloffMax value="2.500000" />
         <falloffExponent value="8.000000" />
-        <innerConeAngle value="30.000000" />
-        <outerConeAngle value="80.000000" />
-        <emmissiveBoost value="false" />
-        <color value="0xFFFF8000" />
+        <innerConeAngle value="20.000000" />
+        <outerConeAngle value="50.000000" />
+        <emmissiveBoost value="true" />
+        <color value="0xfff2730c" />
       </indicator>
       <rearIndicatorCorona>
         <size value="0.000000" />
@@ -436,7 +495,7 @@
         <intensity value="0.000000" />
         <intensity_far value="0.000000" />
         <color value="0x00000000" />
-        <numCoronas value="0" />
+        <numCoronas value="1" />
         <distBetweenCoronas value="128" />
         <distBetweenCoronas_far value="255" />
         <xRotation value="0.000000" />
@@ -451,7 +510,7 @@
         <intensity value="0.000000" />
         <intensity_far value="0.000000" />
         <color value="0x00000000" />
-        <numCoronas value="0" />
+        <numCoronas value="1" />
         <distBetweenCoronas value="128" />
         <distBetweenCoronas_far value="255" />
         <xRotation value="0.000000" />
@@ -461,7 +520,7 @@
         <pullCoronaIn value="false" />
       </frontIndicatorCorona>
       <tailLight>
-        <intensity value="0.250000" />
+        <intensity value="0.800000" />
         <falloffMax value="4.000000" />
         <falloffExponent value="16.000000" />
         <innerConeAngle value="45.000000" />
@@ -470,64 +529,64 @@
         <color value="0xFFFF0000" />
       </tailLight>
       <tailLightCorona>
-        <size value="2.900000" />
-        <size_far value="3.100000" />
-        <intensity value="0.200000" />
-        <intensity_far value="0.250000" />
-        <color value="0xFFFF0600" />
+        <size value="0.000000" />
+        <size_far value="0.000000" />
+        <intensity value="5.000000" />
+        <intensity_far value="1.000000" />
+        <color value="0xFFFF0F05" />
         <numCoronas value="0" />
-        <distBetweenCoronas value="42" />
-        <distBetweenCoronas_far value="12" />
+        <distBetweenCoronas value="1" />
+        <distBetweenCoronas_far value="56" />
         <xRotation value="0.000000" />
-        <yRotation value="0.000000" />
-        <zRotation value="0.000000" />
-        <zBias value="0.232000" />
+        <yRotation value="1.747000" />
+        <zRotation value="5.906000" />
+        <zBias value="0.250000" />
         <pullCoronaIn value="false" />
       </tailLightCorona>
       <tailLightMiddleCorona>
-        <size value="0.350000" />
-        <size_far value="0.700000" />
-        <intensity value="0.700000" />
-        <intensity_far value="1.000000" />
-        <color value="0xFFFF0600" />
+        <size value="0.000000" />
+        <size_far value="0.000000" />
+        <intensity value="0.000000" />
+        <intensity_far value="0.000000" />
+        <color value="0x00000000" />
         <numCoronas value="0" />
-        <distBetweenCoronas value="10" />
-        <distBetweenCoronas_far value="10" />
+        <distBetweenCoronas value="128" />
+        <distBetweenCoronas_far value="255" />
         <xRotation value="0.000000" />
         <yRotation value="0.000000" />
         <zRotation value="0.000000" />
-        <zBias value="0.232000" />
+        <zBias value="0.250000" />
         <pullCoronaIn value="false" />
       </tailLightMiddleCorona>
       <headLight>
-        <intensity value="1.500000" />
+        <intensity value="1.000000" />
         <falloffMax value="35.000000" />
         <falloffExponent value="16.000000" />
         <innerConeAngle value="0.000000" />
-        <outerConeAngle value="60.000000" />
+        <outerConeAngle value="60.209999" />
         <emmissiveBoost value="false" />
-        <color value="0xFFB8F0F2" />
-        <textureName>VehicleLight_car_LED1</textureName>
+        <color value="0xFFFFFFCC" />
+        <textureName>VehicleLight_car_standardmodern</textureName>
         <mirrorTexture value="false" />
       </headLight>
       <headLightCorona>
-        <size value="3.000000" />
-        <size_far value="4.000000" />
-        <intensity value="0.900000" />
-        <intensity_far value="1.400000" />
-        <color value="0xFFB8F0F2" />
+        <size value="0.100000" />
+        <size_far value="10.000000" />
+        <intensity value="5.000000" />
+        <intensity_far value="1.000000" />
+        <color value="0xFFFFFFFF" />
         <numCoronas value="1" />
-        <distBetweenCoronas value="0" />
-        <distBetweenCoronas_far value="147" />
+        <distBetweenCoronas value="1" />
+        <distBetweenCoronas_far value="190" />
         <xRotation value="0.000000" />
         <yRotation value="0.000000" />
         <zRotation value="0.000000" />
-        <zBias value="0.232000" />
+        <zBias value="0.250000" />
         <pullCoronaIn value="false" />
       </headLightCorona>
       <reversingLight>
-        <intensity value="0.500000" />
-        <falloffMax value="4.000000" />
+        <intensity value="0.080000" />
+        <falloffMax value="2.000000" />
         <falloffExponent value="32.000000" />
         <innerConeAngle value="45.000000" />
         <outerConeAngle value="90.000000" />
@@ -537,8 +596,8 @@
       <reversingLightCorona>
         <size value="0.000000" />
         <size_far value="0.000000" />
-        <intensity value="0.000000" />
-        <intensity_far value="0.000000" />
+        <intensity value="1.500000" />
+        <intensity_far value="1.000000" />
         <color value="0x00F7F7F7" />
         <numCoronas value="0" />
         <distBetweenCoronas value="128" />
@@ -546,10 +605,11 @@
         <xRotation value="0.000000" />
         <yRotation value="0.000000" />
         <zRotation value="0.000000" />
-        <zBias value="0.000000" />
+        <zBias value="0.250000" />
         <pullCoronaIn value="false" />
       </reversingLightCorona>
-      <name>m4comp</name>
+      <name>macanpd600m</name>
     </Item>
-  </Lights>
+
+    </Lights>
 </CVehicleModelInfoVarGlobal>

@@ -870,6 +870,7 @@ end
 
 function SetVehicleMaxMods(vehicle, tip)
 	local props = {}
+	print(GetNumVehicleMods(vehicle, 16))
 	if tip == 2 then
 		props = {
 			modEngine       = 2,
@@ -879,7 +880,7 @@ function SetVehicleMaxMods(vehicle, tip)
 			modTurbo        = true,
 			wheels 			= 7,
 			modFrontWheels  = 2,
-			modArmor 		= GetNumVehicleMods(vehicle, 16)
+			modArmor 		= GetNumVehicleMods(vehicle, 16)-1
 		}
 	else
 		props = {
@@ -888,12 +889,12 @@ function SetVehicleMaxMods(vehicle, tip)
 			modTransmission = 2,
 			modSuspension   = 3,
 			modTurbo        = true,
-			modArmor 		= GetNumVehicleMods(vehicle, 16)
+			modArmor 		= GetNumVehicleMods(vehicle, 16)-1
 		}
 	end
 
   ESX.Game.SetVehicleProperties(vehicle, props)
-
+  print(GetVehicleMod(vehicle, 16))
 end
 
 function OpenShopMenu(elements, restoreCoords, shopCoords)

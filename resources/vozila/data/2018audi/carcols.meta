@@ -1,33 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<CVehicleModelInfoVarGlobal>     
+<CVehicleModelInfoVarGlobal>    
   <Kits>
     <Item>
-      <kitName>8765_m4comp_modkit</kitName>
-      <id value="8765" />	 	  
+      <kitName>974_a8lfsi_modkit</kitName>
+      <id value="974" />	 	  
       <kitType>MKT_SPECIAL</kitType>
-      <visibleMods>
+      <visibleMods> 
+        <Item>
+          <modelName>a8lfsi_roof_1</modelName>
+          <modShopLabel>MNU_ROOFC</modShopLabel>
+          <linkedModels/>
+          <turnOffBones>
+            <Item>misc_e</Item>
+          </turnOffBones>
+          <type>VMT_ROOF</type>
+          <bone>chassis</bone>
+          <collisionBone>chassis</collisionBone>
+          <cameraPos>VMCP_DEFAULT</cameraPos>
+          <audioApply value="1.00000000"/>
+          <weight value="20"/>
+          <turnOffExtra value="false"/>
+          <disableBonnetCamera value="false"/>
+          <allowBonnetSlide value="true"/>
+        </Item>
       </visibleMods>
-      <linkMods>
-      </linkMods>
+      <linkMods />
       <statMods>
         <Item>
           <identifier />
-          <modifier value="15" />
-          <audioApply value="1.000000" />
-          <weight value="20" />
-          <type>VMT_ENGINE</type>
-        </Item>
-        <Item>
-          <identifier />
-          <modifier value="20" />
-          <audioApply value="1.000000" />
-          <weight value="20" />
-          <type>VMT_ENGINE</type>
-        </Item>
-        <Item>
-          <identifier />
-          <modifier value="35" />
+          <modifier value="25" />
           <audioApply value="1.000000" />
           <weight value="20" />
           <type>VMT_ENGINE</type>
@@ -41,10 +42,17 @@
         </Item>
         <Item>
           <identifier />
-          <modifier value="15" />
+          <modifier value="75" />
           <audioApply value="1.000000" />
-          <weight value="5" />
-          <type>VMT_BRAKES</type>
+          <weight value="20" />
+          <type>VMT_ENGINE</type>
+        </Item>
+        <Item>
+          <identifier />
+          <modifier value="100" />
+          <audioApply value="1.000000" />
+          <weight value="20" />
+          <type>VMT_ENGINE</type>
         </Item>
         <Item>
           <identifier />
@@ -55,28 +63,35 @@
         </Item>
         <Item>
           <identifier />
-          <modifier value="50" />
+          <modifier value="65" />
           <audioApply value="1.000000" />
           <weight value="5" />
           <type>VMT_BRAKES</type>
         </Item>
         <Item>
           <identifier />
-          <modifier value="15" />
+          <modifier value="100" />
+          <audioApply value="1.000000" />
+          <weight value="5" />
+          <type>VMT_BRAKES</type>
+        </Item>
+        <Item>
+          <identifier />
+          <modifier value="25" />
           <audioApply value="1.000000" />
           <weight value="5" />
           <type>VMT_GEARBOX</type>
         </Item>
         <Item>
           <identifier />
-          <modifier value="20" />
+          <modifier value="50" />
           <audioApply value="1.000000" />
           <weight value="5" />
           <type>VMT_GEARBOX</type>
         </Item>
         <Item>
           <identifier />
-          <modifier value="80" />
+          <modifier value="100" />
           <audioApply value="1.000000" />
           <weight value="5" />
           <type>VMT_GEARBOX</type>
@@ -118,7 +133,7 @@
         </Item>
         <Item>
           <identifier>HORN_TRUCK</identifier>
-          <modifier value="1766676653" />
+          <modifier value="1766676233" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_HORN</type>
@@ -387,48 +402,52 @@
         </Item>
         <Item>
           <identifier />
-          <modifier value="5" />
+          <modifier value="1" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_SUSPENSION</type>
         </Item>
         <Item>
           <identifier />
-          <modifier value="10" />
+          <modifier value="2" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_SUSPENSION</type>
         </Item>
         <Item>
           <identifier />
-          <modifier value="15" />
+          <modifier value="3" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_SUSPENSION</type>
         </Item>
         <Item>
           <identifier />
-          <modifier value="20" />
+          <modifier value="4" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_SUSPENSION</type>
         </Item>
       </statMods>
       <slotNames />
+        <Item>
+          <slot>VMT_CHASSIS</slot>
+          <name>TOP_CAGE</name>
+        </Item>
       <liveryNames />
     </Item>
   </Kits>
-  <Lights>
-    <Item>
-      <id value="7663" />	
+    <Lights>
+	<Item>
+      <id value="974" />
       <indicator>
-        <intensity value="0.575000" />
+        <intensity value="0.375000" />
         <falloffMax value="2.500000" />
         <falloffExponent value="8.000000" />
-        <innerConeAngle value="30.000000" />
-        <outerConeAngle value="80.000000" />
-        <emmissiveBoost value="false" />
-        <color value="0xFFFF8000" />
+        <innerConeAngle value="20.000000" />
+        <outerConeAngle value="50.000000" />
+        <emmissiveBoost value="true" />
+        <color value="0xfff2730c" />
       </indicator>
       <rearIndicatorCorona>
         <size value="0.000000" />
@@ -436,7 +455,7 @@
         <intensity value="0.000000" />
         <intensity_far value="0.000000" />
         <color value="0x00000000" />
-        <numCoronas value="0" />
+        <numCoronas value="1" />
         <distBetweenCoronas value="128" />
         <distBetweenCoronas_far value="255" />
         <xRotation value="0.000000" />
@@ -451,7 +470,7 @@
         <intensity value="0.000000" />
         <intensity_far value="0.000000" />
         <color value="0x00000000" />
-        <numCoronas value="0" />
+        <numCoronas value="1" />
         <distBetweenCoronas value="128" />
         <distBetweenCoronas_far value="255" />
         <xRotation value="0.000000" />
@@ -470,64 +489,64 @@
         <color value="0xFFFF0000" />
       </tailLight>
       <tailLightCorona>
-        <size value="2.900000" />
-        <size_far value="3.100000" />
-        <intensity value="0.200000" />
-        <intensity_far value="0.250000" />
-        <color value="0xFFFF0600" />
+        <size value="0.000000" />
+        <size_far value="0.000000" />
+        <intensity value="5.000000" />
+        <intensity_far value="1.000000" />
+        <color value="0xFFFF0F05" />
         <numCoronas value="0" />
-        <distBetweenCoronas value="42" />
-        <distBetweenCoronas_far value="12" />
+        <distBetweenCoronas value="1" />
+        <distBetweenCoronas_far value="56" />
         <xRotation value="0.000000" />
-        <yRotation value="0.000000" />
-        <zRotation value="0.000000" />
-        <zBias value="0.232000" />
+        <yRotation value="1.747000" />
+        <zRotation value="5.906000" />
+        <zBias value="0.250000" />
         <pullCoronaIn value="false" />
       </tailLightCorona>
       <tailLightMiddleCorona>
-        <size value="0.350000" />
-        <size_far value="0.700000" />
-        <intensity value="0.700000" />
-        <intensity_far value="1.000000" />
-        <color value="0xFFFF0600" />
+        <size value="0.000000" />
+        <size_far value="0.000000" />
+        <intensity value="0.000000" />
+        <intensity_far value="0.000000" />
+        <color value="0x00000000" />
         <numCoronas value="0" />
-        <distBetweenCoronas value="10" />
-        <distBetweenCoronas_far value="10" />
+        <distBetweenCoronas value="128" />
+        <distBetweenCoronas_far value="255" />
         <xRotation value="0.000000" />
         <yRotation value="0.000000" />
         <zRotation value="0.000000" />
-        <zBias value="0.232000" />
+        <zBias value="0.250000" />
         <pullCoronaIn value="false" />
       </tailLightMiddleCorona>
       <headLight>
-        <intensity value="1.500000" />
-        <falloffMax value="35.000000" />
+        <intensity value="0.800000" />
+        <falloffMax value="30.000000" />
         <falloffExponent value="16.000000" />
         <innerConeAngle value="0.000000" />
-        <outerConeAngle value="60.000000" />
+        <outerConeAngle value="60.209999" />
         <emmissiveBoost value="false" />
-        <color value="0xFFB8F0F2" />
-        <textureName>VehicleLight_car_LED1</textureName>
+        <color value="0xFF7FA7E3" />
+        <textureName>VehicleLight_car_standardmodern</textureName>
         <mirrorTexture value="false" />
       </headLight>
       <headLightCorona>
-        <size value="3.000000" />
-        <size_far value="4.000000" />
-        <intensity value="0.900000" />
-        <intensity_far value="1.400000" />
-        <color value="0xFFB8F0F2" />
+        <size value="0.100000" />
+        <size_far value="0.100000" />
+        <intensity value="2.000000" />
+        <intensity_far value="1.000000" />
+        <color value="0xFFd1fbff" />
         <numCoronas value="1" />
-        <distBetweenCoronas value="0" />
-        <distBetweenCoronas_far value="147" />
+        <distBetweenCoronas value="128" />
+        <distBetweenCoronas_far value="255" />
         <xRotation value="0.000000" />
         <yRotation value="0.000000" />
         <zRotation value="0.000000" />
-        <zBias value="0.232000" />
+        <zBias value="0.250000" />
         <pullCoronaIn value="false" />
       </headLightCorona>
       <reversingLight>
-        <intensity value="0.500000" />
-        <falloffMax value="4.000000" />
+        <intensity value="0.030000" />
+        <falloffMax value="2.000000" />
         <falloffExponent value="32.000000" />
         <innerConeAngle value="45.000000" />
         <outerConeAngle value="90.000000" />
@@ -537,8 +556,8 @@
       <reversingLightCorona>
         <size value="0.000000" />
         <size_far value="0.000000" />
-        <intensity value="0.000000" />
-        <intensity_far value="0.000000" />
+        <intensity value="1.500000" />
+        <intensity_far value="1.000000" />
         <color value="0x00F7F7F7" />
         <numCoronas value="0" />
         <distBetweenCoronas value="128" />
@@ -546,10 +565,11 @@
         <xRotation value="0.000000" />
         <yRotation value="0.000000" />
         <zRotation value="0.000000" />
-        <zBias value="0.000000" />
+        <zBias value="0.250000" />
         <pullCoronaIn value="false" />
       </reversingLightCorona>
-      <name>m4comp</name>
+      <name>a8lfsi</name>
     </Item>
-  </Lights>
+
+    </Lights>
 </CVehicleModelInfoVarGlobal>

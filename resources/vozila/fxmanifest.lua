@@ -119,7 +119,6 @@ data_file 'VEHICLE_VARIATION_FILE' 'data/audiS8Policijski/carvariations.meta'
 
 data_file 'HANDLING_FILE' 'data/BMWe90/handling.meta'
 data_file 'VEHICLE_METADATA_FILE' 'data/BMWe90/vehicles.meta'
-data_file 'CARCOLS_FILE' 'data/BMWe90/carcols.meta'
 data_file 'VEHICLE_VARIATION_FILE' 'data/BMWe90/carvariations.meta'
 
 data_file 'HANDLING_FILE' 'data/bmwx5/handling.meta'
@@ -721,3 +720,28 @@ data_file 'HANDLING_FILE' 'data/urus/handling.meta'
 data_file 'VEHICLE_METADATA_FILE' 'data/urus/vehicles.meta'
 data_file 'CARCOLS_FILE' 'data/urus/carcols.meta'
 data_file 'VEHICLE_VARIATION_FILE' 'data/urus/carvariations.meta'
+
+data_file 'HANDLING_FILE' 'data/pickup/handling.meta'
+data_file 'VEHICLE_METADATA_FILE' 'data/pickup/vehicles.meta'
+data_file 'CARCOLS_FILE' 'data/pickup/carcols.meta'
+data_file 'VEHICLE_VARIATION_FILE' 'data/pickup/carvariations.meta'
+
+data_file 'HANDLING_FILE' 'data/2018audi/handling.meta'
+data_file 'VEHICLE_METADATA_FILE' 'data/2018audi/vehicles.meta'
+data_file 'CARCOLS_FILE' 'data/2018audi/carcols.meta'
+data_file 'VEHICLE_VARIATION_FILE' 'data/2018audi/carvariations.meta'
+
+data_file 'HANDLING_FILE' 'data/rols/handling.meta'
+data_file 'VEHICLE_METADATA_FILE' 'data/rols/vehicles.meta'
+data_file 'CARCOLS_FILE' 'data/rols/carcols.meta'
+data_file 'VEHICLE_VARIATION_FILE' 'data/rols/carvariations.meta'
+
+data_file 'HANDLING_FILE' 'data/macanpd600m/handling.meta'
+data_file 'VEHICLE_METADATA_FILE' 'data/macanpd600m/vehicles.meta'
+data_file 'CARCOLS_FILE' 'data/macanpd600m/carcols.meta'
+data_file 'VEHICLE_VARIATION_FILE' 'data/macanpd600m/carvariations.meta'
+
+data_file 'HANDLING_FILE' 'data/raptor/handling.meta'
+data_file 'VEHICLE_METADATA_FILE' 'data/raptor/vehicles.meta'
+data_file 'CARCOLS_FILE' 'data/raptor/carcols.meta'
+data_file 'VEHICLE_VARIATION_FILE' 'data/raptor/carvariations.meta'
