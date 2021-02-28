@@ -207,6 +207,7 @@ AddEventHandler('zone:UpdateBoju', function(ime, boja, maf, label)
 		if Zone[i].Ime == ime then
 			Zone[i].Boja = boja
 			Zone[i].Vlasnik = maf
+			Zone[i].Label = label
 			break
 		end
 	end
