@@ -967,9 +967,9 @@ AddEventHandler('mafije:IsplatiSve', function(maf)
 		TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
 			societyAccount = account
 		end)
-		societyAccount.addMoney(80000)
+		societyAccount.addMoney(160000)
 		societyAccount.save()
-		xPlayer.showNotification("Vasa mafija je dobila 80000$ od prodaje 300kg kokaina!")
+		xPlayer.showNotification("Vasa mafija je dobila 160000$ od prodaje 300kg kokaina!")
 	end
 end)
 
