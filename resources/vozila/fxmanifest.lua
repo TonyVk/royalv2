@@ -745,3 +745,8 @@ data_file 'HANDLING_FILE' 'data/raptor/handling.meta'
 data_file 'VEHICLE_METADATA_FILE' 'data/raptor/vehicles.meta'
 data_file 'CARCOLS_FILE' 'data/raptor/carcols.meta'
 data_file 'VEHICLE_VARIATION_FILE' 'data/raptor/carvariations.meta'
+
+data_file 'HANDLING_FILE' 'data/duja/handling.meta'
+data_file 'VEHICLE_METADATA_FILE' 'data/duja/vehicles.meta'
+data_file 'CARCOLS_FILE' 'data/duja/carcols.meta'
+data_file 'VEHICLE_VARIATION_FILE' 'data/duja/carvariations.meta'

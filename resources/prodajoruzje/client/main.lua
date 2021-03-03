@@ -256,6 +256,16 @@ RegisterCommand("lc", function(source, args, rawCommandString)
 	end
 end, false)
 
+RegisterCommand("aduty", function(source, args, rawCommandString)
+	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if perm == 1 then
+			SetEntityCoords(PlayerPedId(), -889.0873413086, -432.51022338868, 88.263557434082)
+		else
+			ESX.ShowNotification("Nemate pristup ovoj komandi!")
+		end
+	--end)
+end, false)
+
 local beba = false
 
 RegisterCommand("beba", function(source, args, rawCommandString)

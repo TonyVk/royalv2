@@ -143,6 +143,7 @@ Citizen.CreateThread(function()
 		
         --Here you can add hover text for the "large" icon.
         SetDiscordRichPresenceAssetText('https://discord.gg/hugo')
+		SetDiscordRichPresenceAction(0, "Pridruži se", "fivem://connect/cfx.re/join/49xa88")
 		while ESX == nil do
 			Wait(0)
 		end

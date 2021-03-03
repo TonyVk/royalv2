@@ -2289,18 +2289,11 @@ function OpenIdentityCardMenu(player)
 
     ESX.TriggerServerCallback('mafije:getOtherPlayerData', function(data)
 
-      local jobLabel    = nil
       local sexLabel    = nil
       local sex         = nil
       local dobLabel    = nil
       local heightLabel = nil
       local idLabel     = nil
-
-      if data.job.grade_label ~= nil and  data.job.grade_label ~= '' then
-        jobLabel = 'Posao : ' .. data.job.label .. ' - ' .. data.job.grade_label
-      else
-        jobLabel = 'Posao : ' .. data.job.label
-      end
 
       if data.sex ~= nil then
         if (data.sex == 'm') or (data.sex == 'M') then
@@ -2336,7 +2329,6 @@ function OpenIdentityCardMenu(player)
         {label = sexLabel,    value = nil},
         {label = dobLabel,    value = nil},
         {label = heightLabel, value = nil},
-        {label = jobLabel,    value = nil},
         {label = idLabel,     value = nil},
       }
 
@@ -2375,17 +2367,8 @@ function OpenIdentityCardMenu(player)
 
     ESX.TriggerServerCallback('mafije:getOtherPlayerData', function(data)
 
-      local jobLabel = nil
-
-      if data.job.grade_label ~= nil and  data.job.grade_label ~= '' then
-        jobLabel = 'Job : ' .. data.job.label .. ' - ' .. data.job.grade_label
-      else
-        jobLabel = 'Job : ' .. data.job.label
-      end
-
         local elements = {
-          {label = _U('name') .. data.name, value = nil},
-          {label = jobLabel,              value = nil},
+          {label = _U('name') .. data.name, value = nil}
         }
 
       if data.drunk ~= nil then
