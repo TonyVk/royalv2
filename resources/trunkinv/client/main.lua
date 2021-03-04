@@ -462,7 +462,7 @@ AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
 	end
 	
 	
-
+	SetCurrentPedWeapon(PlayerPedId(), GetHashKey("WEAPON_UNARMED"), true)
 	ESX.UI.Menu.Open(
 	  'default', GetCurrentResourceName(), 'inventory_deposit',
 	  {
@@ -597,6 +597,16 @@ AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
 				if tablica ~= nil then
 					TriggerServerEvent('gepeke:addInventoryItem', GetVehicleClass(closecar), GetDisplayNameFromVehicleModel(GetEntityModel(closecar)), tablica, data3.current.value, quantity, data3.current.name, data3.current.type, ownedV)
 					ESX.ShowNotification('Tezina gepeka : ~g~'.. Kgweight .. ' Kg / '..MaxVh..' Kg')
+					menu.close()
+					menu3.close()
+					RequestAnimDict("mini@repair")
+					while not HasAnimDictLoaded( "mini@repair") do
+						Citizen.Wait(1)
+					end
+
+					TaskPlayAnim(GetPlayerPed(-1), "mini@repair" ,"fixing_a_ped" ,8.0, -8.0, -1, 0, 0, false, false, false )
+					Citizen.Wait(4000)
+					ClearPedTasksImmediately(GetPlayerPed(-1))
 					Citizen.Wait(500)
 					TriggerServerEvent("gepeke:getInventory", GetVehicleNumberPlateText(closecar))
 				else
@@ -665,6 +675,16 @@ AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
 						if tablica ~= nil then
 							TriggerServerEvent('gepeke:addInventoryItem', GetVehicleClass(closecar), GetDisplayNameFromVehicleModel(GetEntityModel(closecar)), tablica, data3.current.value, data3.current.count, data3.current.name, data3.current.type, ownedV)
 							ESX.ShowNotification('Tezina gepeka : ~g~'.. Kgweight .. ' Kg / '..MaxVh..' Kg')
+							menu.close()
+							menu3.close()
+							RequestAnimDict("mini@repair")
+							while not HasAnimDictLoaded( "mini@repair") do
+								Citizen.Wait(1)
+							end
+
+							TaskPlayAnim(GetPlayerPed(-1), "mini@repair" ,"fixing_a_ped" ,8.0, -8.0, -1, 0, 0, false, false, false )
+							Citizen.Wait(4000)
+							ClearPedTasksImmediately(GetPlayerPed(-1))
 							Citizen.Wait(500)
 							TriggerServerEvent("gepeke:getInventory", GetVehicleNumberPlateText(closecar))
 						else
@@ -743,11 +763,20 @@ AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
 						local waitara = math.random(200,800)
 						Wait(waitara)
 						TriggerServerEvent('gepeke:removeInventoryItem', GetVehicleNumberPlateText(vehFront), data.current.value, data.current.type, quantity)
+						menu.close()
 						local MaxVh =(tonumber(DajTezinu(vehFront))/1000)
 						local Itemweight =tonumber(getItemyWeight(data.current.value)) * quantity
 						local totalweight = tonumber(weight) - Itemweight
 						local Kgweight =  totalweight/1000
 						ESX.ShowNotification('Vasa tezina : ~g~'.. Kgweight .. ' Kg / '..MaxVh..' Kg')
+						RequestAnimDict("mini@repair")
+						while not HasAnimDictLoaded( "mini@repair") do
+							Citizen.Wait(1)
+						end
+
+						TaskPlayAnim(GetPlayerPed(-1), "mini@repair" ,"fixing_a_ped" ,8.0, -8.0, -1, 0, 0, false, false, false )
+						Citizen.Wait(4000)
+						ClearPedTasksImmediately(GetPlayerPed(-1))
 					else
 						ESX.ShowNotification('~r~ Vec nosite previse stvari!')
 					end
@@ -803,11 +832,20 @@ AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
 								local waitara = math.random(200,800)
 								Wait(waitara)
 								TriggerServerEvent('gepeke:removeInventoryItem', GetVehicleNumberPlateText(vehFront), data.current.value, data.current.type, quantity)
+								menu.close()
 								local MaxVh =(tonumber(DajTezinu(vehFront))/1000)
 								local Itemweight =tonumber(getItemyWeight(data.current.value)) * quantity
 								local totalweight = tonumber(weight) - Itemweight
 								local Kgweight =  totalweight/1000
 								ESX.ShowNotification('Vasa tezina : ~g~'.. Kgweight .. ' Kg / '..MaxVh..' Kg')
+								RequestAnimDict("mini@repair")
+								while not HasAnimDictLoaded( "mini@repair") do
+									Citizen.Wait(1)
+								end
+
+								TaskPlayAnim(GetPlayerPed(-1), "mini@repair" ,"fixing_a_ped" ,8.0, -8.0, -1, 0, 0, false, false, false )
+								Citizen.Wait(4000)
+								ClearPedTasksImmediately(GetPlayerPed(-1))
 							else
 							  ESX.ShowNotification('~r~ Vec nosite previse stvari!')
 							end

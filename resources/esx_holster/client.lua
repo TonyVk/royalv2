@@ -246,6 +246,56 @@ AddEventHandler("playerSpawned", function()
 	end
 end)
 
+RegisterNetEvent('esx:addWeapon')
+AddEventHandler("esx:addWeapon", function(source, weaponName, ammo)
+	local me = GetPlayerPed(-1)
+	---------------------------------------
+	-- attach if player has large weapon --
+	---------------------------------------
+	for wep_name, wep_hash in pairs(SETTINGS.compatable_weapon_hashes) do
+		if HasPedGotWeapon(me, wep_hash, false) then
+			if not attached_weapons[wep_name] then
+				AttachWeapon(wep_name, wep_hash, SETTINGS.back_bone, SETTINGS.x, SETTINGS.y, SETTINGS.z, SETTINGS.x_rotation, SETTINGS.y_rotation, SETTINGS.z_rotation, isMeleeWeapon(wep_name))
+			end
+		end
+	end
+	--------------------------------------------
+	-- remove from back if equipped / dropped --
+	--------------------------------------------
+	for name, attached_object in pairs(attached_weapons) do
+		-- equipped? delete it from back:
+		if GetSelectedPedWeapon(me) ==  attached_object.hash or not HasPedGotWeapon(me, attached_object.hash, false) then -- equipped or not in weapon wheel
+			DeleteObject(attached_object.handle)
+			attached_weapons[name] = nil
+		end
+	end
+end)
+
+RegisterNetEvent('esx:removeWeapon')
+AddEventHandler("esx:removeWeapon", function(source, weaponName, ammo)
+	local me = GetPlayerPed(-1)
+	---------------------------------------
+	-- attach if player has large weapon --
+	---------------------------------------
+	for wep_name, wep_hash in pairs(SETTINGS.compatable_weapon_hashes) do
+		if HasPedGotWeapon(me, wep_hash, false) then
+			if not attached_weapons[wep_name] then
+				AttachWeapon(wep_name, wep_hash, SETTINGS.back_bone, SETTINGS.x, SETTINGS.y, SETTINGS.z, SETTINGS.x_rotation, SETTINGS.y_rotation, SETTINGS.z_rotation, isMeleeWeapon(wep_name))
+			end
+		end
+	end
+	--------------------------------------------
+	-- remove from back if equipped / dropped --
+	--------------------------------------------
+	for name, attached_object in pairs(attached_weapons) do
+		-- equipped? delete it from back:
+		if GetSelectedPedWeapon(me) ==  attached_object.hash or not HasPedGotWeapon(me, attached_object.hash, false) then -- equipped or not in weapon wheel
+			DeleteObject(attached_object.handle)
+			attached_weapons[name] = nil
+		end
+	end
+end)
+
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
