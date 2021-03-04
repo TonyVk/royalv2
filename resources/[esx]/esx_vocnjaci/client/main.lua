@@ -50,11 +50,21 @@ function firstToUpper(str)
     return (str:gsub("^%l", string.upper))
 end
 
-function OpenVocnjakMenu()
+function OpenVocnjakMenu(ime)
     local elements = {}
-	table.insert(elements, {label = "Posadi drvo", value = 'posadi'})
-	table.insert(elements, {label = "Beri drvo", value = 'beri'})
-	
+	local cijena = 0
+	ESX.TriggerServerCallback('vocnjaci:JelVlasnik', function(br, cij)
+		if br then
+			table.insert(elements, {label = "Posadi drvo", value = 'posadi'})
+			table.insert(elements, {label = "Beri drvo", value = 'beri'})
+		else
+			table.insert(elements, {label = "Kupi za $"..cij, value = 'kupi'})
+		end
+		cijena = cij
+	end, ime)
+	while #elements == 0 do
+		Wait(100)
+	end
     ESX.UI.Menu.Open(
       'default', GetCurrentResourceName(), 'vocnjak',
       {
@@ -77,12 +87,53 @@ function OpenVocnjakMenu()
 			Drvo = CreateObject(model, x, y, z-1.6, true, true, false)
 			FreezeEntityPosition(Drvo, true)
 		elseif data.current.value == 'beri' then
+			RequestAnimDict("random@mugging5")
+			while not HasAnimDictLoaded("random@mugging5") do
+				Wait(1)
+			end
 			local br = 0
 			while br < 5 do
 				TaskPlayAnim(GetPlayerPed(-1), "random@mugging5", "001445_01_gangintimidation_1_female_idle_b", 2.0, 2.0, 3000, false, 0, false, false, false)
 				Wait(3000)
 				br = br+1
 			end
+		elseif data.current.value == 'kupi' then
+			local elements2 = {
+				{label = "Da", value = 'da'},
+				{label = "Ne", value = 'ne'}
+			}
+			ESX.UI.Menu.Open(
+			  'default', GetCurrentResourceName(), 'vocnjak2',
+			  {
+				title    = "Zelite li kupiti vocnjak za $"..cijena.."?",
+				align    = 'top-left',
+				elements = elements2,
+			  },
+			  function(data2, menu2)
+				if data2.current.value == 'da' then
+					TriggerServerEvent("vocnjaci:Kupi", ime)
+					menu2.close()
+					menu.close()
+					CurrentAction     = 'menu_vocnjak'
+					CurrentActionMsg  = "Pritisnite E da vidite opcije vocnjaka"
+					CurrentActionData = {ime = ime}
+				elseif data2.current.value == 'ne' then
+					menu2.close()
+					menu.close()
+					CurrentAction     = 'menu_vocnjak'
+					CurrentActionMsg  = "Pritisnite E da vidite opcije vocnjaka"
+					CurrentActionData = {ime = ime}
+				end
+			  end,
+			  function(data2, menu2)
+
+				menu2.close()
+
+				CurrentAction     = 'menu_vocnjak'
+				CurrentActionMsg  = "Pritisnite E da vidite opcije vocnjaka"
+				CurrentActionData = {ime = ime}
+			  end
+			)
         end
       end,
       function(data, menu)
@@ -91,12 +142,12 @@ function OpenVocnjakMenu()
 
         CurrentAction     = 'menu_vocnjak'
 		CurrentActionMsg  = "Pritisnite E da vidite opcije vocnjaka"
-		CurrentActionData = {}
+		CurrentActionData = {ime = ime}
       end
     )
 end
 
-RegisterCommand("uredimafiju", function(source, args, raw)
+RegisterCommand("uredivocnjak", function(source, args, raw)
 	local elements = {}
 	
 	for i=1, #njive, 1 do
@@ -711,7 +762,7 @@ AddEventHandler('vocnjaci:hasEnteredMarker', function(station, part, partNum)
   if part == 'Vocnjak' then
     CurrentAction     = 'menu_vocnjak'
     CurrentActionMsg  = "Pritisnite E da vidite opcije vocnjaka"
-    CurrentActionData = {}
+    CurrentActionData = {ime = partNum}
   end
 end)
 
@@ -743,7 +794,7 @@ Citizen.CreateThread(function()
 			if IsControlPressed(0,  Keys['E']) and (GetGameTimer() - GUI.Time) > 150 then
 
 				if CurrentAction == 'menu_vocnjak' then
-					OpenVocnjakMenu()
+					OpenVocnjakMenu(CurrentActionData.ime)
 				end
 				CurrentAction = nil
 				GUI.Time      = GetGameTimer()
@@ -766,7 +817,7 @@ Citizen.CreateThread(function()
 							isInMarker     = true
 							currentStation = 1
 							currentPart    = 'Vocnjak'
-							currentPartNum = i
+							currentPartNum = Koord[i].Vocnjak
 						end
 					end
 				end
