@@ -88,19 +88,19 @@ AddEventHandler('prodajoruzje:KoiKuracJeOvo', function(br)
 	local src = source
 	if Grebalice[src] then
 		local xPlayer = ESX.GetPlayerFromId(src)
-		if br == 0 then
+		if br == 3 then
 			xPlayer.addMoney(25000)
-		elseif br == 1 then
+		elseif br == 7 then
 			xPlayer.addMoney(35000)
-		elseif br == 2 then
+		elseif br == 11 then
 			xPlayer.addMoney(45000)
-		elseif br == 3 then
+		elseif br == 15 then
 			xPlayer.addMoney(55000)
 		end
 		Grebalice[src] = false
 	else
 		TriggerEvent("DiscordBot:Anticheat", GetPlayerName(src).."["..src.."] je pokusao pozvati event za nagradu grebalice, a nije iskoristio grebalicu!")
-	    --TriggerEvent("AntiCheat:Citer", src)
+	    TriggerEvent("AntiCheat:Citer", src)
 	end
 end)
 
