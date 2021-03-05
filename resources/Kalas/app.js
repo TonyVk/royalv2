@@ -170,7 +170,7 @@ window.onload = function () {
 				console.log(coords2.top);
 				let bot = 0;
 				if(broj == 0){
-					bot = coords.bottom-61;
+					bot = coords.bottom-60;
 				}
 				else if(broj == 1){
 					bot = coords.bottom-90;
@@ -194,7 +194,7 @@ window.onload = function () {
 					bot = coords.bottom-100;
 				}
 				else if(broj == 1){
-					bot = coords.bottom-84;
+					bot = coords.bottom-82;
 				}
 				if(coords2.top >= coords.top && coords2.top <= bot && coords2.left >= coords.left && coords2.left <= coords.bottomRight){
 					console.info("inside");
