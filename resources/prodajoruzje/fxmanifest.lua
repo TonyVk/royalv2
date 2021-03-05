@@ -16,3 +16,12 @@ client_scripts {
   '@es_extended/locale.lua',
   'client/main.lua'
 }
+
+ui_page 'html/ui.html'
+
+files {
+	'html/ui.html',
+	'html/app.js',
+	'html/main.css',
+	'html/ralesrecka.png'
+}

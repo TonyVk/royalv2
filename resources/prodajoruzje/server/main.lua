@@ -1,4 +1,5 @@
 ESX = nil
+local Grebalice = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -70,6 +71,38 @@ ESX.RegisterUsableItem("petarde", function(source)
 	TriggerClientEvent('prodajoruzje:petarde', _source)
 end)
 
+ESX.RegisterUsableItem("grebalica", function(source)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	local oprema = xPlayer.getInventoryItem("grebalica").count
+	if oprema > 0 then
+		TriggerClientEvent("esx_invh:closeinv", _source)
+		Grebalice[_source] = true
+		xPlayer.removeInventoryItem("grebalica", 1)
+		TriggerClientEvent('prodajoruzje:grebalica', _source)
+	end
+end)
+
+RegisterNetEvent("prodajoruzje:KoiKuracJeOvo")
+AddEventHandler('prodajoruzje:KoiKuracJeOvo', function(br)
+	local src = source
+	if Grebalice[src] then
+		local xPlayer = ESX.GetPlayerFromId(src)
+		if br == 0 then
+			xPlayer.addMoney(25000)
+		elseif br == 1 then
+			xPlayer.addMoney(35000)
+		elseif br == 2 then
+			xPlayer.addMoney(45000)
+		elseif br == 3 then
+			xPlayer.addMoney(55000)
+		end
+		Grebalice[src] = false
+	else
+		TriggerEvent("DiscordBot:Anticheat", GetPlayerName(src).."["..src.."] je pokusao pozvati event za nagradu grebalice, a nije iskoristio grebalicu!")
+	    --TriggerEvent("AntiCheat:Citer", src)
+	end
+end)
 
 ESX.RegisterUsableItem("petarda", function(source)
 	local _source = source

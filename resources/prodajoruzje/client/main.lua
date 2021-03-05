@@ -178,6 +178,22 @@ AddEventHandler('ronjenje:PocniRonit', function()
 	end
 end)
 
+RegisterNetEvent('prodajoruzje:grebalica')
+AddEventHandler('prodajoruzje:grebalica', function()
+	SendNUIMessage({
+		prikazi = true
+	})
+	SetNuiFocus(true, true)
+end)
+
+RegisterNUICallback(
+    "kraj",
+    function(data, cb)
+		SetNuiFocus(false)
+		TriggerServerEvent("prodajoruzje:KoiKuracJeOvo", data.broj)
+    end
+)
+
 RegisterNetEvent('prodajoruzje:petarde')
 AddEventHandler('prodajoruzje:petarde', function()
 			local modele = "prop_cs_dildo_01"
