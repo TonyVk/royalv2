@@ -69,11 +69,14 @@ window.onload = function () {
 		var moze2 = true;
 		var moze3 = true;
 		var moze4 = true;
+		var rand = Math.floor(Math.random() * 2);
+		var broj = rand;
+		document.querySelectorAll('.form')[rand].style.display = 'block';
 		
-		div = document.getElementsByClassName("infodiv")[0];
-		div2 = document.getElementsByClassName("infodiv2")[0];
-		div3 = document.getElementsByClassName("infodiv3")[0];
-		div4 = document.getElementsByClassName("infodiv4")[0];
+		div = document.getElementsByClassName("infodiv")[broj];
+		div2 = document.getElementsByClassName("infodiv2")[broj];
+		div3 = document.getElementsByClassName("infodiv3")[broj];
+		div4 = document.getElementsByClassName("infodiv4")[broj];
 		
 		div.addEventListener('mousedown', function(e) {
 			if(moze){
@@ -117,13 +120,20 @@ window.onload = function () {
 
 		document.addEventListener('mouseup', function() {
 			if(isDown == 1){
-				var coords = $('#infodiv7').position();
-				var coords2 = $('.infodiv').eq(0).position();
-				coords.bottom = coords.top + $('#infodiv7').height();
-				coords.bottomRight = coords.left + $('#infodiv7').width();
+				var coords = $('.infodiv7').eq(broj).position();
+				var coords2 = $('.infodiv').eq(broj).position();
+				coords.bottom = coords.top + $('.infodiv7').eq(broj).height();
+				coords.bottomRight = coords.left + $('.infodiv7').eq(broj).width();
 				console.log(coords.bottom);
 				console.log(coords2.top);
-				if(coords2.top >= coords.top && coords2.top <= (coords.bottom-75) && coords2.left >= coords.left && coords2.left <= coords.bottomRight){
+				let bot = 0;
+				if(broj == 0){
+					bot = coords.bottom-75;
+				}
+				else if(broj == 1){
+					bot = coords.bottom-91;
+				}
+				if(coords2.top >= coords.top && coords2.top <= bot && coords2.left >= coords.left && coords2.left <= coords.bottomRight){
 					console.info("inside");
 					moze = false;
 				}else{
@@ -131,13 +141,20 @@ window.onload = function () {
 				}
 			}
 			else if(isDown == 2){
-				var coords = $('#infodiv5').position();
-				var coords2 = $('.infodiv2').eq(0).position();
-				coords.bottom = coords.top + $('#infodiv5').height();
-				coords.bottomRight = coords.left + $('#infodiv5').width();
+				var coords = $('.infodiv5').eq(broj).position();
+				var coords2 = $('.infodiv2').eq(broj).position();
+				coords.bottom = coords.top + $('.infodiv5').eq(broj).height();
+				coords.bottomRight = coords.left + $('.infodiv5').eq(broj).width();
 				console.log(coords.bottom);
 				console.log(coords2.top);
-				if(coords2.top >= coords.top && coords2.top <= (coords.bottom-121) && coords2.left >= coords.left && coords2.left <= coords.bottomRight){
+				let bot = 0;
+				if(broj == 0){
+					bot = coords.bottom-121;
+				}
+				else if(broj == 1){
+					bot = coords.bottom-185;
+				}
+				if(coords2.top >= coords.top && coords2.top <= bot && coords2.left >= coords.left && coords2.left <= coords.bottomRight){
 					console.info("inside");
 					moze2 = false;
 				}else{
@@ -145,13 +162,20 @@ window.onload = function () {
 				}
 			}
 			else if(isDown == 3){
-				var coords = $('#infodiv6').position();
-				var coords2 = $('.infodiv3').eq(0).position();
-				coords.bottom = coords.top + $('#infodiv6').height();
-				coords.bottomRight = coords.left + $('#infodiv6').width();
+				var coords = $('.infodiv6').eq(broj).position();
+				var coords2 = $('.infodiv3').eq(broj).position();
+				coords.bottom = coords.top + $('.infodiv6').eq(broj).height();
+				coords.bottomRight = coords.left + $('.infodiv6').eq(broj).width();
 				console.log(coords.bottom);
 				console.log(coords2.top);
-				if(coords2.top >= coords.top && coords2.top <= (coords.bottom-63) && coords2.left >= coords.left && coords2.left <= coords.bottomRight){
+				let bot = 0;
+				if(broj == 0){
+					bot = coords.bottom-61;
+				}
+				else if(broj == 1){
+					bot = coords.bottom-90;
+				}
+				if(coords2.top >= coords.top && coords2.top <= bot && coords2.left >= coords.left && coords2.left <= coords.bottomRight){
 					console.info("inside");
 					moze3 = false;
 				}else{
@@ -159,13 +183,20 @@ window.onload = function () {
 				}
 			}
 			else if(isDown == 4){
-				var coords = $('#infodiv8').position();
-				var coords2 = $('.infodiv4').eq(0).position();
-				coords.bottom = coords.top + $('#infodiv8').height();
-				coords.bottomRight = coords.left + $('#infodiv8').width();
+				var coords = $('.infodiv8').eq(broj).position();
+				var coords2 = $('.infodiv4').eq(broj).position();
+				coords.bottom = coords.top + $('.infodiv8').eq(broj).height();
+				coords.bottomRight = coords.left + $('.infodiv8').eq(broj).width();
 				console.log(coords.bottom);
 				console.log(coords2.top);
-				if(coords2.top >= coords.top && coords2.top <= (coords.bottom-100) && coords2.left >= coords.left && coords2.left <= coords.bottomRight){
+				let bot = 0;
+				if(broj == 0){
+					bot = coords.bottom-100;
+				}
+				else if(broj == 1){
+					bot = coords.bottom-84;
+				}
+				if(coords2.top >= coords.top && coords2.top <= bot && coords2.left >= coords.left && coords2.left <= coords.bottomRight){
 					console.info("inside");
 					moze4 = false;
 				}else{

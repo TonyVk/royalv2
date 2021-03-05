@@ -25,6 +25,7 @@
   height: 300px;
   position: absolute;
   background-color: white;
+  background-image: url(ralesrecka.png);
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -34,7 +35,7 @@
 
 .canvas {
   position: absolute;
-  top: 0;
+  z-index:1;
 }
 
 .form {
