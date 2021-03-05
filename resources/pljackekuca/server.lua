@@ -11,19 +11,26 @@ local itemi = {
 }
 
 RegisterNetEvent('pkuca:DajItem')
-AddEventHandler('pkuca:DajItem', function()
+AddEventHandler('pkuca:DajItem', function(v)
 	local src = source
 	if UKuci[src] then
-		local rand = math.random(1, 5)
-		local xPlayer = ESX.GetPlayerFromId(src)
-		local kolic = itemi[rand].kolicina
-		xPlayer.addInventoryItem(itemi[rand].ime, kolic)
-		TriggerClientEvent('esx:showNotification', xPlayer.source, "Pronasli ste "..kolic.."x "..itemi[rand].label..".")
-		local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(src).."("..xPlayer.identifier..") je dobio item "..itemi[rand].ime.." x "..kolic
-		TriggerEvent("SpremiLog", por)
+		local koord = GetEntityCoords(GetPlayerPed(src))
+		local udalj = #(koord-v.Pos)
+		if udalj <= 1.0 then
+			local rand = math.random(1, 5)
+			local xPlayer = ESX.GetPlayerFromId(src)
+			local kolic = itemi[rand].kolicina
+			xPlayer.addInventoryItem(itemi[rand].ime, kolic)
+			TriggerClientEvent('esx:showNotification', xPlayer.source, "Pronasli ste "..kolic.."x "..itemi[rand].label..".")
+			local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(src).."("..xPlayer.identifier..") je dobio item "..itemi[rand].ime.." x "..kolic
+			TriggerEvent("SpremiLog", por)
+		else
+			TriggerEvent("DiscordBot:Anticheat", GetPlayerName(src).."["..src.."] je pokusao pozvati event za dobijanje stvari od pljacke kuce, a ne pljacka kucu!")
+			TriggerEvent("AntiCheat:Citer", src)
+		end
 	else
-		TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za dobijanje stvari od pljacke kuce, a ne pljacka kucu!")
-	    TriggerEvent("AntiCheat:Citer", _source)
+		TriggerEvent("DiscordBot:Anticheat", GetPlayerName(src).."["..src.."] je pokusao pozvati event za dobijanje stvari od pljacke kuce, a ne pljacka kucu!")
+	    TriggerEvent("AntiCheat:Citer", src)
 	end
 end)
 
@@ -61,8 +68,8 @@ AddEventHandler('pkuca:ProdajStvari', function()
 	end
 end)
 
-RegisterNetEvent('pkuca:Uso')
-AddEventHandler('pkuca:Uso', function(br)
+RegisterNetEvent('pkuca:NekiEvent')
+AddEventHandler('pkuca:NekiEvent', function(br)
 	local src = source
 	UKuci[src] = br
 end)

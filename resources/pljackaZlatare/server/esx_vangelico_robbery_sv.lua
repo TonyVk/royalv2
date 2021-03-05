@@ -119,6 +119,7 @@ AddEventHandler('esx_vangelico_robbery:PitajBogaStaRadi', function()
 		TriggerEvent("SpremiLog", por)
     else
         TriggerEvent("DiscordBot:Anticheat", GetPlayerName(src).."("..src..") je pokusao dodati si nakit, a nije na pljacki zlatare!")
+		TriggerEvent("AntiCheat:Citer", src)
     end
 end)
 

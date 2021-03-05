@@ -56,18 +56,26 @@ end)
 
 RegisterServerEvent("glavnabanka:DajTuljane")
 AddEventHandler("glavnabanka:DajTuljane",function()
-	local h=a.GetPlayerFromId(source)
-	if h then 
-		local j=math.random(Config.Trolley["cash"][1],Config.Trolley["cash"][2])
-		if Config.BlackMoney then 
-			h.addAccountMoney('black_money',j)
-			TriggerClientEvent("esx:showNotification",source,"You received~r~~n~"..j.."~s~$ ~r~dirty money")
-		else 
-			h.addMoney(j)
-			TriggerClientEvent("esx:showNotification",source,"Uzeli ste~g~ "..j.."~s~$")
-                        local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..h.identifier..") je dobio $"..j
-			TriggerEvent("SpremiLog", por)
-		end 
+	local src = source
+	local h=a.GetPlayerFromId(src)
+	if h then
+		local B=GetEntityCoords(GetPlayerPed(src))
+		local J=#(B-Config.Bank["Principal Bank"]["start"]["pos"])
+		if J<=20.0 then
+			local j=math.random(Config.Trolley["cash"][1],Config.Trolley["cash"][2])
+			if Config.BlackMoney then 
+				h.addAccountMoney('black_money',j)
+				TriggerClientEvent("esx:showNotification",source,"You received~r~~n~"..j.."~s~$ ~r~dirty money")
+			else 
+				h.addMoney(j)
+				TriggerClientEvent("esx:showNotification",source,"Uzeli ste~g~ "..j.."~s~$")
+				local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..h.identifier..") je dobio $"..j
+				TriggerEvent("SpremiLog", por)
+			end 
+		else
+			TriggerEvent("DiscordBot:Anticheat", GetPlayerName(src).."["..src.."] je pokusao pozvati event za novac glavne banke, a nije u glavnoj banci!")
+			TriggerEvent("AntiCheat:Citer", src)
+		end
 	end 
 end)
 

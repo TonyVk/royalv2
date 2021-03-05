@@ -195,7 +195,7 @@ Citizen.CreateThread(function()
 									brojac = 0
 									unutra = true
 									TriggerServerEvent("pkuca:SpremiVrijeme", 30)
-									TriggerServerEvent("pkuca:Uso", true)
+									TriggerServerEvent("pkuca:NekiEvent", true)
 									Minute = 30
 									Wait(300)
 									DoScreenFadeIn(100)
@@ -231,7 +231,7 @@ Citizen.CreateThread(function()
 							Citizen.Wait(10000)
 							ClearPedTasks(playerPed)
 							FreezeEntityPosition(playerPed, false)
-							TriggerServerEvent("pkuca:DajItem")
+							TriggerServerEvent("pkuca:DajItem", v)
 						end
 					end
 				end
@@ -255,7 +255,7 @@ Citizen.CreateThread(function()
 					kuca = nil
 					TriggerEvent('instance:leave')
 					TriggerEvent('instance:close')
-					TriggerServerEvent("pkuca:Uso", false)
+					TriggerServerEvent("pkuca:NekiEvent", false)
 					SetEntityCollision(PlayerPedId(), true, true)
 					SetEntityVisible(PlayerPedId(), true, false)
 					BrojiVrijeme()
