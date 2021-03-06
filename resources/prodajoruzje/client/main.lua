@@ -294,6 +294,31 @@ RegisterCommand("ctest", function(source, args, rawCommandString)
 	end
 end, false)
 
+RegisterNetEvent('prodajoruzje:SloziOruzje')
+AddEventHandler('prodajoruzje:SloziOruzje', function(br)
+	SendNUIMessage({
+		prikazi2 = true,
+		broj = br,
+		ktijelo = true,
+		kkundak = true,
+		clip = true,
+		kcijev = true
+	})
+	SetNuiFocus(true, true)
+end)
+
+RegisterNUICallback(
+    "slozi",
+    function(data, cb)
+		SendNUIMessage({
+			prikazi2 = true,
+			broj = data.broj
+		})
+		SetNuiFocus(false)
+		TriggerServerEvent("prodajoruzje:KoiKuracJeOvo2", data.broj)
+    end
+)
+
 RegisterCommand("lc", function(source, args, rawCommandString)
 	if IsPedInAnyVehicle(PlayerPedId(), false) then
 		local deri = true

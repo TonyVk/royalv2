@@ -1,5 +1,6 @@
 ESX = nil
 local Grebalice = {}
+local COruzje = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -57,10 +58,6 @@ AddEventHandler('ObrisiSociety', function(soc, broj)
 	end
 end)
 
-ESX.RegisterUsableItem("ktijelo", function(source)
-	
-end)
-
 RegisterNetEvent("EoTiSkinara")
 AddEventHandler('EoTiSkinara', function(pid, modid, id)
 	local retval = NetworkGetEntityFromNetworkId(pid)
@@ -73,6 +70,20 @@ ESX.RegisterUsableItem("petarde", function(source)
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	xPlayer.removeInventoryItem("petarde", 1)
 	TriggerClientEvent('prodajoruzje:petarde', _source)
+end)
+
+ESX.RegisterUsableItem("ktijelo", function(source)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	local kc = xPlayer.getInventoryItem("kcijev").count
+	local kk = xPlayer.getInventoryItem("kkundak").count
+	local kt = xPlayer.getInventoryItem("ktijelo").count
+	local cl = xPlayer.getInventoryItem("clip").count
+	if kc > 0 and kk > 0 and kt > 0 and cl > 0 then
+		COruzje[_source] = true
+		TriggerClientEvent("esx_invh:closeinv", _source)
+		TriggerClientEvent('prodajoruzje:SloziOruzje', _source, 0)
+	end
 end)
 
 ESX.RegisterUsableItem("grebalica", function(source)
@@ -118,6 +129,27 @@ AddEventHandler('prodajoruzje:KoiKuracJeOvo', function(br)
 		Grebalice[src] = false
 	else
 		TriggerEvent("DiscordBot:Anticheat", GetPlayerName(src).."["..src.."] je pokusao pozvati event za nagradu grebalice, a nije iskoristio grebalicu!")
+	    TriggerEvent("AntiCheat:Citer", src)
+	end
+end)
+
+RegisterNetEvent("prodajoruzje:KoiKuracJeOvo2")
+AddEventHandler('prodajoruzje:KoiKuracJeOvo2', function(br)
+	local src = source
+	if COruzje[src] then
+		local xPlayer = ESX.GetPlayerFromId(src)
+		if br == 0 then
+			xPlayer.removeInventoryItem("kcijev", 1)
+			xPlayer.removeInventoryItem("kkundak", 1)
+			xPlayer.removeInventoryItem("ktijelo", 1)
+			xPlayer.removeInventoryItem("clip", 1)
+			xPlayer.addInventoryItem("weapon_assaultrifle", 1)
+		elseif br == 1 then
+			xPlayer.addWeapon("weapon_carbinerifle", 250)
+		end
+		COruzje[src] = false
+	else
+		TriggerEvent("DiscordBot:Anticheat", GetPlayerName(src).."["..src.."] je pokusao pozvati event za craft oruzja, a nije iskoristio dijelove!")
 	    TriggerEvent("AntiCheat:Citer", src)
 	end
 end)

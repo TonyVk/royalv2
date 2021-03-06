@@ -1,7 +1,7 @@
 let Prikazan = false;
 let Prikazan2 = false;
 let broj = -1;
-let brojic = -1;
+let brojic = 0;
 
 (function() {
   
@@ -202,6 +202,8 @@ window.addEventListener('message', function(event) {
 	}
 });
 
+Odradi();
+
 function Odradi(){
 		var mousePosition;
 		var offset = [0,0];
@@ -214,6 +216,7 @@ function Odradi(){
 		var moze2 = true;
 		var moze3 = true;
 		var moze4 = true;
+		var Brojac = 0;
 		//document.querySelectorAll('.forma')[rand].style.display = 'block';
 		
 		div = document.getElementsByClassName("infodiv")[brojic];
@@ -278,6 +281,20 @@ function Odradi(){
 				}
 				if(coords2.top >= coords.top && coords2.top <= bot && coords2.left >= coords.left && coords2.left <= coords.bottomRight){
 					console.info("inside");
+					Brojac++;
+					if(Brojac == 4){
+						div.style.top = "25px";
+						div.style.left = "25px";
+						div2.style.top = "25px";
+						div2.style.left = "25px";
+						div3.style.top = "25px";
+						div3.style.left = "25px";
+						div4.style.top = "25px";
+						div4.style.left = "25px";
+						$.post("http://prodajoruzje/slozi", JSON.stringify({
+							broj: brojic
+						}));
+					}
 					moze = false;
 				}else{
 					console.info("outside");   
@@ -299,6 +316,20 @@ function Odradi(){
 				}
 				if(coords2.top >= coords.top && coords2.top <= bot && coords2.left >= coords.left && coords2.left <= coords.bottomRight){
 					console.info("inside");
+					Brojac++;
+					if(Brojac == 4){
+						div.style.top = "25px";
+						div.style.left = "25px";
+						div2.style.top = "25px";
+						div2.style.left = "25px";
+						div3.style.top = "25px";
+						div3.style.left = "25px";
+						div4.style.top = "25px";
+						div4.style.left = "25px";
+						$.post("http://prodajoruzje/slozi", JSON.stringify({
+							broj: brojic
+						}));
+					}
 					moze2 = false;
 				}else{
 					console.info("outside");   
@@ -320,6 +351,20 @@ function Odradi(){
 				}
 				if(coords2.top >= coords.top && coords2.top <= bot && coords2.left >= coords.left && coords2.left <= coords.bottomRight){
 					console.info("inside");
+					Brojac++;
+					if(Brojac == 4){
+						div.style.top = "25px";
+						div.style.left = "25px";
+						div2.style.top = "25px";
+						div2.style.left = "25px";
+						div3.style.top = "25px";
+						div3.style.left = "25px";
+						div4.style.top = "25px";
+						div4.style.left = "25px";
+						$.post("http://prodajoruzje/slozi", JSON.stringify({
+							broj: brojic
+						}));
+					}
 					moze3 = false;
 				}else{
 					console.info("outside");   
@@ -341,6 +386,20 @@ function Odradi(){
 				}
 				if(coords2.top >= coords.top && coords2.top <= bot && coords2.left >= coords.left && coords2.left <= coords.bottomRight){
 					console.info("inside");
+					Brojac++;
+					if(Brojac == 4){
+						div.style.top = "25px";
+						div.style.left = "25px";
+						div2.style.top = "25px";
+						div2.style.left = "25px";
+						div3.style.top = "25px";
+						div3.style.left = "25px";
+						div4.style.top = "25px";
+						div4.style.left = "25px";
+						$.post("http://prodajoruzje/slozi", JSON.stringify({
+							broj: brojic
+						}));
+					}
 					moze4 = false;
 				}else{
 					console.info("outside");   
