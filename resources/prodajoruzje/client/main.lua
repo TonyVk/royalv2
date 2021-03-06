@@ -270,6 +270,30 @@ AddEventHandler('prodajoruzje:petarde', function()
 			DeleteEntity(prop)
 end)
 
+local Upaljeno2 = false
+
+RegisterCommand("ctest", function(source, args, rawCommandString)
+	if not Upaljeno2 then
+		SendNUIMessage({
+			prikazi2 = true,
+			broj = 0,
+			ktijelo = true,
+			kkundak = true,
+			clip = true,
+			kcijev = true
+		})
+		SetNuiFocus(true, true)
+		Upaljeno2 = true
+	else
+		SendNUIMessage({
+			prikazi2 = true,
+			broj = 0
+		})
+		SetNuiFocus(false)
+		Upaljeno2 = false
+	end
+end, false)
+
 RegisterCommand("lc", function(source, args, rawCommandString)
 	if IsPedInAnyVehicle(PlayerPedId(), false) then
 		local deri = true

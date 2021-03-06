@@ -1,5 +1,7 @@
 let Prikazan = false;
+let Prikazan2 = false;
 let broj = -1;
+let brojic = -1;
 
 (function() {
   
@@ -93,6 +95,8 @@ let broj = -1;
 			  document.querySelectorAll('.form')[broj].style.display = 'none';
 			  var x = document.getElementById("grebalica");
 			  x.style.display = "none";
+			  var y = document.getElementById("glavni");
+			  y.style.display = "none";
 			  Prikazan = false;
 			  Cekas = false;
 			  $.post("http://prodajoruzje/vratik", JSON.stringify({}));
@@ -136,22 +140,69 @@ window.addEventListener('message', function(event) {
 	var item = event.data;
 	if (item.prikazi) {
 		var x = document.getElementById("grebalica");
+		var y = document.getElementById("glavni");
 		if(Prikazan == false)
 		{
 			x.style.display = "block";
+			y.style.display = "block";
 			Prikazan = true;
-			broj = Math.floor(Math.random() * 40)
+			broj = Math.floor(Math.random() * 30)
 			document.querySelectorAll('.form')[broj].style.display = 'block';
 		}
 		else
 		{
 			x.style.display = "none";
+			y.style.display = "none";
 			Prikazan = false;
+		}
+	}
+	if (item.prikazi2) {
+		var x;
+		if(item.broj == 0){
+			x = document.getElementById("kalas");
+		}
+		else if(item.broj == 1){
+			x = document.getElementById("carbine");	
+		}
+		brojic = item.broj;
+		var y = document.getElementById("glavni");
+		var kt = document.getElementById("infodiv2");
+		var kk = document.getElementById("infodiv");
+		var cl = document.getElementById("infodiv4");
+		var kc = document.getElementById("infodiv3");
+		if(Prikazan2 == false)
+		{
+			x.style.display = "block";
+			y.style.display = "block";
+			if(item.ktijelo){
+				kt.style.display = "block";
+			}
+			if(item.kkundak){
+				kk.style.display = "block";
+			}
+			if(item.clip){
+				cl.style.display = "block";
+			}
+			if(item.kcijev){
+				kc.style.display = "block";
+			}
+			Prikazan2 = true;
+			Odradi();
+		}
+		else
+		{
+			x.style.display = "none";
+			y.style.display = "none";
+			kt.style.display = "none";
+			kk.style.display = "none";
+			kc.style.display = "none";
+			cl.style.display = "none";
+			Prikazan2 = false;
 		}
 	}
 });
 
-window.onload = function () {
+function Odradi(){
 		var mousePosition;
 		var offset = [0,0];
 		var div;
@@ -163,8 +214,6 @@ window.onload = function () {
 		var moze2 = true;
 		var moze3 = true;
 		var moze4 = true;
-		var rand = Math.floor(Math.random() * 2);
-		var brojic = rand;
 		//document.querySelectorAll('.forma')[rand].style.display = 'block';
 		
 		div = document.getElementsByClassName("infodiv")[brojic];
@@ -347,29 +396,4 @@ window.onload = function () {
 				div4.style.right = 'auto';
 			}
 		}, true);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-			
-
-
-
-
-
-
-
-
-		};
+}

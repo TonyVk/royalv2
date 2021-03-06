@@ -2,6 +2,10 @@
   background-color: transparent;
 }
 
+#glavni{
+	display:none;
+}
+
 #grebalica{
 	display:none;
 }

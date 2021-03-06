@@ -57,6 +57,10 @@ AddEventHandler('ObrisiSociety', function(soc, broj)
 	end
 end)
 
+ESX.RegisterUsableItem("ktijelo", function(source)
+	
+end)
+
 RegisterNetEvent("EoTiSkinara")
 AddEventHandler('EoTiSkinara', function(pid, modid, id)
 	local retval = NetworkGetEntityFromNetworkId(pid)

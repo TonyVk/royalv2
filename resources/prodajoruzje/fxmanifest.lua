@@ -23,5 +23,7 @@ files {
 	'html/ui.html',
 	'html/app.js',
 	'html/main.css',
-	'html/ralesrecka.png'
+	'html/ralesrecka.png',
+	'html/carbine/*.png',
+	'html/kalas/*.png'
 }
