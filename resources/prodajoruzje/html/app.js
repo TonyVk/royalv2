@@ -91,7 +91,7 @@ let broj = -1;
 		  setTimeout(function(){
 			  ctx.drawImage(image, 0, 0);
 			  document.querySelectorAll('.form')[broj].style.display = 'none';
-			  var x = document.getElementById("glavni");
+			  var x = document.getElementById("grebalica");
 			  x.style.display = "none";
 			  Prikazan = false;
 			  Cekas = false;
@@ -135,12 +135,12 @@ let broj = -1;
 window.addEventListener('message', function(event) {
 	var item = event.data;
 	if (item.prikazi) {
-		var x = document.getElementById("glavni");
+		var x = document.getElementById("grebalica");
 		if(Prikazan == false)
 		{
 			x.style.display = "block";
 			Prikazan = true;
-			broj = Math.floor(Math.random() * 25)
+			broj = Math.floor(Math.random() * 40)
 			document.querySelectorAll('.form')[broj].style.display = 'block';
 		}
 		else
@@ -150,3 +150,226 @@ window.addEventListener('message', function(event) {
 		}
 	}
 });
+
+window.onload = function () {
+		var mousePosition;
+		var offset = [0,0];
+		var div;
+		var div2;
+		var div3;
+		var div4;
+		var isDown = 0;
+		var moze = true;
+		var moze2 = true;
+		var moze3 = true;
+		var moze4 = true;
+		var rand = Math.floor(Math.random() * 2);
+		var brojic = rand;
+		//document.querySelectorAll('.forma')[rand].style.display = 'block';
+		
+		div = document.getElementsByClassName("infodiv")[brojic];
+		div2 = document.getElementsByClassName("infodiv2")[brojic];
+		div3 = document.getElementsByClassName("infodiv3")[brojic];
+		div4 = document.getElementsByClassName("infodiv4")[brojic];
+		
+		div.addEventListener('mousedown', function(e) {
+			if(moze){
+				isDown = 1;
+				offset = [
+					div.offsetLeft - e.clientX,
+					div.offsetTop - e.clientY
+				];
+			}
+		}, true);
+		
+		div2.addEventListener('mousedown', function(e) {
+			if(moze2){
+				isDown = 2;
+				offset = [
+					div2.offsetLeft - e.clientX,
+					div2.offsetTop - e.clientY
+				];
+			}
+		}, true);
+		
+		div3.addEventListener('mousedown', function(e) {
+			if(moze3){
+				isDown = 3;
+				offset = [
+					div3.offsetLeft - e.clientX,
+					div3.offsetTop - e.clientY
+				];
+			}
+		}, true);
+		
+		div4.addEventListener('mousedown', function(e) {
+			if(moze4){
+				isDown = 4;
+				offset = [
+					div4.offsetLeft - e.clientX,
+					div4.offsetTop - e.clientY
+				];
+			}
+		}, true);
+
+		document.addEventListener('mouseup', function() {
+			if(isDown == 1){
+				var coords = $('.infodiv7').eq(brojic).position();
+				var coords2 = $('.infodiv').eq(brojic).position();
+				coords.bottom = coords.top + $('.infodiv7').eq(brojic).height();
+				coords.bottomRight = coords.left + $('.infodiv7').eq(brojic).width();
+				console.log(coords.bottom);
+				console.log(coords2.top);
+				let bot = 0;
+				if(brojic == 0){
+					bot = coords.bottom-75;
+				}
+				else if(brojic == 1){
+					bot = coords.bottom-91;
+				}
+				if(coords2.top >= coords.top && coords2.top <= bot && coords2.left >= coords.left && coords2.left <= coords.bottomRight){
+					console.info("inside");
+					moze = false;
+				}else{
+					console.info("outside");   
+				}
+			}
+			else if(isDown == 2){
+				var coords = $('.infodiv5').eq(brojic).position();
+				var coords2 = $('.infodiv2').eq(brojic).position();
+				coords.bottom = coords.top + $('.infodiv5').eq(brojic).height();
+				coords.bottomRight = coords.left + $('.infodiv5').eq(brojic).width();
+				console.log(coords.bottom);
+				console.log(coords2.top);
+				let bot = 0;
+				if(brojic == 0){
+					bot = coords.bottom-121;
+				}
+				else if(brojic == 1){
+					bot = coords.bottom-185;
+				}
+				if(coords2.top >= coords.top && coords2.top <= bot && coords2.left >= coords.left && coords2.left <= coords.bottomRight){
+					console.info("inside");
+					moze2 = false;
+				}else{
+					console.info("outside");   
+				}
+			}
+			else if(isDown == 3){
+				var coords = $('.infodiv6').eq(brojic).position();
+				var coords2 = $('.infodiv3').eq(brojic).position();
+				coords.bottom = coords.top + $('.infodiv6').eq(brojic).height();
+				coords.bottomRight = coords.left + $('.infodiv6').eq(brojic).width();
+				console.log(coords.bottom);
+				console.log(coords2.top);
+				let bot = 0;
+				if(brojic == 0){
+					bot = coords.bottom-60;
+				}
+				else if(brojic == 1){
+					bot = coords.bottom-90;
+				}
+				if(coords2.top >= coords.top && coords2.top <= bot && coords2.left >= coords.left && coords2.left <= coords.bottomRight){
+					console.info("inside");
+					moze3 = false;
+				}else{
+					console.info("outside");   
+				}
+			}
+			else if(isDown == 4){
+				var coords = $('.infodiv8').eq(brojic).position();
+				var coords2 = $('.infodiv4').eq(brojic).position();
+				coords.bottom = coords.top + $('.infodiv8').eq(brojic).height();
+				coords.bottomRight = coords.left + $('.infodiv8').eq(brojic).width();
+				console.log(coords.bottom);
+				console.log(coords2.top);
+				let bot = 0;
+				if(brojic == 0){
+					bot = coords.bottom-100;
+				}
+				else if(brojic == 1){
+					bot = coords.bottom-82;
+				}
+				if(coords2.top >= coords.top && coords2.top <= bot && coords2.left >= coords.left && coords2.left <= coords.bottomRight){
+					console.info("inside");
+					moze4 = false;
+				}else{
+					console.info("outside");   
+				}
+			}
+			isDown = 0;
+		}, true);
+
+		document.addEventListener('mousemove', function(event) {
+			event.preventDefault();
+			if (isDown == 1) {
+				mousePosition = {
+			
+					x : event.clientX,
+					y : event.clientY
+			
+				};
+				div.style.left = Math.max(0,Math.min(window.innerWidth-div.offsetWidth,mousePosition.x + offset[0]))+"px";
+				div.style.top  = Math.max(0,Math.min(window.innerHeight-div.offsetHeight,mousePosition.y + offset[1]))+"px";;
+				div.style.right = 'auto';
+			}
+			else if (isDown == 2) {
+				mousePosition = {
+			
+					x : event.clientX,
+					y : event.clientY
+			
+				};
+				div2.style.left = Math.max(0,Math.min(window.innerWidth-div2.offsetWidth,mousePosition.x + offset[0]))+"px";
+				div2.style.top  = Math.max(0,Math.min(window.innerHeight-div2.offsetHeight,mousePosition.y + offset[1]))+"px";;
+				div2.style.right = 'auto';
+			}
+			else if (isDown == 3) {
+				mousePosition = {
+			
+					x : event.clientX,
+					y : event.clientY
+			
+				};
+				div3.style.left = Math.max(0,Math.min(window.innerWidth-div3.offsetWidth,mousePosition.x + offset[0]))+"px";
+				div3.style.top  = Math.max(0,Math.min(window.innerHeight-div3.offsetHeight,mousePosition.y + offset[1]))+"px";;
+				div3.style.right = 'auto';
+			}
+			else if (isDown == 4) {
+				mousePosition = {
+			
+					x : event.clientX,
+					y : event.clientY
+			
+				};
+				div4.style.left = Math.max(0,Math.min(window.innerWidth-div4.offsetWidth,mousePosition.x + offset[0]))+"px";
+				div4.style.top  = Math.max(0,Math.min(window.innerHeight-div4.offsetHeight,mousePosition.y + offset[1]))+"px";;
+				div4.style.right = 'auto';
+			}
+		}, true);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			
+
+
+
+
+
+
+
+
+		};
