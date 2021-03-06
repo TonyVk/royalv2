@@ -95,6 +95,7 @@ let broj = -1;
 			  x.style.display = "none";
 			  Prikazan = false;
 			  Cekas = false;
+			  $.post("http://prodajoruzje/vratik", JSON.stringify({}));
 		  }, 2000);
 	  }
     }

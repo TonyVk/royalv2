@@ -88,14 +88,28 @@ AddEventHandler('prodajoruzje:KoiKuracJeOvo', function(br)
 	local src = source
 	if Grebalice[src] then
 		local xPlayer = ESX.GetPlayerFromId(src)
-		if br == 3 then
-			xPlayer.addMoney(25000)
+		if br == 1 then
+			xPlayer.addMoney(500)
+		elseif br == 3 then
+			xPlayer.addMoney(1)
+		elseif br == 5 then
+			xPlayer.addMoney(100)
 		elseif br == 7 then
-			xPlayer.addMoney(35000)
+			xPlayer.addMoney(2)
+		elseif br == 9 then
+			xPlayer.addMoney(1000)
 		elseif br == 11 then
-			xPlayer.addMoney(45000)
+			xPlayer.addMoney(5)
 		elseif br == 15 then
 			xPlayer.addMoney(55000)
+		elseif br == 19 then
+			xPlayer.addInventoryItem("burek", 1)
+		elseif br == 21 then
+			xPlayer.addMoney(2500)
+		elseif br == 23 then
+			xPlayer.addInventoryItem("kola", 1)
+		elseif br == 26 then
+			xPlayer.addMoney(5000)
 		end
 		Grebalice[src] = false
 	else

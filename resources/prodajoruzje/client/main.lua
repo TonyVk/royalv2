@@ -178,12 +178,21 @@ AddEventHandler('ronjenje:PocniRonit', function()
 	end
 end)
 
+local Upaljeno = false
+
 RegisterNetEvent('prodajoruzje:grebalica')
 AddEventHandler('prodajoruzje:grebalica', function()
 	SendNUIMessage({
 		prikazi = true
 	})
 	SetNuiFocus(true, true)
+	Upaljeno = true
+	Citizen.CreateThread(function()
+		while Upaljeno do
+			Citizen.Wait(0)
+			DisableAllControlActions(0)
+		end
+	end)
 end)
 
 RegisterNUICallback(
@@ -191,6 +200,13 @@ RegisterNUICallback(
     function(data, cb)
 		SetNuiFocus(false)
 		TriggerServerEvent("prodajoruzje:KoiKuracJeOvo", data.broj)
+    end
+)
+
+RegisterNUICallback(
+    "vratik",
+    function(data, cb)
+		Upaljeno = false
     end
 )
 
