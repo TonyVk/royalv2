@@ -2086,7 +2086,7 @@ ESX.RegisterServerCallback('mafije:removeArmoryWeapon', function(source, cb, wea
 
 end)
 
-ESX.RegisterServerCallback('kupistvari', function(source, cb, stvar)
+ESX.RegisterServerCallback('kupistvari', function(source, cb, stvar, maf)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	if stvar == "laptop" then
 		local xItem = xPlayer.getInventoryItem('net_cracker')
@@ -2115,6 +2115,38 @@ ESX.RegisterServerCallback('kupistvari', function(source, cb, stvar)
 			else
 			  cb(false)
 			end
+		else
+			cb(false)
+		end
+	elseif stvar == "ktijelo" then
+		local xItem = xPlayer.getInventoryItem('ktijelo')
+		if (xItem.count + 1) <= xItem.limit then
+			local soc = "society_"..maf
+			TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
+				if account.money >= 2500 then
+					account.removeMoney(2500)
+					xPlayer.addInventoryItem('ktijelo', 1)
+					cb(true)
+				else
+					cb(false)
+				end
+			end)
+		else
+			cb(false)
+		end
+	elseif stvar == "ctijelo" then
+		local xItem = xPlayer.getInventoryItem('ktijelo')
+		if (xItem.count + 1) <= xItem.limit then
+			local soc = "society_"..maf
+			TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
+				if account.money >= 5000 then
+					account.removeMoney(5000)
+					xPlayer.addInventoryItem('ctijelo', 1)
+					cb(true)
+				else
+					cb(false)
+				end
+			end)
 		else
 			cb(false)
 		end

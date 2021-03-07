@@ -3528,6 +3528,11 @@ function OpenBuyStvarMenu(station)
     local elements = {}
     table.insert(elements, {label = 'Laptop za hakiranje (25000$)', value = 'laptop'})
 	table.insert(elements, {label = 'Termitna bomba (5000$)', value = 'termit'})
+	
+	if PlayerData.job.name == Config.Tijelo then
+		table.insert(elements, {label = 'Tijelo za assault rifle (2500$)', value = 'ktijelo'})
+		table.insert(elements, {label = 'Tijelo za carbine rifle (5000$)', value = 'ctijelo'})
+	end
 
     ESX.UI.Menu.Open(
       'default', GetCurrentResourceName(), 'armory_buy_stvari',
@@ -3541,9 +3546,13 @@ function OpenBuyStvarMenu(station)
 			  if hasEnoughMoney then
 					ESX.ShowNotification("Uspjesno kupljeno!")
 			  else
-					ESX.ShowNotification("Nemate dovoljno novca ili vec imate dovoljno u inventoryju!")
+					if data.current.value == "laptop" or data.current.value == "termit" then
+						ESX.ShowNotification("Nemate dovoljno novca ili vec imate dovoljno u inventoryju!")
+					else
+						ESX.ShowNotification("Vasa mafija nema dovoljno novca ili vec imate dovoljno u inventoryju!")
+					end
 			  end
-		end, data.current.value)
+		end, data.current.value, PlayerData.job.name)
       end,
       function(data, menu)
         menu.close()

@@ -91,6 +91,13 @@ window.onload = function () {
 				var key = document.querySelector('#'+data.id+' span');
 				var html = data.value;
 				saferInnerHTML(key, html);
+				if(data.id == "job"){
+					var z = document.getElementById("job");
+					z.style.left = "-40px";
+					setTimeout(function(){
+						z.style.left = "550px";
+					}, 5000);
+				}
 			},
 			setFont: function(data) {
 				document.querySelector('#font').href = data.url;
@@ -98,10 +105,17 @@ window.onload = function () {
 			},
 			
 			setMoney: function(data) {
-				data.value = data.value.toLocaleString();
-				var oldValue = document.querySelector('#'+data.id+' span').innerHTML;
-				if (oldValue != data.value) { document.querySelector('#'+data.id).classList.add('pulse'); }
-				eventCallback['setText'](data);
+				var y = document.getElementById("money");
+				y.style.left = "-40px";
+				setTimeout(function(){
+					data.value = data.value.toLocaleString();
+					var oldValue = document.querySelector('#'+data.id+' span').innerHTML;
+					if (oldValue != data.value) { document.querySelector('#'+data.id).classList.add('pulse'); }
+					eventCallback['setText'](data);
+				}, 2000);
+				setTimeout(function(){
+					y.style.left = "150px";
+				}, 5000);
 			},
 
 
