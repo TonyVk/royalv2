@@ -2135,7 +2135,7 @@ ESX.RegisterServerCallback('kupistvari', function(source, cb, stvar, maf)
 			cb(false)
 		end
 	elseif stvar == "ctijelo" then
-		local xItem = xPlayer.getInventoryItem('ktijelo')
+		local xItem = xPlayer.getInventoryItem('ctijelo')
 		if (xItem.count + 1) <= xItem.limit then
 			local soc = "society_"..maf
 			TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)

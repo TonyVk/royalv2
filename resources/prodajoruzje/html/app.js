@@ -1,7 +1,7 @@
 let Prikazan = false;
 let Prikazan2 = false;
 let broj = -1;
-let brojic = 0;
+let brojic = 2;
 
 (function() {
   
@@ -164,6 +164,9 @@ window.addEventListener('message', function(event) {
 		else if(item.broj == 1){
 			x = document.getElementById("carbine");	
 		}
+		else if(item.broj == 2){
+			x = document.getElementById("special");	
+		}
 		brojic = item.broj;
 		var y = document.getElementById("glavni");
 		var kt = document.getElementById("infodiv2");
@@ -279,6 +282,9 @@ function Odradi(){
 				else if(brojic == 1){
 					bot = coords.bottom-91;
 				}
+				else if(brojic == 2){
+					bot = coords.bottom-91;
+				}
 				if(coords2.top >= coords.top && coords2.top <= bot && coords2.left >= coords.left && coords2.left <= coords.bottomRight){
 					console.info("inside");
 					Brojac++;
@@ -313,6 +319,9 @@ function Odradi(){
 				}
 				else if(brojic == 1){
 					bot = coords.bottom-185;
+				}
+				else if(brojic == 2){
+					bot = coords.bottom-164;
 				}
 				if(coords2.top >= coords.top && coords2.top <= bot && coords2.left >= coords.left && coords2.left <= coords.bottomRight){
 					console.info("inside");
@@ -349,6 +358,9 @@ function Odradi(){
 				else if(brojic == 1){
 					bot = coords.bottom-90;
 				}
+				else if(brojic == 2){
+					bot = coords.bottom-60;
+				}
 				if(coords2.top >= coords.top && coords2.top <= bot && coords2.left >= coords.left && coords2.left <= coords.bottomRight){
 					console.info("inside");
 					Brojac++;
@@ -383,6 +395,9 @@ function Odradi(){
 				}
 				else if(brojic == 1){
 					bot = coords.bottom-82;
+				}
+				else if(brojic == 2){
+					bot = coords.bottom-103;
 				}
 				if(coords2.top >= coords.top && coords2.top <= bot && coords2.left >= coords.left && coords2.left <= coords.bottomRight){
 					console.info("inside");

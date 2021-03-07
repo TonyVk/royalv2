@@ -433,6 +433,7 @@ function OpenPreradaMenu()
     local elements = {}
     table.insert(elements, {label = 'Kundak za assault rifle (5 zeljeza)', value = "kkundak"})
 	table.insert(elements, {label = 'Kundak za carbine rifle (10 zeljeza)', value = "ckundak"})
+	table.insert(elements, {label = 'Kundak za special carbine (15 zeljeza)', value = "skundak"})
 
     ESX.UI.Menu.Open(
       'default', GetCurrentResourceName(), 'kraft_prerada',
@@ -478,6 +479,7 @@ function OpenCijevMenu()
     local elements = {}
     table.insert(elements, {label = 'Cijev za assault rifle ($5000)', value = "kcijev"})
 	table.insert(elements, {label = 'Cijev za carbine rifle ($6000)', value = "ccijev"})
+	table.insert(elements, {label = 'Cijev za special carbine ($7000)', value = "scijev"})
 
     ESX.UI.Menu.Open(
       'default', GetCurrentResourceName(), 'kraft_cijev',
