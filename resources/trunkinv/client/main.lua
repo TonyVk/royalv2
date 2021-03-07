@@ -599,6 +599,7 @@ AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
 					ESX.ShowNotification('Tezina gepeka : ~g~'.. Kgweight .. ' Kg / '..MaxVh..' Kg')
 					menu.close()
 					menu3.close()
+					menu4.close()
 					RequestAnimDict("mini@repair")
 					while not HasAnimDictLoaded( "mini@repair") do
 						Citizen.Wait(1)
@@ -764,6 +765,7 @@ AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
 						Wait(waitara)
 						TriggerServerEvent('gepeke:removeInventoryItem', GetVehicleNumberPlateText(vehFront), data.current.value, data.current.type, quantity)
 						menu.close()
+						menu2.close()
 						local MaxVh =(tonumber(DajTezinu(vehFront))/1000)
 						local Itemweight =tonumber(getItemyWeight(data.current.value)) * quantity
 						local totalweight = tonumber(weight) - Itemweight

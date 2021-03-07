@@ -303,6 +303,11 @@ Citizen.CreateThread(function()
 		Citizen.Wait(waitara)
 		local naso = 0
 		local playerPed = GetPlayerPed(-1)
+		local isInMarker     = false
+		local currentStation = nil
+		local currentPart    = nil
+		local currentPartNum = nil
+		local hasExited = false
 		if CurrentAction ~= nil then
 			waitara = 0
 			naso = 1
@@ -324,6 +329,11 @@ Citizen.CreateThread(function()
 					TriggerServerEvent("kraft:SkupiGa")
 					ESX.ShowNotification("Dobili ste 1x zeljeza!")
 					ClearPedTasksImmediately(playerPed)
+					currentStation = 1
+					currentPart    = 'Skupljanje'
+					currentPartNum = 1
+					isInMarker = false
+					HasAlreadyEnteredMarker = false
 				elseif CurrentAction == 'menu_cijev' then
 					OpenCijevMenu()
 				end
@@ -332,11 +342,6 @@ Citizen.CreateThread(function()
 			end
 		end
 		local coords    = GetEntityCoords(playerPed)
-		
-		local isInMarker     = false
-		local currentStation = nil
-		local currentPart    = nil
-		local currentPartNum = nil
 		
 		if #(coords-cprerada) < 100.0 then
 			waitara = 0
@@ -373,7 +378,6 @@ Citizen.CreateThread(function()
 			currentPart    = 'Cijev'
 			currentPartNum = 1
 		end
-		local hasExited = false
 
 		if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastStation ~= currentStation or LastPart ~= currentPart or LastPartNum ~= currentPartNum) ) then
 			waitara = 0
@@ -462,6 +466,7 @@ function OpenPreradaMenu()
 					ClearPedTasksImmediately(PlayerPedId())
 					TriggerServerEvent("kraft:DajKundak", itemic)
 					ESX.ShowNotification("Zavrsili ste preradu zeljeza u kundak!")
+					HasAlreadyEnteredMarker = false
 			  else
 					ESX.ShowNotification("Nemate dovoljno zeljeza ili nemate mjesta u inventoryju za kundak!")
 			  end

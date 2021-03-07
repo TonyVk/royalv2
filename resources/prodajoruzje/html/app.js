@@ -158,7 +158,6 @@ window.addEventListener('message', function(event) {
 	}
 	if (item.prikazi2) {
 		var x;
-		console.log(item.broj);
 		if(item.broj == 0){
 			x = document.getElementById("kalas");
 		}
@@ -257,8 +256,8 @@ function Odradi(){
 				var coords2 = $('.infodiv').eq(brojic).position();
 				coords.bottom = coords.top + $('.infodiv7').eq(brojic).height();
 				coords.bottomRight = coords.left + $('.infodiv7').eq(brojic).width();
-				console.log(coords.bottom);
-				console.log(coords2.top);
+				//console.log(coords.bottom);
+				//console.log(coords2.top);
 				let bot = 0;
 				if(brojic == 0){
 					bot = coords.bottom-75;
@@ -273,7 +272,7 @@ function Odradi(){
 					bot = coords.bottom-100;
 				}
 				if(coords2.top >= coords.top && coords2.top <= bot && coords2.left >= coords.left && coords2.left <= coords.bottomRight){
-					console.info("inside");
+					//console.info("inside");
 					Brojac++;
 					if(Brojac == 4){
 						div.style.top = "25px";
@@ -290,7 +289,7 @@ function Odradi(){
 					}
 					moze = false;
 				}else{
-					console.info("outside");   
+					//console.info("outside");   
 				}
 			}
 			else if(isDown == 2){
@@ -298,8 +297,8 @@ function Odradi(){
 				var coords2 = $('.infodiv2').eq(brojic).position();
 				coords.bottom = coords.top + $('.infodiv5').eq(brojic).height();
 				coords.bottomRight = coords.left + $('.infodiv5').eq(brojic).width();
-				console.log(coords.bottom);
-				console.log(coords2.top);
+				//console.log(coords.bottom);
+				//console.log(coords2.top);
 				let bot = 0;
 				if(brojic == 0){
 					bot = coords.bottom-121;
@@ -314,7 +313,7 @@ function Odradi(){
 					bot = coords.bottom-176;
 				}
 				if(coords2.top >= coords.top && coords2.top <= bot && coords2.left >= coords.left && coords2.left <= coords.bottomRight){
-					console.info("inside");
+					//console.info("inside");
 					Brojac++;
 					if(Brojac == 4){
 						div.style.top = "25px";
@@ -331,7 +330,7 @@ function Odradi(){
 					}
 					moze2 = false;
 				}else{
-					console.info("outside");   
+					//console.info("outside");   
 				}
 			}
 			else if(isDown == 3){
@@ -339,8 +338,8 @@ function Odradi(){
 				var coords2 = $('.infodiv3').eq(brojic).position();
 				coords.bottom = coords.top + $('.infodiv6').eq(brojic).height();
 				coords.bottomRight = coords.left + $('.infodiv6').eq(brojic).width();
-				console.log(coords.bottom);
-				console.log(coords2.top);
+				//console.log(coords.bottom);
+				//console.log(coords2.top);
 				let bot = 0;
 				if(brojic == 0){
 					bot = coords.bottom-60;
@@ -355,7 +354,7 @@ function Odradi(){
 					bot = coords.bottom-81;
 				}
 				if(coords2.top >= coords.top && coords2.top <= bot && coords2.left >= coords.left && coords2.left <= coords.bottomRight){
-					console.info("inside");
+					//console.info("inside");
 					Brojac++;
 					if(Brojac == 4){
 						div.style.top = "25px";
@@ -372,7 +371,7 @@ function Odradi(){
 					}
 					moze3 = false;
 				}else{
-					console.info("outside");   
+					//console.info("outside");   
 				}
 			}
 			else if(isDown == 4){
@@ -380,8 +379,8 @@ function Odradi(){
 				var coords2 = $('.infodiv4').eq(brojic).position();
 				coords.bottom = coords.top + $('.infodiv8').eq(brojic).height();
 				coords.bottomRight = coords.left + $('.infodiv8').eq(brojic).width();
-				console.log(coords.bottom);
-				console.log(coords2.top);
+				//console.log(coords.bottom);
+				//console.log(coords2.top);
 				let bot = 0;
 				if(brojic == 0){
 					bot = coords.bottom-100;
@@ -396,7 +395,7 @@ function Odradi(){
 					bot = coords.bottom-76;
 				}
 				if(coords2.top >= coords.top && coords2.top <= bot && coords2.left >= coords.left && coords2.left <= coords.bottomRight){
-					console.info("inside");
+					//console.info("inside");
 					Brojac++;
 					if(Brojac == 4){
 						div.style.top = "25px";
@@ -413,7 +412,7 @@ function Odradi(){
 					}
 					moze4 = false;
 				}else{
-					console.info("outside");   
+					//console.info("outside");   
 				}
 			}
 			isDown = 0;

@@ -1120,9 +1120,7 @@ function OpenNewMenu()
 	if grado == 0 then
 		table.insert(elements, {label = "Kupovina stvari", value = 'buy_stvar'})
 	end
-	if PlayerData.job.name == Config.Tijelo then
-		table.insert(elements, {label = 'Oruzarnica',  value = 'buy_oruzje'})
-	end
+	table.insert(elements, {label = 'Oruzarnica',  value = 'buy_oruzje'})
 
 
     ESX.UI.Menu.Open(
@@ -1356,7 +1354,9 @@ function OpenArmoryMenu(br)
 
 		if br == 0 then
 			if PlayerData.job.grade_name == 'boss' or PlayerData.job.grade_name == 'vlasnik' then
-			  table.insert(elements, {label = _U('buy_weapons'), value = 'buy_weapons'})
+				if PlayerData.job.name == Config.Tijelo then
+					table.insert(elements, {label = _U('buy_weapons'), value = 'buy_weapons'})
+				end
 			end
 		else
 			table.insert(elements, {label = _U('buy_weapons'), value = 'buy_weapons'})
