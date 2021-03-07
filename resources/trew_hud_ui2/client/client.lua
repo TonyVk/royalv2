@@ -706,32 +706,12 @@ Citizen.CreateThread(function()
 				HideHudComponentThisFrame(20) -- Weapon State
 			end
 		end
-		
-		if IsControlJustPressed(1, Keys['H']) then
-			if IsControlPressed(1, Keys['LEFTALT']) then
-				Config.voice.levels.current = (Config.voice.levels.current + 1) % 3
-
-				if Config.voice.levels.current == 0 then
-					NetworkSetTalkerProximity(Config.voice.levels.default)
-					voiceDistance = 'normal'
-				elseif Config.voice.levels.current == 1 then
-					NetworkSetTalkerProximity(Config.voice.levels.shout)
-					voiceDistance = 'shout'
-				elseif Config.voice.levels.current == 2 then
-					NetworkSetTalkerProximity(Config.voice.levels.whisper)
-					voiceDistance = 'whisper'
-				end
-
-				SendNUIMessage({ action = 'setVoiceDistance', value = voiceDistance })
-			end
-		end
 	end
 end)
 
 AddEventHandler('playerSpawned', function()
 	SendNUIMessage({ action = 'ui', config = Config.ui })
 	SendNUIMessage({ action = 'setFont', url = Config.font.url, name = Config.font.name })
-	SendNUIMessage({ action = 'setLogo', value = Config.serverLogo })
 	
 	if Config.ui.showVoice == true then
 		if Config.voice.levels.current == 0 then
@@ -963,8 +943,6 @@ RegisterCommand('toggleui', function()
 	if not toggleui then
 		SendNUIMessage({ action = 'element', task = 'disable', value = 'job' })
 		SendNUIMessage({ action = 'element', task = 'disable', value = 'society' })
-		SendNUIMessage({ action = 'element', task = 'disable', value = 'bank' })
-		SendNUIMessage({ action = 'element', task = 'disable', value = 'blackMoney' })
 		SendNUIMessage({ action = 'element', task = 'disable', value = 'wallet' })
 	else
 		if (Config.ui.showJob == true) then
@@ -972,12 +950,6 @@ RegisterCommand('toggleui', function()
 		end
 		if (Config.ui.showSocietyMoney == true) then
 			SendNUIMessage({ action = 'element', task = 'enable', value = 'society' })
-		end
-		if (Config.ui.showBankMoney == true) then
-			SendNUIMessage({ action = 'element', task = 'enable', value = 'bank' })
-		end
-		if (Config.ui.showBlackMoney == true) then
-			SendNUIMessage({ action = 'element', task = 'enable', value = 'blackMoney' })
 		end
 		if (Config.ui.showWalletMoney == true) then
 			SendNUIMessage({ action = 'element', task = 'enable', value = 'wallet' })

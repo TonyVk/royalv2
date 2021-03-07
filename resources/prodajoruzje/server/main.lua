@@ -143,13 +143,84 @@ AddEventHandler('prodajoruzje:KoiKuracJeOvo2', function(br)
 			xPlayer.removeInventoryItem("kkundak", 1)
 			xPlayer.removeInventoryItem("ktijelo", 1)
 			xPlayer.removeInventoryItem("clip", 1)
-			xPlayer.addInventoryItem("weapon_assaultrifle", 1)
+			xPlayer.addWeapon("weapon_assaultrifle", 250)
 		elseif br == 1 then
 			xPlayer.addWeapon("weapon_carbinerifle", 250)
 		end
 		COruzje[src] = false
 	else
 		TriggerEvent("DiscordBot:Anticheat", GetPlayerName(src).."["..src.."] je pokusao pozvati event za craft oruzja, a nije iskoristio dijelove!")
+	    TriggerEvent("AntiCheat:Citer", src)
+	end
+end)
+
+ESX.RegisterServerCallback('kraft:ProvjeriKolicinu', function(source, cb, item)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	local morel = false
+	if xPlayer.getInventoryItem(item).count+1 <= xPlayer.getInventoryItem(item).limit then
+		if item == "kkundak"then
+			if xPlayer.getInventoryItem("iron").count >= 5 then
+				xPlayer.removeInventoryItem("iron", 5)
+				morel = true
+				COruzje[src] = true
+			end
+		elseif item == "ckundak"then
+			if xPlayer.getInventoryItem("iron").count >= 10 then
+				xPlayer.removeInventoryItem("iron", 10)
+				morel = true
+				COruzje[src] = true
+			end
+		end
+	end
+	cb(morel)
+end)
+
+ESX.RegisterServerCallback('kraft:ProvjeriKolicinu2', function(source, cb, item)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	local morel = false
+	if xPlayer.getInventoryItem(item).count+1 <= xPlayer.getInventoryItem(item).limit then
+		if item == "kcijev"then
+			if xPlayer.getMoney() >= 5000 then
+				xPlayer.removeMoney(5000)
+				xPlayer.addInventoryItem("kcijev", 1)
+				morel = true
+			end
+		elseif item == "ccijev"then
+			if xPlayer.getMoney() >= 6000 then
+				xPlayer.removeMoney(6000)
+				xPlayer.addInventoryItem("ccijev", 1)
+				morel = true
+			end
+		end
+	end
+	cb(morel)
+end)
+
+local skupljanje = vector3(59.282123565674, -774.98114013672, 17.823108673096)
+RegisterNetEvent("kraft:SkupiGa")
+AddEventHandler('kraft:SkupiGa', function()
+	local src = source
+	local koord = GetEntityCoords(GetPlayerPed(src))
+	if #(koord-skupljanje) <= 3.5 then
+		local xPlayer = ESX.GetPlayerFromId(src)
+		xPlayer.addInventoryItem("iron", 1)
+	else
+		TriggerEvent("DiscordBot:Anticheat", GetPlayerName(src).."["..src.."] je pokusao pozvati event za dobijanje zeljeza, a nije blizu lokacije skupljanja!")
+	    TriggerEvent("AntiCheat:Citer", src)
+	end
+end)
+
+RegisterNetEvent("kraft:DajKundak")
+AddEventHandler('kraft:DajKundak', function(item)
+	local src = source
+	if COruzje[src] then
+		local xPlayer = ESX.GetPlayerFromId(src)
+		xPlayer.addInventoryItem(item, 1)
+		COruzje[src] = false
+	else
+		TriggerEvent("DiscordBot:Anticheat", GetPlayerName(src).."["..src.."] je pokusao pozvati event za preradu zeljeza u kundak, a nije zapoceo sa preradom!")
 	    TriggerEvent("AntiCheat:Citer", src)
 	end
 end)

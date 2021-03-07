@@ -26,6 +26,8 @@ files {
 	'html/img/kratka.png',
 	'html/img/pojas.png',
 	'html/img/zmigavci.png',
+	'html/img/lijevi.png',
+	'html/img/desni.png',
 	'html/img/vehicle-gear.png',
 
 	'html/img/weapon-bullets.png',
