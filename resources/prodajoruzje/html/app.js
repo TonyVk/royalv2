@@ -146,7 +146,7 @@ window.addEventListener('message', function(event) {
 			x.style.display = "block";
 			y.style.display = "block";
 			Prikazan = true;
-			broj = Math.floor(Math.random() * 30)
+			broj = Math.floor(Math.random() * 100)
 			document.querySelectorAll('.form')[broj].style.display = 'block';
 		}
 		else

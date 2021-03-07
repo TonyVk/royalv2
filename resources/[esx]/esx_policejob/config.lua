@@ -210,18 +210,19 @@ Config.AuthorizedVehicles = {
 	Shared = {
 		{ model = 'police3', label = 'Novi Auto', price = 0 },
 		{ model = 'poctavia', label = 'Skoda Octavia', price = 0},
-		{ model = 'g63amg6x6cop', label = 'Mercedes 6x6', price = 0},
+		{ model = 'g63amg6x6cop', label = 'Mercedes 6x6', price = 0}
 	},
 
 	recruit = {
 		{ model = 'police', label = 'Mercedes CLA', price = 0 },
-		{ model = 'poctavia', label = 'Skoda Octavia', price = 0},
+		{ model = 'poctavia', label = 'Skoda Octavia', price = 0}
 	},
 
 	officer = {
 		{ model = 'police', label = 'Mercedes CLA', price = 0 },
 		{ model = 'polgt500', label = 'Ford Mustang GT500', price = 0},
 		{ model = 'poctavia', label = 'Skoda Octavia', price = 0},
+		{ model = 'policeb', label = 'Motor', price = 0}
 	},
 
 	sergeant = {
@@ -229,11 +230,13 @@ Config.AuthorizedVehicles = {
 		{ model = 'polgt500', label = 'Ford Mustang GT500', price = 0},
 		{ model = 'pol718', label = 'Porsche Cayman 718', price = 0 },
 		{ model = 'poctavia', label = 'Skoda Octavia', price = 0},
+		{ model = 'policeb', label = 'Motor', price = 0}
 	},
 
 	intendent = {
 		{ model = 'pranger', label = 'Ranger', price = 0},
 		{ model = 'sheriff', label = 'Sheriff', price = 0},
+		{ model = 'policeb', label = 'Motor', price = 0}
 	},
 	
 	lieutenant = {
@@ -241,7 +244,8 @@ Config.AuthorizedVehicles = {
 		{ model = 'police4', label = 'BMW 520d', price = 0 },
 		{ model = 'riot2', label = 'Neko vozilo', price = 0},
 		{ model = 'Sheriff2', label = 'Mercedes G', price = 0},
-		{ model = 'umkscout', label = 'Jeep', price = 0}
+		{ model = 'umkscout', label = 'Jeep', price = 0},
+		{ model = 'policeb', label = 'Motor', price = 0}
 	},
 	
 	interventna = {
@@ -265,7 +269,8 @@ Config.AuthorizedVehicles = {
 		{ model = 'police4', label = 'BMW 520d', price = 0 },
 		{ model = 'riot2', label = 'Neko vozilo', price = 0},
 		{ model = 'Sheriff2', label = 'Mercedes G', price = 0},
-		{ model = 'umkscout', label = 'Jeep', price = 0}
+		{ model = 'umkscout', label = 'Jeep', price = 0},
+		{ model = 'policeb', label = 'Motor', price = 0}
 	},
 
 	boss = {
@@ -273,12 +278,12 @@ Config.AuthorizedVehicles = {
 		{ model = 'polgt500', label = 'Ford Mustang GT500', price = 0},
 		{ model = 'riot', label = 'Oklopno vozilo Interventna', price = 0 },
 		{ model = 'riot2', label = 'Neko vozilo', price = 0},
-		{ model = 'fbi', label = 'Audi S8', price = 0 },
 		{ model = 'police4', label = 'BMW 520d', price = 0 },
 		{ model = 'Rumpo3', label = 'Vojni Kombi', price = 0},
 		{ model = 'Sheriff2', label = 'Mercedes G', price = 0},
 		{ model = 'fbi2', label = 'VW Touareg', price = 0},
-		{ model = 'umkscout', label = 'Jeep', price = 0}
+		{ model = 'umkscout', label = 'Jeep', price = 0},
+		{ model = 'policeb', label = 'Motor', price = 0}
 	}
 }
 
