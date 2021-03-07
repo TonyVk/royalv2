@@ -264,6 +264,36 @@ RegisterCommand("puls", function(source, args, rawCommandString)
 	end
 end, false)
 
+-- Fast travels
+Citizen.CreateThread(function()
+	while true do
+		Citizen.Wait(0)
+		local letSleep = true
+		if ESX.PlayerData.job and ESX.PlayerData.job.name == 'ambulance' then
+			local playerCoords = GetEntityCoords(PlayerPedId())
+
+			for hospitalNum,hospital in pairs(Config.Hospitals) do
+				-- Fast Travels
+				for k,v in ipairs(hospital.FastTravels) do
+					local distance = #(playerCoords - v.From)
+
+					if distance < Config.DrawDistance then
+						DrawMarker(v.Marker.type, v.From, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Marker.x, v.Marker.y, v.Marker.z, v.Marker.r, v.Marker.g, v.Marker.b, v.Marker.a, false, false, 2, v.Marker.rotate, nil, nil, false)
+						letSleep = false
+
+						if distance < v.Marker.x then
+							FastTravel(v.To.coords, v.To.heading)
+						end
+					end
+				end
+			end
+		end
+		if letSleep then
+			Citizen.Wait(500)
+		end
+	end
+end)
+
 -- Draw markers & Marker logic
 Citizen.CreateThread(function()
 	while true do
@@ -330,7 +360,6 @@ Citizen.CreateThread(function()
 						isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'Helicopters', k
 					end
 				end
-
 			end
 
 			-- Logic for exiting & entering markers
@@ -768,9 +797,8 @@ function OpenHelicopterSpawnerMenu(hospital, partNum)
 	local playerCoords = GetEntityCoords(PlayerPedId())
 	ESX.PlayerData = ESX.GetPlayerData()
 	local elements = {
-		{label = _U('helicopter_garage'), action = 'garage'},
-		{label = _U('helicopter_store'), action = 'store_garage'},
-		{label = _U('helicopter_buy'), action = 'buy_helicopter'}
+		{label = _U('helicopter_garage'), action = 'buy_helicopter'},
+		{label = _U('helicopter_store'), action = 'store_garage'}
 	}
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'helicopter_spawner', {
@@ -1023,7 +1051,8 @@ function OpenPharmacyMenu()
 		align    = 'top-left',
 		elements = {
 			{label = _U('pharmacy_take', _U('medikit')), value = 'medikit'},
-			{label = _U('pharmacy_take', _U('bandage')), value = 'bandage'}
+			{label = _U('pharmacy_take', _U('bandage')), value = 'bandage'},
+			{label = _U('pharmacy_take', "Repairkit"), value = 'repairkit'}
 		}
 	}, function(data, menu)
 		local torba = 0

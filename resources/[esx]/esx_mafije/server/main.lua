@@ -2123,8 +2123,8 @@ ESX.RegisterServerCallback('kupistvari', function(source, cb, stvar, maf)
 		if (xItem.count + 1) <= xItem.limit then
 			local soc = "society_"..maf
 			TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
-				if account.money >= 2500 then
-					account.removeMoney(2500)
+				if account.money >= 10000 then
+					account.removeMoney(10000)
 					xPlayer.addInventoryItem('ktijelo', 1)
 					cb(true)
 				else
@@ -2139,9 +2139,41 @@ ESX.RegisterServerCallback('kupistvari', function(source, cb, stvar, maf)
 		if (xItem.count + 1) <= xItem.limit then
 			local soc = "society_"..maf
 			TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
-				if account.money >= 5000 then
-					account.removeMoney(5000)
+				if account.money >= 15000 then
+					account.removeMoney(15000)
 					xPlayer.addInventoryItem('ctijelo', 1)
+					cb(true)
+				else
+					cb(false)
+				end
+			end)
+		else
+			cb(false)
+		end
+	elseif stvar == "stijelo" then
+		local xItem = xPlayer.getInventoryItem('stijelo')
+		if (xItem.count + 1) <= xItem.limit then
+			local soc = "society_"..maf
+			TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
+				if account.money >= 20000 then
+					account.removeMoney(20000)
+					xPlayer.addInventoryItem('stijelo', 1)
+					cb(true)
+				else
+					cb(false)
+				end
+			end)
+		else
+			cb(false)
+		end
+	elseif stvar == "smtijelo" then
+		local xItem = xPlayer.getInventoryItem('smtijelo')
+		if (xItem.count + 1) <= xItem.limit then
+			local soc = "society_"..maf
+			TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
+				if account.money >= 7000 then
+					account.removeMoney(7000)
+					xPlayer.addInventoryItem('smtijelo', 1)
 					cb(true)
 				else
 					cb(false)

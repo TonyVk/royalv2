@@ -157,7 +157,7 @@ function OnPlayerDeath()
 				if LastDamagedBone == 31086 then
 					TriggerServerEvent('DiscordBot:playerDied', GetPlayerName(PlayerId()) .. ' je dobio metak u glavu')
 					TriggerEvent('chat:addMessage', { args = { '[HITNA]', 'Pogođeni ste u glavu i nije vam bilo spasa!' } })
-					RemoveItemsAfterRPDeath()
+					TriggerEvent("esx_hitna:umrisine")
 					return
 				end
 			end
@@ -455,6 +455,7 @@ function RemoveItemsAfterRPDeath()
 		while not IsScreenFadedOut() do
 			Citizen.Wait(10)
 		end
+
 		ESX.TriggerServerCallback('ambulanta:kradenakonsmrti', function()
 			local formattedCoords = {
 				x = Config.RespawnPoint.coords.x,

@@ -1,7 +1,7 @@
 let Prikazan = false;
 let Prikazan2 = false;
 let broj = -1;
-let brojic = 2;
+let brojic = 0;
 
 (function() {
   
@@ -158,6 +158,7 @@ window.addEventListener('message', function(event) {
 	}
 	if (item.prikazi2) {
 		var x;
+		console.log(item.broj);
 		if(item.broj == 0){
 			x = document.getElementById("kalas");
 		}
@@ -167,28 +168,15 @@ window.addEventListener('message', function(event) {
 		else if(item.broj == 2){
 			x = document.getElementById("special");	
 		}
+		else if(item.broj == 3){
+			x = document.getElementById("smg");	
+		}
 		brojic = item.broj;
 		var y = document.getElementById("glavni");
-		var kt = document.getElementById("infodiv2");
-		var kk = document.getElementById("infodiv");
-		var cl = document.getElementById("infodiv4");
-		var kc = document.getElementById("infodiv3");
 		if(Prikazan2 == false)
 		{
 			x.style.display = "block";
 			y.style.display = "block";
-			if(item.ktijelo){
-				kt.style.display = "block";
-			}
-			if(item.kkundak){
-				kk.style.display = "block";
-			}
-			if(item.clip){
-				cl.style.display = "block";
-			}
-			if(item.kcijev){
-				kc.style.display = "block";
-			}
 			Prikazan2 = true;
 			Odradi();
 		}
@@ -196,16 +184,12 @@ window.addEventListener('message', function(event) {
 		{
 			x.style.display = "none";
 			y.style.display = "none";
-			kt.style.display = "none";
-			kk.style.display = "none";
-			kc.style.display = "none";
-			cl.style.display = "none";
 			Prikazan2 = false;
 		}
 	}
 });
 
-Odradi();
+//Odradi();
 
 function Odradi(){
 		var mousePosition;
@@ -285,6 +269,9 @@ function Odradi(){
 				else if(brojic == 2){
 					bot = coords.bottom-91;
 				}
+				else if(brojic == 3){
+					bot = coords.bottom-100;
+				}
 				if(coords2.top >= coords.top && coords2.top <= bot && coords2.left >= coords.left && coords2.left <= coords.bottomRight){
 					console.info("inside");
 					Brojac++;
@@ -322,6 +309,9 @@ function Odradi(){
 				}
 				else if(brojic == 2){
 					bot = coords.bottom-164;
+				}
+				else if(brojic == 3){
+					bot = coords.bottom-176;
 				}
 				if(coords2.top >= coords.top && coords2.top <= bot && coords2.left >= coords.left && coords2.left <= coords.bottomRight){
 					console.info("inside");
@@ -361,6 +351,9 @@ function Odradi(){
 				else if(brojic == 2){
 					bot = coords.bottom-60;
 				}
+				else if(brojic == 3){
+					bot = coords.bottom-81;
+				}
 				if(coords2.top >= coords.top && coords2.top <= bot && coords2.left >= coords.left && coords2.left <= coords.bottomRight){
 					console.info("inside");
 					Brojac++;
@@ -398,6 +391,9 @@ function Odradi(){
 				}
 				else if(brojic == 2){
 					bot = coords.bottom-103;
+				}
+				else if(brojic == 3){
+					bot = coords.bottom-76;
 				}
 				if(coords2.top >= coords.top && coords2.top <= bot && coords2.left >= coords.left && coords2.left <= coords.bottomRight){
 					console.info("inside");

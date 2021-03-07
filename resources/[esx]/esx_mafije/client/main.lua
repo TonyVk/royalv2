@@ -1120,7 +1120,9 @@ function OpenNewMenu()
 	if grado == 0 then
 		table.insert(elements, {label = "Kupovina stvari", value = 'buy_stvar'})
 	end
-	table.insert(elements, {label = 'Oruzarnica',  value = 'buy_oruzje'})
+	if PlayerData.job.name == Config.Tijelo then
+		table.insert(elements, {label = 'Oruzarnica',  value = 'buy_oruzje'})
+	end
 
 
     ESX.UI.Menu.Open(
@@ -3530,8 +3532,10 @@ function OpenBuyStvarMenu(station)
 	table.insert(elements, {label = 'Termitna bomba (5000$)', value = 'termit'})
 	
 	if PlayerData.job.name == Config.Tijelo then
-		table.insert(elements, {label = 'Tijelo za assault rifle (2500$)', value = 'ktijelo'})
-		table.insert(elements, {label = 'Tijelo za carbine rifle (5000$)', value = 'ctijelo'})
+		table.insert(elements, {label = 'Tijelo za assault rifle (10000$)', value = 'ktijelo'})
+		table.insert(elements, {label = 'Tijelo za carbine rifle (15000$)', value = 'ctijelo'})
+		table.insert(elements, {label = 'Tijelo za special carbine (20000$)', value = 'stijelo'})
+		table.insert(elements, {label = 'Tijelo za smg (7000$)', value = 'smtijelo'})
 	end
 
     ESX.UI.Menu.Open(

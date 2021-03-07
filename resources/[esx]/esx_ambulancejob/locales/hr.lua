@@ -56,7 +56,7 @@ Locales['hr'] = {
   ['fast_travel'] = 'pritisnite ~INPUT_CONTEXT~ za brzi port.',
   ['open_pharmacy'] = 'pritisnite ~INPUT_CONTEXT~ da otvorite ormaric sa lijekovima.',
   ['pharmacy_menu_title'] = 'ljekarna',
-  ['pharmacy_take'] = 'uzima <span style="color:blue;">%s</span>',
+  ['pharmacy_take'] = 'Uzmi <span style="color:blue;">%s</span>',
   ['medikit'] = 'medkit',
   ['bandage'] = 'zavoji',
   ['max_item'] = 'Vec nosite sa sobom dovoljno.',

@@ -25,5 +25,7 @@ files {
 	'html/main.css',
 	'html/ralesrecka.png',
 	'html/carbine/*.png',
-	'html/kalas/*.png'
+	'html/kalas/*.png',
+	'html/special/*.png',
+	'html/smg/*.png'
 }

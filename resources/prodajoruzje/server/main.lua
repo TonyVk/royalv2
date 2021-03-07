@@ -83,6 +83,8 @@ ESX.RegisterUsableItem("ktijelo", function(source)
 		COruzje[_source] = true
 		TriggerClientEvent("esx_invh:closeinv", _source)
 		TriggerClientEvent('prodajoruzje:SloziOruzje', _source, 0)
+	else
+		xPlayer.showNotification("Fali vam jedan od dijelova!")
 	end
 end)
 
@@ -97,6 +99,8 @@ ESX.RegisterUsableItem("ctijelo", function(source)
 		COruzje[_source] = true
 		TriggerClientEvent("esx_invh:closeinv", _source)
 		TriggerClientEvent('prodajoruzje:SloziOruzje', _source, 1)
+	else
+		xPlayer.showNotification("Fali vam jedan od dijelova!")
 	end
 end)
 
@@ -111,6 +115,24 @@ ESX.RegisterUsableItem("stijelo", function(source)
 		COruzje[_source] = true
 		TriggerClientEvent("esx_invh:closeinv", _source)
 		TriggerClientEvent('prodajoruzje:SloziOruzje', _source, 2)
+	else
+		xPlayer.showNotification("Fali vam jedan od dijelova!")
+	end
+end)
+
+ESX.RegisterUsableItem("smtijelo", function(source)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	local kc = xPlayer.getInventoryItem("smcijev").count
+	local kk = xPlayer.getInventoryItem("smkundak").count
+	local kt = xPlayer.getInventoryItem("smtijelo").count
+	local cl = xPlayer.getInventoryItem("clip").count
+	if kc > 0 and kk > 0 and kt > 0 and cl > 0 then
+		COruzje[_source] = true
+		TriggerClientEvent("esx_invh:closeinv", _source)
+		TriggerClientEvent('prodajoruzje:SloziOruzje', _source, 3)
+	else
+		xPlayer.showNotification("Fali vam jedan od dijelova!")
 	end
 end)
 
@@ -123,6 +145,8 @@ ESX.RegisterUsableItem("grebalica", function(source)
 		Grebalice[_source] = true
 		xPlayer.removeInventoryItem("grebalica", 1)
 		TriggerClientEvent('prodajoruzje:grebalica', _source)
+	else
+		xPlayer.showNotification("Fali vam jedan od dijelova!")
 	end
 end)
 
@@ -215,6 +239,12 @@ ESX.RegisterServerCallback('kraft:ProvjeriKolicinu', function(source, cb, item)
 				morel = true
 				COruzje[src] = true
 			end
+		elseif item == "smkundak"then
+			if xPlayer.getInventoryItem("iron").count >= 4 then
+				xPlayer.removeInventoryItem("iron", 4)
+				morel = true
+				COruzje[src] = true
+			end
 		end
 	end
 	cb(morel)
@@ -241,6 +271,12 @@ ESX.RegisterServerCallback('kraft:ProvjeriKolicinu2', function(source, cb, item)
 			if xPlayer.getMoney() >= 7000 then
 				xPlayer.removeMoney(7000)
 				xPlayer.addInventoryItem("scijev", 1)
+				morel = true
+			end
+		elseif item == "smcijev"then
+			if xPlayer.getMoney() >= 4000 then
+				xPlayer.removeMoney(4000)
+				xPlayer.addInventoryItem("smcijev", 1)
 				morel = true
 			end
 		end
