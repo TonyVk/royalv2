@@ -208,6 +208,12 @@ AddEventHandler('prodajoruzje:KoiKuracJeOvo2', function(br)
 			xPlayer.removeInventoryItem("stijelo", 1)
 			xPlayer.removeInventoryItem("clip", 1)
 			xPlayer.addWeapon("weapon_specialcarbine", 250)
+		elseif br == 3 then
+			xPlayer.removeInventoryItem("smcijev", 1)
+			xPlayer.removeInventoryItem("smkundak", 1)
+			xPlayer.removeInventoryItem("smtijelo", 1)
+			xPlayer.removeInventoryItem("clip", 1)
+			xPlayer.addWeapon("weapon_smg", 250)
 		end
 		COruzje[src] = false
 	else

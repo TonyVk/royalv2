@@ -9,4 +9,4 @@ Config.Locale                     = 'hr'
 Config.Blipovi					  = true
 Config.Price 					  = 1500
 Config.RepairMultiplier 		  = 1
-Config.Tijelo 					  = "test"
+Config.Tijelo 					  = "sarajlije"
