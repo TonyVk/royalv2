@@ -155,28 +155,20 @@ AddEventHandler('prodajoruzje:KoiKuracJeOvo', function(br)
 	local src = source
 	if Grebalice[src] then
 		local xPlayer = ESX.GetPlayerFromId(src)
-		if br == 1 then
-			xPlayer.addMoney(500)
-		elseif br == 3 then
-			xPlayer.addMoney(1)
-		elseif br == 5 then
-			xPlayer.addMoney(100)
-		elseif br == 7 then
-			xPlayer.addMoney(2)
-		elseif br == 9 then
-			xPlayer.addMoney(1000)
-		elseif br == 11 then
+		if br == 19 then
+			xPlayer.addMoney(10)
+		elseif br == 25 then
 			xPlayer.addMoney(5)
-		elseif br == 15 then
-			xPlayer.addMoney(55000)
-		elseif br == 19 then
+		elseif br == 30 then
+			xPlayer.addMoney(500)
+		elseif br == 35 then
+			xPlayer.addMoney(25)
+		elseif br == 40 then
+			xPlayer.addMoney(50)
+		elseif br == 33 then
 			xPlayer.addInventoryItem("burek", 1)
-		elseif br == 21 then
-			xPlayer.addMoney(2500)
-		elseif br == 23 then
+		elseif br == 37 then
 			xPlayer.addInventoryItem("kola", 1)
-		elseif br == 26 then
-			xPlayer.addMoney(5000)
 		end
 		Grebalice[src] = false
 	else
@@ -295,7 +287,7 @@ RegisterNetEvent("kraft:SkupiGa")
 AddEventHandler('kraft:SkupiGa', function()
 	local src = source
 	local koord = GetEntityCoords(GetPlayerPed(src))
-	if #(koord-skupljanje) <= 3.5 then
+	if #(koord-skupljanje) <= 15.0 then
 		local xPlayer = ESX.GetPlayerFromId(src)
 		xPlayer.addInventoryItem("iron", 1)
 	else

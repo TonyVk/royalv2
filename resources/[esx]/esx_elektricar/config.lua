@@ -41,7 +41,7 @@ Config.Zones = {
 }
 
 Config.Uniforms = {
-	EUP = true,
+	EUP = false,
 	uniforma = { 
 		male = {
 			['tshirt_1'] = 59,  ['tshirt_2'] = 0,
