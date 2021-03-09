@@ -13,7 +13,7 @@ local LastPosition		= nil
 local polarAngleDeg		= 0;
 local azimuthAngleDeg	= 90;
 local radius			= -3.5;
-local cam 				= nil
+--local cam 				= nil
 local PlayerDate		= {}
 local ShowInfos			= false
 local group
@@ -33,9 +33,11 @@ function polar3DToWorld3D(entityPosition, radius, polarAngleDeg, azimuthAngleDeg
 end
 
 function spectate(target)
-	ESX.TriggerServerCallback('esx_spectate:getPlayerData', function(player, kord)
+	ESX.TriggerServerCallback('esx_spectate:getPlayerData', function(player, kord, ped, id)
 		if not InSpectatorMode then
 			LastPosition = GetEntityCoords(GetPlayerPed(-1))
+		else
+			resetNormalCamera()
 		end
 
 		local playerPed = GetPlayerPed(-1)
@@ -45,7 +47,6 @@ function spectate(target)
 		local xa, ya, za = table.unpack(kord)
 		SetEntityCoords(playerPed, xa, ya, za - 5)
 		SetPedMaxTimeUnderwater(playerPed, 2000.00)
-		
 		local komando = "/spec "..target
 		TriggerServerEvent("DiscordBot:RegCmd", GetPlayerServerId(PlayerId()), komando)
 
@@ -58,7 +59,7 @@ function spectate(target)
 		end
 
 		--Citizen.CreateThread(function()
-			while not DoesCamExist(cam) do
+			--[[while not DoesCamExist(cam) do
 			--if not DoesCamExist(cam) then
 				Wait(0)
 				cam = CreateCam('DEFAULT_SCRIPTED_CAMERA', true)
@@ -66,7 +67,14 @@ function spectate(target)
 
 			SetCamCoord(cam,  xa, ya, za)
 			SetCamActive(cam, true)
-			RenderScriptCams(true, false, 0, true, true)
+			RenderScriptCams(true, false, 0, true, true)]]
+			local pedara = GetPlayerPed(GetPlayerFromServerId(id))
+			while pedara == PlayerPedId() do
+				Wait(100)
+				pedara = GetPlayerPed(GetPlayerFromServerId(id))
+			end
+			RequestCollisionAtCoord(xa, ya, za)
+			NetworkSetInSpectatorMode(true, pedara)
 
 			TargetSpectate  = target
 			InSpectatorMode = true
@@ -77,14 +85,18 @@ end
 
 function resetNormalCamera()
 	InSpectatorMode = false
+	local targetPlayerId = GetPlayerFromServerId(TargetSpectate)
+	local ped = GetPlayerPed(targetPlayerId)
+	NetworkSetInSpectatorMode(false, ped)
 	TargetSpectate  = nil
 	local playerPed = GetPlayerPed(-1)
 
-	SetCamActive(cam,  false)
-	RenderScriptCams(false, false, 0, true, true)
+	--SetCamActive(cam,  false)
+	--RenderScriptCams(false, false, 0, true, true)
 
 	SetEntityCollision(playerPed, true, true)
 	SetEntityVisible(playerPed, true)
+	RequestCollisionAtCoord(LastPosition.x, LastPosition.y, LastPosition.z)
 	SetEntityCoords(playerPed, LastPosition.x, LastPosition.y, LastPosition.z)
 	SetPedMaxTimeUnderwater(playerPed, 10.0)
 end
@@ -237,12 +249,10 @@ function OpenAdminActionMenu(player)
     end, GetPlayerServerId(player))
 end
 
-Citizen.CreateThread(function()
+--[[Citizen.CreateThread(function()
 	while true do
 		Wait(0)
-		
 		if IsControlJustReleased(1, 163) or IsDisabledControlJustReleased(1, 163) then
-			print('triggered')
 			ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 				if br == 1 then
 					TriggerEvent('esx_spectate:spectate')
@@ -250,7 +260,16 @@ Citizen.CreateThread(function()
 			end)
 		end
 	end
-end)
+end)]]
+
+RegisterCommand('+spectate', function()
+    ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if br == 1 then
+			TriggerEvent('esx_spectate:spectate')
+		end
+	end)
+end, false)
+RegisterKeyMapping('+spectate', 'Spectate menu', 'keyboard', '9')
 
 RegisterNetEvent('es_admin:setGroup')
 AddEventHandler('es_admin:setGroup', function(g)
@@ -266,13 +285,11 @@ AddEventHandler('esx_spectate:spectate', function()
 end)
 
 RegisterNUICallback('select', function(data, cb)
-	print("select UI " .. json.encode(data))
 	spectate(data.id)
 	SetNuiFocus(false)
 end)
 
 RegisterNUICallback('close', function(data, cb)
-	print("closing UI")
 	SetNuiFocus(false)
 end)
 
@@ -287,14 +304,9 @@ RegisterNUICallback('kick', function(data, cb)
 	TriggerEvent('esx_spectate:spectate')
 end)
 
-
-
 Citizen.CreateThread(function()
-
   	while true do
-
 		Wait(0)
-
 		if InSpectatorMode then
 			local targetPlayerId = GetPlayerFromServerId(TargetSpectate)
 			local playerPed	  = GetPlayerPed(-1)
@@ -309,7 +321,7 @@ Citizen.CreateThread(function()
 				end
 			end
 
-			if IsControlPressed(2, 241) then
+			--[[if IsControlPressed(2, 241) then
 				radius = radius + 2.0;
 			end
 
@@ -339,12 +351,12 @@ Citizen.CreateThread(function()
 			local nextCamLocation = polar3DToWorld3D(coords, radius, polarAngleDeg, azimuthAngleDeg)
 
 			SetCamCoord(cam,  nextCamLocation.x,  nextCamLocation.y,  nextCamLocation.z)
-			PointCamAtEntity(cam,  targetPed)
+			PointCamAtEntity(cam,  targetPed)]]
 			SetEntityCoords(playerPed,  coords.x, coords.y, coords.z - 5)
 			--NetworkSetTalkerProximity(19.0)
 
 			if IsControlPressed(2, 47) then
-			OpenAdminActionMenu(targetPlayerId)
+				OpenAdminActionMenu(targetPlayerId)
 			end
 			
 -- taken from Easy Admin (thx to Bluethefurry)  --
@@ -374,6 +386,5 @@ Citizen.CreateThread(function()
 			end
 -- end of taken from easyadmin -- 
 		end
-
   	end
 end)
