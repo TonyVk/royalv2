@@ -63,7 +63,7 @@ var tableauQuestion = [
 	},
 
 	{
-		question: "Sta je dozvolito kada obilazite drugo vozilo",
+		question: "Sta je dozvoljeno kada obilazite drugo vozilo",
 		propositionA: "Slijedite ga pazljivo kako biste ga brze prosli",
 		propositionB: "Prodete ga bez napustanja kolnika",
 		propositionC: "Vozite se na suprotnoj strani ceste da biste prosli",

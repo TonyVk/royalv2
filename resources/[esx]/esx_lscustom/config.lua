@@ -578,7 +578,7 @@ Config.Menus = {
 		modArmor		= _U('armor'),
 		modTurbo		= _U('turbo'),
 		mjenjac 		= "Zamjena mjenjaca",
-		swap 			= "Zamjena motora"
+		--swap 			= "Zamjena motora"
 	},
 	modEngine = {
 		label = _U('engine'),

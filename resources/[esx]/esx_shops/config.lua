@@ -59,7 +59,7 @@ Config.Zones = {
 	BurgeriSeSutaju = {
 		Items = {},
 		Pos = {
-			vector3(-1194.5, -891.52, 13.0),
+			
 		}
 	},
 }
