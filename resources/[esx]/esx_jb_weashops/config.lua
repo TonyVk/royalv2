@@ -5,13 +5,13 @@ Config.Color          			= { r = 0, g = 128, b = 255 }
 Config.Type           			= 1
 Config.Locale         			= 'hr'
 Config.EnableLicense  			= true
-Config.LicensePrice   			= 50000
+Config.LicensePrice   			= 150000
 Config.EnableClipGunShop		= true
 Config.EnableClipBlackWeashop	= true
 
 Config.EnableClip = {
 	GunShop = {
-		Price = 250,
+		Price = 800,
 		Label = "Sarzer"	
 	}
 }
