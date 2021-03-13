@@ -44,7 +44,29 @@ files {
   'audioconfig/r35sound_game.dat151.rel',
   'audioconfig/r35sound_sounds.dat54.rel',
   'sfx/dlc_r35sound/r35sound.awc',
-  'sfx/dlc_r35sound/r35sound_npc.awc'
+  'sfx/dlc_r35sound/r35sound_npc.awc',
+  'audioconfig/gt3flat6_game.dat151.nametable',
+  'audioconfig/gt3flat6_game.dat151.rel',
+  'audioconfig/gt3flat6_sounds.dat54.nametable',
+  'audioconfig/gt3flat6_sounds.dat54.rel',
+  'audioconfig/gt3flat6_amp.dat10.nametable',
+  'audioconfig/gt3flat6_amp.dat10.rel',
+  'sfx/dlc_gt3flat6/gt3flat6.awc',
+  'sfx/dlc_gt3flat6/gt3flat6_npc.awc',
+  'audioconfig/k20a_game.dat151.nametable',
+  'audioconfig/k20a_game.dat151.rel',
+  'audioconfig/k20a_sounds.dat54.nametable',
+  'audioconfig/k20a_sounds.dat54.rel',
+  'audioconfig/k20a_amp.dat10.nametable',
+  'audioconfig/k20a_amp.dat10.rel',
+  'sfx/dlc_k20a/k20a.awc',
+  'sfx/dlc_k20a/k20a_npc.awc',
+  'audioconfig/predatorv8_game.dat151.nametable',
+  'audioconfig/predatorv8_game.dat151.rel',
+  'audioconfig/predatorv8_sounds.dat54.nametable',
+  'audioconfig/predatorv8_sounds.dat54.rel',
+  'sfx/dlc_predatorv8/predatorv8.awc',
+  'sfx/dlc_predatorv8/predatorv8_npc.awc',
 }
 
 data_file 'AUDIO_GAMEDATA' 'audioconfig/lambov10_game.dat'
@@ -76,3 +98,14 @@ data_file 'AUDIO_WAVEPACK' 'sfx/dlc_m297zonda'
 data_file 'AUDIO_GAMEDATA' 'audioconfig/r35sound_game.dat'
 data_file 'AUDIO_SOUNDDATA' 'audioconfig/r35sound_sounds.dat'
 data_file 'AUDIO_WAVEPACK' 'sfx/dlc_r35sound'
+data_file 'AUDIO_GAMEDATA' 'audioconfig/predatorv8_game.dat'
+data_file 'AUDIO_SOUNDDATA' 'audioconfig/predatorv8_sounds.dat'
+data_file 'AUDIO_WAVEPACK' 'sfx/dlc_predatorv8'
+data_file 'AUDIO_SYNTHDATA' 'audioconfig/k20a_amp.dat'
+data_file 'AUDIO_GAMEDATA' 'audioconfig/k20a_game.dat'
+data_file 'AUDIO_SOUNDDATA' 'audioconfig/k20a_sounds.dat'
+data_file 'AUDIO_WAVEPACK' 'sfx/dlc_k20a'
+data_file 'AUDIO_SYNTHDATA' 'audioconfig/gt3flat6_amp.dat'
+data_file 'AUDIO_GAMEDATA' 'audioconfig/gt3flat6_game.dat'
+data_file 'AUDIO_SOUNDDATA' 'audioconfig/gt3flat6_sounds.dat'
+data_file 'AUDIO_WAVEPACK' 'sfx/dlc_gt3flat6'
