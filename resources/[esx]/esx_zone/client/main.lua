@@ -80,7 +80,7 @@ function SpawnBlipove()
 	end
 	local naso = false
 	for i=1, #Mafije, 1 do
-		if PlayerData.job.name == Mafije[i].Ime then
+		if PlayerData.job.name == Mafije[i].Ime and PlayerData.job.name ~= "automafija" then
 			naso = true
 			break
 		end
@@ -148,7 +148,7 @@ AddEventHandler('zone:UpdateZonu', function(ime, koord, rot)
 				Zone[i].Rotacija = rot
 				local naso = false
 				for a=1, #Mafije, 1 do
-					if PlayerData.job.name == Mafije[a].Ime then
+					if PlayerData.job.name == Mafije[a].Ime and PlayerData.job.name ~= "automafija" then
 						naso = true
 						break
 					end
@@ -193,7 +193,7 @@ AddEventHandler('zone:UpdateBoju', function(ime, boja, maf, lab)
 				Zone[i].Label = lab
 				local naso = false
 				for a=1, #Mafije, 1 do
-					if PlayerData.job.name == Mafije[a].Ime then
+					if PlayerData.job.name == Mafije[a].Ime and PlayerData.job.name ~= "automafija" then
 						naso = true
 						break
 					end
@@ -226,7 +226,7 @@ AddEventHandler('zone:ObrisiZonu', function(ime)
 			if Zone[i].Ime == ime then
 				local naso = false
 				for a=1, #Mafije, 1 do
-					if PlayerData.job.name == Mafije[a].Ime then
+					if PlayerData.job.name == Mafije[a].Ime and PlayerData.job.name ~= "automafija" then
 						naso = true
 						break
 					end
@@ -247,7 +247,7 @@ AddEventHandler('zone:ObrisiMafiju', function(ime)
 	for i=1, #Mafije, 1 do
 		if Mafije[i] ~= nil then
 			if Mafije[i].Ime == ime then
-				if PlayerData.job.name == Mafije[i].Ime then
+				if PlayerData.job.name == Mafije[i].Ime and PlayerData.job.name ~= "automafija" then
 					for a=1, #Zone, 1 do
 						if Zone[a] ~= nil then
 							RemoveBlip(Zone[a].ID)
@@ -528,7 +528,7 @@ AddEventHandler('esx:setJob', function(job)
     PlayerData.job = job
 	local naso = false
 	for i=1, #Mafije, 1 do
-		if job.name == Mafije[i].Ime then
+		if job.name == Mafije[i].Ime and PlayerData.job.name ~= "automafija" then
 			naso = true
 			break
 		end
@@ -672,14 +672,14 @@ Citizen.CreateThread(function()
 										local boja = 0
 										if not Config.DinamicneMafije then
 											for i=1, #Mafije, 1 do
-												if PlayerData.job.name == Mafije[i].Ime then
+												if PlayerData.job.name == Mafije[i].Ime and PlayerData.job.name ~= "automafija" then
 													boja = Mafije[i].Boja
 													break
 												end
 											end
 										else
 											for i=1, #Mafije, 1 do
-												if PlayerData.job.name == Mafije[i].Ime then
+												if PlayerData.job.name == Mafije[i].Ime and PlayerData.job.name ~= "automafija" then
 													for a=1, #Boje, 1 do
 														if Mafije[i].Ime == Boje[a].Mafija and Boje[a].Ime == "Blip" then
 															boja = Boje[a].Boja
