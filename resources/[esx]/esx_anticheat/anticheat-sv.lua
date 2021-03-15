@@ -302,7 +302,7 @@ end)
 RegisterNetEvent('ac:IzasoVezan')
 AddEventHandler('ac:IzasoVezan', function(ime)
 	print("[AntiCheat] | " ..ime.. " je napustio server dok je bio vezan")
-	TriggerClientEvent('chatMessage', -1, '^3[AntiCheat]', {255, 0, 0}, "^3" ..ime.. "^1 je napustio server dok je bio vezan (3 dana ban)")
+	--TriggerClientEvent('chatMessage', -1, '^3[AntiCheat]', {255, 0, 0}, "^3" ..ime.. "^1 je napustio server dok je bio vezan (3 dana ban)")
 	bandata = {}
 	bandata.reason = "AntiCheat: ( Izaso dok si bio vezan ). Ukoliko je doslo do greske, javite se na discordu: "..Config.Discord -- drop/ban reason
 	bandata.period = '3' -- days, 0 for permanent
@@ -316,7 +316,7 @@ AddEventHandler('ac:MjenjanjeModela', function()
 	local _source = source
 	local xPlayer  = ESX.GetPlayerFromId(_source)  
 	print("[AntiCheat] | " ..xPlayer.name.. "[" ..xPlayer.identifier.. "] je mjenjao model vozila sa CheatEngineom")
-	TriggerClientEvent('chatMessage', -1, '^3[AntiCheat]', {255, 0, 0}, "^3" ..xPlayer.name.. "^1 je mjenjao modele vozila")
+	--TriggerClientEvent('chatMessage', -1, '^3[AntiCheat]', {255, 0, 0}, "^3" ..xPlayer.name.. "^1 je mjenjao modele vozila")
 	--DropPlayer(source, _U('drop_player_superjump_notification')..Config.Discord)
 	bandata = {}
 	bandata.reason = "AntiCheat: ( Mjenjanje modela vozila sa CheatEngineom ). Ukoliko je doslo do greske, javite se na discordu: "..Config.Discord -- drop/ban reason
