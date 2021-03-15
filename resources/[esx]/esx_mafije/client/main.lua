@@ -3031,6 +3031,12 @@ AddEventHandler('mafije:hasEnteredMarker', function(station, part, partNum)
     CurrentActionData = {station = station}
   end
   
+  if part == 'Impound' then
+    CurrentAction     = 'menu_impound'
+    CurrentActionMsg  = "Pritisnite E da zapljenite vozilo"
+    CurrentActionData = {station = station}
+  end
+  
   if part == 'Dostava' then
 		if KVozilo == GetVehiclePedIsIn(PlayerPedId(), false) then
 			if DoesBlipExist(KBlip) then
@@ -3630,6 +3636,47 @@ Citizen.CreateThread(function()
 			OpenSPitajMenu()
         end
 		
+		if CurrentAction == 'menu_impound' then
+			local veh = GetVehiclePedIsIn(PlayerPedId(), false)
+			local vehicle = ESX.Game.GetVehicleProperties(veh)
+			ESX.TriggerServerCallback('mafije:OsobnoVozilo', function(isOwnedVehicle)
+				if isOwnedVehicle then
+					TriggerServerEvent('eden_garage:modifystate2', vehicle, 2)
+					ESX.Game.DeleteVehicle(veh)
+					Wait(200)
+					if DoesEntityExist(veh) then
+						local entity = veh
+						carModel = GetEntityModel(entity)
+						carName = GetDisplayNameFromVehicleModel(carModel)
+						NetworkRequestControlOfEntity(entity)
+						
+						local timeout = 2000
+						while timeout > 0 and not NetworkHasControlOfEntity(entity) do
+							Wait(100)
+							timeout = timeout - 100
+						end
+
+						SetEntityAsMissionEntity(entity, true, true)
+						
+						local timeout = 2000
+						while timeout > 0 and not IsEntityAMissionEntity(entity) do
+							Wait(100)
+							timeout = timeout - 100
+						end
+
+						Citizen.InvokeNative( 0xEA386986E786A54F, Citizen.PointerValueIntInitialized( entity ) )
+						
+						if (DoesEntityExist(entity)) then 
+							DeleteEntity(entity)
+						end 
+					end
+					ESX.ShowNotification("Vozilo spremljeno u garazu!")
+				else
+					ESX.ShowNotification("Ovo nije osobno vozilo ili se desio bug dupliciranog vozila!")
+				end
+			end, ESX.Math.Trim(GetVehicleNumberPlateText(veh)))
+        end
+		
 		if CurrentAction == 'menu_ulaz' then
 			for i=1, #Koord, 1 do
 				if Koord[i] ~= nil and Koord[i].Mafija == PlayerData.job.name and Koord[i].Ime == "Izlaz" then
@@ -3786,6 +3833,19 @@ Citizen.CreateThread(function()
     local currentPartNum = nil
 	while PlayerData.job == nil do
 		Wait(1)
+	end
+	if PlayerData.job.name == Config.Automafija then
+		if #(coords-Config.Impound) < 100.0 then
+			waitara = 0
+			naso = 1
+			DrawMarker(1, Config.Impound, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 50, 50, 204, 100, false, true, 2, false, false, false, false)
+		end
+		if #(coords-Config.Impound) < 1.5 then
+			isInMarker     = true
+			currentStation = 1
+			currentPart    = 'Impound'
+			currentPartNum = 1
+		end
 	end
 	for i=1, #Koord, 1 do
 		if Koord[i] ~= nil and Koord[i].Mafija == PlayerData.job.name then

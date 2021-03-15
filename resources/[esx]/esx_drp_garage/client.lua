@@ -89,7 +89,7 @@ function refreshBlips()
 			EndTextCommandSetBlipName(Blip)
 			
 			if zoneValues.MunicipalPoundPoint ~= nil then
-				if PlayerData.job.name == "zemunski" then
+				if PlayerData.job.name == "automafija" then
 					Blipara = AddBlipForCoord(zoneValues.MunicipalPoundPoint.Pos)
 					SetBlipSprite (Blipara, Config.BlipPound.Sprite)
 					SetBlipDisplay(Blipara, 4)
@@ -596,7 +596,7 @@ AddEventHandler('eden_garage:hasEnteredMarker', function(zone)
 		while PlayerData.job == nil do
 			Wait(1)
 		end
-		if PlayerData.job.name == 'zemunski' then
+		if PlayerData.job.name == 'automafija' then
 			CurrentAction     = 'pound_action_menu'
 			CurrentActionMsg  = _U('pound_action_menu')
 			CurrentActionData = {}
@@ -611,7 +611,7 @@ end)
 
 
 function ReturnVehicleMenu()
-	if PlayerData.job.name == 'zemunski' then
+	if PlayerData.job.name == 'automafija' then
 		ESX.TriggerServerCallback('eden_garage:getOutVehicles', function(vehicles)
 			local elements = {}
 			local brojac = 0

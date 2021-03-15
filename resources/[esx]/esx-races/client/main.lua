@@ -496,9 +496,12 @@ function SpawnajGa(race)
 		Ry2 = raceInfo['StartPosition']['y']
 		Rz2 = raceInfo['StartPosition']['z']
 		Rh2 = raceInfo['StartPosition']['h']
+		SetEntityCoords(PlayerPedId(), Rx, Ry, Rz, 1, 0, 0, 1)
 		RaceVehicle = CreateVehicle(model, Rx, Ry, Rz, Rh, true, false)
 		SetModelAsNoLongerNeeded(model)
-		SetEntityCoords(PlayerPedId(), Rx, Ry, Rz, 1, 0, 0, 1)
+		while not DoesEntityExist(RaceVehicle) do
+			Wait(100)
+		end
 		FreezeEntityPosition(RaceVehicle, true)
 		local cordsa = GetOffsetFromEntityInWorldCoords(RaceVehicle, 0.0, -6.0 , 0.0)
 		Rx = cordsa.x
@@ -514,9 +517,12 @@ function SpawnajGa(race)
 		if Lokacija == 0 then
 			Lokacija = 1
 			TriggerServerEvent("SpremiPomocne", Lokacija, ucitao, Prvi)
+			SetEntityCoords(PlayerPedId(), Rx, Ry, Rz, 1, 0, 0, 1)
 			RaceVehicle = CreateVehicle(model, Rx, Ry, Rz, Rh, true, false)
 			SetModelAsNoLongerNeeded(model)
-			SetEntityCoords(PlayerPedId(), Rx, Ry, Rz, 1, 0, 0, 1)
+			while not DoesEntityExist(RaceVehicle) do
+				Wait(100)
+			end
 			FreezeEntityPosition(RaceVehicle, true)
 			local cordsa = GetOffsetFromEntityInWorldCoords(RaceVehicle, 0.0, -6.0 , 0.0)
 			Rx = cordsa.x
@@ -533,9 +539,12 @@ function SpawnajGa(race)
 				Prvi = 1
 				Lokacija = 0
 				TriggerServerEvent("SpremiPomocne", Lokacija, ucitao, Prvi)
+				SetEntityCoords(PlayerPedId(), Rx2, Ry2, Rz2, 1, 0, 0, 1)
 				RaceVehicle = CreateVehicle(model, Rx2, Ry2, Rz2, Rh2, true, false)
 				SetModelAsNoLongerNeeded(model)
-				SetEntityCoords(PlayerPedId(), Rx2, Ry2, Rz2, 1, 0, 0, 1)
+				while not DoesEntityExist(RaceVehicle) do
+					Wait(100)
+				end
 				FreezeEntityPosition(RaceVehicle, true)
 				local cordsa = GetOffsetFromEntityInWorldCoords(RaceVehicle, 0.0, -6.0 , 0.0)
 				Rx2 = cordsa.x
@@ -545,9 +554,12 @@ function SpawnajGa(race)
 			else
 				Lokacija = 0
 				TriggerServerEvent("SpremiPomocne", Lokacija, ucitao, Prvi)
+				SetEntityCoords(PlayerPedId(), Rx2, Ry2, Rz2, 1, 0, 0, 1)
 				RaceVehicle = CreateVehicle(model, Rx2, Ry2, Rz2, Rh2, true, false)
 				SetModelAsNoLongerNeeded(model)
-				SetEntityCoords(PlayerPedId(), Rx2, Ry2, Rz2, 1, 0, 0, 1)
+				while not DoesEntityExist(RaceVehicle) do
+					Wait(100)
+				end
 				FreezeEntityPosition(RaceVehicle, true)
 				local cordsa = GetOffsetFromEntityInWorldCoords(RaceVehicle, 0.0, -6.0 , 0.0)
 				Rx2 = cordsa.x

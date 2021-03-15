@@ -105,9 +105,10 @@ Config.Uniforms = {
 			['tshirt_1'] = 90,  ['tshirt_2'] = 1,
 			['torso_1'] = 66,   ['torso_2'] = 1,
 			['decals_1'] = 0,   ['decals_2'] = 0,
-			['arms'] = 27,
+			['arms'] = 20,
 			['pants_1'] = 39,   ['pants_2'] = 1,
-			['shoes_1'] = 27,   ['shoes_2'] = 0
+			['shoes_1'] = 24,   ['shoes_2'] = 0,
+			['glasses_1'] = 5, ['glasses_2'] = 1
 		},
 		female = {
 			['tshirt_1'] = 90,  ['tshirt_2'] = 1,
@@ -168,9 +169,10 @@ Config.Uniforms = {
 			['tshirt_1'] = 90,  ['tshirt_2'] = 1,
 			['torso_1'] = 66,   ['torso_2'] = 1,
 			['decals_1'] = 0,   ['decals_2'] = 0,
-			['arms'] = 27,
+			['arms'] = 20,
 			['pants_1'] = 39,   ['pants_2'] = 1,
-			['shoes_1'] = 27,   ['shoes_2'] = 0
+			['shoes_1'] = 24,   ['shoes_2'] = 0,
+			['glasses_1'] = 5, ['glasses_2'] = 1
 		},
 		female = {
 			['tshirt_1'] = 90,  ['tshirt_2'] = 1,
@@ -231,9 +233,10 @@ Config.Uniforms = {
 			['tshirt_1'] = 90,  ['tshirt_2'] = 1,
 			['torso_1'] = 66,   ['torso_2'] = 1,
 			['decals_1'] = 0,   ['decals_2'] = 0,
-			['arms'] = 27,
+			['arms'] = 20,
 			['pants_1'] = 39,   ['pants_2'] = 1,
-			['shoes_1'] = 27,   ['shoes_2'] = 0
+			['shoes_1'] = 24,   ['shoes_2'] = 0,
+			['glasses_1'] = 5, ['glasses_2'] = 1
 		},
 		female = {
 			['tshirt_1'] = 90,  ['tshirt_2'] = 1,
@@ -294,9 +297,10 @@ Config.Uniforms = {
 			['tshirt_1'] = 90,  ['tshirt_2'] = 1,
 			['torso_1'] = 66,   ['torso_2'] = 1,
 			['decals_1'] = 0,   ['decals_2'] = 0,
-			['arms'] = 27,
+			['arms'] = 20,
 			['pants_1'] = 39,   ['pants_2'] = 1,
-			['shoes_1'] = 27,   ['shoes_2'] = 0
+			['shoes_1'] = 24,   ['shoes_2'] = 0,
+			['glasses_1'] = 5, ['glasses_2'] = 1
 		},
 		female = {
 			['tshirt_1'] = 90,  ['tshirt_2'] = 1,
@@ -358,9 +362,10 @@ Config.Uniforms = {
 			['tshirt_1'] = 90,  ['tshirt_2'] = 1,
 			['torso_1'] = 66,   ['torso_2'] = 1,
 			['decals_1'] = 0,   ['decals_2'] = 0,
-			['arms'] = 27,
+			['arms'] = 20,
 			['pants_1'] = 39,   ['pants_2'] = 1,
-			['shoes_1'] = 27,   ['shoes_2'] = 0
+			['shoes_1'] = 24,   ['shoes_2'] = 0,
+			['glasses_1'] = 5, ['glasses_2'] = 1
 		},
 		female = {
 			['tshirt_1'] = 90,  ['tshirt_2'] = 1,
