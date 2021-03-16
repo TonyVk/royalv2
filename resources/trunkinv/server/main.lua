@@ -170,8 +170,10 @@ AddEventHandler('gepeke:addInventoryItem', function(type, model, plate, item, qt
                 for i = 1, #currentLoadout, 1 do
                     if currentLoadout[i].name == item then
                         xPlayer.removeWeapon(item, qtty)
+                        if item ~= "WEAPON_HEAVYSNIPER" then
                         putInTrunk(plate, qtty, item, name, itemType, ownedV)
 						TriggerEvent("DiscordBot:Gepek", GetPlayerName(_source).."[".._source.."] je stavio u gepek "..qtty.." "..item..". Tablica vozila: "..plate)
+                        end
                     end
                 end
             end

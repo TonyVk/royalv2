@@ -16,7 +16,7 @@ AddEventHandler('pkuca:DajItem', function(v)
 	if UKuci[src] then
 		local koord = GetEntityCoords(GetPlayerPed(src))
 		local udalj = #(koord-v.Pos)
-		if udalj <= 1.0 then
+		if udalj <= 5.0 then
 			local rand = math.random(1, 5)
 			local xPlayer = ESX.GetPlayerFromId(src)
 			local kolic = itemi[rand].kolicina
