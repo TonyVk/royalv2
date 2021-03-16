@@ -30,6 +30,7 @@ local CurrentActionMsg          = ''
 local CurrentActionData         = {}
 local GUI                       = {}
 GUI.Time                        = 0
+local BlizuPumpe 				= nil
 
 function ManageFuelUsage(vehicle)
 	if not DecorExistOn(vehicle, Config.FuelDecor) then
@@ -495,32 +496,41 @@ end)
 
 function FindNearestFuelPump()
 	local coords = GetEntityCoords(PlayerPedId())
-	local fuelPumps = {}
-	local handle, object = FindFirstObject()
-	local success
-
-	repeat
-		if Config.PumpModels[GetEntityModel(object)] then
-			table.insert(fuelPumps, object)
-		end
-
-		success, object = FindNextObject(handle, object)
-	until not success
-
-	EndFindObject(handle)
-
+	local blizu = false
 	local pumpObject = 0
 	local pumpDistance = 1000
-
-	for k,v in pairs(fuelPumps) do
-		local dstcheck = GetDistanceBetweenCoords(coords, GetEntityCoords(v))
-
-		if dstcheck < pumpDistance then
-			pumpDistance = dstcheck
-			pumpObject = v
+	for i=1, #Pumpe, 1 do
+		if Pumpe[i] ~= nil then
+			if #(coords-Pumpe[i].Koord) <= 50.0 then
+				blizu = true
+				BlizuPumpe = Pumpe[i].Ime
+			end
 		end
 	end
+	if blizu then
+		local fuelPumps = {}
+		local handle, object = FindFirstObject()
+		local success
 
+		repeat
+			if Config.PumpModels[GetEntityModel(object)] then
+				table.insert(fuelPumps, object)
+			end
+
+			success, object = FindNextObject(handle, object)
+		until not success
+
+		EndFindObject(handle)
+
+		for k,v in pairs(fuelPumps) do
+			local dstcheck = GetDistanceBetweenCoords(coords, GetEntityCoords(v))
+
+			if dstcheck < pumpDistance then
+				pumpDistance = dstcheck
+				pumpObject = v
+			end
+		end
+	end
 	return pumpObject, pumpDistance
 end
 
@@ -531,14 +541,18 @@ Citizen.CreateThread(function()
 		local pumpObject, pumpDistance = FindNearestFuelPump()
 
 		if pumpDistance < 2.5 then
+			if isNearPump == false then
+				print(BlizuPumpe)
+			end
 			isNearPump = pumpObject
-
 			if Config.UseESX then
 				currentCash = ESX.GetPlayerData().money
 			end
 		else
+			if isNearPump then
+				BlizuPumpe = nil
+			end
 			isNearPump = false
-
 			Citizen.Wait(math.ceil(pumpDistance * 20))
 		end
 	end
@@ -629,7 +643,7 @@ AddEventHandler('fuel:startFuelUpTick', function(pumpObject, ped, vehicle)
 	end
 
 	if pumpObject then
-		TriggerServerEvent('gorivo:foka', currentCost)
+		TriggerServerEvent('gorivo:foka', currentCost, BlizuPumpe)
 	end
 
 	currentCost = 0.0
@@ -752,7 +766,7 @@ Citizen.CreateThread(function()
 							if IsControlJustReleased(0, 38) then
 								GiveWeaponToPed(ped, 883325847, 4500, false, true)
 
-								TriggerServerEvent('gorivo:foka', Config.JerryCanCost)
+								TriggerServerEvent('gorivo:foka', Config.JerryCanCost, BlizuPumpe)
 
 								currentCash = ESX.GetPlayerData().money
 							end
@@ -765,7 +779,7 @@ Citizen.CreateThread(function()
 										DrawText3Ds(stringCoords.x, stringCoords.y, stringCoords.z + 1.2, Config.Strings.RefillJerryCan .. refillCost)
 
 										if IsControlJustReleased(0, 38) then
-											TriggerServerEvent('gorivo:foka', refillCost)
+											TriggerServerEvent('gorivo:foka', refillCost, BlizuPumpe)
 
 											SetPedAmmo(ped, 883325847, 4500)
 										end

@@ -6,12 +6,22 @@ if Config.UseESX then
 	TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 	RegisterServerEvent('gorivo:foka')
-	AddEventHandler('gorivo:foka', function(price)
+	AddEventHandler('gorivo:foka', function(price, ime)
 		local xPlayer = ESX.GetPlayerFromId(source)
 		local amount = ESX.Math.Round(price)
 
 		if price > 0 then
 			xPlayer.removeMoney(amount)
+			for i=1, #Pumpe, 1 do
+				if Pumpe[i] ~= nil and Pumpe[i].Ime == ime then
+					Pumpe[i].Sef = Pumpe[i].Sef+amount
+					MySQL.Async.execute('UPDATE pumpe SET sef = @se WHERE ime = @im', {
+						['@se'] = Pumpe[i].Sef,
+						['@im'] = ime
+					})
+					break
+				end
+			end
 		end
 	end)
 end
@@ -206,11 +216,12 @@ AddEventHandler('pumpe:MakniVlasnika', function(ime)
 	for i=1, #Pumpe, 1 do
 		if Pumpe[i] ~= nil and Pumpe[i].Ime == ime then
 			Pumpe[i].Vlasnik = nil
+			Pumpe[i].VlasnikIme = "Nema"
+			TriggerClientEvent("pumpe:SaljiPumpe", -1, Pumpe)
 			naso = true
 			break
 		end
 	end
-	TriggerClientEvent("pumpe:SaljiPumpe", -1, Pumpe)
 	if naso then
 		MySQL.Async.execute('UPDATE pumpe SET vlasnik = @vl WHERE ime = @ime',{
 			['@ime'] = ime,
