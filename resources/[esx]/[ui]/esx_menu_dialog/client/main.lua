@@ -68,8 +68,10 @@ Citizen.CreateThread(function()
 				vrijeme = GetGameTimer()
 				-- Is the submitted data a number?
 				if tonumber(data.value) ~= nil then
-					-- Round float values
-					data.value = ESX.Math.Round(tonumber(data.value))
+					if data._name ~= "pumpa_stavi_gcijenu" then
+						-- Round float values
+						data.value = ESX.Math.Round(tonumber(data.value))
+					end
 
 					-- Check for negative value
 					if tonumber(data.value) < 0 then

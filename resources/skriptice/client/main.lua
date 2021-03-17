@@ -148,7 +148,7 @@ Citizen.CreateThread(function()
 			Wait(0)
 		end
 		ESX.TriggerServerCallback('discord:DohvatiIgrace', function(br)
-			local str = "Igraci: "..br.."/100"
+			local str = "Igraci: "..br.."/120"
 			SetRichPresence(str)
 		end)
 

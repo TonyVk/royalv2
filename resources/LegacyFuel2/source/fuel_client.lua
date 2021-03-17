@@ -216,6 +216,7 @@ Citizen.CreateThread(function()
 						Draw3DText( kordara.x, kordara.y, kordara.z  -2.200, Pumpe[i].Cijena.."$", 4, 0.1, 0.1)
 					else
 						Draw3DText( kordara.x, kordara.y, kordara.z  -2.000, "Vlasnik: "..Pumpe[i].VlasnikIme, 4, 0.1, 0.1)
+						Draw3DText( kordara.x, kordara.y, kordara.z  -2.200, "Cijena goriva: $"..Pumpe[i].GCijena, 4, 0.1, 0.1)
 					end
 				end
 				if #(coords-kordara) < 1.5 then
@@ -317,6 +318,8 @@ function OpenPumpaMenu(ime)
 		if vlasnik then
 			table.insert(elements, {label = "Stanje sefa", value = 'stanje'})
 			table.insert(elements, {label = "Uzmi iz sefa", value = 'sef'})
+			table.insert(elements, {label = "Promjeni cijenu goriva", value = 'gcij'})
+			table.insert(elements, {label = "Promjeni cijenu kanistera", value = 'kcij'})
 			table.insert(elements, {label = "Prodaj firmu", value = 'prodaj'})
 		else
 			table.insert(elements, {label = "Ova firma nije tvoja!", value = 'error'})
@@ -361,6 +364,51 @@ function OpenPumpaMenu(ime)
 			else
 				menu3.close()
 				TriggerServerEvent("pumpe:UzmiIzSefa", ime, count)
+			end
+			end,
+			function(data3, menu3)
+				menu3.close()
+			end
+		)
+      end
+	  
+	  if data.current.value == 'gcij' then
+		ESX.UI.Menu.Open(
+			'dialog', GetCurrentResourceName(), 'pumpa_stavi_gcijenu',
+			{
+				title = "Unesite koju cijenu goriva zelite (npr. 3.5)"
+			},
+			function(data3, menu3)
+			local count = tonumber(data3.value)
+
+			if count == nil then
+				ESX.ShowNotification("Kriva vrijednost!")
+			else
+				menu3.close()
+				TriggerServerEvent("pumpe:PostaviCijenu", 1, ime, count)
+			end
+			end,
+			function(data3, menu3)
+				menu3.close()
+			end
+		)
+      end
+	  
+	  if data.current.value == 'kcij' then
+		ESX.UI.Menu.Open(
+			'dialog', GetCurrentResourceName(), 'pumpa_daj_lovu',
+			{
+				title = "Unesite koju cijenu kanistera zelite (npr. 270)"
+			},
+			function(data3, menu3)
+
+			local count = tonumber(data3.value)
+
+			if count == nil then
+				ESX.ShowNotification("Kriva vrijednost!")
+			else
+				menu3.close()
+				TriggerServerEvent("pumpe:PostaviCijenu", 2, ime, count)
 			end
 			end,
 			function(data3, menu3)
@@ -600,13 +648,21 @@ end
 
 AddEventHandler('fuel:startFuelUpTick', function(pumpObject, ped, vehicle)
 	currentFuel = GetVehicleFuelLevel(vehicle)
-
+	local cijena = 0
+	for i=1, #Pumpe, 1 do
+		if Pumpe[i] ~= nil then
+			if Pumpe[i].Ime == BlizuPumpe then
+				cijena = Pumpe[i].GCijena
+				break
+			end
+		end
+	end
 	while isFueling do
 		Citizen.Wait(500)
 
 		local oldFuel = DecorGetFloat(vehicle, Config.FuelDecor)
 		local fuelToAdd = math.random(10, 20) / 10.0
-		local extraCost = fuelToAdd / 1.5
+		local extraCost = fuelToAdd * cijena
 
 		if not pumpObject then
 			if GetAmmoInPedWeapon(ped, 883325847) - fuelToAdd * 100 >= 0 then
@@ -758,15 +814,23 @@ Citizen.CreateThread(function()
 					end
 				elseif isNearPump then
 					local stringCoords = GetEntityCoords(isNearPump)
-
-					if currentCash >= Config.JerryCanCost then
+					local cijena = 250
+					for i=1, #Pumpe, 1 do
+						if Pumpe[i] ~= nil then
+							if Pumpe[i].Ime == BlizuPumpe then
+								cijena = Pumpe[i].KCijena
+								break
+							end
+						end
+					end
+					if currentCash >= cijena then
 						if not HasPedGotWeapon(ped, 883325847) then
-							DrawText3Ds(stringCoords.x, stringCoords.y, stringCoords.z + 1.2, Config.Strings.PurchaseJerryCan)
+							DrawText3Ds(stringCoords.x, stringCoords.y, stringCoords.z + 1.2, "Pritisnite ~g~E ~w~da kupite kanister goriva za ~g~$" .. cijena)
 
 							if IsControlJustReleased(0, 38) then
 								GiveWeaponToPed(ped, 883325847, 4500, false, true)
-
-								TriggerServerEvent('gorivo:foka', Config.JerryCanCost, BlizuPumpe)
+								
+								TriggerServerEvent('gorivo:foka', cijena, BlizuPumpe)
 
 								currentCash = ESX.GetPlayerData().money
 							end
@@ -837,14 +901,24 @@ if Config.ShowNearestGasStationOnly then
 			local closest = 1000
 			local closestCoords
 
-			for k,v in pairs(Config.GasStations) do
+			for i=1, #Pumpe, 1 do
+				if Pumpe[i] ~= nil then
+					local dstcheck = #(coords-Pumpe[i].Koord)
+
+					if dstcheck < closest then
+						closest = dstcheck
+						closestCoords = Pumpe[i].Koord
+					end
+				end
+			end
+			--[[for k,v in pairs(Config.GasStations) do
 				local dstcheck = GetDistanceBetweenCoords(coords, v)
 
 				if dstcheck < closest then
 					closest = dstcheck
 					closestCoords = v
 				end
-			end
+			end]]
 
 			if DoesBlipExist(currentGasBlip) then
 				RemoveBlip(currentGasBlip)
