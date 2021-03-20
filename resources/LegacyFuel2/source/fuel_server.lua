@@ -170,8 +170,8 @@ AddEventHandler('pumpe:KupiPumpu', function(ime)
 	local naso = false
 	for i=1, #Pumpe, 1 do
 		if Pumpe[i] ~= nil and Pumpe[i].Ime == ime then
-			if Pumpe[i].Cijena <= xPlayer.getMoney() then
-				xPlayer.removeMoney(Pumpe[i].Cijena)
+			if tonumber(Pumpe[i].Cijena) <= xPlayer.getMoney() then
+				xPlayer.removeMoney(tonumber(Pumpe[i].Cijena))
 				Pumpe[i].Vlasnik = xPlayer.identifier
 				GetRPName(xPlayer.identifier, function(Firstname, Lastname)
 					local im = Firstname.." "..Lastname

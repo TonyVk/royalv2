@@ -111,12 +111,12 @@ Config.Uniforms = {
 			['glasses_1'] = 5, ['glasses_2'] = 1
 		},
 		female = {
-			['tshirt_1'] = 90,  ['tshirt_2'] = 1,
-			['torso_1'] = 66,   ['torso_2'] = 1,
+			['tshirt_1'] = 56,  ['tshirt_2'] = 0,
+			['torso_1'] = 49,   ['torso_2'] = 0,
 			['decals_1'] = 0,   ['decals_2'] = 0,
-			['arms'] = 27,
-			['pants_1'] = 39,   ['pants_2'] = 1,
-			['shoes_1'] = 27,   ['shoes_2'] = 0
+			['arms'] = 14,
+			['pants_1'] = 100,   ['pants_2'] = 3,
+			['shoes_1'] = 50,   ['shoes_2'] = 0
 		}
 	},
 	EUPrecrue_wear = {
@@ -175,12 +175,12 @@ Config.Uniforms = {
 			['glasses_1'] = 5, ['glasses_2'] = 1
 		},
 		female = {
-			['tshirt_1'] = 90,  ['tshirt_2'] = 1,
-			['torso_1'] = 66,   ['torso_2'] = 1,
+			['tshirt_1'] = 56,  ['tshirt_2'] = 0,
+			['torso_1'] = 49,   ['torso_2'] = 0,
 			['decals_1'] = 0,   ['decals_2'] = 0,
-			['arms'] = 27,
-			['pants_1'] = 39,   ['pants_2'] = 1,
-			['shoes_1'] = 27,   ['shoes_2'] = 0
+			['arms'] = 14,
+			['pants_1'] = 100,   ['pants_2'] = 3,
+			['shoes_1'] = 50,   ['shoes_2'] = 0
 		}
 	},
 	EUPnovice_wear = {
@@ -239,12 +239,12 @@ Config.Uniforms = {
 			['glasses_1'] = 5, ['glasses_2'] = 1
 		},
 		female = {
-			['tshirt_1'] = 90,  ['tshirt_2'] = 1,
-			['torso_1'] = 66,   ['torso_2'] = 1,
+			['tshirt_1'] = 56,  ['tshirt_2'] = 0,
+			['torso_1'] = 49,   ['torso_2'] = 0,
 			['decals_1'] = 0,   ['decals_2'] = 0,
-			['arms'] = 27,
-			['pants_1'] = 39,   ['pants_2'] = 1,
-			['shoes_1'] = 27,   ['shoes_2'] = 0
+			['arms'] = 14,
+			['pants_1'] = 100,   ['pants_2'] = 3,
+			['shoes_1'] = 50,   ['shoes_2'] = 0
 		}
 	},
 	EUPexperimente_wear = {
@@ -303,12 +303,12 @@ Config.Uniforms = {
 			['glasses_1'] = 5, ['glasses_2'] = 1
 		},
 		female = {
-			['tshirt_1'] = 90,  ['tshirt_2'] = 1,
-			['torso_1'] = 66,   ['torso_2'] = 1,
+			['tshirt_1'] = 56,  ['tshirt_2'] = 0,
+			['torso_1'] = 49,   ['torso_2'] = 0,
 			['decals_1'] = 0,   ['decals_2'] = 0,
-			['arms'] = 27,
-			['pants_1'] = 39,   ['pants_2'] = 1,
-			['shoes_1'] = 27,   ['shoes_2'] = 0
+			['arms'] = 14,
+			['pants_1'] = 100,   ['pants_2'] = 3,
+			['shoes_1'] = 50,   ['shoes_2'] = 0
 		}
 	},
 	
@@ -368,12 +368,12 @@ Config.Uniforms = {
 			['glasses_1'] = 5, ['glasses_2'] = 1
 		},
 		female = {
-			['tshirt_1'] = 90,  ['tshirt_2'] = 1,
-			['torso_1'] = 66,   ['torso_2'] = 1,
+			['tshirt_1'] = 56,  ['tshirt_2'] = 0,
+			['torso_1'] = 49,   ['torso_2'] = 0,
 			['decals_1'] = 0,   ['decals_2'] = 0,
-			['arms'] = 27,
-			['pants_1'] = 39,   ['pants_2'] = 1,
-			['shoes_1'] = 27,   ['shoes_2'] = 0
+			['arms'] = 14,
+			['pants_1'] = 100,   ['pants_2'] = 3,
+			['shoes_1'] = 50,   ['shoes_2'] = 0
 		}
 	},
 	EUPboss_wear = {

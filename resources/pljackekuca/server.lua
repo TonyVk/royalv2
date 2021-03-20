@@ -16,7 +16,7 @@ AddEventHandler('pkuca:DajItem', function(v)
 	if UKuci[src] then
 		local koord = GetEntityCoords(GetPlayerPed(src))
 		local udalj = #(koord-v.Pos)
-		if udalj <= 5.0 then
+		if udalj <= 50.0 then
 			local rand = math.random(1, 5)
 			local xPlayer = ESX.GetPlayerFromId(src)
 			local kolic = itemi[rand].kolicina
@@ -25,11 +25,11 @@ AddEventHandler('pkuca:DajItem', function(v)
 			local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(src).."("..xPlayer.identifier..") je dobio item "..itemi[rand].ime.." x "..kolic
 			TriggerEvent("SpremiLog", por)
 		else
-			TriggerEvent("DiscordBot:Anticheat", GetPlayerName(src).."["..src.."] je pokusao pozvati event za dobijanje stvari od pljacke kuce, a ne pljacka kucu!")
+			TriggerEvent("DiscordBot:Anticheat", GetPlayerName(src).."["..src.."] je pokusao pozvati event za dobijanje stvari od pljacke kuce, a ne pljacka kucu! (koordinate)")
 			TriggerEvent("AntiCheat:Citer", src)
 		end
 	else
-		TriggerEvent("DiscordBot:Anticheat", GetPlayerName(src).."["..src.."] je pokusao pozvati event za dobijanje stvari od pljacke kuce, a ne pljacka kucu!")
+		TriggerEvent("DiscordBot:Anticheat", GetPlayerName(src).."["..src.."] je pokusao pozvati event za dobijanje stvari od pljacke kuce, a ne pljacka kucu! (varijabla)")
 	    TriggerEvent("AntiCheat:Citer", src)
 	end
 end)

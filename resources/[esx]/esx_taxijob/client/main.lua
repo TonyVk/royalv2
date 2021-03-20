@@ -382,20 +382,34 @@ function PokreniNPC()
 	while not HasModelLoaded(GetHashKey(modelic)) do
 		Wait(1)
 	end
-	CurrentCustomer = CreatePed(5, model, targetCoords, 260, true, true)
-	SetModelAsNoLongerNeeded(model)
-	CurrentCustomerBlip = AddBlipForEntity(CurrentCustomer)
+	--CurrentCustomer = CreatePed(5, model, targetCoords, 260, true, true)
+	--SetModelAsNoLongerNeeded(model)
+	CurrentCustomerBlip = AddBlipForCoord(targetCoords)
 	SetBlipAsFriendly(CurrentCustomerBlip, true)
 	SetBlipColour(CurrentCustomerBlip, 2)
 	SetBlipCategory(CurrentCustomerBlip, 3)
 	SetBlipRoute(CurrentCustomerBlip, true)
-	SetEntityAsMissionEntity(CurrentCustomer, true, false)
-	ClearPedTasksImmediately(CurrentCustomer)
-	SetBlockingOfNonTemporaryEvents(CurrentCustomer, true)
-	local standTime = GetRandomIntInRange(60000, 180000)
-	TaskStandStill(CurrentCustomer, standTime)
+	--SetEntityAsMissionEntity(CurrentCustomer, true, false)
+	--ClearPedTasksImmediately(CurrentCustomer)
+	--SetBlockingOfNonTemporaryEvents(CurrentCustomer, true)
+	--local standTime = GetRandomIntInRange(60000, 180000)
+	--TaskStandStill(CurrentCustomer, standTime)
+	local spawno = false
 	Posao = 1
 	ESX.ShowNotification("Idite do checkpointa kako bih ste pokupili musteriju!")
+	while not spawno and Posao == 1 do
+		Wait(500)
+		if targetCoords ~= nil and #(GetEntityCoords(PlayerPedId())-targetCoords) <= 100.0 then
+			spawno = true
+			CurrentCustomer = CreatePed(5, model, targetCoords, 260, true, true)
+			SetModelAsNoLongerNeeded(model)
+			SetEntityAsMissionEntity(CurrentCustomer, true, false)
+			ClearPedTasksImmediately(CurrentCustomer)
+			SetBlockingOfNonTemporaryEvents(CurrentCustomer, true)
+			local standTime = GetRandomIntInRange(60000, 180000)
+			TaskStandStill(CurrentCustomer, standTime)
+		end
+	end
 	Citizen.CreateThread(function()
 		while Posao == 1 do
 			local korda = GetEntityCoords(PlayerPedId())
