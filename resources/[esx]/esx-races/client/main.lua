@@ -125,13 +125,7 @@ function StartRace(currentRace)
 					isRacing = false
                     ESX.ShowNotification("Zavrsili ste utrku " .. currentRace .. " sa vremenom " .. currentTime .. " sekundi !")
 					ESX.ShowNotification("Bio si " .. Pozicija .. ". od " .. MaxTada .. "!")
-					if Pozicija == 1 then
-						TriggerServerEvent('utrka:DiSuDajPare', 1)
-					elseif Pozicija == 2 then
-						TriggerServerEvent('utrka:DiSuDajPare', 2)
-					elseif Pozicija == 3 then
-						TriggerServerEvent('utrka:DiSuDajPare', 3)
-					end
+					TriggerServerEvent('utrka:DiSuDajPare', Pozicija)
                     TriggerServerEvent('esx-qalle-races:addTime', currentTime, currentRace)
                     DeleteEntity(RaceVehicle)
 					TriggerServerEvent("utrke:BucketajGa", false)

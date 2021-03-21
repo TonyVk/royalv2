@@ -14,6 +14,7 @@ local Rh2
 local ZadnjiARace = 0
 
 local Pokreci = 0
+local UUtrci = {}
 
 
 ESX.RegisterServerCallback('trke:nemapara', function(source, cb, money)
@@ -135,21 +136,28 @@ end)
 
 RegisterNetEvent("utrka:DiSuDajPare")
 AddEventHandler('utrka:DiSuDajPare', function(broj)
-    local xPlayer = ESX.GetPlayerFromId(source)
-	local money = 0;
-	if broj == 1 then
-		money = 5000
-	elseif broj == 2 then
-		money = 3000
-	elseif broj == 3 then
-		money = 1000
-	end
-    if xPlayer ~= nil then
-        xPlayer.addMoney(money)
-        local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..xPlayer.identifier..") je dobio $"..money
-	TriggerEvent("SpremiLog", por)
-		ESX.SavePlayer(xPlayer, function()
-		end)
+	local src = source
+	if UUtrci[src] == true then
+		local xPlayer = ESX.GetPlayerFromId(src)
+		local money = 0;
+		if broj == 1 then
+			money = 5000
+		elseif broj == 2 then
+			money = 3000
+		elseif broj == 3 then
+			money = 1000
+		end
+		if xPlayer ~= nil and money > 0 then
+			xPlayer.addMoney(money)
+			local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..xPlayer.identifier..") je dobio $"..money
+			TriggerEvent("SpremiLog", por)
+			ESX.SavePlayer(xPlayer, function()
+			end)
+		end
+		UUtrci[src] = false
+	else
+		TriggerEvent("DiscordBot:Anticheat", GetPlayerName(src).."["..src.."] je pokusao pozvati event za novac od utrka, a nije u utrci!")
+	    TriggerEvent("AntiCheat:Citer", src)
 	end
 end)
 
@@ -186,6 +194,8 @@ end)
 
 RegisterNetEvent("SpremiBroj")
 AddEventHandler('SpremiBroj', function(broj)
+	local src = source
+	UUtrci[src] = true
 	TriggerClientEvent('VratiBroj', -1, broj)
 end)
 

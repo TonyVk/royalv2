@@ -6,6 +6,7 @@ local ZadnjaPozicija = 1
 local PokrenutSumo = false
 local TrajeSumo = false
 local Igraci = {}
+local USumo = {}
 
 RegisterNetEvent("sumo:SyncajVrijeme")
 AddEventHandler('sumo:SyncajVrijeme', function(sec)
@@ -89,6 +90,7 @@ AddEventHandler('sumo:PovecajPoziciju', function()
 	local _source = source
 	ZadnjaPozicija = ZadnjaPozicija+1
 	table.insert(Igraci, {id = _source})
+	USumo[_source] = true
 end)
 
 AddEventHandler('esx:playerDropped', function(playerID, reason)
@@ -124,6 +126,8 @@ AddEventHandler('sumo:SmanjiPoziciju', function()
 		TrajeSumo = false
 		TriggerClientEvent("sumo:Zavrsi", -1)
 		ZadnjaPozicija = 1
+	else
+		USumo[src] = false
 	end
 	if ZadnjaPozicija == 1 then
 		PokrenutSumo = false
@@ -144,9 +148,15 @@ end)
 RegisterNetEvent("sumo:Tuljan")
 AddEventHandler('sumo:Tuljan', function()
 	local src = source
-	local xPlayer = ESX.GetPlayerFromId(src)
-	xPlayer.addMoney(5000)
-	TriggerClientEvent('esx:showNotification', xPlayer.source, "Cestitamo!! Prezivjeli ste sumo i dobili $5000!")
-        local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(src).."("..xPlayer.identifier..") je dobio $5000"
-	TriggerEvent("SpremiLog", por)
+	if USumo[src] == true then
+		local xPlayer = ESX.GetPlayerFromId(src)
+		xPlayer.addMoney(5000)
+		USumo[src] = false
+		TriggerClientEvent('esx:showNotification', xPlayer.source, "Cestitamo!! Prezivjeli ste sumo i dobili $5000!")
+		local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(src).."("..xPlayer.identifier..") je dobio $5000"
+		TriggerEvent("SpremiLog", por)
+	else
+		TriggerEvent("DiscordBot:Anticheat", GetPlayerName(src).."["..src.."] je pokusao pozvati event za novac od sumo, a nije u sumo!")
+	    TriggerEvent("AntiCheat:Citer", src)
+	end
 end)

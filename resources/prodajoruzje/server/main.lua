@@ -289,11 +289,11 @@ AddEventHandler('kraft:SkupiGa', function()
 	local koord = GetEntityCoords(GetPlayerPed(src))
 	if #(koord-skupljanje) <= 15.0 then
 		local xPlayer = ESX.GetPlayerFromId(src)
-                if xPlayer.getInventoryItem("iron").count+1 <= xPlayer.getInventoryItem("iron").limit then
+        if xPlayer.getInventoryItem("iron").count+1 <= xPlayer.getInventoryItem("iron").limit then
 		     xPlayer.addInventoryItem("iron", 1)
-                else
-                     xPlayer.showNotification("Ne stane vam vise u inventory")
-                end
+        else
+			xPlayer.showNotification("Ne stane vam vise u inventory")
+		end
 	else
 		TriggerEvent("DiscordBot:Anticheat", GetPlayerName(src).."["..src.."] je pokusao pozvati event za dobijanje zeljeza, a nije blizu lokacije skupljanja!")
 	    TriggerEvent("AntiCheat:Citer", src)
