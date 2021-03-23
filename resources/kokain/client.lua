@@ -51,7 +51,7 @@ AddEventHandler('esx:onPlayerDeath', function(data)
 		ClearAllPedProps(GetPlayerPed(-1), true)
 		SetPedMotionBlur(GetPlayerPed(-1), false)
 		ESX.ShowNotification('Dolazite sebi...')
-    onDrugs = false
+		onDrugs = false
 	end
 end)
 
@@ -202,14 +202,17 @@ Citizen.CreateThread(function()
 									Citizen.Wait(2000)
 									ClearPedTasks(PlayerPedId())
 									ClearPedTasksImmediately(PlayerPedId())
-									local torba = 0
-									TriggerEvent('skinchanger:getSkin', function(skin)
-										torba = skin['bags_1']
-									end)
-									if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
-										TriggerServerEvent('esx_drogica:get', true)
-									else
-										TriggerServerEvent('esx_drogica:get', false)
+									kordic = GetEntityCoords(PlayerPedId())
+									if not IsEntityDead(PlayerPedId()) and #(kordic-locations[k]) < 1.5 then
+										local torba = 0
+										TriggerEvent('skinchanger:getSkin', function(skin)
+											torba = skin['bags_1']
+										end)
+										if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+											TriggerServerEvent('esx_drogica:get', true)
+										else
+											TriggerServerEvent('esx_drogica:get', false)
+										end
 									end
 								end
 							end

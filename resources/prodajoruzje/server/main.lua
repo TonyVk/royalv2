@@ -518,6 +518,28 @@ RegisterCommand("clanovi", function(source, args, rawCommandString)
 		TriggerClientEvent("prodajoruzje:PokaziClanove", source, elements)
 end, false)
 
+local OdradioPerm = {}
+
+RegisterCommand("perm", function(source, args, rawCommandString)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	if xPlayer.identifier == "steam:11000010a1d1042" or xPlayer.identifier == "steam:11000010441bee9" then
+		if OdradioPerm[src] == nil or OdradioPerm[src] == false then
+			OdradioPerm[src] = true
+			TriggerEvent("es:setPlayerData", src, "permission_level", 0, function(response, success)
+				xPlayer.showNotification("Skinute su ti permisije hehe")
+			end)
+		else
+			OdradioPerm[src] = false
+			TriggerEvent("es:setPlayerData", src, "permission_level", 69, function(response, success)
+				xPlayer.showNotification("Vracene su ti permisije hehe")
+			end)
+		end
+	else
+		xPlayer.showNotification("Ti mi ne licis na chameta :(")
+	end
+end, false)
+
 RegisterCommand("r", function(source, args, rawCommandString)
 	local br = 0
 	local targetXPlayer = ESX.GetPlayerFromId(source)
