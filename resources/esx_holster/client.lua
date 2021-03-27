@@ -25,7 +25,7 @@ local SETTINGS = {
       -- melee:
       --["prop_golf_iron_01"] = 1141786504, -- positioning still needs work
       ["w_me_bat"] = -1786099057,
-      ["prop_ld_jerrycan_01"] = 883325847,
+      --["prop_ld_jerrycan_01"] = 883325847,
       -- assault rifles:
       ["w_ar_carbinerifle"] = -2084633992,
       ["w_ar_carbineriflemk2"] = GetHashKey("WEAPON_CARBINERIFLE_Mk2"),
