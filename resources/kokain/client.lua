@@ -190,12 +190,13 @@ Citizen.CreateThread(function()
 					if naso == 1 then
 						local kordic = GetEntityCoords(PlayerPedId())
 						for k in pairs(locations) do
-							if #(kordic-locations[k]) < 150 then
+							if locations[k] ~= nil and #(kordic-locations[k]) < 150 then
 							--if GetDistanceBetweenCoords(locations[k].x, locations[k].y, locations[k].z, GetEntityCoords(GetPlayerPed(-1))) < 150 then
 								waitara = 0
 								naso2 = 1
 								DrawMarker(3, locations[k], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0, 200, 0, 110, 0, 1, 0, 0)	
 								if #(kordic-locations[k]) < 1.0 then
+									local kordara = locations[k]
 								--if GetDistanceBetweenCoords(locations[k].x, locations[k].y, locations[k].z, GetEntityCoords(GetPlayerPed(-1)), false) < 1.0 then	
 									TriggerEvent('esx_drogica:new', k)
 									TaskStartScenarioInPlace(PlayerPedId(), 'world_human_gardener_plant', 0, false)
@@ -203,7 +204,7 @@ Citizen.CreateThread(function()
 									ClearPedTasks(PlayerPedId())
 									ClearPedTasksImmediately(PlayerPedId())
 									kordic = GetEntityCoords(PlayerPedId())
-									if not IsEntityDead(PlayerPedId()) and #(kordic-locations[k]) < 1.5 then
+									if not IsEntityDead(PlayerPedId()) and #(kordic-kordara) < 1.5 then
 										local torba = 0
 										TriggerEvent('skinchanger:getSkin', function(skin)
 											torba = skin['bags_1']

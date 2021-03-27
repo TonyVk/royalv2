@@ -326,12 +326,15 @@ Citizen.CreateThread(function()
 						Wait(1)
 						DisableAllControlActions()
 					end
-					TriggerServerEvent("kraft:SkupiGa")
-					ESX.ShowNotification("Dobili ste 1x zeljeza!")
 					ClearPedTasksImmediately(playerPed)
-					currentStation = 1
-					currentPart    = 'Skupljanje'
-					currentPartNum = 1
+					local kordic = GetEntityCoords(playerPed)
+					if not IsEntityDead(playerPed) and #(kordic-skupljanje) <= 5.0 then
+						TriggerServerEvent("kraft:SkupiGa")
+						ESX.ShowNotification("Dobili ste 1x zeljeza!")
+						currentStation = 1
+						currentPart    = 'Skupljanje'
+						currentPartNum = 1
+					end
 					isInMarker = false
 					HasAlreadyEnteredMarker = false
 				elseif CurrentAction == 'menu_cijev' then
@@ -464,8 +467,11 @@ function OpenPreradaMenu()
 						DisableAllControlActions()
 					end
 					ClearPedTasksImmediately(PlayerPedId())
-					TriggerServerEvent("kraft:DajKundak", itemic)
-					ESX.ShowNotification("Zavrsili ste preradu zeljeza u kundak!")
+					local kordic = GetEntityCoords(PlayerPedId())
+					if not IsEntityDead(PlayerPedId()) and #(kordic-cprerada) <= 5.0 then
+						TriggerServerEvent("kraft:DajKundak", itemic)
+						ESX.ShowNotification("Zavrsili ste preradu zeljeza u kundak!")
+					end
 					HasAlreadyEnteredMarker = false
 			  else
 					ESX.ShowNotification("Nemate dovoljno zeljeza ili nemate mjesta u inventoryju za kundak!")
