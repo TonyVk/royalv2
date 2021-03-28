@@ -398,6 +398,16 @@ RegisterNUICallback(
     end
 )
 
+RegisterNetEvent('pijaca:ResetajMe')
+AddEventHandler('pijaca:ResetajMe', function()
+	CurrentAction     = 'menu_kupi'
+	CurrentActionMsg  = "Pritisnite E da vidite listu vozila!"
+	CurrentActionData = {}
+	FreezeEntityPosition(PlayerPedId(), false)
+	SetEntityVisible(PlayerPedId(), true)
+	SetEntityCoords(PlayerPedId(), -41.069328308105, -1675.1540527344, 28.443593978882)
+end)
+
 RegisterNUICallback(
     "lijevo",
     function()

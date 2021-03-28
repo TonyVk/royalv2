@@ -161,9 +161,9 @@ function MenuVehicleSpawner()
 				local pronaso = false
 				for i=1, #Config.VehicleSpawnPoint, 1 do
 					if ESX.Game.IsSpawnPointClear({
-						x = Config.VehicleSpawnPoint[i].Prikolica.x,
-						y = Config.VehicleSpawnPoint[i].Prikolica.y,
-						z = Config.VehicleSpawnPoint[i].Prikolica.z
+						x = Config.VehicleSpawnPoint[i].Pos.x,
+						y = Config.VehicleSpawnPoint[i].Pos.y,
+						z = Config.VehicleSpawnPoint[i].Pos.z
 					}, 10.0) then
 						pronaso = true
 						Vozilo = CreateVehicle(data.current.value, Config.VehicleSpawnPoint[i].Pos.x, Config.VehicleSpawnPoint[i].Pos.y, Config.VehicleSpawnPoint[i].Pos.z, 0, true, false)

@@ -94,6 +94,7 @@ AddEventHandler('pijaca:Tuljani', function(plate, prop, mj)
 					break
 				else
 					xPlayer.showNotification("Nemate dovoljno novca!")
+					TriggerClientEvent("pijaca:ResetajMe", _source)
 				end
 			else
 				xPlayer.showNotification('Maknuli ste vozilo sa pijace!')
