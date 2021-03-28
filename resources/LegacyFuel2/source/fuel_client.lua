@@ -103,6 +103,7 @@ RegisterCommand("uredipumpe", function(source, args, raw)
 							},
 							function(data2, menu2)
 								local elements = {
+									{label = "Portaj se do pumpe", value = "port"},
 									{label = "Premjesti pumpu", value = "premj"},
 									{label = "Promjeni cijenu", value = "vrij"},
 									{label = "Promjeni kolicinu goriva", value = "gvrij"},
@@ -128,6 +129,17 @@ RegisterCommand("uredipumpe", function(source, args, raw)
 											menu3.close()
 											menu2.close()
 											ESX.ShowNotification("Obrisali ste pumpu "..data2.current.value)
+										elseif data3.current.value == "port" then
+											menu3.close()
+											menu2.close()
+											for i=1, #Pumpe, 1 do
+												if Pumpe[i] ~= nil and Pumpe[i].Koord ~= nil then
+													if Pumpe[i].Ime == data2.current.value then
+														SetEntityCoords(PlayerPedId(), Pumpe[i].Koord)
+													end
+												end
+											end
+											ESX.ShowNotification("Portali ste se do pumpe "..data2.current.value)
 										elseif data3.current.value == "vlasn" then
 											TriggerServerEvent("pumpe:MakniVlasnika", data2.current.value)
 											menu3.close()

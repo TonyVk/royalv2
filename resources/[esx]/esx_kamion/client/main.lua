@@ -91,8 +91,17 @@ end)
 function MenuVehicleSpawner()
 	local elements = {}
 	
+	local brojic = 0
+	for i=1, #Pumpe, 1 do
+		if Pumpe[i] ~= nil then
+			if Pumpe[i].Narudzba == 1 then
+				brojic = brojic+1
+			end
+		end
+	end
+	
 	table.insert(elements, {label = "Dostava kontenjera", value = "handler"})
-	table.insert(elements, {label = "Dostava goriva", value = "phantom"})
+	table.insert(elements, {label = "Dostava goriva ("..brojic.." narudzbi)", value = "phantom"})
 
 
 	ESX.UI.Menu.CloseAll()
@@ -383,10 +392,14 @@ end
 
 -- Key Controls
 Citizen.CreateThread(function()
+	local waitara = 500
     while true do
-        Citizen.Wait(20)
+		local naso = 0
+        Citizen.Wait(waitara)
 		if IsJobKamion() then
 			if CurrentAction ~= nil then
+				waitara = 1
+				naso = 1
 				SetTextComponentFormat('STRING')
 				AddTextComponentString(CurrentActionMsg)
 				DisplayHelpTextFromStringLabel(0, 0, 1, -1)
@@ -399,6 +412,9 @@ Citizen.CreateThread(function()
 					CurrentAction = nil
 				end
 			end
+		end
+		if naso == 0 then
+			waitara = 500
 		end
     end
 end)
@@ -526,6 +542,7 @@ function ZavrsiPosao()
 	Radis = false
 	RemoveBlip(Blipara)
 	Blipara = nil
+	Gorivo = false
 	if kamion ~= nil then
 		ESX.Game.DeleteVehicle(kamion)
 		kamion = nil
