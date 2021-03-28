@@ -491,6 +491,7 @@ function SpawnajGa(race)
 		Rz2 = raceInfo['StartPosition']['z']
 		Rh2 = raceInfo['StartPosition']['h']
 		SetEntityCoords(PlayerPedId(), Rx, Ry, Rz, 1, 0, 0, 1)
+		Wait(200)
 		RaceVehicle = CreateVehicle(model, Rx, Ry, Rz, Rh, true, false)
 		SetModelAsNoLongerNeeded(model)
 		while not DoesEntityExist(RaceVehicle) do
@@ -512,6 +513,7 @@ function SpawnajGa(race)
 			Lokacija = 1
 			TriggerServerEvent("SpremiPomocne", Lokacija, ucitao, Prvi)
 			SetEntityCoords(PlayerPedId(), Rx, Ry, Rz, 1, 0, 0, 1)
+			Wait(200)
 			RaceVehicle = CreateVehicle(model, Rx, Ry, Rz, Rh, true, false)
 			SetModelAsNoLongerNeeded(model)
 			while not DoesEntityExist(RaceVehicle) do
@@ -534,6 +536,7 @@ function SpawnajGa(race)
 				Lokacija = 0
 				TriggerServerEvent("SpremiPomocne", Lokacija, ucitao, Prvi)
 				SetEntityCoords(PlayerPedId(), Rx2, Ry2, Rz2, 1, 0, 0, 1)
+				Wait(200)
 				RaceVehicle = CreateVehicle(model, Rx2, Ry2, Rz2, Rh2, true, false)
 				SetModelAsNoLongerNeeded(model)
 				while not DoesEntityExist(RaceVehicle) do
@@ -549,6 +552,7 @@ function SpawnajGa(race)
 				Lokacija = 0
 				TriggerServerEvent("SpremiPomocne", Lokacija, ucitao, Prvi)
 				SetEntityCoords(PlayerPedId(), Rx2, Ry2, Rz2, 1, 0, 0, 1)
+				Wait(200)
 				RaceVehicle = CreateVehicle(model, Rx2, Ry2, Rz2, Rh2, true, false)
 				SetModelAsNoLongerNeeded(model)
 				while not DoesEntityExist(RaceVehicle) do
@@ -563,12 +567,9 @@ function SpawnajGa(race)
 			end
 		end
 	end
-	
-	exports["LegacyFuel"]:SetFuel(RaceVehicle, 100)
-
+	exports["LegacyFuel2"]:SetFuel(RaceVehicle, 100)
     TaskWarpPedIntoVehicle(PlayerPedId(), RaceVehicle, -1)
 	SetVehicleDoorsLocked(RaceVehicle, 4)
-
     Citizen.Wait(1500)
 	SetVehicleOnGroundProperly(GetVehiclePedIsUsing(PlayerPedId()))
 	--FreezeEntityPosition(PlayerPedId(), true)

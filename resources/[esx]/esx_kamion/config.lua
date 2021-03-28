@@ -5,7 +5,8 @@ Config.TruckPrice	= 0
 Config.Locale       = 'en'
 
 Config.Trucks = {
-	"handler"
+	"handler",
+	"phantom"
 }
 
 Config.Cloakroom = {

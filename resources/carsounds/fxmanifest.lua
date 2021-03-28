@@ -67,6 +67,10 @@ files {
   'audioconfig/predatorv8_sounds.dat54.rel',
   'sfx/dlc_predatorv8/predatorv8.awc',
   'sfx/dlc_predatorv8/predatorv8_npc.awc',
+  'audioconfig/venenov12_game.dat151.rel',
+  'audioconfig/venenov12_sounds.dat54.rel',
+  'sfx/dlc_venenov12/venenov12.awc',
+  'sfx/dlc_venenov12/venenov12_npc.awc',
 }
 
 data_file 'AUDIO_GAMEDATA' 'audioconfig/lambov10_game.dat'
@@ -109,3 +113,6 @@ data_file 'AUDIO_SYNTHDATA' 'audioconfig/gt3flat6_amp.dat'
 data_file 'AUDIO_GAMEDATA' 'audioconfig/gt3flat6_game.dat'
 data_file 'AUDIO_SOUNDDATA' 'audioconfig/gt3flat6_sounds.dat'
 data_file 'AUDIO_WAVEPACK' 'sfx/dlc_gt3flat6'
+data_file 'AUDIO_GAMEDATA' 'audioconfig/venenov12_game.dat'
+data_file 'AUDIO_SOUNDDATA' 'audioconfig/venenov12_sounds.dat'
+data_file 'AUDIO_WAVEPACK' 'sfx/dlc_venenov12'

@@ -9,6 +9,9 @@ local zakacio = false
 local utovario = false
 local zakacioprikolicu = false
 local Lokacija = nil
+local Pumpe = {}
+local Gorivo = false
+local Pumpa = nil
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -19,6 +22,10 @@ Citizen.CreateThread(function()
 		Citizen.Wait(100)
 	end
 	ProvjeriPosao()
+	Wait(5000)
+	ESX.TriggerServerCallback('pumpe:DohvatiPumpe', function(pumpe)
+		Pumpe = pumpe
+	end)
 end)
 --------------------------------------------------------------------------------
 -- NE RIEN MODIFIER
@@ -76,12 +83,16 @@ function MenuCloakRoom()
 	)
 end
 
+RegisterNetEvent('pumpe:SaljiPumpe')
+AddEventHandler('pumpe:SaljiPumpe', function(pumpe) 
+	Pumpe = pumpe
+end)
+
 function MenuVehicleSpawner()
 	local elements = {}
-
-	for i=1, #Config.Trucks, 1 do
-		table.insert(elements, {label = GetLabelText(GetDisplayNameFromVehicleModel(Config.Trucks[i])), value = Config.Trucks[i]})
-	end
+	
+	table.insert(elements, {label = "Dostava kontenjera", value = "handler"})
+	table.insert(elements, {label = "Dostava goriva", value = "phantom"})
 
 
 	ESX.UI.Menu.CloseAll()
@@ -121,6 +132,51 @@ function MenuVehicleSpawner()
 			end
 			if pronaso == false then
 				ESX.ShowNotification("Trenutno nemamo slobodnih mjesta za utovar!")
+			end
+		elseif data.current.value == "phantom" then
+			local naso = false
+			for i=1, #Pumpe, 1 do
+				if Pumpe[i] ~= nil then
+					if Pumpe[i].Narudzba == 1 then
+						naso = true
+						break
+					end
+				end
+			end
+			if naso then
+				if Vozilo ~= nil then
+					ESX.Game.DeleteVehicle(Vozilo)
+					Vozilo = nil
+				end
+				ESX.Streaming.RequestModel(data.current.value)
+				local pronaso = false
+				for i=1, #Config.VehicleSpawnPoint, 1 do
+					if ESX.Game.IsSpawnPointClear({
+						x = Config.VehicleSpawnPoint[i].Prikolica.x,
+						y = Config.VehicleSpawnPoint[i].Prikolica.y,
+						z = Config.VehicleSpawnPoint[i].Prikolica.z
+					}, 10.0) then
+						pronaso = true
+						Vozilo = CreateVehicle(data.current.value, Config.VehicleSpawnPoint[i].Pos.x, Config.VehicleSpawnPoint[i].Pos.y, Config.VehicleSpawnPoint[i].Pos.z, 0, true, false)
+						SetModelAsNoLongerNeeded(GetHashKey(data.current.value))
+						platenum = math.random(10000, 99999)
+						SetVehicleNumberPlateText(Vozilo, "SIK"..platenum)             
+						plaquevehicule = "SIK"..platenum			
+						TaskWarpPedIntoVehicle(GetPlayerPed(-1), Vozilo, -1)
+						ESX.Streaming.RequestModel("tanker")
+						prikolica = CreateVehicle(GetHashKey("tanker"), Config.VehicleSpawnPoint[i].Pos.x, Config.VehicleSpawnPoint[i].Pos.y, Config.VehicleSpawnPoint[i].Pos.z, 0, true, false)
+						SetModelAsNoLongerNeeded(GetHashKey("tanker"))
+						AttachVehicleToTrailer(Vozilo, prikolica, 5)
+						StartajPosao2()
+						Radis = true
+						break
+					end
+				end
+				if pronaso == false then
+					ESX.ShowNotification("Trenutno nemamo slobodnih mjesta za utovar!")
+				end
+			else
+				ESX.ShowNotification("Trenutno nema narudzbi za dostavu goriva!")
 			end
 		end
 			menu.close()
@@ -245,26 +301,49 @@ AddEventHandler('esx_kamion:hasEnteredMarker', function(zone)
 		--if GetDistanceBetweenCoords(corde, Lokacija, true) <= 10.0 then
 			RemoveBlip(Blipara)
 			Blipara = nil
-			FreezeEntityPosition(kamion, true)
-			DoScreenFadeOut(2000)
-			while not IsScreenFadedOut() do
-				Wait(100)
+			if not Gorivo then
+				FreezeEntityPosition(kamion, true)
+				DoScreenFadeOut(2000)
+				while not IsScreenFadedOut() do
+					Wait(100)
+				end
+				ESX.Game.DeleteObject(kont)
+				kont = nil
+				DoScreenFadeIn(500)
+				FreezeEntityPosition(kamion, false)
+				Lokacija = nil
+				Blipara = AddBlipForCoord(1156.4053955078, -3287.73046875, 5.901026725769)
+				SetBlipSprite (Blipara, 68)
+				SetBlipDisplay(Blipara, 8)
+				SetBlipColour (Blipara, 47)
+				SetBlipScale  (Blipara, 1.4)
+				SetBlipRoute(Blipara, true)
+				ESX.ShowNotification("Vratite kamion nazad do firme!")
+				TriggerServerEvent("kamiooon:platituljanu")
+				TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.job.name)
+				TriggerServerEvent("kamion:MaknutObjekt", GetPlayerServerId(PlayerId()))
+			else
+				FreezeEntityPosition(Vozilo, true)
+				DoScreenFadeOut(2000)
+				while not IsScreenFadedOut() do
+					Wait(100)
+				end
+				DoScreenFadeIn(500)
+				FreezeEntityPosition(Vozilo, false)
+				Lokacija = nil
+				Blipara = AddBlipForCoord(1156.4053955078, -3287.73046875, 5.901026725769)
+				SetBlipSprite (Blipara, 68)
+				SetBlipDisplay(Blipara, 8)
+				SetBlipColour (Blipara, 47)
+				SetBlipScale  (Blipara, 1.4)
+				SetBlipRoute(Blipara, true)
+				ESX.ShowNotification("Vratite kamion nazad do firme!")
+				TriggerServerEvent("pumpe:DostavioGorivo", Pumpa)
+				TriggerServerEvent("kamiooon:platituljanu2")
+				TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.job.name)
+				Gorivo = false
+				Pumpa = nil
 			end
-			ESX.Game.DeleteObject(kont)
-			kont = nil
-			DoScreenFadeIn(500)
-			FreezeEntityPosition(kamion, false)
-			Lokacija = nil
-			Blipara = AddBlipForCoord(1156.4053955078, -3287.73046875, 5.901026725769)
-			SetBlipSprite (Blipara, 68)
-			SetBlipDisplay(Blipara, 8)
-			SetBlipColour (Blipara, 47)
-			SetBlipScale  (Blipara, 1.4)
-			SetBlipRoute(Blipara, true)
-			ESX.ShowNotification("Vratite kamion nazad do firme!")
-			TriggerServerEvent("kamiooon:platituljanu")
-			TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.job.name)
-			TriggerServerEvent("kamion:MaknutObjekt", GetPlayerServerId(PlayerId()))
 		else
 			ESX.ShowNotification("Dosli ste bez prikolice!")
 		end
@@ -395,7 +474,11 @@ Citizen.CreateThread(function()
 					waitara = 0
 					naso = 1
 					local x,y,z = table.unpack(Lokacija)
-					DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
+					if Gorivo then
+						DrawMarker(1, x, y, z-1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
+					else
+						DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
+					end
 				end
 			end
 			
@@ -460,6 +543,26 @@ function ZavrsiPosao()
 		Vozilo = nil
 	end
 	TriggerServerEvent("kamion:MaknutObjekt", GetPlayerServerId(PlayerId()))
+end
+
+function StartajPosao2()
+	for i=1, #Pumpe, 1 do
+		if Pumpe[i] ~= nil then
+			if Pumpe[i].Narudzba == 1 then
+				Blipara = AddBlipForCoord(Pumpe[i].Dostava.x, Pumpe[i].Dostava.y, Pumpe[i].Dostava.z)
+				SetBlipSprite (Blipara, 68)
+				SetBlipDisplay(Blipara, 8)
+				SetBlipColour (Blipara, 47)
+				SetBlipScale  (Blipara, 1.4)
+				SetBlipRoute(Blipara, true)
+				ESX.ShowNotification("Odvezite gorivo na oznacenu lokaciju!")
+				Lokacija = vector3(Pumpe[i].Dostava.x, Pumpe[i].Dostava.y, Pumpe[i].Dostava.z)
+				Gorivo = true
+				Pumpa = Pumpe[i].Ime
+				break
+			end
+		end
+	end
 end
 
 function StartajPosao(br)

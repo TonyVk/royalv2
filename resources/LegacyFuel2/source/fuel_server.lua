@@ -6,7 +6,7 @@ if Config.UseESX then
 	TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 	RegisterServerEvent('gorivo:foka')
-	AddEventHandler('gorivo:foka', function(price, ime)
+	AddEventHandler('gorivo:foka', function(price, ime, gor, vl)
 		local xPlayer = ESX.GetPlayerFromId(source)
 		local amount = ESX.Math.Round(price)
 
@@ -15,8 +15,16 @@ if Config.UseESX then
 			for i=1, #Pumpe, 1 do
 				if Pumpe[i] ~= nil and Pumpe[i].Ime == ime then
 					Pumpe[i].Sef = Pumpe[i].Sef+amount
-					MySQL.Async.execute('UPDATE pumpe SET sef = @se WHERE ime = @im', {
+					if vl then
+						Pumpe[i].Gorivo = Pumpe[i].Gorivo-gor
+						if Pumpe[i].Gorivo < 0 then
+							Pumpe[i].Gorivo = 0
+						end
+					end
+					TriggerClientEvent("pumpe:SaljiPumpe", -1, Pumpe)
+					MySQL.Async.execute('UPDATE pumpe SET sef = @se, gorivo = @gor WHERE ime = @im', {
 						['@se'] = Pumpe[i].Sef,
+						['@gor'] = Pumpe[i].Gorivo,
 						['@im'] = ime
 					})
 					break
@@ -39,12 +47,17 @@ function UcitajPumpe()
         for i=1, #result, 1 do
 			local data2 = json.decode(result[i].koord)
 			local vecta = vector3(data2.x, data2.y, data2.z)
+			local data3 = json.decode(result[i].dostava)
+			local vecta2 = nil
+			if data3.x ~= nil then
+				vecta2 = vector3(data3.x, data3.y, data3.z)
+			end
 			if result[i].vlasnik == nil then
-				table.insert(Pumpe, {Ime = result[i].ime, Vlasnik = nil, Sef = result[i].sef, VlasnikIme = "Nema", Koord = vecta, Cijena = result[i].cijena, GCijena = result[i].gcijena, KCijena = result[i].kcijena})
+				table.insert(Pumpe, {Ime = result[i].ime, Vlasnik = nil, Sef = result[i].sef, VlasnikIme = "Nema", Koord = vecta, Cijena = result[i].cijena, GCijena = result[i].gcijena, KCijena = result[i].kcijena, Gorivo = result[i].gorivo, Narudzba = tonumber(result[i].narudzba), Dostava = vecta2})
 			else
 				GetRPName(result[i].vlasnik, function(Firstname, Lastname)
 					local im = Firstname.." "..Lastname
-					table.insert(Pumpe, {Ime = result[i].ime, Vlasnik = result[i].vlasnik, Sef = result[i].sef, VlasnikIme = im, Koord = vecta, Cijena = result[i].cijena, GCijena = result[i].gcijena, KCijena = result[i].kcijena})
+					table.insert(Pumpe, {Ime = result[i].ime, Vlasnik = result[i].vlasnik, Sef = result[i].sef, VlasnikIme = im, Koord = vecta, Cijena = result[i].cijena, GCijena = result[i].gcijena, KCijena = result[i].kcijena, Gorivo = result[i].gorivo, Narudzba = tonumber(result[i].narudzba), Dostava = vecta2})
 				end)
 			end
         end
@@ -98,6 +111,66 @@ AddEventHandler('pumpe:DajStanje', function(ime)
         end
       end
     )
+end)
+
+RegisterNetEvent('pumpe:NapraviNarudzbu')
+AddEventHandler('pumpe:NapraviNarudzbu', function(ime, cifra)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	for i=1, #Pumpe, 1 do
+		if Pumpe[i] ~= nil and Pumpe[i].Ime == ime then
+			if Pumpe[i].Sef >= cifra then
+				if Pumpe[i].Narudzba == 0 then
+					Pumpe[i].Narudzba = 1
+					Pumpe[i].Sef = Pumpe[i].Sef-cifra
+					MySQL.Async.execute('UPDATE pumpe SET sef = @se, narudzba = @nar WHERE ime = @im', {
+						['@se'] = Pumpe[i].Sef,
+						['@nar'] = 1,
+						['@im'] = ime
+					})
+					TriggerClientEvent("pumpe:SaljiPumpe", -1, Pumpe)
+					TriggerClientEvent('esx:showNotification', src, "Narucili ste dostavu goriva za $"..cifra)
+					break
+				else
+					xPlayer.showNotification("Vec imate narudzbu!")
+				end
+			else
+				xPlayer.showNotification("Nemate dovoljno u sefu firme!")
+			end
+		end
+	end
+end)
+
+RegisterNetEvent('pumpe:SpremiDostavu')
+AddEventHandler('pumpe:SpremiDostavu', function(ime, koord)
+	for i=1, #Pumpe, 1 do
+		if Pumpe[i] ~= nil and Pumpe[i].Ime == ime then
+			Pumpe[i].Dostava = koord
+			MySQL.Async.execute('UPDATE pumpe SET dostava = @do WHERE ime = @im', {
+				['@do'] = json.encode(koord),
+				['@im'] = ime
+			})
+			TriggerClientEvent("pumpe:SaljiPumpe", -1, Pumpe)
+			break
+		end
+	end
+end)
+
+RegisterNetEvent('pumpe:DostavioGorivo')
+AddEventHandler('pumpe:DostavioGorivo', function(ime)
+	for i=1, #Pumpe, 1 do
+		if Pumpe[i] ~= nil and Pumpe[i].Ime == ime then
+			Pumpe[i].Narudzba = 0
+			Pumpe[i].Gorivo = 500
+			MySQL.Async.execute('UPDATE pumpe SET narudzba = @nar, gorivo = @gor WHERE ime = @im', {
+				['@nar'] = 0,
+				['@gor'] = 500,
+				['@im'] = ime
+			})
+			TriggerClientEvent("pumpe:SaljiPumpe", -1, Pumpe)
+			break
+		end
+	end
 end)
 
 RegisterNetEvent('pumpe:UzmiIzSefa')
@@ -221,7 +294,7 @@ end)
 RegisterServerEvent('pumpe:DodajPumpu')
 AddEventHandler('pumpe:DodajPumpu', function(coords, cijena)
 	local str = "Pumpa "..#Pumpe+1
-	table.insert(Pumpe, {Ime = str, Koord = coords, Vlasnik = nil, Cijena = cijena, Sef = 0, VlasnikIme = "Nema", GCijena = 1.5, KCijena = 250})
+	table.insert(Pumpe, {Ime = str, Koord = coords, Vlasnik = nil, Cijena = cijena, Sef = 0, VlasnikIme = "Nema", GCijena = 1.5, KCijena = 250, Gorivo = 500, Narudzba = 0, Dostava = nil})
 	MySQL.Async.execute('INSERT INTO pumpe (ime, koord, vlasnik, cijena, sef, gcijena, kcijena) VALUES (@ime, @koord, @vl, @cij, @sef, @gcij, @kcij)',{
 		['@ime'] = str,
 		['@koord'] = json.encode(coords),
@@ -288,6 +361,26 @@ AddEventHandler('pumpe:UrediCijenu', function(ime, cij)
 		MySQL.Async.execute('UPDATE pumpe SET cijena = @cj WHERE ime = @ime',{
 			['@ime'] = ime,
 			['@cj'] = cij
+		})
+	end
+end)
+
+RegisterServerEvent('pumpe:UrediKolicinu')
+AddEventHandler('pumpe:UrediKolicinu', function(ime, kol)
+	local naso = false
+	for i=1, #Pumpe, 1 do
+		if Pumpe[i] ~= nil and Pumpe[i].Ime == ime then
+			Pumpe[i].Gorivo = kol
+			TriggerClientEvent("pumpe:SaljiPumpe", -1, Pumpe)
+			naso = true
+			break
+		end
+	end
+	TriggerClientEvent("pumpe:SaljiPumpe", -1, Pumpe)
+	if naso then
+		MySQL.Async.execute('UPDATE pumpe SET gorivo = @gor WHERE ime = @ime',{
+			['@ime'] = ime,
+			['@gor'] = kol
 		})
 	end
 end)

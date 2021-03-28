@@ -16,6 +16,19 @@ AddEventHandler('kamiooon:platituljanu', function()
 	end
 end)
 
+RegisterServerEvent('kamiooon:platituljanu2')
+AddEventHandler('kamiooon:platituljanu2', function()
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	if xPlayer.job.name == "kamion" then
+		xPlayer.addMoney(2000)
+		TriggerEvent("biznis:StaviUSef", "kamion", math.ceil(2000*0.30))
+	else
+        TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac kamiondzije, a nije zaposlen kao kamiondzija!")
+	    TriggerEvent("AntiCheat:Citer", _source)
+	end
+end)
+
 RegisterServerEvent('kamion:PosaljiObjekte')
 AddEventHandler('kamion:PosaljiObjekte', function(obj)
 	for i=1, #obj, 1 do
