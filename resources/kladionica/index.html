@@ -1,0 +1,198 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Oglasi</title>
+    <script src="assets/plugins/jquery/jquery-3.2.1.min.js"></script>
+    <link rel="stylesheet" href="assets/plugins/bootstrap-3.3.7-dist/css/bootstrap.css">
+	<style>
+		html {
+		  font-size: 14px;
+		}
+		@media (min-width: 768px) {
+		  html {
+			font-size: 16px;
+		  }
+		}
+
+		.container {
+			max-width: 960px;
+			max-height: 870px;
+			overflow: scroll;
+			overflow-x: hidden;
+			overflow-y: auto;
+			position: relative;
+			left: 0;
+			margin: 0;
+			padding-top: 10px;
+			background-color: #c3c3c3;
+			top: 55px;
+			border-radius: 15px;
+			font-size: 19px;
+		}
+
+		.pricing-header {
+		  max-width: 700px;
+		}
+
+		.card-deck .card {
+			min-width: 220px;
+			float: left;
+			margin-right: 0px;
+			margin-left: 8px;
+			margin-top: 11px;
+			margin-bottom: 11px;
+			background-color: #00000017;
+		}
+		
+		.jumbotron {
+			margin-bottom: 0px;
+			padding-top: 15px;
+			padding-bottom: 15px;
+		}
+		
+		#tijelo {
+			background-color: transparent;
+		}
+
+		.border-top { border-top: 1px solid #e5e5e5; }
+		.border-bottom { border-bottom: 1px solid #e5e5e5; }
+
+		.box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
+		
+		.btn-danger {
+			float: right;
+		}
+		.tekma{
+			background-color: #00000026;
+			color: black;
+			padding: 15px;
+			margin-bottom: 1px;
+		}
+		.bizbor{
+			width: 60px;
+			float:right;
+		}
+	</style>
+</head>
+	<body id = "tijelo">
+		<center>
+		<div class="container">
+		<button type="button" class="btn btn-danger" onclick="Zatvori()">X</button>
+		<div class="jumbotron text-center"><h2>KLADIONICA</h2></div>
+		  <div class="card-deck mb-3 text-center" id="test">
+			 <div class="tekma">
+				<div class="row">
+					<div class="col-sm-4">
+						Hrvatska-Srbija (18:00)
+					</div>
+					<div class="col-sm-4">
+						1(2.10) X(3.40) 2(2.87)
+					</div>
+					<div class="col-sm-4">
+						<button class="bizbor">2</button>
+						<button class="bizbor">X</button>
+						<button class="bizbor">1</button>
+					</div>
+				</div>
+			 </div>
+			 <div class="tekma">
+				<div class="row">
+					<div class="col-sm-4">
+						Hrvatska-BIH (20:45)
+					</div>
+					<div class="col-sm-4">
+						1(2.10) X(3.40) 2(2.87)
+					</div>
+					<div class="col-sm-4">
+						<button class="bizbor">2</button>
+						<button class="bizbor">X</button>
+						<button class="bizbor">1</button>
+					</div>
+				</div>
+			 </div>
+			 <div class="tekma">
+				<div class="row">
+					<div class="col-sm-4">
+						Hrvatska-Malta (20:00)
+					</div>
+					<div class="col-sm-4">
+						1(2.10) X(3.40) 2(2.87)
+					</div>
+					<div class="col-sm-4">
+						<button class="bizbor">2</button>
+						<button class="bizbor">X</button>
+						<button class="bizbor">1</button>
+					</div>
+				</div>
+			 </div>
+			 <div class="tekma">
+				<div class="row">
+					<div class="col-sm-4">
+						BIH-Srbija (20:30)
+					</div>
+					<div class="col-sm-4">
+						1(2.10) X(3.40) 2(2.87)
+					</div>
+					<div class="col-sm-4">
+						<button class="bizbor">2</button>
+						<button class="bizbor">X</button>
+						<button class="bizbor">1</button>
+					</div>
+				</div>
+			 </div>
+		  </div>
+		</div>
+		</center>
+		<script src="assets/plugins/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+		<script>
+			var Prikazan = false;
+			window.addEventListener('message', function(event) {
+				var item = event.data;
+				if (item.salji) {
+					var model = item.model;
+					var marka = item.marka;
+					var cijena = item.cijena;
+					var br = item.broj;
+					var maindiv = document.getElementById('test');
+					var div = document.createElement('div');
+					div.className = 'card mb-4 box-shadow';
+					maindiv.appendChild(div);
+					var div2 = document.createElement('div');
+					div2.className = 'card-header';
+					div2.innerHTML = '<h4 class="my-0 font-weight-normal">Oglas</h4>';
+					div.appendChild(div2);
+					var div3 = document.createElement('div');
+					div3.className = 'card-body';
+					div3.innerHTML = '<h1 class="card-title pricing-card-title">$'+cijena+'</h1><ul class="list-unstyled mt-3 mb-4"><li>Marka <small class="text-muted">'+marka+'</small></li><li>Model <small class="text-muted">'+model+'</small></li><li>Broj <small class="text-muted">'+br+'</small></li></ul><button type="button" class="btn btn-lg btn-block btn-primary" onclick="Test(\''+ br +'\')">Pozovi</button>';
+					div.appendChild(div3);
+				}
+				if (item.prikazi) {
+					var x = document.getElementById("tijelo");
+					if(Prikazan == false)
+					{
+						x.style.display = "block";
+						Prikazan = true;
+					}
+					else
+					{
+						x.style.display = "none";
+						Prikazan = false;
+					}
+				}
+			});
+			function Test(broj)
+			{
+				$.post("http://oglasi/zovi", JSON.stringify({
+					br: broj
+				}));
+			}
+			function Zatvori()
+			{
+				$.post("http://oglasi/zatvori", JSON.stringify({}));
+			}
+		</script>
+	</body>
+</html>
