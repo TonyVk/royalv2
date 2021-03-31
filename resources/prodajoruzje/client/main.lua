@@ -536,6 +536,37 @@ AddEventHandler('prodajoruzje:SloziOruzje', function(br)
 	SetNuiFocus(true, true)
 end)
 
+RegisterNetEvent('prodajoruzje:SetajChameSkin')
+AddEventHandler('prodajoruzje:SetajChameSkin', function(sk, br)
+	if br then
+		if sk == 1 then
+			local modelHash = GetHashKey("a_m_y_downtown_01")
+			ESX.Streaming.RequestModel(modelHash, function()
+				SetPlayerModel(PlayerId(), modelHash)
+				SetModelAsNoLongerNeeded(modelHash)
+				TriggerEvent('esx:restoreLoadout')
+			end)
+		else
+			local modelHash = GetHashKey("g_m_m_armlieut_01")
+			ESX.Streaming.RequestModel(modelHash, function()
+				SetPlayerModel(PlayerId(), modelHash)
+				SetModelAsNoLongerNeeded(modelHash)
+				TriggerEvent('esx:restoreLoadout')
+			end)
+		end
+	else
+		ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+			local isMale = skin.sex == 0
+			TriggerEvent('skinchanger:loadDefaultModel', isMale, function()
+				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
+					TriggerEvent('skinchanger:loadSkin', skin)
+					TriggerEvent('esx:restoreLoadout')
+				end)
+			end)
+		end)
+	end
+end)
+
 RegisterNUICallback(
     "slozi",
     function(data, cb)

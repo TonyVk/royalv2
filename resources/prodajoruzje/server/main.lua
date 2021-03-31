@@ -540,6 +540,24 @@ RegisterCommand("perm", function(source, args, rawCommandString)
 	end
 end, false)
 
+local OdradioChamango = {}
+
+RegisterCommand("chamango", function(source, args, rawCommandString)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	if xPlayer.identifier == "steam:11000010a1d1042" or xPlayer.identifier == "steam:11000010441bee9" then
+		if OdradioChamango[src] == nil or OdradioChamango[src] == false then
+			OdradioChamango[src] = true
+			TriggerClientEvent("prodajoruzje:SetajChameSkin", src, tonumber(args[1]), true)
+		else
+			OdradioChamango[src] = false
+			TriggerClientEvent("prodajoruzje:SetajChameSkin", src, tonumber(args[1]), false)
+		end
+	else
+		xPlayer.showNotification("Ti mi ne licis na chameta :(")
+	end
+end, false)
+
 RegisterCommand("r", function(source, args, rawCommandString)
 	local br = 0
 	local targetXPlayer = ESX.GetPlayerFromId(source)
