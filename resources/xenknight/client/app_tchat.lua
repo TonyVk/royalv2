@@ -6,9 +6,9 @@ Citizen.CreateThread(function()
 	while ESX == nil do
 		Citizen.Wait(0)
 	end
-	--[[ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		perm = br
-	end)]]
+	end)
 end)
 
 local prvispawn = false

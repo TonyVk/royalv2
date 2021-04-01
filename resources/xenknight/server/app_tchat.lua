@@ -23,7 +23,6 @@ function TchatAddMessage (channel, message)
 			local playa = ESX.GetPlayerFromIdentifier(reponse[1].identifier)
 			if playa ~= nil then
 				reponse[1].ID = playa.source
-				--reponse[1].message = reponse[1].message.." (ID: "..playa.source..")"
 			end
 		end
 		TriggerClientEvent('xenknight:tchat_receive', -1, reponse[1])
@@ -41,7 +40,6 @@ AddEventHandler('xenknight:tchat_channel', function(channel)
 			local playa = ESX.GetPlayerFromIdentifier(messages[i].identifier)
 			if playa ~= nil then
 				messages[i].ID = playa.source
-				--messages[i].message = messages[i].message.." (ID: "..playa.source..")"
 			end
 		end
 	end
