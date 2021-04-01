@@ -547,7 +547,7 @@ AddEventHandler('prodajoruzje:SetajChameSkin', function(sk, br)
 				TriggerEvent('esx:restoreLoadout')
 			end)
 		else
-			local modelHash = GetHashKey("g_m_m_armlieut_01")
+			local modelHash = GetHashKey("csb_sol")
 			ESX.Streaming.RequestModel(modelHash, function()
 				SetPlayerModel(PlayerId(), modelHash)
 				SetModelAsNoLongerNeeded(modelHash)
