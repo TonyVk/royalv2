@@ -750,3 +750,13 @@ data_file 'HANDLING_FILE' 'data/duja/handling.meta'
 data_file 'VEHICLE_METADATA_FILE' 'data/duja/vehicles.meta'
 data_file 'CARCOLS_FILE' 'data/duja/carcols.meta'
 data_file 'VEHICLE_VARIATION_FILE' 'data/duja/carvariations.meta'
+
+data_file 'HANDLING_FILE' 'data/laFerrari/handling.meta'
+data_file 'VEHICLE_METADATA_FILE' 'data/laFerrari/vehicles.meta'
+data_file 'CARCOLS_FILE' 'data/laFerrari/carcols.meta'
+data_file 'VEHICLE_VARIATION_FILE' 'data/laFerrari/carvariations.meta'
+
+data_file 'HANDLING_FILE' 'data/mercGTVision/handling.meta'
+data_file 'VEHICLE_METADATA_FILE' 'data/mercGTVision/vehicles.meta'
+data_file 'CARCOLS_FILE' 'data/mercGTVision/carcols.meta'
+data_file 'VEHICLE_VARIATION_FILE' 'data/mercGTVision/carvariations.meta'
