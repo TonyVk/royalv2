@@ -33,22 +33,22 @@ Config.PoliceStations = {
 		},
 
 		Cloakrooms = {
-			vector3(452.6, -992.8, 30.6)
+			vector3(470.98352050781, -988.64825439453, 25.734672546387)
 		},
 
 		Armories = {
-			vector3(451.7, -980.1, 30.6)
+			vector3(485.53536987305, -1005.6081542969, 25.734548568726)
 		},
 
 		Vehicles = {
 			{
-				Spawner = vector3(454.6, -1017.4, 28.4),
+				Spawner = vector3(440.85629272461, -984.72174072266, 25.729694366455),
 				InsideShop = vector3(228.5, -993.5, -99.5),
 				SpawnPoints = {
-					{ coords = vector3(438.4, -1018.3, 27.7), heading = 90.0, radius = 6.0 },
-					{ coords = vector3(441.0, -1024.2, 28.3), heading = 90.0, radius = 6.0 },
-					{ coords = vector3(453.5, -1022.2, 28.0), heading = 90.0, radius = 6.0 },
-					{ coords = vector3(450.9, -1016.5, 28.1), heading = 90.0, radius = 6.0 },
+					{ coords = vector3(427.50576782227, -987.87731933594, 24.729700088501), heading = 283.08, radius = 6.0 },
+					{ coords = vector3(427.65551757812, -982.35119628906, 25.729698181152), heading = 288.22, radius = 6.0 },
+					{ coords = vector3(427.5302734375, -976.76538085938, 25.729698181152), heading = 277.64, radius = 6.0 },
+					{ coords = vector3(426.70175170898, -990.69836425781, 25.729682922363), heading = 282.90, radius = 6.0 },
 				}
 			},
 
@@ -73,7 +73,7 @@ Config.PoliceStations = {
 		},
 
 		BossActions = {
-			vector3(448.4, -973.2, 30.6)
+			vector3(471.62698364258, -1005.3814697266, 30.692152023315)
 		}
 
 	},
@@ -146,7 +146,6 @@ Config.AuthorizedWeapons = {
 		{ weapon = 'WEAPON_NIGHTSTICK', price = 0 },
 		{ weapon = 'WEAPON_SMG' , components = { 0, 0, 0, 0, nil }, price = 0},
 		{ weapon = 'WEAPON_STUNGUN', price = 0 },
-		{ weapon = 'WEAPON_SNIPERRIFLE', price = 0 },
 		{ weapon = 'WEAPON_FLASHLIGHT', price = 0 }
 	},
 
@@ -167,7 +166,6 @@ Config.AuthorizedWeapons = {
 		{ weapon = 'WEAPON_NIGHTSTICK', price = 0 },
 		{ weapon = 'WEAPON_SMG' , components = { 0, 0, 0, 0, nil }, price = 0},
 		{ weapon = 'WEAPON_STUNGUN', price = 0 },
-		{ weapon = 'WEAPON_SNIPERRIFLE', price = 0 },
 		{ weapon = 'WEAPON_FLASHLIGHT', price = 0 }
 	},
 	
@@ -178,7 +176,6 @@ Config.AuthorizedWeapons = {
 		{ weapon = 'WEAPON_NIGHTSTICK', price = 0 },
 		{ weapon = 'WEAPON_SMG' , components = { 0, 0, 0, 0, nil }, price = 0},
 		{ weapon = 'WEAPON_STUNGUN', price = 0 },
-		{ weapon = 'WEAPON_SNIPERRIFLE', price = 0 },
 		{ weapon = 'WEAPON_FLASHLIGHT', price = 0 }
 	},
 
@@ -189,7 +186,6 @@ Config.AuthorizedWeapons = {
 		{ weapon = 'WEAPON_NIGHTSTICK', price = 0 },
 		{ weapon = 'WEAPON_SMG' , components = { 0, 0, 0, 0, nil }, price = 0},
 		{ weapon = 'WEAPON_STUNGUN', price = 0 },
-		{ weapon = 'WEAPON_SNIPERRIFLE', price = 0 },
 		{ weapon = 'WEAPON_FLASHLIGHT', price = 0 }
 	},
 
@@ -201,7 +197,6 @@ Config.AuthorizedWeapons = {
 		{ weapon = 'WEAPON_NIGHTSTICK', price = 0 },
 		{ weapon = 'WEAPON_SMG' , components = { 0, 0, 0, 0, nil }, price = 0},
 		{ weapon = 'WEAPON_STUNGUN', price = 0 },
-		{ weapon = 'WEAPON_SNIPERRIFLE', price = 0 },
 		{ weapon = 'WEAPON_FLASHLIGHT', price = 0 }
 	}
 }
@@ -283,7 +278,8 @@ Config.AuthorizedVehicles = {
 		{ model = 'Sheriff2', label = 'Mercedes G', price = 0},
 		{ model = 'fbi2', label = 'VW Touareg', price = 0},
 		{ model = 'umkscout', label = 'Jeep', price = 0},
-		{ model = 'policeb', label = 'Motor', price = 0}
+		{ model = 'policeb', label = 'Motor', price = 0},
+		{ model = '2015polstang', label = 'Novi Mustang', price = 0}
 	}
 }
 

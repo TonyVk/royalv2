@@ -27,21 +27,21 @@ Config = {
 Config.Garages = {
 
 	Garage_Centre = {	
-		Pos = vector3(-825.510, -440.8749, 35.6722),
+		Pos = vector3(212.76470947266, -887.22009277344, 18.319744110107),
 		Size  = {x = 3.0, y = 3.0, z = 1.0},
 		Color = {r = 204, g = 204, b = 0},
 		Marker = 1,
 		PrikaziBlip = 1,
 		Ime = "Garaza Centar",
 		SpawnPoint = {
-			Pos = vector3(-835.510, -401.8749, 30.4722),
+			Pos = vector3(212.76470947266, -887.22009277344, 17.319744110107),
 			Color = {r=0,g=255,b=0},
 			Size  = {x = 3.0, y = 3.0, z = 1.0},
-			Heading= 300.00,
+			Heading= 55.50,
 			Marker = 1		
 		},
 		DeletePoint = {
-			Pos = vector3(-828.774, -428.77, 35.646),
+			Pos = vector3(219.13619995117, -902.43194580078, 17.319715499878),
 			Color = {r=255,g=0,b=0},
 			Size  = {x = 3.0, y = 3.0, z = 1.0},
 			Marker = 1,
@@ -151,16 +151,16 @@ Config.Garages = {
 		}
 	},
 	Garage_DodatniMarkeri = {	
-		Pos = vector3(-838.8584228516, -397.13308837891, 30.370678710938 ),
+		Pos = vector3(218.76092529297, -878.7666015625, 18.319732666016 ),
 		Size  = {x = 3.0, y = 3.0, z = 1.0},
 		Color = {r = 255, g = 0, b = 0},
 		Marker = 1,
 		Ime = "DodatniMarkeri",
 		PrikaziBlip = 0,
 		SpawnPoint = {
-			Pos = vector3(-838.8584228516, -397.13308837891, 30.370678710938 ),
+			Pos = vector3(218.76092529297, -878.7666015625, 17.319732666016),
 			Color = {r=0,g=255,b=0},
-			Heading = 300.00,
+			Heading = 55.50,
 			Size  = {x = 3.0, y = 3.0, z = 1.0},
 			Marker = 1
 		},
@@ -168,26 +168,26 @@ Config.Garages = {
 			Pos = vector4(238.360962,-1004.80573,-99.99996,90.22185),	
 		},
 		SpawnVozila = {
-			Pos = vector3(234.44923400879, -976.57659912109, -99.999954223633),
+			Pos = vector3(225.93049621582, -894.76141357422, 17.31974029541),
 		},
 		DeletePoint = {
-			Pos = vector3(-838.14,-413.14, 35.80 ),
+			Pos = vector3(225.59072875977, -894.65692138672, 17.319715499878),
 			Color = {r=255,g=0,b=0},
 			Size  = {x = 3.0, y = 3.0, z = 1.0},
 			Marker = 1
 		}
 	},
 	Garage_DodatniMarkeri2 = {	
-		Pos = vector3(-841.3184228516, -392.94308837891, 30.35678710938 ),
+		Pos = vector3(220.66430664062, -876.26593017578, 18.319734573364 ),
 		Size  = {x = 3.0, y = 3.0, z = 1.0},
 		Color = {r = 255, g = 0, b = 0},
 		Marker = 1,
 		Ime = "DodatniMarkeri2",
 		PrikaziBlip = 0,
 		SpawnPoint = {
-			Pos = vector3(-841.3184228516, -392.94308837891, 30.35678710938 ),
+			Pos = vector3(220.66430664062, -876.26593017578, 17.319734573364),
 			Color = {r=0,g=255,b=0},
-			Heading = 300.00,
+			Heading = 55.50,
 			Size  = {x = 3.0, y = 3.0, z = 1.0},
 			Marker = 1
 		},
@@ -195,26 +195,26 @@ Config.Garages = {
 			Pos = vector4(238.360962,-1004.80573,-99.99996,90.22185),	
 		},
 		SpawnVozila = {
-			Pos = vector3(234.44923400879, -976.57659912109, -99.999954223633),
+			Pos = vector3(231.84121704102, -886.31658935547, 17.319738388062),
 		},
 		DeletePoint = {
-			Pos = vector3(-859.13, -409.39, 35.80 ),
+			Pos = vector3(231.5115814209, -886.24591064453, 17.319723129272),
 			Color = {r=255,g=0,b=0},
 			Size  = {x = 3.0, y = 3.0, z = 1.0},
 			Marker = 1
 		}
 	},
 	Garage_DodatniMarkeri3 = {	
-		Pos = vector3(-867.38, -428.34, 35.80 ),
+		Pos = vector3(214.74337768555, -884.45135498047, 17.319744110107 ),
 		Size  = {x = 3.0, y = 3.0, z = 1.0},
 		Color = {r = 255, g = 0, b = 0},
 		Marker = 1,
 		Ime = "DodatniMarkeri2",
 		PrikaziBlip = 0,
 		SpawnPoint = {
-			Pos = vector3(-816.3284228516, -420.86308837891, 44.45678710938 ),
+			Pos = vector3(214.74337768555, -884.45135498047, 17.319744110107),
 			Color = {r=0,g=255,b=0},
-			Heading = 300.07,
+			Heading = 55.07,
 			Size  = {x = 3.0, y = 3.0, z = 1.0},
 			Marker = 1
 		},
@@ -225,7 +225,7 @@ Config.Garages = {
 			Pos = vector3(234.44923400879, -976.57659912109, -99.999954223633),
 		},
 		DeletePoint = {
-			Pos = vector3(-867.38, -428.34, 35.80 ),
+			Pos = vector3(237.7785949707, -877.16766357422, 17.319723129272),
 			Color = {r=255,g=0,b=0},
 			Size  = {x = 3.0, y = 3.0, z = 1.0},
 			Marker = 1

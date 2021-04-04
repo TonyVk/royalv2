@@ -2414,7 +2414,7 @@ Citizen.CreateThread(function()
 
 end)
 
-local pozicija = vector3(459.74523925782, -989.07751464844, 24.914861679078)
+local pozicija = vector3(439.44024658203, -991.91552734375, 30.689340591431)
 
 -- Display markers
 Citizen.CreateThread(function()

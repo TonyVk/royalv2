@@ -14,8 +14,8 @@ Config.Locale                     = 'hr'
 Config.AuthorizedVehicles = {
 
 	{
-		model = 'taxi',
-		label = 'Taxi'
+		model = 'taxi2',
+		label = 'Mercedes C Class'
 	}
 
 }
@@ -23,35 +23,35 @@ Config.AuthorizedVehicles = {
 Config.Zones = {
 
 	VehicleSpawner = {
-		Pos   = {x = 915.039, y = -162.187, z = 74.5},
+		Pos   = {x = 896.544, y = -153.892, z = 76.569},
 		Size  = {x = 1.0, y = 1.0, z = 1.0},
 		Color = {r = 204, g = 204, b = 0},
 		Type  = 36, Rotate = true
 	},
 
 	VehicleSpawnPoint = {
-		Pos     = {x = 911.108, y = -177.867, z = 74.283},
+		Pos     = {x = 898.237, y = -151.117, z = 75.559},
 		Size    = {x = 1.5, y = 1.5, z = 1.0},
 		Type    = -1, Rotate = false,
-		Heading = 225.0
+		Heading = 328.66
 	},
 	
 	TaxiActions = {
-		Pos   = {x = 903.32, y = -170.55, z = 74.0},
+		Pos   = {x = 906.416, y = -150.967, z = 74.168},
 		Size  = {x = 1.0, y = 1.0, z = 1.0},
 		Color = {r = 204, g = 204, b = 0},
 		Type  = 20, Rotate = true
 	},
 
 	VehicleDeleter = {
-		Pos   = {x = 908.317, y = -183.070, z = 73.201},
+		Pos   = {x = 901.521, y = -144.533, z = 75.638},
 		Size  = {x = 3.0, y = 3.0, z = 0.25},
 		Color = {r = 255, g = 0, b = 0},
 		Type  = 1, Rotate = false
 	},
 
 	Cloakroom = {
-		Pos     = {x = 894.88, y = -180.23, z = 74.5},
+		Pos     = {x = 898.658, y = -169.670, z = 74.168},
 		Size    = {x = 1.0, y = 1.0, z = 1.0},
 		Color   = {r = 204, g = 204, b = 0},
 		Type    = 21, Rotate = true
