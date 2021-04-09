@@ -1,89 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <CVehicleModelInfoVarGlobal>    
   <Kits>
-   <Item>
-      <kitName>11255_rmodamgc63_modkit</kitName>
-      <id value="11255" />	 	  
+    <Item>
+      <kitName>2199_rs7r_modkit</kitName>
+      <id value="2199" />
       <kitType>MKT_SPECIAL</kitType>
-      <visibleMods>
-	  	<Item>
-          <modelName>amg63_wing_1</modelName>
-          <modShopLabel>amg63_wing_1</modShopLabel>
-          <linkedModels />
-		  <turnOffBones>
-		  <Item>boot</Item>
-		  </turnOffBones>
-          <type>VMT_SPOILER</type>
-          <bone>boot</bone>
-          <collisionBone>boot</collisionBone>
-          <cameraPos>VMCP_DEFAULT</cameraPos>
-          <audioApply value="1.000000" />
-          <weight value="0" />
-          <turnOffExtra value="false" />
-          <disableBonnetCamera value="false" />
-          <allowBonnetSlide value="true" />
-        </Item>
-	  	<Item>
-          <modelName>amg63_wing_2</modelName>
-          <modShopLabel>amg63_wing_2</modShopLabel>
-          <linkedModels />
-		  <turnOffBones>
-		  <Item>boot</Item>
-		  </turnOffBones>
-          <type>VMT_SPOILER</type>
-          <bone>boot</bone>
-          <collisionBone>boot</collisionBone>
-          <cameraPos>VMCP_DEFAULT</cameraPos>
-          <audioApply value="1.000000" />
-          <weight value="0" />
-          <turnOffExtra value="false" />
-          <disableBonnetCamera value="false" />
-          <allowBonnetSlide value="true" />
-        </Item>
-		<Item>
-          <modelName>amg63_wing_3</modelName>
-          <modShopLabel>amg63_wing_3</modShopLabel>
-          <linkedModels />
-		  <turnOffBones>
-		  <Item>boot</Item>
-		  </turnOffBones>
-          <type>VMT_SPOILER</type>
-          <bone>boot</bone>
-          <collisionBone>boot</collisionBone>
-          <cameraPos>VMCP_DEFAULT</cameraPos>
-          <audioApply value="1.000000" />
-          <weight value="0" />
-          <turnOffExtra value="false" />
-          <disableBonnetCamera value="false" />
-          <allowBonnetSlide value="true" />
-        </Item>
-      </visibleMods>
+      <visibleMods />
       <linkMods />
       <statMods>
         <Item>
           <identifier />
+          <modifier value="25" />
+          <audioApply value="1.000000" />
+          <weight value="20" />
+          <type>VMT_ENGINE</type>
+        </Item>
+        <Item>
+          <identifier />
+          <modifier value="50" />
+          <audioApply value="1.000000" />
+          <weight value="20" />
+          <type>VMT_ENGINE</type>
+        </Item>
+        <Item>
+          <identifier />
+          <modifier value="75" />
+          <audioApply value="1.000000" />
+          <weight value="20" />
+          <type>VMT_ENGINE</type>
+        </Item>
+        <Item>
+          <identifier />
           <modifier value="100" />
-          <audioApply value="1.000000" />
-          <weight value="20" />
-          <type>VMT_ENGINE</type>
-        </Item>
-        <Item>
-          <identifier />
-          <modifier value="150" />
-          <audioApply value="1.000000" />
-          <weight value="20" />
-          <type>VMT_ENGINE</type>
-        </Item>
-        <Item>
-          <identifier />
-          <modifier value="230" />
-          <audioApply value="1.000000" />
-          <weight value="20" />
-          <type>VMT_ENGINE</type>
-        </Item>
-        <Item>
-          <identifier />
-          <modifier value="280" />
           <audioApply value="1.000000" />
           <weight value="20" />
           <type>VMT_ENGINE</type>
@@ -97,7 +46,7 @@
         </Item>
         <Item>
           <identifier />
-          <modifier value="50" />
+          <modifier value="65" />
           <audioApply value="1.000000" />
           <weight value="5" />
           <type>VMT_BRAKES</type>
@@ -221,7 +170,7 @@
           <weight value="0" />
           <type>VMT_HORN</type>
         </Item>
-		<Item>
+		   <Item>
           <identifier>HORN_SAD_TROMBONE</identifier>
           <modifier value="632950117" />
           <audioApply value="1.000000" />
@@ -269,70 +218,70 @@
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_HORN</type>
-		</Item>
-		<Item>
+	    </Item>
+	    <Item>
           <identifier>MUSICAL_HORN_BUSINESS_7</identifier>
           <modifier value="3203290992" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_HORN</type>
-		</Item>
-		<Item>
+    	</Item>
+	    <Item>
           <identifier>DLC_BUSI2_C_MAJOR_NOTES_C0</identifier>
           <modifier value="771284519" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_HORN</type>
-		</Item>
-		<Item>
+	    </Item>
+	    <Item>
           <identifier>DLC_BUSI2_C_MAJOR_NOTES_D0</identifier>
           <modifier value="2586621229" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_HORN</type>
-		</Item>
-		<Item>
+	    </Item>
+	    <Item>
           <identifier>DLC_BUSI2_C_MAJOR_NOTES_E0</identifier>
           <modifier value="283386134" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_HORN</type>
-		</Item>
-		<Item>
+	    </Item>
+	    <Item>
           <identifier>DLC_BUSI2_C_MAJOR_NOTES_F0</identifier>
           <modifier value="3884502400" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_HORN</type>
-		</Item>
-		<Item>
+    	</Item>
+    	<Item>
           <identifier>DLC_BUSI2_C_MAJOR_NOTES_G0</identifier>
           <modifier value="265723083" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_HORN</type>
-		</Item>
-		<Item>
+    	</Item>
+	    <Item>
           <identifier>DLC_BUSI2_C_MAJOR_NOTES_A0</identifier>
           <modifier value="1746883687" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_HORN</type>
-		</Item>
-		<Item>
+    	</Item>
+	    <Item>
           <identifier>DLC_BUSI2_C_MAJOR_NOTES_B0</identifier>
           <modifier value="1919870950" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_HORN</type>
-		</Item>
-		<Item>
+    	</Item>
+    	<Item>
           <identifier>DLC_BUSI2_C_MAJOR_NOTES_C1</identifier>
           <modifier value="1085277077" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_HORN</type>
-		</Item>
+    	</Item>
         <Item>
           <identifier>HIPSTER_HORN_1</identifier>
           <modifier value="444549672" />
@@ -389,21 +338,21 @@
           <weight value="0" />
           <type>VMT_HORN</type>
         </Item>
-		<Item>
+	    	<Item>
           <identifier>LUXE_HORN_1</identifier>
           <modifier value="3199657341" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_HORN</type>
         </Item>
-		<Item>
+	    	<Item>
           <identifier>LUXE_HORN_2</identifier>
           <modifier value="2900378064" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_HORN</type>
         </Item>
-		<Item>
+	    	<Item>
           <identifier>LUXE_HORN_3</identifier>
           <modifier value="3956195248" />
           <audioApply value="1.000000" />
@@ -411,7 +360,7 @@
           <type>VMT_HORN</type>
         </Item>
 		<!-- PREVIEW HORN - FOR MOD SHOP USE ONLY -->
-		<Item>
+	    	<Item>
           <identifier>LUXORY_HORN_1</identifier>
           <modifier value="676333254" />
           <audioApply value="1.000000" />
@@ -419,7 +368,7 @@
           <type>VMT_HORN</type>
         </Item>
 		<!-- PREVIEW HORN - FOR MOD SHOP USE ONLY -->
-		<Item>
+    		<Item>
           <identifier>LUXURY_HORN_2</identifier>
           <modifier value="2099578296" />
           <audioApply value="1.000000" />
@@ -427,239 +376,184 @@
           <type>VMT_HORN</type>
         </Item>
 		<!-- PREVIEW HORN - FOR MOD SHOP USE ONLY -->
-		<Item>
+	    	<Item>
           <identifier>LUXURY_HORN_3</identifier>
           <modifier value="1373384483" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_HORN</type>
         </Item>
-		<Item>
-          <identifier>ORGAN_HORN_LOOP_01</identifier>
-          <modifier value="2916775806" />
-          <audioApply value="1.000000" />
-          <weight value="0" />
-          <type>VMT_HORN</type>
-        </Item>
-		<!-- PREVIEW HORN - FOR MOD SHOP USE ONLY -->
-		<Item>
-          <identifier>ORGAN_HORN_LOOP_01_PREVIEW</identifier>
-          <modifier value="3714706952" />
-          <audioApply value="1.000000" />
-          <weight value="0" />
-          <type>VMT_HORN</type>
-        </Item>
-		<Item>
-          <identifier>ORGAN_HORN_LOOP_02</identifier>
-          <modifier value="2611860261" />
-          <audioApply value="1.000000" />
-          <weight value="0" />
-          <type>VMT_HORN</type>
-        </Item>
-		<!-- PREVIEW HORN - FOR MOD SHOP USE ONLY -->
-		<Item>
-          <identifier>ORGAN_HORN_LOOP_02_PREVIEW</identifier>
-          <modifier value="3206770359" />
-          <audioApply value="1.000000" />
-          <weight value="0" />
-          <type>VMT_HORN</type>
-        </Item>
-		<Item>
-          <identifier>LOWRIDER_HORN_1</identifier>
-          <modifier value="310529291" />
-          <audioApply value="1.000000" />
-          <weight value="0" />
-          <type>VMT_HORN</type>
-        </Item>
-		<!-- PREVIEW HORN - FOR MOD SHOP USE ONLY -->
-		<Item>
-          <identifier>LOWRIDER_HORN_1_PREVIEW</identifier>
-          <modifier value="2965568987" />
-          <audioApply value="1.000000" />
-          <weight value="0" />
-          <type>VMT_HORN</type>
-        </Item>
-		<Item>
-          <identifier>LOWRIDER_HORN_2</identifier>
-          <modifier value="55291550" />
-          <audioApply value="1.000000" />
-          <weight value="0" />
-          <type>VMT_HORN</type>
-        </Item>
-		<!-- PREVIEW HORN - FOR MOD SHOP USE ONLY -->
-		<Item>
-          <identifier>LOWRIDER_HORN_2_PREVIEW</identifier>
-          <modifier value="965054819" />
-          <audioApply value="1.000000" />
-          <weight value="0" />
-          <type>VMT_HORN</type>
-        </Item>
-		<Item>
+        <Item>
           <identifier />
-          <modifier value="1" />
+          <modifier value="5" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_SUSPENSION</type>
         </Item>
         <Item>
           <identifier />
-          <modifier value="2" />
+          <modifier value="10" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_SUSPENSION</type>
         </Item>
         <Item>
           <identifier />
-          <modifier value="3" />
+          <modifier value="15" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_SUSPENSION</type>
         </Item>
         <Item>
           <identifier />
-          <modifier value="4" />
+          <modifier value="20" />
           <audioApply value="1.000000" />
           <weight value="0" />
           <type>VMT_SUSPENSION</type>
         </Item>
       </statMods>
       <slotNames />
-      <liveryNames>
-      </liveryNames>
+      <liveryNames />
     </Item>
   </Kits>
-      <Lights>
-      <Item>
-      <id value="11255" />
+  <Lights>
+    <Item>
+      <id value="902" />
       <indicator>
-        <intensity value="0.375000" />
-        <falloffMax value="2.500000" />
-        <falloffExponent value="8.000000" />
-        <innerConeAngle value="20.000000" />
-        <outerConeAngle value="50.000000" />
+        <intensity value="0.37500000" />
+        <falloffMax value="2.50000000" />
+        <falloffExponent value="8.00000000" />
+        <innerConeAngle value="20.00000000" />
+        <outerConeAngle value="50.00000000" />
         <emmissiveBoost value="false" />
         <color value="0xFFFF7300" />
+        <textureName />
+        <mirrorTexture value="true" />
       </indicator>
       <rearIndicatorCorona>
-        <size value="0.000000" />
-        <size_far value="0.000000" />
-        <intensity value="0.000000" />
-        <intensity_far value="0.000000" />
-        <color value="0x00000000" />
-        <numCoronas value="0" />
-        <distBetweenCoronas value="128" />
-        <distBetweenCoronas_far value="255" />
-        <xRotation value="0.000000" />
-        <yRotation value="0.000000" />
-        <zRotation value="0.000000" />
-        <zBias value="0.250000" />
-        <pullCoronaIn value="false" />
-      </rearIndicatorCorona>
-      <frontIndicatorCorona>
-        <size value="0.000000" />
-        <size_far value="0.000000" />
-        <intensity value="0.000000" />
-        <intensity_far value="0.000000" />
+        <size value="0.00000000" />
+        <size_far value="0.00000000" />
+        <intensity value="0.00000000" />
+        <intensity_far value="0.00000000" />
         <color value="0x00000000" />
         <numCoronas value="1" />
         <distBetweenCoronas value="128" />
         <distBetweenCoronas_far value="255" />
-        <xRotation value="0.000000" />
-        <yRotation value="0.000000" />
-        <zRotation value="0.000000" />
-        <zBias value="0.250000" />
+        <xRotation value="0.00000000" />
+        <yRotation value="0.00000000" />
+        <zRotation value="0.00000000" />
+        <zBias value="0.25000000" />
+        <pullCoronaIn value="false" />
+      </rearIndicatorCorona>
+      <frontIndicatorCorona>
+        <size value="0.00000000" />
+        <size_far value="0.00000000" />
+        <intensity value="0.00000000" />
+        <intensity_far value="0.00000000" />
+        <color value="0x00000000" />
+        <numCoronas value="1" />
+        <distBetweenCoronas value="128" />
+        <distBetweenCoronas_far value="255" />
+        <xRotation value="0.00000000" />
+        <yRotation value="0.00000000" />
+        <zRotation value="0.00000000" />
+        <zBias value="0.25000000" />
         <pullCoronaIn value="false" />
       </frontIndicatorCorona>
       <tailLight>
-        <intensity value="0.250000" />
-        <falloffMax value="4.000000" />
-        <falloffExponent value="16.000000" />
-        <innerConeAngle value="45.000000" />
-        <outerConeAngle value="90.000000" />
+        <intensity value="0.25000000" />
+        <falloffMax value="4.00000000" />
+        <falloffExponent value="16.00000000" />
+        <innerConeAngle value="45.00000000" />
+        <outerConeAngle value="90.00000000" />
         <emmissiveBoost value="false" />
         <color value="0xFFFF0000" />
+        <textureName />
+        <mirrorTexture value="true" />
       </tailLight>
       <tailLightCorona>
-        <size value="1.200000" />
-        <size_far value="2.500000" />
-        <intensity value="5.000000" />
-        <intensity_far value="1.000000" />
+        <size value="1.20000000" />
+        <size_far value="2.50000000" />
+        <intensity value="5.00000000" />
+        <intensity_far value="1.00000000" />
         <color value="0xFFFF0F05" />
-        <numCoronas value="0" />
-        <distBetweenCoronas value="25" />
-        <distBetweenCoronas_far value="49" />
-        <xRotation value="0.270177" />
-        <yRotation value="1.407433" />
-        <zRotation value="0.000000" />
-        <zBias value="0.250000" />
-        <pullCoronaIn value="false" />
-      </tailLightCorona>
-      <tailLightMiddleCorona>
-        <size value="0.000000" />
-        <size_far value="0.000000" />
-        <intensity value="0.000000" />
-        <intensity_far value="0.000000" />
-        <color value="0x00000000" />
         <numCoronas value="0" />
         <distBetweenCoronas value="128" />
         <distBetweenCoronas_far value="255" />
-        <xRotation value="0.000000" />
-        <yRotation value="0.000000" />
-        <zRotation value="0.000000" />
-        <zBias value="0.250000" />
+        <xRotation value="0.00000000" />
+        <yRotation value="0.00000000" />
+        <zRotation value="0.00000000" />
+        <zBias value="0.25000000" />
+        <pullCoronaIn value="false" />
+      </tailLightCorona>
+      <tailLightMiddleCorona>
+        <size value="0.00000000" />
+        <size_far value="0.00000000" />
+        <intensity value="0.00000000" />
+        <intensity_far value="0.00000000" />
+        <color value="0x00000000" />
+        <numCoronas value="1" />
+        <distBetweenCoronas value="128" />
+        <distBetweenCoronas_far value="255" />
+        <xRotation value="0.00000000" />
+        <yRotation value="0.00000000" />
+        <zRotation value="0.00000000" />
+        <zBias value="0.25000000" />
         <pullCoronaIn value="false" />
       </tailLightMiddleCorona>
       <headLight>
-        <intensity value="1.500000" />
-        <falloffMax value="35.000000" />
-        <falloffExponent value="16.000000" />
-        <innerConeAngle value="0.000000" />
-        <outerConeAngle value="60.000000" />
-        <emmissiveBoost value="false" />
+        <intensity value="1.50000000" />
+        <falloffMax value="35.00000000" />
+        <falloffExponent value="16.00000000" />
+        <innerConeAngle value="0.00000000" />
+        <outerConeAngle value="60.00000000" />
+        <emmissiveBoost value="true" />
         <color value="0xFF7FA7E3" />
         <textureName>VehicleLight_car_standardmodern</textureName>
         <mirrorTexture value="false" />
       </headLight>
       <headLightCorona>
-        <size value="0.100000" />
-        <size_far value="7.000000" />
-        <intensity value="7.000000" />
-        <intensity_far value="5.000000" />
+        <size value="0.10000000" />
+        <size_far value="7.00000000" />
+        <intensity value="7.00000000" />
+        <intensity_far value="5.00000000" />
         <color value="0xFF61A5FF" />
-        <numCoronas value="2" />
-        <distBetweenCoronas value="13" />
-        <distBetweenCoronas_far value="89" />
-        <xRotation value="0.000000" />
-        <yRotation value="0.175929" />
-        <zRotation value="0.527788" />
-        <zBias value="0.250000" />
+        <numCoronas value="1" />
+        <distBetweenCoronas value="128" />
+        <distBetweenCoronas_far value="255" />
+        <xRotation value="0.00000000" />
+        <yRotation value="0.00000000" />
+        <zRotation value="0.00000000" />
+        <zBias value="0.25000000" />
         <pullCoronaIn value="false" />
       </headLightCorona>
       <reversingLight>
-        <intensity value="0.500000" />
-        <falloffMax value="7.200000" />
-        <falloffExponent value="32.000000" />
-        <innerConeAngle value="20.000000" />
-        <outerConeAngle value="78.000000" />
+        <intensity value="0.50000000" />
+        <falloffMax value="7.20000000" />
+        <falloffExponent value="32.00000000" />
+        <innerConeAngle value="20.00000000" />
+        <outerConeAngle value="78.00000000" />
         <emmissiveBoost value="false" />
         <color value="0xFFFFFFFF" />
+        <textureName />
+        <mirrorTexture value="true" />
       </reversingLight>
       <reversingLightCorona>
-        <size value="0.800000" />
-        <size_far value="2.000000" />
-        <intensity value="1.500000" />
-        <intensity_far value="1.000000" />
+        <size value="0.80000000" />
+        <size_far value="2.00000000" />
+        <intensity value="1.50000000" />
+        <intensity_far value="1.00000000" />
         <color value="0x00F7F7F7" />
-        <numCoronas value="0" />
+        <numCoronas value="1" />
         <distBetweenCoronas value="128" />
         <distBetweenCoronas_far value="255" />
-        <xRotation value="0.000000" />
-        <yRotation value="0.000000" />
-        <zRotation value="0.000000" />
-        <zBias value="0.250000" />
+        <xRotation value="0.00000000" />
+        <yRotation value="0.00000000" />
+        <zRotation value="0.00000000" />
+        <zBias value="0.25000000" />
         <pullCoronaIn value="false" />
       </reversingLightCorona>
-      <name>rmodgtr</name>
+      <name>rs7r</name>
     </Item>
-    </Lights>
+  </Lights>
 </CVehicleModelInfoVarGlobal>

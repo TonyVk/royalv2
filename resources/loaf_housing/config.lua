@@ -1,7 +1,7 @@
 -- Translations for the text are at the bottom of this file.
 
 Config = {
-	RastTrave = 25000, -- vrijeme potrebno da trava izraste u ms
+	RastTrave = 3600000, -- vrijeme potrebno da trava izraste u ms
     SellPercentage = 75, -- percentage of original price you should get back when selling a house.
     AddHouseBlips = true, -- add all available houses to the map?
     AddBoughtHouses = true, -- add blips for houses bought by other people?
@@ -7178,7 +7178,6 @@ Config = {
         {['prop'] = 'lester', ['door'] = vector3(1316.886, -1698.854, 57.27156), ['price'] = 150000},
         {['prop'] = 'kinda_nice', ['door'] = vector3(1355.066, -1690.527, 59.54117), ['price'] = 125000},
         {['prop'] = 'lester', ['door'] = vector3(1365.325, -1721.377, 64.68388), ['price'] = 150000},
-		{['prop'] = 'mansion', ['door'] = vector3(-1886.5770263672, 2050.2824707031, 139.98086547852), ['price'] = 5000000}, --vinarija
     },
     HouseSpawns = { -- every possible position for a shell to be spawned. default is 66 different spawns, meaning 66 people can be inside their house at the same time! You shouldn't mess around with this tbh.
         {['taken'] = false, ['coords'] = vector3(1020.0, 2000.0, -100.0)}, -- spawn #1

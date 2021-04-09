@@ -3,7 +3,7 @@ Config.DrawDistance = 100.0
 Config.MaxDelivery	= 10
 Config.TruckPrice	= 0     -- old config from orginal script not used in this version.
 Config.Locale       = 'hr'
-Config.BagPay       = 100     -- Pay per bag pulled from bin.
+Config.BagPay       = 35     -- Pay per bag pulled from bin.
 Config.MulitplyBags = true   -- Multiplies BagPay by number of workers - 4 max.
 Config.TruckPlateNumb = 0
 

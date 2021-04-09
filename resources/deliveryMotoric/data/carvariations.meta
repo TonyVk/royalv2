@@ -2,18 +2,18 @@
 
 <CVehicleModelInfoVariation>
   <variationData>
-	<Item>
-      <modelName>rmodamgc63</modelName>
+     <Item>
+      <modelName>skuter</modelName>
       <colors>
         <Item>
           <indices content="char_array">
-            15 
-            89
-            15
+            42
+            112
+            112
             156 
           </indices>
           <liveries>
-            <Item value="true" />
+            <Item value="false" />
             <Item value="false" />
             <Item value="false" />
             <Item value="false" />
@@ -22,21 +22,33 @@
             <Item value="false" />
             <Item value="false" />
           </liveries>
-        </Item> 
+        </Item>
       </colors>
       <kits>
-        <Item>11255_rmodamgc63_modkit</Item>
+        <Item>1020_skuter_modkit</Item>
       </kits>
       <windowsWithExposedEdges />
       <plateProbabilities>
         <Probabilities>
           <Item>
             <Name>Standard White</Name>
-            <Value value="100" />
+            <Value value="25" />
+          </Item>
+          <Item>
+            <Name>White Plate 2</Name>
+            <Value value="50" />
+          </Item>
+          <Item>
+            <Name>Blue Plate</Name>
+            <Value value="10" />
+          </Item>
+          <Item>
+            <Name>Yellow Plate</Name>
+            <Value value="15" />
           </Item>
         </Probabilities>
       </plateProbabilities>
-      <lightSettings value="11255" />
+      <lightSettings value="0" />
       <sirenSettings value="0" />
     </Item>
   </variationData>

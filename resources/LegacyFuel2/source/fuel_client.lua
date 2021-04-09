@@ -340,6 +340,7 @@ function OpenPumpaMenu(ime)
   ESX.UI.Menu.CloseAll()
   
   local Kupljen = false
+  local Kapacitet = false
   local Cijena = 0
   local Gorivo = 0
   for i=1, #Pumpe, 1 do
@@ -349,6 +350,9 @@ function OpenPumpaMenu(ime)
 		if Pumpe[i].Vlasnik ~= nil then
 			Kupljen = true
 		end
+		if Pumpe[i].Kapacitet == 1 then
+			Kapacitet = true
+		end
 		break
 	end
   end
@@ -357,14 +361,22 @@ function OpenPumpaMenu(ime)
   if Kupljen == true then
 	ESX.TriggerServerCallback('pumpe:JelVlasnik', function(vlasnik)
 		if vlasnik then
-			racunica = math.ceil((500-tonumber(Gorivo))*1.2)
+			local brojcic = 500
+			if Kapacitet then
+				brojcic = 1000
+			end
+			racunica = math.ceil((brojcic-tonumber(Gorivo))*1.2)
 			table.insert(elements, {label = "Stanje sefa", value = 'stanje'})
 			table.insert(elements, {label = "Uzmi iz sefa", value = 'sef'})
+			table.insert(elements, {label = "Ostavi u sef", value = 'sef2'})
 			if racunica > 0 then
 				table.insert(elements, {label = "Naruci gorivo ($"..racunica..")", value = 'naruci'})
 			end
 			table.insert(elements, {label = "Promjeni cijenu goriva", value = 'gcij'})
 			table.insert(elements, {label = "Promjeni cijenu kanistera", value = 'kcij'})
+			if not Kapacitet then
+				table.insert(elements, {label = "Povecaj kapacitet pumpe", value = 'kkap'})
+			end
 			table.insert(elements, {label = "Prodaj firmu", value = 'prodaj'})
 		else
 			table.insert(elements, {label = "Ova firma nije tvoja!", value = 'error'})
@@ -421,6 +433,29 @@ function OpenPumpaMenu(ime)
 		)
       end
 	  
+	  if data.current.value == 'sef2' then
+		ESX.UI.Menu.Open(
+			'dialog', GetCurrentResourceName(), 'pumpa_ostav_lovu',
+			{
+				title = "Unesite koliko novca zelite ostaviti"
+			},
+			function(data3, menu3)
+
+			local count = tonumber(data3.value)
+
+			if count == nil then
+				ESX.ShowNotification("Kriva vrijednost!")
+			else
+				menu3.close()
+				TriggerServerEvent("pumpe:OstaviUSef", ime, count)
+			end
+			end,
+			function(data3, menu3)
+				menu3.close()
+			end
+		)
+      end
+	  
 	  if data.current.value == 'gcij' then
 		ESX.UI.Menu.Open(
 			'dialog', GetCurrentResourceName(), 'pumpa_stavi_gcijenu',
@@ -468,6 +503,36 @@ function OpenPumpaMenu(ime)
 	  
 	  if data.current.value == "error" then
 		
+	  end
+	  
+	  if data.current.value == "kkap" then
+			ESX.UI.Menu.Open(
+			  'default', GetCurrentResourceName(), 'pumpa',
+			  {
+				title    = "Zelite li povecati kapacitet na 1000 litara?",
+				align    = 'top-left',
+				elements = {
+					{label = "Da (100000$)", value = 'da'},
+					{label = "Ne", value = 'ne'}
+				},
+			  },
+
+			 function(data69, menu69)
+
+			  menu69.close()
+
+			  if data69.current.value == 'da' then
+				TriggerServerEvent("pumpe:PovecajKapacitet", ime)
+			  end
+
+			  if data69.current.value == 'ne' then
+				menu69.close()
+			  end
+			end,
+			function(data69, menu69)
+			  menu69.close()
+			end
+		  )
 	  end
 	  
 	  if data.current.value == "kupi" then
@@ -739,7 +804,7 @@ AddEventHandler('fuel:startFuelUpTick', function(pumpObject, ped, vehicle)
 
 		if pumpObject then
 			if currentCash >= currentCost then
-				if tonumber(gorivo) >= tonumber(UkupnoGoriva) then
+				if tonumber(gorivo) > 0 and tonumber(gorivo) >= tonumber(UkupnoGoriva) then
 					SetFuel(vehicle, currentFuel)
 					local retval = NetworkGetNetworkIdFromEntity(vehicle)
 					TriggerServerEvent("SyncajToGorivo", retval, GetVehicleFuelLevel(vehicle))
