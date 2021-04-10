@@ -53,11 +53,11 @@ function UcitajPumpe()
 				vecta2 = vector3(data3.x, data3.y, data3.z)
 			end
 			if result[i].vlasnik == nil then
-				table.insert(Pumpe, {Ime = result[i].ime, Vlasnik = nil, Sef = result[i].sef, VlasnikIme = "Nema", Koord = vecta, Cijena = result[i].cijena, GCijena = result[i].gcijena, KCijena = result[i].kcijena, Gorivo = result[i].gorivo, Narudzba = tonumber(result[i].narudzba), Dostava = vecta2, Kapacitet = tonumber(result[i].kapacitet)})
+				table.insert(Pumpe, {Ime = result[i].ime, Vlasnik = nil, Sef = result[i].sef, VlasnikIme = "Nema", Koord = vecta, Cijena = result[i].cijena, GCijena = result[i].gcijena, KCijena = result[i].kcijena, Gorivo = result[i].gorivo, Narudzba = tonumber(result[i].narudzba), Dostava = vecta2, Kapacitet = result[i].kapacitet})
 			else
 				GetRPName(result[i].vlasnik, function(Firstname, Lastname)
 					local im = Firstname.." "..Lastname
-					table.insert(Pumpe, {Ime = result[i].ime, Vlasnik = result[i].vlasnik, Sef = result[i].sef, VlasnikIme = im, Koord = vecta, Cijena = result[i].cijena, GCijena = result[i].gcijena, KCijena = result[i].kcijena, Gorivo = result[i].gorivo, Narudzba = tonumber(result[i].narudzba), Dostava = vecta2, Kapacitet = tonumber(result[i].kapacitet)})
+					table.insert(Pumpe, {Ime = result[i].ime, Vlasnik = result[i].vlasnik, Sef = result[i].sef, VlasnikIme = im, Koord = vecta, Cijena = result[i].cijena, GCijena = result[i].gcijena, KCijena = result[i].kcijena, Gorivo = result[i].gorivo, Narudzba = tonumber(result[i].narudzba), Dostava = vecta2, Kapacitet = result[i].kapacitet})
 				end)
 			end
         end
@@ -164,7 +164,7 @@ AddEventHandler('pumpe:PovecajKapacitet', function(ime)
 		if Pumpe[i] ~= nil and Pumpe[i].Ime == ime then
 			if Pumpe[i].Sef >= 100000 then
 				Pumpe[i].Sef = Pumpe[i].Sef-100000
-				Pumpe[i].Kapacitet = 1
+				Pumpe[i].Kapacitet = true
 				MySQL.Async.execute('UPDATE pumpe SET sef = @sef, kapacitet = @ka WHERE ime = @im', {
 					['@sef'] = Pumpe[i].Sef,
 					['@ka'] = 1,
@@ -186,9 +186,9 @@ AddEventHandler('pumpe:DostavioGorivo', function(ime)
 		if Pumpe[i] ~= nil and Pumpe[i].Ime == ime then
 			Pumpe[i].Narudzba = 0
 			local brojcic = 500
-			if Pumpe[i].Kapacitet == 0 or Pumpe[i].Kapacitet == nil then
+			if Pumpe[i].Kapacitet == false or Pumpe[i].Kapacitet == nil then
 				Pumpe[i].Gorivo = 500
-			elseif Pumpe[i].Kapacitet == 1 then
+			elseif Pumpe[i].Kapacitet == true then
 				Pumpe[i].Gorivo = 1000
 				brojcic = 1000
 			end
@@ -346,7 +346,7 @@ end)
 RegisterServerEvent('pumpe:DodajPumpu')
 AddEventHandler('pumpe:DodajPumpu', function(coords, cijena)
 	local str = "Pumpa "..#Pumpe+1
-	table.insert(Pumpe, {Ime = str, Koord = coords, Vlasnik = nil, Cijena = cijena, Sef = 0, VlasnikIme = "Nema", GCijena = 1.5, KCijena = 250, Gorivo = 500, Narudzba = 0, Dostava = nil, Kapacitet = 0})
+	table.insert(Pumpe, {Ime = str, Koord = coords, Vlasnik = nil, Cijena = cijena, Sef = 0, VlasnikIme = "Nema", GCijena = 1.5, KCijena = 250, Gorivo = 500, Narudzba = 0, Dostava = nil, Kapacitet = false})
 	MySQL.Async.execute('INSERT INTO pumpe (ime, koord, vlasnik, cijena, sef, gcijena, kcijena) VALUES (@ime, @koord, @vl, @cij, @sef, @gcij, @kcij)',{
 		['@ime'] = str,
 		['@koord'] = json.encode(coords),

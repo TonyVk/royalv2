@@ -350,7 +350,7 @@ function OpenPumpaMenu(ime)
 		if Pumpe[i].Vlasnik ~= nil then
 			Kupljen = true
 		end
-		if Pumpe[i].Kapacitet == 1 then
+		if Pumpe[i].Kapacitet == true then
 			Kapacitet = true
 		end
 		break
