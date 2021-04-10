@@ -1761,22 +1761,25 @@ RegisterServerEvent('mafije:putStockItems')
 AddEventHandler('mafije:putStockItems', function(itemName, count, maf)
   local soc = "society_"..maf
   local xPlayer = ESX.GetPlayerFromId(source)
-  local sourceItem = xPlayer.getInventoryItem(itemName)
+  if xPlayer ~= nil then
+	  local sourceItem = xPlayer.getInventoryItem(itemName)
 
-  TriggerEvent('esx_addoninventory:getSharedInventory', soc, function(inventory)
+	  TriggerEvent('esx_addoninventory:getSharedInventory', soc, function(inventory)
 
-    local item = inventory.getItem(itemName)
+		local item = inventory.getItem(itemName)
 
-    if sourceItem.count >= count and count > 0 then
-      xPlayer.removeInventoryItem(itemName, count)
-      inventory.addItem(itemName, count)
-	  TriggerClientEvent('esx:showNotification', xPlayer.source, "Dodali ste x" .. count .. ' ' .. item.label)
-    else
-      TriggerClientEvent('esx:showNotification', xPlayer.source, "Krivi iznos")
-    end
+		if sourceItem.count >= count and count > 0 then
+		  xPlayer.removeInventoryItem(itemName, count)
+		  inventory.addItem(itemName, count)
+		  TriggerClientEvent('esx:showNotification', xPlayer.source, "Dodali ste x" .. count .. ' ' .. item.label)
+		else
+		  TriggerClientEvent('esx:showNotification', xPlayer.source, "Krivi iznos")
+		end
 
-  end)
-
+	  end)
+  else
+	TriggerClientEvent('esx:showNotification', source, "Greska! Pokusajte ponovno ili odite relog!")
+  end
 end)
 
 ESX.RegisterServerCallback('mafije:getOtherPlayerData', function(source, cb, target)
@@ -2006,41 +2009,43 @@ ESX.RegisterServerCallback('mafije:addArmoryWeapon', function(source, cb, weapon
   local soc = "society_"..maf
   local _source = source
   local xPlayer = ESX.GetPlayerFromId(_source)
+  if xPlayer ~= nil then
+	  xPlayer.removeWeapon(weaponName)
 
-  xPlayer.removeWeapon(weaponName)
+	  TriggerEvent('esx_datastore:getSharedDataStore', soc, function(store)
 
-  TriggerEvent('esx_datastore:getSharedDataStore', soc, function(store)
+		local weapons = store.get('weapons')
 
-    local weapons = store.get('weapons')
+		if weapons == nil then
+		  weapons = {}
+		end
 
-    if weapons == nil then
-      weapons = {}
-    end
+		local foundWeapon = false
 
-    local foundWeapon = false
+		for i=1, #weapons, 1 do
+		  if weapons[i].name == weaponName then
+			weapons[i].count = weapons[i].count + 1
+			weapons[i].ammo = weapons[i].ammo+am
+			foundWeapon = true
+		  end
+		end
 
-    for i=1, #weapons, 1 do
-      if weapons[i].name == weaponName then
-        weapons[i].count = weapons[i].count + 1
-		weapons[i].ammo = weapons[i].ammo+am
-        foundWeapon = true
-      end
-    end
+		if not foundWeapon then
+		  table.insert(weapons, {
+			name  = weaponName,
+			count = 1,
+			ammo = am
+		  })
+		end
 
-    if not foundWeapon then
-      table.insert(weapons, {
-        name  = weaponName,
-        count = 1,
-		ammo = am
-      })
-    end
+		 store.set('weapons', weapons)
 
-     store.set('weapons', weapons)
+		 cb()
 
-     cb()
-
-  end)
-
+	  end)
+  else
+	TriggerClientEvent('esx:showNotification', _source, "Greska! Pokusajte ponovno ili odite relog!")
+  end
 end)
 
 ESX.RegisterServerCallback('mafije:dajWeaponItem', function(source, cb, weaponName, am, maf)

@@ -1330,12 +1330,14 @@ Citizen.CreateThread(function()
 	end
 end)
 
+local loka1 = vector3(-1382.0578613281, -614.68621826172, 31.497901916504)
+local loka2 = vector3(370.29565429688, 277.03662109375, 91.189918518066)
 --radio u klubu
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(5000)
 		local kord = GetEntityCoords(PlayerPedId())
-		if GetDistanceBetweenCoords(-1382.0578613281, -614.68621826172, 31.497901916504,  kord.x,  kord.y,  kord.z,  true) <= 16.5 then
+		if #(loka1-kord) <= 16.5 or #(loka2-kord) <= 16.5 then
 			if Slusa == false then
 				SendNUIMessage({
 					pusti = true

@@ -1331,6 +1331,7 @@ function OpenCloakroomMenu()
 end
 
 function OpenArmoryMenu(br)
+	TriggerEvent("esx:ZabraniInv", true)
 	OruzarnicaMenu = false
 	local g,h=ESX.Game.GetClosestPlayer()
 	if g~=-1 and h<=3.0 then 
@@ -1398,7 +1399,7 @@ function OpenArmoryMenu(br)
 
 		  end,
 		  function(data, menu)
-
+			TriggerEvent("esx:ZabraniInv", false)
 			menu.close()
 
 			CurrentAction     = 'menu_armory'
