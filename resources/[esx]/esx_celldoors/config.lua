@@ -505,4 +505,24 @@ Config.DoorList = {
 		distance = 3,
 		size = 1
 	},
+	
+	{
+		textCoords = vector3(-1864.6369628906, 2060.4721679688, 140.97680664062),
+		authorizedJobs = { 'lisice' },
+		locked = true,
+		distance = 2.5,
+		doors = {
+			{
+				objName = 'ball_fridge_mafia_l',
+				objYaw = -90.0,
+				objCoords = vector3(-1864.6369628906, 2060.4721679688, 140.97680664062)
+			},
+
+			{
+				objName = 'ball_fridge_mafia_r',
+				objYaw = -90.0,
+				objCoords = vector3(-1864.6369628906, 2060.4721679688, 140.97680664062)
+			}
+		}
+	},
 }

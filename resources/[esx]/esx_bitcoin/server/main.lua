@@ -26,7 +26,7 @@ end
 CountCops()
 
 --kodeina
-local function HarvestKoda(source)
+local function HarvestKoda(source, torba)
 	if not TrajeTimer2[source] then
 		TrajeTimer2[source] = true
 		SetTimeout(Config.TimeToFarm, function()
@@ -34,12 +34,21 @@ local function HarvestKoda(source)
 			if PlayersHarvestingKoda[source] then
 				local xPlayer = ESX.GetPlayerFromId(source)
 				local koda = xPlayer.getInventoryItem('bitcoin')
+				if torba then
+					if koda.limit ~= -1 and koda.count >= koda.limit*2 then
+						TriggerClientEvent('esx:showNotification', source, _U('mochila_full'))
+					else
+						xPlayer.addInventoryItem('bitcoin', 1)
+						HarvestKoda(source, torba)
+					end
 
-				if koda.limit ~= -1 and koda.count >= koda.limit then
-					TriggerClientEvent('esx:showNotification', source, _U('mochila_full'))
 				else
-					xPlayer.addInventoryItem('bitcoin', 1)
-					HarvestKoda(source)
+					if koda.limit ~= -1 and koda.count >= koda.limit then
+						TriggerClientEvent('esx:showNotification', source, _U('mochila_full'))
+					else
+						xPlayer.addInventoryItem('bitcoin', 1)
+						HarvestKoda(source, torba)
+					end
 				end
 			end
 		end)
@@ -47,14 +56,14 @@ local function HarvestKoda(source)
 end
 
 RegisterServerEvent('esx_bitcoin:startHarvestKoda')
-AddEventHandler('esx_bitcoin:startHarvestKoda', function()
+AddEventHandler('esx_bitcoin:startHarvestKoda', function(torba)
 	local _source = source
 
 	if not PlayersHarvestingKoda[_source] then
 		PlayersHarvestingKoda[_source] = true
 
 		TriggerClientEvent('esx:showNotification', _source, _U('pegar_frutos'))
-		HarvestKoda(_source)
+		HarvestKoda(_source, torba)
 	else
 		print(('esx_bitcoin: %s attempted to exploit the marker!'):format(GetPlayerIdentifiers(_source)[1]))
 	end
@@ -124,22 +133,22 @@ local function SellKoda(source)
 				else
 					xPlayer.removeInventoryItem('bitcoin', 1)
 					if CopsConnected == 0 then
-						xPlayer.addAccountMoney('bank', 1600)
+						xPlayer.addMoney(1000)
 						TriggerClientEvent('esx:showNotification', source, _U('vendeste_sacos'))
 					elseif CopsConnected == 1 then
-						xPlayer.addAccountMoney('bank', 1600)
+						xPlayer.addMoney(1000)
 						TriggerClientEvent('esx:showNotification', source, _U('vendeste_sacos'))
 					elseif CopsConnected == 2 then
-						xPlayer.addAccountMoney('bank', 1600)
+						xPlayer.addMoney(1000)
 						TriggerClientEvent('esx:showNotification', source, _U('vendeste_sacos'))
 					elseif CopsConnected == 3 then
-						xPlayer.addAccountMoney('bank', 1600)
+						xPlayer.addMoney(1000)
 						TriggerClientEvent('esx:showNotification', source, _U('vendeste_sacos'))
 					elseif CopsConnected == 4 then
-						xPlayer.addAccountMoney('bank', 1600)
+						xPlayer.addMoney(1000)
 						TriggerClientEvent('esx:showNotification', source, _U('vendeste_sacos'))
 					elseif CopsConnected >= 5 then
-						xPlayer.addAccountMoney('bank', 1600)
+						xPlayer.addMoney(1000)
 						TriggerClientEvent('esx:showNotification', source, _U('vendeste_sacos'))
 					end
 

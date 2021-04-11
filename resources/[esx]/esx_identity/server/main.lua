@@ -200,19 +200,20 @@ AddEventHandler('esx_identity:setIdentity', function(data, myIdentifiers)
 	end)
 end)
 
-AddEventHandler('es:playerLoaded', function(source)
+AddEventHandler('esx:playerLoaded', function(xPlayer)
 	local myID = {
-		steamid = GetPlayerIdentifiers(source)[1],
-		playerid = source
+		steamid = GetPlayerIdentifiers(xPlayer)[1],
+		playerid = xPlayer
 	}
 
-	TriggerClientEvent('esx_identity:saveID', source, myID)
-	getIdentity(source, function(data)
+	TriggerClientEvent('esx_identity:saveID', xPlayer, myID)
+	Wait(200)
+	getIdentity(xPlayer, function(data)
 		if data.firstname == '' then
-			TriggerClientEvent('esx_identity:identityCheck', source, false)
-			TriggerClientEvent('esx_identity:showRegisterIdentity', source)
+			TriggerClientEvent('esx_identity:identityCheck', xPlayer, false)
+			TriggerClientEvent('esx_identity:showRegisterIdentity', xPlayer)
 		else
-			TriggerClientEvent('esx_identity:identityCheck', source, true)
+			TriggerClientEvent('esx_identity:identityCheck', xPlayer, true)
 		end
 	end)
 end)

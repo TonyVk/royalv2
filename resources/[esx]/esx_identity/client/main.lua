@@ -67,6 +67,9 @@ RegisterNUICallback('escape', function(data, cb)
 		EnableGui(false)
 	else
 		TriggerEvent('chat:addMessage', { args = { '^1[IDENTITET]', '^1Morate napraviti svog prvog lika kako biste mogli igrati' } })
+		EnableGui(false)
+		Wait(500)
+		EnableGui(true)
 	end
 end)
 
