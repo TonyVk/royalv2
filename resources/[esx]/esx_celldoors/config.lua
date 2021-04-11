@@ -525,4 +525,24 @@ Config.DoorList = {
 			}
 		}
 	},
+	
+	{
+		objName = 'prop_id2_11_gdoor',
+		objCoords  = vector3(998.58721923828, -2327.1960449218, 30.509534835816),
+		textCoords = vector3(998.58721923828, -2327.1960449218, 30.509534835816),
+		authorizedJobs = { 'mechanic' },
+		locked = false,
+		distance = 12,
+		size = 2
+	},
+	
+	{
+		objName = 'prop_id2_11_gdoor',
+		objCoords  = vector3(1034.3520507812, -2299.716796875, 30.501712799072),
+		textCoords = vector3(1034.3520507812, -2299.716796875, 30.501712799072),
+		authorizedJobs = { 'mechanic' },
+		locked = false,
+		distance = 12,
+		size = 2
+	},
 }
