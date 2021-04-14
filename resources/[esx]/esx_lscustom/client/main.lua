@@ -547,6 +547,7 @@ Citizen.CreateThread(function()
 			local currentZone = nil
 			local zone 		  = nil
 			local lastZone    = nil
+			local benny 	  = false
 			if (PlayerData.job ~= nil and PlayerData.job.name == 'mechanic') or Config.IsMechanicJobOnly == false then
 				for k,v in pairs(Config.Zones) do
 					if (GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) and lsMenuIsShowed == false then
@@ -554,6 +555,9 @@ Citizen.CreateThread(function()
 						waitara = 0
 						isInLSMarker  = true
 						ESX.ShowHelpNotification(v.Hint)
+						if k == "ls6" then
+							benny = true
+						end
 						break
 					else
 						isInLSMarker  = false
@@ -573,7 +577,7 @@ Citizen.CreateThread(function()
 							break
 						end
 					end
-					if not JelRazz then
+					if not JelRazz or benny then
 						lsMenuIsShowed = true
 
 						FreezeEntityPosition(vehicle, true)
