@@ -462,7 +462,7 @@ function StartajVatru()
 				if GetDistanceBetweenCoords(core, cor, false) < 20 and ESX.PlayerData.job.name == "vatrogasac" and isInService then
 					TriggerServerEvent("vatraaa:platituljanu")
 					TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.job.name)
-					ESX.ShowNotification("Dobili ste $220 za uspjesno ugasen pozar!")
+					ESX.ShowNotification("Uspjesno ugasen pozar!")
 				end
 				local retvala, script = GetEntityScript(ZadnjeVozilo)
 				if retvala == "esx_vatrogasci" then

@@ -99,7 +99,7 @@ AddEventHandler('esx_contract:getVehicle', function()
 			local JelDonatorski = false
 			for i=1, #Vehicles, 1 do
 				if GetHashKey(Vehicles[i].model) == GetEntityModel(vehicle) then
-					if Vehicles[i].category == "donatorski" then
+					if Vehicles[i].category == "donatorski" or Vehicles[i].category == "razz" then
 						JelDonatorski = true
 						break
 					end

@@ -3040,6 +3040,7 @@ AddEventHandler('mafije:hasEnteredMarker', function(station, part, partNum)
   
   if part == 'Dostava' then
 		if KVozilo == GetVehiclePedIsIn(PlayerPedId(), false) then
+                     if GetPedInVehicleSeat(GetVehiclePedIsIn(PlayerPedId(), false), -1) == PlayerPedId() then
 			if DoesBlipExist(KBlip) then
 				RemoveBlip(KBlip)
 				KBlip = nil
@@ -3079,6 +3080,7 @@ AddEventHandler('mafije:hasEnteredMarker', function(station, part, partNum)
 				ESX.Game.DeleteVehicle(KVozilo)
 				KVozilo = nil
 			end
+                    end
 		else
 			ESX.ShowNotification("Niste u vozilu za prodaju kokaina!")
 		end

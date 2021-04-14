@@ -249,7 +249,7 @@ AddEventHandler('esx_vodoinstalater:hasEnteredMarker', function(zone)
 				retval = IsExplosionActiveInArea(13, x, y, z, x, y, z)
 			end
 			ClearPedTasks(PlayerPedId())
-			ESX.ShowNotification("Uspjesno popravljen kvar! Dobili ste 150 dolara!")
+			ESX.ShowNotification("Uspjesno popravljen kvar!")
 			TriggerServerEvent("vodaa:platituljanu")
 			TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.job.name)
 			RemoveBlip(Blipara)

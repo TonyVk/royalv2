@@ -73,13 +73,14 @@ end)
 
 ESX.RegisterServerCallback('esx_lscustom:getVehiclesPrices', function(source, cb)
 	if Vehicles == nil then
-		MySQL.Async.fetchAll('SELECT model, price FROM vehicles', {}, function(result)
+		MySQL.Async.fetchAll('SELECT model, price, category FROM vehicles', {}, function(result)
 			local vehicles = {}
 
 			for i=1, #result, 1 do
 				table.insert(vehicles, {
 					model = result[i].model,
-					price = result[i].price
+					price = result[i].price,
+					category = result[i].category
 				})
 			end
 

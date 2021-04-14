@@ -1982,7 +1982,7 @@ function OpenUpitProdajeMenu(cardata)
 			if data.current.value == "da" then
 				local koord = GetEntityCoords(PlayerPedId())
 				if GetDistanceBetweenCoords(koord, -44.569271087646, -1081.7122802734, 25.685205459595, true) <= 3.0 or GetDistanceBetweenCoords(koord, -731.54217529297, -1334.6604003906, 0.28573158383369, true) <= 3.0 then
-					if cardata.kategorija ~= "donatorski" then
+					if cardata.kategorija ~= "donatorski" and cardata.kategorija ~= "razz" then
 						ESX.TriggerServerCallback('esx_vehicleshop:resellVehicle', function(vehicleSold)
 							if vehicleSold then
 								if GarazaV ~= nil then

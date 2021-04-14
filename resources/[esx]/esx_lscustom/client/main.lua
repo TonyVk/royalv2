@@ -563,15 +563,28 @@ Citizen.CreateThread(function()
 
 			if IsControlJustReleased(0, Keys['E']) and not lsMenuIsShowed and isInLSMarker then
 				if (PlayerData.job ~= nil and PlayerData.job.name == 'mechanic') or Config.IsMechanicJobOnly == false then
-					lsMenuIsShowed = true
-
 					local vehicle = GetVehiclePedIsIn(playerPed, false)
-					FreezeEntityPosition(vehicle, true)
+					local JelRazz = false
+					for i=1, #Vehicles, 1 do
+						if GetEntityModel(vehicle) == GetHashKey(Vehicles[i].model) then
+							if Vehicles[i].category == "razz" then
+								JelRazz = true
+							end
+							break
+						end
+					end
+					if not JelRazz then
+						lsMenuIsShowed = true
 
-					myCar = ESX.Game.GetVehicleProperties(vehicle)
+						FreezeEntityPosition(vehicle, true)
 
-					ESX.UI.Menu.CloseAll()
-					GetAction({value = 'main'})
+						myCar = ESX.Game.GetVehicleProperties(vehicle)
+
+						ESX.UI.Menu.CloseAll()
+						GetAction({value = 'main'})
+					else
+						ESX.ShowNotification("Ne mozete tunirati Razz Motoring vozilo!")
+					end
 				end
 			end
 
