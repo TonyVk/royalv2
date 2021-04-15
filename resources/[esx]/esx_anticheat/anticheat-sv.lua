@@ -113,6 +113,10 @@ BlObjs = {
 }
 
 AddEventHandler("entityCreating",  function(entity)
+	--[[CancelEvent()
+	local ime = GetPlayerName(NetworkGetEntityOwner(entity))
+	local id = NetworkGetEntityOwner(entity)
+	TriggerEvent("DiscordBot:Anticheat", ime.."["..id.."] je spawn objekt/NPC-a ("..GetEntityModel(entity)..")")]]
 	for i=1,#BlObjs do
 		local model = (type(BlObjs[i]) == 'number' and BlObjs[i] or GetHashKey(BlObjs[i]))
 		if GetEntityModel(entity) == model then
