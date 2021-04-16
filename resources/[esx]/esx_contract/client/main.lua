@@ -13,11 +13,21 @@ Citizen.CreateThread(function()
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(0)
 	end
+	while ESX.GetPlayerData().job == nil do
+		Citizen.Wait(10)
+	end
+
+	ESX.PlayerData = ESX.GetPlayerData()
 	Citizen.Wait(10000)
 
 	ESX.TriggerServerCallback('esx_vehicleshop:getVehicles', function(vehicles)
 		Vehicles = vehicles
 	end)
+end)
+
+RegisterNetEvent('esx:setJob')
+AddEventHandler('esx:setJob', function(job)
+	ESX.PlayerData.job = job
 end)
 
 RegisterNetEvent('esx_contract:PoslaoMu')
@@ -101,6 +111,9 @@ AddEventHandler('esx_contract:getVehicle', function()
 				if GetHashKey(Vehicles[i].model) == GetEntityModel(vehicle) then
 					if Vehicles[i].category == "donatorski" or Vehicles[i].category == "razz" then
 						JelDonatorski = true
+						if Vehicles[i].category == "razz" and ESX.PlayerData.job.name == 'mechanic' and ESX.PlayerData.job.grade == 5 then
+							JelDonatorski = false
+						end
 						break
 					end
 				end
