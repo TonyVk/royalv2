@@ -811,6 +811,18 @@ RegisterCommand("unmute", function(source, args, rawCommandString)
 	--end)
 end, false)
 
+RegisterCommand("testumor", function(source, args, rawCommandString)
+	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if perm == 1 then
+			StatSetInt(GetHashKey('MP0_STAMINA'), tonumber(args[1]), true)
+		else
+			name = "System"..":"
+			message = " Nemate pristup ovoj komandi"
+			TriggerEvent('chat:addMessage', { args = { name, message }, color = r,g,b })	
+		end
+	--end)
+end, false)
+
 RegisterCommand("testanim", function(source, args, rawCommandString)
 	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		if perm == 1 then
@@ -820,6 +832,18 @@ RegisterCommand("testanim", function(source, args, rawCommandString)
 			end
 			TaskPlayAnim(PlayerPedId(),args[1],args[2], 8.0, -8, -1, 2, 0, 0, 0, 0)
 			--TaskStartScenarioInPlace(PlayerPedId(), args[1], 0, true)
+		else
+			name = "System"..":"
+			message = " Nemate pristup ovoj komandi"
+			TriggerEvent('chat:addMessage', { args = { name, message }, color = r,g,b })	
+		end
+	--end)
+end, false)
+
+RegisterCommand("testscenario", function(source, args, rawCommandString)
+	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if perm == 1 then
+			TaskStartScenarioInPlace(PlayerPedId(), args[1], 0, true)
 		else
 			name = "System"..":"
 			message = " Nemate pristup ovoj komandi"

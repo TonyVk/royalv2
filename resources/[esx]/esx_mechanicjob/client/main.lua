@@ -1113,8 +1113,6 @@ Citizen.CreateThread(function()
 
 					if IsPedInAnyVehicle(playerPed, false) and IsVehicleModel(GetVehiclePedIsIn(playerPed, false), GetHashKey('flatbed')) then
 						StartNPCJob()
-					else
-						ESX.ShowNotification(_U('must_in_flatbed'))
 					end
 				end
 			end
