@@ -14,10 +14,12 @@ AddEventHandler('esx_gym:DodajVjezbu', function()
       { ['@id'] = xPlayer.identifier },
       function(result)
 		if result[1].vjezbanje+1 >= 30 then
-			MySQL.Async.execute('UPDATE users SET stamina = stamina+1, vjezbanje = 0 WHERE identifier = @id', {
-				['@id'] = xPlayer.identifier
-			})
-			TriggerClientEvent("esx_gym:PovecajStaminu", _source, result[1].stamina+1)
+			if result[1].stamina+1 <= 90 then
+				MySQL.Async.execute('UPDATE users SET stamina = stamina+1, vjezbanje = 0 WHERE identifier = @id', {
+					['@id'] = xPlayer.identifier
+				})
+				TriggerClientEvent("esx_gym:PovecajStaminu", _source, result[1].stamina+1)
+			end
 		else
 			MySQL.Async.execute('UPDATE users SET vjezbanje = vjezbanje+1 WHERE identifier = @id', {
 				['@id'] = xPlayer.identifier
