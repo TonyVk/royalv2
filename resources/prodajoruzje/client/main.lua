@@ -62,7 +62,7 @@ end
 
 AddEventHandler("playerSpawned", function()
 	SetPedComponentVariation(PlayerPedId(), 1, 0 ,0, 2)
-	StatSetInt(GetHashKey('MP0_STAMINA'), 20, true)
+	--StatSetInt(GetHashKey('MP0_STAMINA'), 20, true)
 	local coords = GetEntityCoords(PlayerPedId())
 	if GetDistanceBetweenCoords(coords, 0, 0, 0, true) <= 10.0 then
 		SetEntityCoords(PlayerPedId(), -825.510, -440.8749, 35.6722)

@@ -2,9 +2,15 @@ local Keys = {["E"] = 38, ["SPACE"] = 22, ["DELETE"] = 178}
 local canExercise = false
 local exercising = false
 local procent = 0
-local motionProcent = 0
-local doingMotion = false
-local motionTimesDone = 0
+local PrviSpawn = false
+ESX                             = nil
+
+Citizen.CreateThread(function()
+  while ESX == nil do
+    TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+    Citizen.Wait(0)
+  end
+end)
 
 Citizen.CreateThread(function()
     while true do
@@ -28,6 +34,21 @@ Citizen.CreateThread(function()
             end
         Citizen.Wait(sleep)
     end
+end)
+	
+AddEventHandler("playerSpawned", function()
+	if not PrviSpawn then
+		ESX.TriggerServerCallback('esx_gym:DohvatiStaminu', function(brojic)
+			StatSetInt(GetHashKey('MP0_STAMINA'), tonumber(brojic), true)
+		end)
+		PrviSpawn = true
+	end
+end)
+
+RegisterNetEvent('esx_gym:PovecajStaminu')
+AddEventHandler('esx_gym:PovecajStaminu', function(br)
+	StatSetInt(GetHashKey('MP0_STAMINA'), tonumber(br), true)
+	ESX.ShowNotification("Povecala vam se stamina za 1!")
 end)
 
 function startExercise(animInfo, pos, ime)
