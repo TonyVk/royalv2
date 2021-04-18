@@ -10,6 +10,6 @@ Config = {
 		
 		-- Add Vehicles to this list to allow the 2step/Anti-lag engagement -- Put more cars into one line to save vertical space
 	TwoStepCars = {
-	"jester", "futo", "bmwm8", "s63amg"
+	"a80","r35","fd",-- "skyline", "r35", "s63amg"
 	}
 }

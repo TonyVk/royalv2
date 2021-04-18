@@ -33,7 +33,7 @@ Citizen.CreateThread(function()
 				if GetPedInVehicleSeat(pedVehicle, -1) == ped then
 					local vehicleModel = GetEntityModel(GetVehiclePedIsIn(GetPlayerPed(-1)))
 					local BackFireDelay = (math.random(100, 500))
-					if RPM > 0.3 and RPM < 0.5 then
+					if RPM > 0.5 and RPM < 0.7 then
 						for _,cars in pairs(Config.TwoStepCars) do
 							if GetHashKey(cars) == vehicleModel then
 								DrawHudText("|", {255, 0, 0,255},0.955,0.8825,0.7,0.7,7)
@@ -61,7 +61,7 @@ Citizen.CreateThread(function()
 						local RPM = GetVehicleCurrentRpm(GetVehiclePedIsIn(GetPlayerPed(-1)))
 						local AntiLagDelay = (math.random(25, 200))
 						if GetPedInVehicleSeat(pedVehicle, -1) == ped then
-							if RPM > 0.75 then
+							if RPM > 0.85 then
 								for _,cars in pairs(Config.TwoStepCars) do
 									local vehicleModel = GetEntityModel(GetVehiclePedIsIn(GetPlayerPed(-1)))
 									if GetHashKey(cars) == vehicleModel then
@@ -115,13 +115,15 @@ p_flame_location = {
 }
 p_flame_particle = "veh_backfire"
 p_flame_particle_asset = "core" 
-p_flame_size = 2.4
+p_flame_size = 2.0
 
 AddEventHandler("c_eff_flames", function(c_veh)
-	for _,bones in pairs(p_flame_location) do
-		UseParticleFxAssetNextCall(p_flame_particle_asset)
-		createdPart = StartParticleFxLoopedOnEntityBone(p_flame_particle, NetToVeh(c_veh), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, GetEntityBoneIndexByName(NetToVeh(c_veh), bones), p_flame_size, 0.0, 0.0, 0.0)
-		StopParticleFxLooped(createdPart, 1)
+	if NetworkDoesNetworkIdExist(c_veh) and NetworkDoesEntityExistWithNetworkId(c_veh) then
+		for _,bones in pairs(p_flame_location) do
+			UseParticleFxAssetNextCall(p_flame_particle_asset)
+			createdPart = StartParticleFxLoopedOnEntityBone(p_flame_particle, NetToVeh(c_veh), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, GetEntityBoneIndexByName(NetToVeh(c_veh), bones), p_flame_size, 0.0, 0.0, 0.0)
+			StopParticleFxLooped(createdPart, 1)
+		end
 	end
 end)
 
