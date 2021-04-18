@@ -51,11 +51,11 @@ function RequestAllIpls()
 	RequestIpl('refit_unload')
 
 	-- Heist Union Depository: 2.697, -667.017, 16.130
-	RequestIpl('FINBANK')
+	--RequestIpl('FINBANK')
 
 	-- Morgue: 239.752, -1360.650, 39.534
-	RequestIpl('Coroner_Int_on')
-	RequestIpl('coronertrash')
+	--RequestIpl('Coroner_Int_on')
+	--RequestIpl('coronertrash')
 
 	-- Cluckin Bell: -146.384, 6161.5, 30.2
 	RequestIpl('CS1_02_cf_onmission1')
@@ -117,7 +117,7 @@ function RequestAllIpls()
 	RequestIpl('CanyonRvrShallow')
 
 	-- Zancudo Gates (GTAO like): -1600.301, 2806.731, 18.797
-	RequestIpl('CS3_07_MPGates')
+	--RequestIpl('CS3_07_MPGates')
 
 	-- Pillbox hospital: 356.8, -590.1, 43.3
 	RequestIpl('RC12B_Default')
@@ -143,7 +143,7 @@ function RequestAllIpls()
 	RequestIpl('cs5_roads_ronoilgraffiti') -- 2119.12, 3058.21, 53.25
 
 	-- Aircraft Carrier (USS Luxington): 3082.312 -4717.119 15.262
-	RequestIpl('hei_carrier')
+	--[[RequestIpl('hei_carrier')
 	RequestIpl('hei_carrier_distantlights')
 	RequestIpl('hei_Carrier_int1')
 	RequestIpl('hei_Carrier_int2')
@@ -152,7 +152,7 @@ function RequestAllIpls()
 	RequestIpl('hei_Carrier_int5')
 	RequestIpl('hei_Carrier_int6')
 	RequestIpl('hei_carrier_lodlights')
-	RequestIpl('hei_carrier_slod')
+	RequestIpl('hei_carrier_slod')]]
 
 	-- Galaxy Super Yacht: -2043.974,-1031.582, 11.981
 	RequestIpl('hei_yacht_heist')
@@ -287,10 +287,10 @@ function RequestAllIpls()
 	--
 
 	-- Clubhouse 1: 1107.04, -3157.399, -37.519
-	RequestIpl('bkr_biker_interior_placement_interior_0_biker_dlc_int_01_milo')
+	--RequestIpl('bkr_biker_interior_placement_interior_0_biker_dlc_int_01_milo')
 
 	-- Clubhouse 2: 998.4809, -3164.711, -38.907
-	RequestIpl('bkr_biker_interior_placement_interior_1_biker_dlc_int_02_milo')
+	--RequestIpl('bkr_biker_interior_placement_interior_1_biker_dlc_int_02_milo')
 
 	-- Warehouse 1: 1009.5, -3196.6, -39
 	RequestIpl('bkr_biker_interior_placement_interior_2_biker_dlc_int_ware01_milo')
@@ -306,26 +306,26 @@ function RequestAllIpls()
 	RequestIpl('bkr_biker_interior_placement_interior_4_biker_dlc_int_ware03_milo')
 
 	-- Warehouse 4: 1121.897, -3195.338, -40.4025
-	RequestIpl('bkr_biker_interior_placement_interior_5_biker_dlc_int_ware04_milo')
+	--RequestIpl('bkr_biker_interior_placement_interior_5_biker_dlc_int_ware04_milo')
 
 	-- Warehouse 5: 1165, -3196.6, -39.013
-	RequestIpl('bkr_biker_interior_placement_interior_6_biker_dlc_int_ware05_milo')
+	--RequestIpl('bkr_biker_interior_placement_interior_6_biker_dlc_int_ware05_milo')
 
 	-- Warehouse Small: 1094.988, -3101.776, -39
 	RequestIpl('ex_exec_warehouse_placement_interior_1_int_warehouse_s_dlc_milo')
 
 	-- Warehouse Medium: 1056.486, -3105.724, -39
-	RequestIpl('ex_exec_warehouse_placement_interior_0_int_warehouse_m_dlc_milo')
+	--RequestIpl('ex_exec_warehouse_placement_interior_0_int_warehouse_m_dlc_milo')
 
 	-- Warehouse Large: 1006.967, -3102.079, -39.0035
-	RequestIpl('ex_exec_warehouse_placement_interior_2_int_warehouse_l_dlc_milo')
+	--RequestIpl('ex_exec_warehouse_placement_interior_2_int_warehouse_l_dlc_milo')
 
 	-- Import / Export Garage: 994.593, -3002.594, -39.647
-	RequestIpl('imp_impexp_interior_placement')
+	--[[RequestIpl('imp_impexp_interior_placement')
 	RequestIpl('imp_impexp_interior_placement_interior_0_impexp_int_01_milo_')
 	RequestIpl('imp_impexp_interior_placement_interior_1_impexp_intwaremed_milo_')
 	RequestIpl('imp_impexp_interior_placement_interior_2_imptexp_mod_int_01_milo_')
-	RequestIpl('imp_impexp_interior_placement_interior_3_impexp_int_02_milo_')
+	RequestIpl('imp_impexp_interior_placement_interior_3_impexp_int_02_milo_')]]
 
 	-- Import / Export Garages: Interiors
 	RequestIpl('imp_dt1_02_modgarage')
@@ -349,7 +349,7 @@ function RequestAllIpls()
 	RequestIpl('imp_sm_15_cargarage_c')
 
 	-- Bunkers: Exteriors
-	RequestIpl('gr_case0_bunkerclosed') -- 848.6175, 2996.567, 45.81612
+	--[[RequestIpl('gr_case0_bunkerclosed') -- 848.6175, 2996.567, 45.81612
 	RequestIpl('gr_case1_bunkerclosed') -- 2126.785, 3335.04, 48.21422
 	RequestIpl('gr_case2_bunkerclosed') -- 2493.654, 3140.399, 51.28789
 	RequestIpl('gr_case3_bunkerclosed') -- 481.0465, 2995.135, 43.96672
@@ -359,7 +359,7 @@ function RequestAllIpls()
 	RequestIpl('gr_case7_bunkerclosed') -- -783.0755, 5934.686, 24.31475
 	RequestIpl('gr_case9_bunkerclosed') -- 24.43542, 2959.705, 58.35517
 	RequestIpl('gr_case10_bunkerclosed') -- -3058.714, 3329.19, 12.5844
-	RequestIpl('gr_case11_bunkerclosed') -- -3180.466, 1374.192, 19.9597
+	RequestIpl('gr_case11_bunkerclosed') -- -3180.466, 1374.192, 19.9597]]
 
 	-- Smugglers run / Doomsday interiors
 
