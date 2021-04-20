@@ -3,6 +3,21 @@ Config.Locale = 'hr'
 
 Config.DoorList = {
 	
+	
+	{
+		textCoords = vector3(355.23, -301.54, 104.5),
+		authorizedJobs = { 'gsf' },
+		locked = true,
+		distance = 2.5,
+		doors = {
+			{
+				objName = '-1989765534',
+				objYaw = 125.0,
+				objCoords = vector3(355.23, -301.54, 105.0)
+			},
+		}
+	},
+	
 	-- 
 	-- BurgeriSeSutaju Lock
 	--
@@ -543,6 +558,36 @@ Config.DoorList = {
 		authorizedJobs = { 'mechanic' },
 		locked = false,
 		distance = 12,
+		size = 2
+	},
+	{
+		objName = 'ba_prop_door_club_entrance',
+		objYaw = 165.0,
+		objCoords  = vector3(354.98229980469, 301.2021484375, 104.03697967529),
+		textCoords = vector3(354.98229980469, 301.2021484375, 104.03697967529),
+		authorizedJobs = { 'gsf' },
+		locked = false,
+		distance = 3,
+		size = 2
+	},
+	{
+		objName = 'ba_prop_door_club_glam_generic',
+		objYaw = -12.0,
+		objCoords  = vector3(380.81326293945, 265.97659301758, 91.190040588379),
+		textCoords = vector3(380.81326293945, 265.97659301758, 91.190040588379),
+		authorizedJobs = { 'gsf' },
+		locked = true,
+		distance = 3,
+		size = 2
+	},
+	{
+		objName = 'ba_prop_door_club_generic_vip',
+		objYaw = 75.0,
+		objCoords  = vector3(377.64376831055, 268.45965576172, 94.990516662598),
+		textCoords = vector3(377.64376831055, 268.45965576172, 94.990516662598),
+		authorizedJobs = { 'gsf' },
+		locked = true,
+		distance = 3,
 		size = 2
 	},
 }

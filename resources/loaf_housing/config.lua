@@ -7179,6 +7179,7 @@ Config = {
         {['prop'] = 'kinda_nice', ['door'] = vector3(1355.066, -1690.527, 59.54117), ['price'] = 125000},
         {['prop'] = 'lester', ['door'] = vector3(1365.325, -1721.377, 64.68388), ['price'] = 150000},
 		{['prop'] = 'mansion', ['door'] = vector3(-1135.865, 375.733, 71.29976), ['price'] = 50000000},
+		{['prop'] = 'mansion', ['door'] = vector3(-447.682, 6271.7622, 33.33002), ['price'] = 50000000},
     },
     HouseSpawns = { -- every possible position for a shell to be spawned. default is 66 different spawns, meaning 66 people can be inside their house at the same time! You shouldn't mess around with this tbh.
         {['taken'] = false, ['coords'] = vector3(1020.0, 2000.0, -100.0)}, -- spawn #1
