@@ -787,6 +787,7 @@ AddEventHandler('esx:setJob', function(job)
 			RemoveBlip(blip)
 			blip = nil
 		end
+		retourcamionperduannulermission_oui()
 	end
 end)
 

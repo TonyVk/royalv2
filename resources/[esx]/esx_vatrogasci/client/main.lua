@@ -487,4 +487,12 @@ end)
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
 	ESX.PlayerData.job = job
+	if TrajePozar then
+		ZaustaviPozar()
+	end
+	if Vozilo ~= nil then
+		ESX.Game.DeleteVehicle(Vozilo)
+		Vozilo = nil
+	end
+	Radis = false
 end)

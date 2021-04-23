@@ -362,4 +362,5 @@ end)
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
 	PlayerData.job = job
+	ZavrsiPosao()
 end)

@@ -540,7 +540,9 @@ end)
 
 function ZavrsiPosao()
 	Radis = false
-	RemoveBlip(Blipara)
+	if Blipara ~= nil then
+		RemoveBlip(Blipara)
+	end
 	Blipara = nil
 	Gorivo = false
 	if kamion ~= nil then
@@ -696,4 +698,5 @@ end)
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
 	ESX.PlayerData.job = job
+	ZavrsiPosao()
 end)

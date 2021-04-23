@@ -388,9 +388,15 @@ AddEventHandler('esx_drvosjeca:hasEnteredMarker', function(zone)
 end)
 
 function ZavrsiPosao()
-	ESX.Game.DeleteVehicle(Vozilo)
-	ESX.Game.DeleteVehicle(Prikolica)
-	RemoveBlip(Blipic)
+	if Vozilo ~= nil then
+		ESX.Game.DeleteVehicle(Vozilo)
+	end
+	if Prikolica ~= nil then
+		ESX.Game.DeleteVehicle(Prikolica)
+	end
+	if Blipic ~= nil then
+		RemoveBlip(Blipic)
+	end
 	for i=1, #Config.Objekti, 1 do
 		if Objekti[i] ~= nil then
 			ESX.Game.DeleteObject(Objekti[i])
@@ -402,6 +408,7 @@ function ZavrsiPosao()
 	Broj = 0
 	Vozilo = nil
 	Prikolica = nil
+	Blipic = nil
 	Spawno = false
 	Radis = false
 	Ulica = false
@@ -636,4 +643,5 @@ end)
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
 	ESX.PlayerData.job = job
+	ZavrsiPosao()
 end)

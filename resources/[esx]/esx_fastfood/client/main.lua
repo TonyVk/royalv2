@@ -2,7 +2,7 @@ ESX = nil
 local Objekti = {}
 local Spawno = false
 local objektSpawnan = false
-local Broj = 0
+local BrojDostava = 6
 local opetBroj = 0
 local Radis = false
 
@@ -55,7 +55,7 @@ function MenuCloakRoom()
 			end
 			if data.current.value == 'job_wear' then
 				isInService = true
-				ESX.ShowNotification("Zaduzite Jetski!")
+				ESX.ShowNotification("Uzmite skuter i krenite sa dostavom!")
 				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 	    			if skin.sex == 0 then
 	    				TriggerEvent('skinchanger:loadClothes', skin, jobSkin.skin_male)
@@ -75,8 +75,8 @@ end
 function MenuVehicleSpawner()
 	local elements = {}
 
-	for i=1, #Config.Boats, 1 do
-		table.insert(elements, {label = GetLabelText(GetDisplayNameFromVehicleModel(Config.Boats[i])), value = Config.Boats[i]})
+	for i=1, #Config.Bikes, 1 do
+		table.insert(elements, {label = "Skuter", value = Config.Bikes[i]})
 	end
 
 
@@ -89,17 +89,17 @@ function MenuVehicleSpawner()
 			elements = elements
 		},
 		function(data, menu)
-		if data.current.value == "seashark2" then
+		if data.current.value == "skuter" then
 			ESX.Game.SpawnVehicle(data.current.value, Config.Zones.VehicleSpawnPoint.Pos, 116.28479003906, function(vehicle)
 				platenum = math.random(10000, 99999)
 				SetVehicleNumberPlateText(vehicle, "WAL"..platenum)             
 				plaquevehicule = "WAL"..platenum			
 				TaskWarpPedIntoVehicle(GetPlayerPed(-1), vehicle, -1)
 			end)
+			restartajCitavuJebenuSkriptu()
 			Radis = true
 			SpawnObjekte()
 		end
-
 			menu.close()
 		end,
 		function(data, menu)
@@ -109,10 +109,9 @@ function MenuVehicleSpawner()
 end
 
 function SpawnObjekte()
-
 	if objektSpawnan == false then
-	local randomBroj = math.random(1,5)
-	opetBroj = randomBroj
+		local randomBroj = math.random(1,16)
+		opetBroj = randomBroj
 		ESX.Game.SpawnLocalObject('prop_ped_gib_01', {
 				x = Config.Objekti[randomBroj].x,
 				y = Config.Objekti[randomBroj].y,
@@ -125,52 +124,64 @@ function SpawnObjekte()
 		SetBlipDisplay(Blipara[randomBroj], 8)
 		SetBlipColour (Blipara[randomBroj], 2)
 		SetBlipScale  (Blipara[randomBroj], 1.4)
-		Broj = #Config.Objekti
+		
 		Spawno = true
 		objektSpawnan = true
-		ESX.ShowNotification("Spasite Covjeka i vratite se na crveni marker sto prije!")
 	end
 end
 
-function isABoat()
-	local isABoat = false
+function isASkuter()
+	local isASkuter = false
 	local playerPed = GetPlayerPed(-1)
-	for i=1, #Config.Boats, 1 do
-		if IsVehicleModel(GetVehiclePedIsUsing(playerPed), Config.Boats[i]) then
-			isABoat = true
+	for i=1, #Config.Bikes, 1 do
+		if IsVehicleModel(GetVehiclePedIsUsing(playerPed), Config.Bikes[i]) then
+			isASkuter = true
 			break
 		end
 	end
-	return isABoat
+	return isASkuter
 end
 
-function IsJobSpasioc()
+function IsJobFastFood()
 	if ESX.PlayerData.job ~= nil then
-		local spasioc = false
-		if ESX.PlayerData.job.name ~= nil and ESX.PlayerData.job.name == 'spasioc' then
-			spasioc = true
+		local fastfood = false
+		if ESX.PlayerData.job.name ~= nil and ESX.PlayerData.job.name == 'fastfood' then
+			fastfood = true
 		end
-		return spasioc
+		return fastfood
 	end
 end
 
-AddEventHandler('esx_spasioc:hasEnteredMarker', function(zone)
+function restartajCitavuJebenuSkriptu()
+	resetBrojDostava()
+	Spawno = false
+	objektSpawnan = false
+end
+
+
+function resetBrojDostava()
+	BrojDostava = 6
+	opetBroj = 0
+end
+
+function postaviWaypoint()
+	SetNewWaypoint(452.63,-698.47)
+end
+
+AddEventHandler('esx_fastfood:hasEnteredMarker', function(zone)
 	if zone == 'CloakRoom' then
 		MenuCloakRoom()
 	end
 
 	if zone == 'VehicleSpawner' then
-		if isInService and IsJobSpasioc() and Radis == false then
+		if isInService and IsJobFastFood() and Radis == false then
 			MenuVehicleSpawner()
 		end
 	end
 	
 	if zone == 'VehicleDeletePoint' then
-		if isInService and IsJobSpasioc() then
-			CurrentAction     = 'Obrisi'
-			CurrentActionMsg  = "Pritisnite E da vratite vozilo!"
+		if isInService and IsJobFastFood() then
 			obrisiVozilo()
-			ZavrsiPosao()
 		end
 	end
 end)
@@ -179,24 +190,21 @@ function obrisiVozilo()
 	local odjebi = 1
 	odjebi = odjebi - 1
 	if odjebi == 0 then
-		ESX.ShowNotification("funkcija radi")
-		ESX.ShowNotification("Vozilo vraceno, covjek spasen!")
+		ESX.ShowNotification("Vozilo vraceno")
 		local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
 		ESX.Game.DeleteVehicle(vehicle)
 		ZavrsiPosao()
+		isInService = false
 	end
 end
 
 function ZavrsiPosao()
-	for i=1, #Config.Objekti, 1 do
-		if Objekti[opetBroj] ~= nil then
-			ESX.Game.DeleteObject(Objekti[opetBroj])
-			if DoesBlipExist(Blipara[opetBroj]) then
-				RemoveBlip(Blipara[opetBroj])
-			end
+	if Objekti[opetBroj] ~= nil then
+		ESX.Game.DeleteObject(Objekti[opetBroj])
+		if DoesBlipExist(Blipara[opetBroj]) then
+			RemoveBlip(Blipara[opetBroj])
 		end
 	end
-	Broj = 0
 	local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
 	local tablica = GetVehicleNumberPlateText(GetVehiclePedIsIn(GetPlayerPed(-1), false))
 	Spawno = false
@@ -204,7 +212,7 @@ function ZavrsiPosao()
 	Radis = false
 end
 
-AddEventHandler('esx_spasioc:hasExitedMarker', function(zone)
+AddEventHandler('esx_fastfood:hasExitedMarker', function(zone)
 	ESX.UI.Menu.CloseAll()    
     CurrentAction = nil
     CurrentActionMsg = ''
@@ -219,37 +227,36 @@ end
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(20)
-		if Spawno == true and Broj > 0 then
-			local tablica = GetVehicleNumberPlateText(GetVehiclePedIsIn(GetPlayerPed(-1), false))
-			if tablica == plaquevehicule then
-				local NewBin, NewBinDistance = ESX.Game.GetClosestObject("prop_ped_gib_01")
-					if Objekti[opetBroj] == NewBin then
-						if NewBinDistance <= 2 then
-							Wait(300)
-							ESX.Game.DeleteObject(Objekti[opetBroj])
-							if DoesBlipExist(Blipara[opetBroj]) then
-								RemoveBlip(Blipara[opetBroj])
-							end
-							Broj = Broj-1
-							TriggerServerEvent("spasioc:isplata")
-							TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.job.name)
-							if Broj == 0 then
-								Spawno = false
-								Radis = false
-								objektSpawnan = false
-								Broj = 0
-								ESX.ShowNotification("Uspjesno spasen cojk!")
-							end
-						end
-					end
+		if Spawno == true and opetBroj > 0 then
+			if #(GetEntityCoords(PlayerPedId())-vector3(Config.Objekti[opetBroj].x, Config.Objekti[opetBroj].y, Config.Objekti[opetBroj].z)) <= 5 then
+				Wait(300)
+				ESX.Game.DeleteObject(Objekti[opetBroj])
+				if DoesBlipExist(Blipara[opetBroj]) then
+					RemoveBlip(Blipara[opetBroj])
+				end
+				BrojDostava = BrojDostava - 1
+				TriggerServerEvent("fastfood:isplata")
+				TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.job.name)
+				if BrojDostava > 0 then
+					objektSpawnan = false
+					Spawno = false
+					SpawnObjekte()
+					ESX.ShowNotification("Dostavite sljedecu narudzbu")
+					ESX.ShowNotification(BrojDostava)
+				else						
+					Radis = false
+					opetBroj = 0
+					Spawno = false
+					ESX.ShowNotification("Dostavili ste sve narudzbe!")
+					postaviWaypoint()
+				end
 			end
 		end
 		if CurrentAction ~= nil then
 			SetTextComponentFormat('STRING')
 			AddTextComponentString(CurrentActionMsg)
 			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
-			if IsControlJustReleased(0, 38) and IsJobSpasioc() then
-
+			if IsControlJustReleased(0, 38) and IsJobFastFood() then
                 if CurrentAction == 'Obrisi' then
 					ZavrsiPosao()
                 end
@@ -261,12 +268,14 @@ end)
 
 -- DISPLAY MISSION MARKERS AND MARKERS
 Citizen.CreateThread(function()
+	local waitara = 1000
 	while true do
-		Wait(0)
+		local naso = 0
+		Wait(waitara)
 
 		local coords = GetEntityCoords(GetPlayerPed(-1))
 		
-		if IsJobSpasioc() then
+		if IsJobFastFood() then
 
 			local coords      = GetEntityCoords(GetPlayerPed(-1))
 			local isInMarker  = false
@@ -274,6 +283,8 @@ Citizen.CreateThread(function()
 
 			for k,v in pairs(Config.Zones) do
 				if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
+					naso = 1
+					waitara = 0
 					isInMarker  = true
 					currentZone = k
 				end
@@ -281,27 +292,35 @@ Citizen.CreateThread(function()
 			
 			for k,v in pairs(Config.Cloakroom) do
 				if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
+					naso = 1
+					waitara = 0
 					isInMarker  = true
 					currentZone = k
 				end
 			end
 			
 			if isInMarker and not hasAlreadyEnteredMarker then
+				naso = 1
+				waitara = 0
 				hasAlreadyEnteredMarker = true
 				lastZone                = currentZone
-				TriggerEvent('esx_spasioc:hasEnteredMarker', currentZone)
+				TriggerEvent('esx_fastfood:hasEnteredMarker', currentZone)
 			end
 
 			if not isInMarker and hasAlreadyEnteredMarker then
+				naso = 1
+				waitara = 0
 				hasAlreadyEnteredMarker = false
-				TriggerEvent('esx_spasioc:hasExitedMarker', lastZone)
+				TriggerEvent('esx_fastfood:hasExitedMarker', lastZone)
 			end
 
 		end
 		
 		for k,v in pairs(Config.Zones) do
 
-			if isInService and (IsJobSpasioc() and v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+			if isInService and (IsJobFastFood() and v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+				naso = 1
+				waitara = 0
 				DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 			end
 
@@ -309,12 +328,17 @@ Citizen.CreateThread(function()
 
 		for k,v in pairs(Config.Cloakroom) do
 
-			if(IsJobSpasioc() and v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+			if(IsJobFastFood() and v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+				naso = 1
+				waitara = 0
 				DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
+				--ESX.ShowNotification("Dostavio")
 			end
 
 		end
-		
+		if naso == 0 then
+			waitara = 1000
+		end
 	end
 end)
 

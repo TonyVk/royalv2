@@ -277,6 +277,7 @@ end)
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
 	PlayerData.job = job
+	Radis = false
 end)
 
 if (Config.Debug) then

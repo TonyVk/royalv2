@@ -292,14 +292,19 @@ AddEventHandler('esx_elektricar:hasEnteredMarker', function(zone)
 end)
 
 function ZavrsiPosao()
+	if Vozilo ~= nil then
 		ESX.Game.DeleteVehicle(Vozilo)
+	end
+	if Blipic ~= nil then
 		RemoveBlip(Blipic)
-		BrTura = 0
-		Broj = 0
-		Vozilo = nil
-		Spawno = false
-		Radis = false
-		LokBroj = nil
+	end
+	BrTura = 0
+	Broj = 0
+	Vozilo = nil
+	Blipic = nil
+	Spawno = false
+	Radis = false
+	LokBroj = nil
 end
 
 AddEventHandler('esx_elektricar:hasExitedMarker', function(zone)
@@ -426,4 +431,5 @@ end)
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
 	ESX.PlayerData.job = job
+	ZavrsiPosao()
 end)

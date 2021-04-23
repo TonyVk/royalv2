@@ -445,8 +445,12 @@ function ZavrsiPosao()
 			end
 		end
 	else
-		ESX.Game.DeleteVehicle(Vozilo)
-		ESX.Game.DeleteVehicle(Vozilo2)
+		if Vozilo ~= nil then
+			ESX.Game.DeleteVehicle(Vozilo)
+		end
+		if Vozilo2 ~= nil then
+			ESX.Game.DeleteVehicle(Vozilo2)
+		end
 	end
 	Vozilo = nil
 	Vozilo2 = nil
@@ -740,4 +744,5 @@ end)
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
 	ESX.PlayerData.job = job
+	ZavrsiPosao()
 end)

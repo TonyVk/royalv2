@@ -528,14 +528,21 @@ end)
 
 function ZavrsiPosao()
 	if Valjak ~= nil then
-		ESX.Game.DeleteVehicle(Vozilo)
+		if Vozilo ~= nil then
+			ESX.Game.DeleteVehicle(Vozilo)
+		end
 		if DoesEntityExist(Prikolica) then
 			ESX.Game.DeleteVehicle(Prikolica)
 		else
 			TriggerServerEvent("gradjevinar:ObrisiVozila")
 		end
-		ESX.Game.DeleteVehicle(Valjak)
-		RemoveBlip(Blipic)
+		if Valjak ~= nil then
+			ESX.Game.DeleteVehicle(Valjak)
+		end
+		if Blipic ~= nil then
+			RemoveBlip(Blipic)
+			Blipic = nil
+		end
 		for i=1, #Objekti, 1 do
 			if Objekti[i] ~= nil then
 				ESX.Game.DeleteObject(Objekti[i])
@@ -812,4 +819,5 @@ end)
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
 	ESX.PlayerData.job = job
+	ZavrsiPosao()
 end)

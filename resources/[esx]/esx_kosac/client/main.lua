@@ -488,7 +488,9 @@ function ZavrsiPosao()
 		Broj = 0
 		Spawno = false
 		Radis = false
-		DeleteObject(prop_ent)
+		if prop_ent ~= nil then
+			DeleteObject(prop_ent)
+		end
 		SendNUIMessage({
 			stop = true
 		})
@@ -767,4 +769,5 @@ end)
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
 	ESX.PlayerData.job = job
+	ZavrsiPosao()
 end)
