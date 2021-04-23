@@ -124,7 +124,7 @@ function SpawnObjekte()
 		SetBlipDisplay(Blipara[randomBroj], 8)
 		SetBlipColour (Blipara[randomBroj], 2)
 		SetBlipScale  (Blipara[randomBroj], 1.4)
-		
+		SetBlipRoute  (Blipara[randomBroj], true)
 		Spawno = true
 		objektSpawnan = true
 	end
@@ -225,9 +225,13 @@ end
 
 -- Key Controls
 Citizen.CreateThread(function()
+	local waitara = 1000
     while true do
-        Citizen.Wait(20)
+        Citizen.Wait(waitara)
+		local naso = 0
 		if Spawno == true and opetBroj > 0 then
+			naso = 1
+			waitara = 20
 			if #(GetEntityCoords(PlayerPedId())-vector3(Config.Objekti[opetBroj].x, Config.Objekti[opetBroj].y, Config.Objekti[opetBroj].z)) <= 5 then
 				Wait(300)
 				ESX.Game.DeleteObject(Objekti[opetBroj])
@@ -242,7 +246,6 @@ Citizen.CreateThread(function()
 					Spawno = false
 					SpawnObjekte()
 					ESX.ShowNotification("Dostavite sljedecu narudzbu")
-					ESX.ShowNotification(BrojDostava)
 				else						
 					Radis = false
 					opetBroj = 0
@@ -253,6 +256,8 @@ Citizen.CreateThread(function()
 			end
 		end
 		if CurrentAction ~= nil then
+			naso = 1
+			waitara = 1
 			SetTextComponentFormat('STRING')
 			AddTextComponentString(CurrentActionMsg)
 			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
@@ -262,6 +267,9 @@ Citizen.CreateThread(function()
                 end
                 CurrentAction = nil
             end
+		end
+		if naso == 0 then
+			waitara = 1000
 		end
     end
 end)

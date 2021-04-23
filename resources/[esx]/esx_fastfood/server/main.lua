@@ -7,8 +7,8 @@ AddEventHandler('fastfood:isplata', function()
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	
 	if xPlayer.job.name == 'fastfood' then
-		xPlayer.addMoney(320)
-		TriggerEvent("biznis:StaviUSef", "fastfood", math.ceil(320*0.30))
+		xPlayer.addMoney(120)
+		TriggerEvent("biznis:StaviUSef", "fastfood", math.ceil(120*0.30))
     else
         TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac fastfooda, a nije zaposljen kao dostavljac!")
 	    TriggerEvent("AntiCheat:Citer", _source)

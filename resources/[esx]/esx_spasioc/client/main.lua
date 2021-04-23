@@ -28,6 +28,7 @@ local CurrentActionMsg        = ''
 local CurrentActionData       = {}
 local Blipara				  = {}
 local VratiBlip				  = {}
+local Vozilo 				  = nil
 --------------------------------------------------------------------------------
 function ProvjeriPosao()
 	PlayerData = ESX.GetPlayerData()
@@ -95,6 +96,7 @@ function MenuVehicleSpawner()
 				SetVehicleNumberPlateText(vehicle, "WAL"..platenum)             
 				plaquevehicule = "WAL"..platenum			
 				TaskWarpPedIntoVehicle(GetPlayerPed(-1), vehicle, -1)
+				Vozilo = vehicle
 			end)
 			Radis = true
 			SpawnObjekte()
@@ -109,10 +111,9 @@ function MenuVehicleSpawner()
 end
 
 function SpawnObjekte()
-
 	if objektSpawnan == false then
-	local randomBroj = math.random(1,5)
-	opetBroj = randomBroj
+		local randomBroj = math.random(1,5)
+		opetBroj = randomBroj
 		ESX.Game.SpawnLocalObject('prop_ped_gib_01', {
 				x = Config.Objekti[randomBroj].x,
 				y = Config.Objekti[randomBroj].y,
@@ -125,7 +126,7 @@ function SpawnObjekte()
 		SetBlipDisplay(Blipara[randomBroj], 8)
 		SetBlipColour (Blipara[randomBroj], 2)
 		SetBlipScale  (Blipara[randomBroj], 1.4)
-		Broj = #Config.Objekti
+		Broj = 1
 		Spawno = true
 		objektSpawnan = true
 		ESX.ShowNotification("Spasite Covjeka i vratite se na crveni marker sto prije!")
@@ -179,10 +180,7 @@ function obrisiVozilo()
 	local odjebi = 1
 	odjebi = odjebi - 1
 	if odjebi == 0 then
-		ESX.ShowNotification("funkcija radi")
 		ESX.ShowNotification("Vozilo vraceno, covjek spasen!")
-		local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
-		ESX.Game.DeleteVehicle(vehicle)
 		ZavrsiPosao()
 	end
 end
@@ -195,6 +193,10 @@ function ZavrsiPosao()
 				RemoveBlip(Blipara[opetBroj])
 			end
 		end
+	end
+	if Vozilo ~= nil then
+		ESX.Game.DeleteVehicle(Vozilo)
+		Vozilo = nil
 	end
 	Broj = 0
 	local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
@@ -217,12 +219,16 @@ end
 
 -- Key Controls
 Citizen.CreateThread(function()
+	local waitara = 1000
     while true do
-        Citizen.Wait(20)
+        Citizen.Wait(waitara)
+		local naso = 0
 		if Spawno == true and Broj > 0 then
+			naso = 1
+			waitara = 20
 			local tablica = GetVehicleNumberPlateText(GetVehiclePedIsIn(GetPlayerPed(-1), false))
 			if tablica == plaquevehicule then
-				local NewBin, NewBinDistance = ESX.Game.GetClosestObject("prop_ped_gib_01")
+					local NewBin, NewBinDistance = ESX.Game.GetClosestObject("prop_ped_gib_01")
 					if Objekti[opetBroj] == NewBin then
 						if NewBinDistance <= 2 then
 							Wait(300)
@@ -245,6 +251,8 @@ Citizen.CreateThread(function()
 			end
 		end
 		if CurrentAction ~= nil then
+			naso = 1
+			waitara = 1
 			SetTextComponentFormat('STRING')
 			AddTextComponentString(CurrentActionMsg)
 			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
@@ -256,14 +264,18 @@ Citizen.CreateThread(function()
                 CurrentAction = nil
             end
 		end
+		if naso == 0 then
+			waitara = 1000
+		end
     end
 end)
 
 -- DISPLAY MISSION MARKERS AND MARKERS
 Citizen.CreateThread(function()
+	local waitara = 1000
 	while true do
-		Wait(0)
-
+		Wait(waitara)
+		local naso = 0
 		local coords = GetEntityCoords(GetPlayerPed(-1))
 		
 		if IsJobSpasioc() then
@@ -274,6 +286,8 @@ Citizen.CreateThread(function()
 
 			for k,v in pairs(Config.Zones) do
 				if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
+					naso = 1
+					waitara = 1
 					isInMarker  = true
 					currentZone = k
 				end
@@ -281,40 +295,47 @@ Citizen.CreateThread(function()
 			
 			for k,v in pairs(Config.Cloakroom) do
 				if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
+					naso = 1
+					waitara = 1
 					isInMarker  = true
 					currentZone = k
 				end
 			end
 			
 			if isInMarker and not hasAlreadyEnteredMarker then
+				naso = 1
+				waitara = 1
 				hasAlreadyEnteredMarker = true
 				lastZone                = currentZone
 				TriggerEvent('esx_spasioc:hasEnteredMarker', currentZone)
 			end
 
 			if not isInMarker and hasAlreadyEnteredMarker then
+				naso = 1
+				waitara = 1
 				hasAlreadyEnteredMarker = false
 				TriggerEvent('esx_spasioc:hasExitedMarker', lastZone)
 			end
 
-		end
-		
-		for k,v in pairs(Config.Zones) do
-
-			if isInService and (IsJobSpasioc() and v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
-				DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
+			for k,v in pairs(Config.Zones) do
+				if isInService and (v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+					naso = 1
+					waitara = 1
+					DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
+				end
 			end
 
-		end
-
-		for k,v in pairs(Config.Cloakroom) do
-
-			if(IsJobSpasioc() and v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
-				DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
+			for k,v in pairs(Config.Cloakroom) do
+				if(v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+					naso = 1
+					waitara = 1
+					DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
+				end
 			end
-
 		end
-		
+		if naso == 0 then
+			waitara = 1000
+		end
 	end
 end)
 
