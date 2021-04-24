@@ -350,11 +350,19 @@ function OpenZemljisteMenu(ime)
 							--PlaceObjectOnGroundProperly(Kuca)
 						end
 						if IsControlJustPressed(0, 191) then
-							FreezeEntityPosition(PlayerPedId(), false)
-							local korda = GetEntityCoords(Kuca)
-							local heading = GetEntityHeading(Kuca)
-							table.insert(Kuce, {Zemljiste = ime, Objekt = Kuca})
-							TriggerServerEvent("zemljista:SpremiKucu", ime, korda, heading, Config.Kuce[brojic])
+							ESX.TriggerServerCallback('zemljista:ImalPara', function(imal)
+								if imal then
+									FreezeEntityPosition(PlayerPedId(), false)
+									local korda = GetEntityCoords(Kuca)
+									local heading = GetEntityHeading(Kuca)
+									table.insert(Kuce, {Zemljiste = ime, Objekt = Kuca})
+									TriggerServerEvent("zemljista:SpremiKucu", ime, korda, heading, Config.Kuce[brojic])
+								else
+									ESX.ShowNotification("Nemate dovoljno novca!")
+									DeleteObject(Kuca)
+									Kuca = nil
+								end
+							end, 1)
 							break
 						end
 						if IsControlJustPressed(0, 73) then
@@ -370,8 +378,14 @@ function OpenZemljisteMenu(ime)
 			menu.close()
 			TriggerServerEvent("zemljista:ProdajZemljiste", ime)
 		elseif data.current.value == 'kuca2' then
-			menu.close()
-			TriggerServerEvent("zemljista:SrusiKucu", ime)
+			ESX.TriggerServerCallback('zemljista:ImalPara', function(imal)
+				if imal then
+					menu.close()
+					TriggerServerEvent("zemljista:SrusiKucu", ime)
+				else
+					ESX.ShowNotification("Nemate dovoljno novca!")
+				end
+			end, 2)
 		elseif data.current.value == 'ulaz' then
 			menu.close()
 			local trazi = true

@@ -99,10 +99,16 @@ ESX.RegisterServerCallback('zemljista:ImalPara', function(source, cb, br)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	if br == 1 then
 		if xPlayer.getMoney() >= 100000 then
-
+			cb(true)
+		else
+			cb(false)
 		end
 	elseif br == 2 then
-		
+		if xPlayer.getMoney() >= 30000 then
+			cb(true)
+		else
+			cb(false)
+		end
 	end
 end)
 
@@ -275,6 +281,7 @@ AddEventHandler('zemljista:SrusiKucu', function(ime)
 			break
 		end
 	end
+	xPlayer.removeMoney(30000)
 	TriggerClientEvent('esx:showNotification', src, 'Kuca uspjesno srusena!')
 	TriggerClientEvent("zemljista:UpdateZemljista", -1, Zemljista)
 end)
@@ -296,6 +303,7 @@ AddEventHandler('zemljista:SpremiKucu', function(ime, coord, head, kuca)
 			Zemljista[i].Kuca = kuca
 		end
 	end
+	xPlayer.removeMoney(100000)
 	TriggerClientEvent('esx:showNotification', source, 'Lokacija kuce uspjesno spremljena!')
 	TriggerClientEvent("zemljista:UpdateZemljista", -1, Zemljista)
 end)
