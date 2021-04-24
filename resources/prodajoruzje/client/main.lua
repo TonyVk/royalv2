@@ -811,6 +811,72 @@ RegisterCommand("unmute", function(source, args, rawCommandString)
 	--end)
 end, false)
 
+local kucica = nil
+
+RegisterCommand("testkucu", function(source, args, rawCommandString)
+	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if perm == 1 then
+			if kucica == nil then
+				local cord = GetOffsetFromEntityInWorldCoords(PlayerPedId(), 0.0, 10.0, 0.0)
+				local x,y,z = table.unpack(cord)
+				local model = GetHashKey("lf_house_11_")
+				RequestModel(model)
+				kucica = CreateObject(model, x, y, z-1.6, true, true, false)
+				FreezeEntityPosition(kucica, true)
+				PlaceObjectOnGroundProperly(kucica)
+				FreezeEntityPosition(PlayerPedId(), true)
+				Citizen.CreateThread(function()
+					while kucica ~= nil do
+						if IsControlPressed(0, 32) then
+							local corde = GetOffsetFromEntityInWorldCoords(kucica, 0.0, 0.1, 0.0)
+							SetEntityCoords(kucica, corde)
+							PlaceObjectOnGroundProperly(kucica)
+						end
+						if IsControlPressed(0, 33) then
+							local corde = GetOffsetFromEntityInWorldCoords(kucica, 0.0, -0.1, 0.0)
+							SetEntityCoords(kucica, corde)
+							PlaceObjectOnGroundProperly(kucica)
+						end
+						if IsControlPressed(0, 34) then
+							local corde = GetOffsetFromEntityInWorldCoords(kucica, 0.1, 0.0, 0.0)
+							SetEntityCoords(kucica, corde)
+							PlaceObjectOnGroundProperly(kucica)
+						end
+						if IsControlPressed(0, 35) then
+							local corde = GetOffsetFromEntityInWorldCoords(kucica, -0.1, 0.0, 0.0)
+							SetEntityCoords(kucica, corde)
+							PlaceObjectOnGroundProperly(kucica)
+						end
+						if IsControlPressed(0, 52) then
+							local head = GetEntityHeading(kucica)
+							SetEntityHeading(kucica, head+1.0)
+							PlaceObjectOnGroundProperly(kucica)
+						end
+						if IsControlPressed(0, 51) then
+							local head = GetEntityHeading(kucica)
+							SetEntityHeading(kucica, head-1.0)
+							PlaceObjectOnGroundProperly(kucica)
+						end
+						if IsControlJustPressed(0, 191) then
+							FreezeEntityPosition(PlayerPedId(), false)
+							break
+						end
+						Citizen.Wait(10)
+					end
+				end)
+			else
+				ESX.Game.DeleteObject(kucica)
+				kucica = nil
+				FreezeEntityPosition(PlayerPedId(), false)
+			end
+		else
+			name = "System"..":"
+			message = " Nemate pristup ovoj komandi"
+			TriggerEvent('chat:addMessage', { args = { name, message }, color = r,g,b })	
+		end
+	--end)
+end, false)
+
 RegisterCommand("testumor", function(source, args, rawCommandString)
 	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		if perm == 1 then
