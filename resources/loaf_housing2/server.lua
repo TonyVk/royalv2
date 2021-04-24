@@ -67,6 +67,19 @@ AddEventHandler('loaf_housing:DodajKucu', function(id, prop, door, price, prod, 
     TriggerClientEvent('loaf_housing:reloadHouses', -1)
 end)
 
+RegisterNetEvent('loaf_housing:UrediKucu')
+AddEventHandler('loaf_housing:UrediKucu', function(id, door, src)
+	for k, v in pairs(Config.Houses) do
+		if v['ID'] == id then
+			v['door'] = door
+			break
+		end
+	end
+	TriggerClientEvent("loaf_housing:SaljiKuce", -1, Config.Houses)
+    Wait(1500)
+    TriggerClientEvent('loaf_housing:reloadHouses', -1)
+end)
+
 RegisterNetEvent('loaf_housing:ObrisiKucu')
 AddEventHandler('loaf_housing:ObrisiKucu', function(id)
 	for ka, v in pairs(Config.Houses) do

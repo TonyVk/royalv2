@@ -95,22 +95,37 @@ ESX.RegisterServerCallback('zemljista:DohvatiZemljista', function(source, cb)
 	cb(vracaj)
 end)
 
+ESX.RegisterServerCallback('zemljista:ImalPara', function(source, cb, br)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	if br == 1 then
+		if xPlayer.getMoney() >= 100000 then
+
+		end
+	elseif br == 2 then
+		
+	end
+end)
+
 ESX.RegisterServerCallback('zemljista:JelVlasnik', function(source, cb, ime)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local cijena = 0
 	for i=1, #Zemljista, 1 do
 		if Zemljista[i] ~= nil and Zemljista[i].Ime == ime then
 			local kucica = false
+			local vrata = false
 			cijena = Zemljista[i].Cijena
 			if Zemljista[i].Kuca ~= nil then
 				kucica = true
 			end
+			if Zemljista[i].KucaID ~= nil then
+				vrata = true
+			end
 			if Zemljista[i].Vlasnik == xPlayer.identifier then
-				cb(true, cijena, true, kucica)
+				cb(true, cijena, true, kucica, vrata)
 			elseif Zemljista[i].Vlasnik == nil then
-				cb(false, cijena, false, kucica)
+				cb(false, cijena, false, kucica, vrata)
 			else
-				cb(true, cijena, false, kucica)
+				cb(true, cijena, false, kucica, vrata)
 			end
 		end
 	end
@@ -182,6 +197,25 @@ AddEventHandler('zemljista:PostaviUlaz', function(ime, coord)
 	TriggerClientEvent('esx:showNotification', src, 'Uspjesno ste si stavili ulaz u kucu!')
 end)
 
+RegisterNetEvent('zemljista:UrediUlaz')
+AddEventHandler('zemljista:UrediUlaz', function(ime, coord)
+	local src = source
+	local kid = 0
+	for i=1, #Zemljista, 1 do
+		if Zemljista[i] ~= nil and Zemljista[i].Ime == ime then
+			kid = Zemljista[i].KucaID
+			break
+		end
+	end
+	MySQL.Async.execute('update kuce set door=@dr where ID=@id', {
+		['@dr'] = json.encode(coord),
+		['@id'] = kid
+	}, function(insertid)
+		TriggerEvent("loaf_housing:UrediKucu", kid, coord, src)
+	end)
+	TriggerClientEvent('esx:showNotification', src, 'Uspjesno ste si uredili ulaz u kucu!')
+end)
+
 RegisterNetEvent('zemljista:ProdajZemljiste')
 AddEventHandler('zemljista:ProdajZemljiste', function(ime)
 	local src = source
@@ -212,6 +246,36 @@ AddEventHandler('zemljista:ProdajZemljiste', function(ime)
 		end
 	end
 	TriggerClientEvent('esx:showNotification', src, 'Zemljiste uspjesno prodano!')
+	TriggerClientEvent("zemljista:UpdateZemljista", -1, Zemljista)
+end)
+
+RegisterNetEvent('zemljista:SrusiKucu')
+AddEventHandler('zemljista:SrusiKucu', function(ime)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	MySQL.Async.execute('UPDATE zemljista SET Kuca = @ku, KKoord = @kor, KucaID = @ku WHERE Ime = @im', {
+		['@ku'] = nil,
+		['@kor'] = "{}",
+		['@ku'] = nil,
+		['@im'] = ime
+	})
+	for i=1, #Zemljista, 1 do
+		if Zemljista[i] ~= nil and Zemljista[i].Ime == ime then
+			Zemljista[i].KKoord = nil
+			Zemljista[i].Heading = nil
+			Zemljista[i].Kuca = nil
+			TriggerClientEvent("zemljista:ObrisiKucu", -1, Zemljista[i].Ime)
+			MySQL.Async.execute('DELETE FROM kuce WHERE ID = @id', {
+				['@id'] = Zemljista[i].KucaID
+			})
+			MySQL.Async.execute("UPDATE users SET house=@house WHERE identifier=@identifier", {['@identifier'] = xPlayer.identifier, ['@house'] = '{"owns":false,"furniture":[],"houseId":0}'}) 
+            MySQL.Async.execute("DELETE FROM bought_houses WHERE houseid=@houseid", {['@houseid'] = Zemljista[i].KucaID})
+			TriggerEvent('loaf_housing:ObrisiKucu', Zemljista[i].KucaID)
+			Zemljista[i].KucaID = nil
+			break
+		end
+	end
+	TriggerClientEvent('esx:showNotification', src, 'Kuca uspjesno srusena!')
 	TriggerClientEvent("zemljista:UpdateZemljista", -1, Zemljista)
 end)
 

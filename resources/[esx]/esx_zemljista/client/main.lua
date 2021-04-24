@@ -24,6 +24,9 @@ local Koord = {}
 local Zemljista = {}
 local Kuce = {}
 local Kuca = nil
+local brojic = 1
+local ButtonsScaleform = nil
+Scaleforms    = mLibs:Scaleforms()
 
 ESX                             = nil
 GUI.Time                        = 0
@@ -53,9 +56,10 @@ end
 function SpawnKucu(data)
 	local model = GetHashKey(data.Kuca)
 	RequestModel(model)
-	Kuca = CreateObject(model, data.KKoord, false, false, false)
+	Kuca = CreateObject(model, data.KKoord.x, data.KKoord.y, data.KKoord.z, false, false, false)
 	table.insert(Kuce, {Zemljiste = data.Ime, Objekt = Kuca})
 	FreezeEntityPosition(Kuca, true)
+	SetEntityCoords(Kuca, data.KKoord.x, data.KKoord.y, data.KKoord.z)
 	SetEntityHeading(Kuca, data.Heading)
 	SetModelAsNoLongerNeeded(model)
 end
@@ -75,14 +79,69 @@ function firstToUpper(str)
     return (str:gsub("^%l", string.upper))
 end
 
+CreateControls = function()
+  local controls
+  controls = {
+      [1] = Config.Controls["direction"],
+      [2] = Config.Controls["heading"],
+      [3] = Config.Controls["height"],
+      [4] = Config.Controls["camera"],
+      [5] = Config.Controls["zoom"],
+  }
+
+  return controls
+end
+
+Instructional = {}
+
+Instructional.Init = function()
+  local scaleform = Scaleforms.LoadMovie('INSTRUCTIONAL_BUTTONS')
+
+  Scaleforms.PopVoid(scaleform,'CLEAR_ALL')
+  Scaleforms.PopInt(scaleform,'SET_CLEAR_SPACE',200) 
+
+  return scaleform
+end
+
+Instructional.SetControls = function(scaleform,controls)
+  for i=1,#controls,1 do
+    PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
+    PushScaleformMovieFunctionParameterInt(i-1)
+    for k=1,#controls[i].codes,1 do
+      ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0, controls[i].codes[k], true))
+    end
+    BeginTextCommandScaleformString("STRING")
+    AddTextComponentScaleform(controls[i].text)
+    EndTextCommandScaleformString()
+    PopScaleformMovieFunctionVoid()
+  end
+
+  Scaleforms.PopVoid(scaleform,'DRAW_INSTRUCTIONAL_BUTTONS')
+  --Scaleforms.PopMulti(scaleform,'SET_BACKGROUND_COLOUR',1,1,1,1)
+end
+
+Instructional.Create = function(controls)
+  local scaleform = Instructional.Init()
+  Instructional.SetControls(scaleform,controls)
+  return scaleform
+end
+
 function OpenZemljisteMenu(ime)
     local elements = {}
 	local cijena = 0
-	ESX.TriggerServerCallback('zemljista:JelVlasnik', function(br, cij, vl, kuca)
+	ESX.TriggerServerCallback('zemljista:JelVlasnik', function(br, cij, vl, kuca, vrata)
 		if br and vl then
-			table.insert(elements, {label = "Izgradi kucu", value = 'kuca'})
+			if not kuca then
+				table.insert(elements, {label = "Izgradi kucu (100000$)", value = 'kuca'})
+			else
+				table.insert(elements, {label = "Srusi kucu(30000$)", value = 'kuca2'})
+			end
 			if kuca then
-				table.insert(elements, {label = "Postavi ulaz u kucu", value = 'ulaz'})
+				if not vrata then
+					table.insert(elements, {label = "Postavi ulaz u kucu", value = 'ulaz'})
+				else
+					table.insert(elements, {label = "Uredi ulaz u kucu", value = 'ulaz2'})
+				end
 			end
 			table.insert(elements, {label = "Prodaj drzavi ("..(cij/2).."$)", value = 'prodaj'})
 		elseif not br and not vl then
@@ -95,6 +154,7 @@ function OpenZemljisteMenu(ime)
 	while #elements == 0 do
 		Wait(100)
 	end
+	brojic = 1
     ESX.UI.Menu.Open(
       'default', GetCurrentResourceName(), 'zemljiste',
       {
@@ -104,15 +164,9 @@ function OpenZemljisteMenu(ime)
       },
       function(data, menu)
 		if data.current.value == 'kuca' then
+			menu.close()
 			local cord = GetOffsetFromEntityInWorldCoords(PlayerPedId(), 0.0, 10.0, 0.0)
 			local x,y,z = table.unpack(cord)
-			local model = GetHashKey("lf_house_11_")
-			RequestModel(model)
-			Kuca = CreateObject(model, x, y, z-1.6, false, false, false)
-			FreezeEntityPosition(Kuca, true)
-			PlaceObjectOnGroundProperly(Kuca)
-			FreezeEntityPosition(PlayerPedId(), true)
-			SetModelAsNoLongerNeeded(model)
 			local kord1 = nil
 			local kord2 = nil
 			for i=1, #Koord, 1 do
@@ -123,8 +177,84 @@ function OpenZemljisteMenu(ime)
 					end
 				end
 			end
+			local a,b,c = table.unpack(kord1)
+			local d,e,f = table.unpack(kord2)
+			if a < d then
+				x = math.random(math.floor(a), math.floor(d))
+				if b < e then
+					y = math.random(math.floor(b), math.floor(e))
+				else
+					y = math.random(math.floor(e), math.floor(b))
+				end
+			else
+				x = math.random(math.floor(d), math.floor(a))
+				if b < e then
+					y = math.random(math.floor(b), math.floor(e))
+				else
+					y = math.random(math.floor(e), math.floor(b))
+				end
+			end
+			x = x+0.0
+			y = y+0.0
+			local model = GetHashKey(Config.Kuce[brojic])
+			RequestModel(model)
+			Kuca = CreateObject(model, x, y, z, false, false, false)
+			FreezeEntityPosition(Kuca, true)
+			PlaceObjectOnGroundProperly(Kuca)
+			FreezeEntityPosition(PlayerPedId(), true)
+			SetModelAsNoLongerNeeded(model)
+			local controls = CreateControls()
+			ButtonsScaleform = Instructional.Create(controls)
+			local kordac = GetEntityCoords(Kuca)
 			Citizen.CreateThread(function()
 				while Kuca ~= nil do
+					DrawScaleformMovieFullscreen(ButtonsScaleform,255,255,255,255,0)
+						if IsControlJustPressed(0, 175) then
+							if (brojic+1) <= 15 then
+								brojic = brojic+1
+								local kordara = GetEntityCoords(Kuca)
+								local model = GetHashKey(Config.Kuce[brojic])
+								DeleteObject(Kuca)
+								RequestModel(model)
+								Kuca = CreateObject(model, kordara.x, kordara.y, kordara.z, false, false, false)
+								FreezeEntityPosition(Kuca, true)
+								Wait(100)
+								PlaceObjectOnGroundProperly(Kuca)
+								FreezeEntityPosition(PlayerPedId(), true)
+								SetModelAsNoLongerNeeded(model)
+							end
+						end
+						if IsControlJustPressed(0, 174) then
+							if (brojic-1) >= 1 then
+								brojic = brojic-1
+								local kordara = GetEntityCoords(Kuca)
+								local model = GetHashKey(Config.Kuce[brojic])
+								DeleteObject(Kuca)
+								RequestModel(model)
+								Kuca = CreateObject(model, kordara.x, kordara.y, kordara.z, false, false, false)
+								FreezeEntityPosition(Kuca, true)
+								Wait(100)
+								PlaceObjectOnGroundProperly(Kuca)
+								FreezeEntityPosition(PlayerPedId(), true)
+								SetModelAsNoLongerNeeded(model)
+							end
+						end
+						if IsControlPressed(0, 172) then
+							local korde1 = nil
+							local corde = GetOffsetFromEntityInWorldCoords(Kuca, 0.0, 0.0, 0.01)
+							if corde.z < kordac.z+0.5 then
+								SetEntityCoords(Kuca, corde)
+								--PlaceObjectOnGroundProperly(Kuca)
+							end
+						end
+						if IsControlPressed(0, 173) then
+							local korde1 = nil
+							local corde = GetOffsetFromEntityInWorldCoords(Kuca, 0.0, 0.0, -0.01)
+							if corde.z > kordac.z-0.5 then
+								SetEntityCoords(Kuca, corde)
+								--PlaceObjectOnGroundProperly(Kuca)
+							end
+						end
 						if IsControlPressed(0, 32) then
 							local korde1 = nil
 							local korde2 = nil
@@ -212,19 +342,19 @@ function OpenZemljisteMenu(ime)
 						if IsControlPressed(0, 52) then
 							local head = GetEntityHeading(Kuca)
 							SetEntityHeading(Kuca, head+1.0)
-							PlaceObjectOnGroundProperly(Kuca)
+							--PlaceObjectOnGroundProperly(Kuca)
 						end
 						if IsControlPressed(0, 51) then
 							local head = GetEntityHeading(Kuca)
 							SetEntityHeading(Kuca, head-1.0)
-							PlaceObjectOnGroundProperly(Kuca)
+							--PlaceObjectOnGroundProperly(Kuca)
 						end
 						if IsControlJustPressed(0, 191) then
 							FreezeEntityPosition(PlayerPedId(), false)
 							local korda = GetEntityCoords(Kuca)
 							local heading = GetEntityHeading(Kuca)
 							table.insert(Kuce, {Zemljiste = ime, Objekt = Kuca})
-							TriggerServerEvent("zemljista:SpremiKucu", ime, korda, heading, "lf_house_11_")
+							TriggerServerEvent("zemljista:SpremiKucu", ime, korda, heading, Config.Kuce[brojic])
 							break
 						end
 						if IsControlJustPressed(0, 73) then
@@ -233,12 +363,17 @@ function OpenZemljisteMenu(ime)
 							Kuca = nil
 							break
 						end
-						Citizen.Wait(10)
+						Citizen.Wait(1)
 				end
 			end)
 		elseif data.current.value == 'prodaj' then
+			menu.close()
 			TriggerServerEvent("zemljista:ProdajZemljiste", ime)
+		elseif data.current.value == 'kuca2' then
+			menu.close()
+			TriggerServerEvent("zemljista:SrusiKucu", ime)
 		elseif data.current.value == 'ulaz' then
+			menu.close()
 			local trazi = true
 			ESX.ShowNotification("Prosetajte do ulaza u kucu i pritisnite lijevu tipku misa kako bih ste spremili koordinate!")
 			ESX.ShowNotification("Ukoliko ne zelite spremiti koordinate, pritisnite X!")
@@ -248,6 +383,25 @@ function OpenZemljisteMenu(ime)
 					if IsControlJustPressed(0, 24) then
 						local korde = GetEntityCoords(PlayerPedId())
 						TriggerServerEvent("zemljista:PostaviUlaz", ime, korde)
+						trazi = false
+					end
+					if IsControlPressed(0, 186) then
+						trazi = false
+						ESX.ShowNotification("Odustali ste od postavljanja ulaza u kucu!")
+					end
+				end
+			end)
+		elseif data.current.value == 'ulaz2' then
+			menu.close()
+			local trazi = true
+			ESX.ShowNotification("Prosetajte do ulaza u kucu i pritisnite lijevu tipku misa kako bih ste spremili koordinate!")
+			ESX.ShowNotification("Ukoliko ne zelite spremiti koordinate, pritisnite X!")
+			Citizen.CreateThread(function()
+				while trazi do
+					Citizen.Wait(1)
+					if IsControlJustPressed(0, 24) then
+						local korde = GetEntityCoords(PlayerPedId())
+						TriggerServerEvent("zemljista:UrediUlaz", ime, korde)
 						trazi = false
 					end
 					if IsControlPressed(0, 186) then
