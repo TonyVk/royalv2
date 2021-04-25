@@ -474,10 +474,17 @@ Citizen.CreateThread(function()
                                 },
                                 function(data, menu)
                                     if data.current.value == 'yes' then
-                                        TriggerServerEvent('loaf_housing:buyHouse', k, ka)
-                                        ESX.UI.Menu.CloseAll()
-                                        Wait(5000)
-										SetTimeout(Config.RastTrave, IzrastiTravo)
+										ESX.TriggerServerCallback('zemljista:ImalZemljiste', function(imal)
+											if not imal then
+												TriggerServerEvent('loaf_housing:buyHouse', k, ka)
+												ESX.UI.Menu.CloseAll()
+												Wait(5000)
+												SetTimeout(Config.RastTrave, IzrastiTravo)
+											else
+												ESX.ShowNotification("Vec imate kupljeno zemljiste!")
+												ESX.UI.Menu.CloseAll()
+											end
+										end)
                                     else
                                         menu.close()
                                     end

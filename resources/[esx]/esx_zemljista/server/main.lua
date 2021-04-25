@@ -25,8 +25,8 @@ function UcitajZemljista()
 				korda = vector3(x,y,z)
 			end
 			local ete2 = json.decode(result[i].MKoord)
-			x,y,z = table.unpack(ete2)
-			local kordici = vector3(x,y,z)
+			--x,y,z = table.unpack(ete2)
+			local kordici = vector3(ete2.x,ete2.y,ete2.z)
 			table.insert(Zemljista, {Ime = result[i].Ime, Cijena = result[i].Cijena, Vlasnik = result[i].Vlasnik, KKoord = korda, Heading = h, Kuca = result[i].Kuca, MKoord = kordici, KucaID = result[i].KucaID})
 			local data = json.decode(result[i].Koord1)
 			local data2 = json.decode(result[i].Koord2)
@@ -254,6 +254,21 @@ ESX.RegisterServerCallback('zemljista:JelVlasnik', function(source, cb, ime)
 	end
 end)
 
+ESX.RegisterServerCallback('zemljista:ImalZemljiste', function(source, cb)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local naso = 0
+	for i=1, #Zemljista, 1 do
+		if Zemljista[i] ~= nil and Zemljista[i].Vlasnik ~= nil and Zemljista[i].Vlasnik == xPlayer.identifier then
+			naso = 1
+			cb(true)
+			break
+		end
+	end
+	if naso == 0 then
+		cb(false)
+	end
+end)
+
 RegisterNetEvent('zemljista:SpremiCoord')
 AddEventHandler('zemljista:SpremiCoord', function(ime, coord, br)
 	local x,y,z = table.unpack(coord)
@@ -388,12 +403,14 @@ AddEventHandler('zemljista:SrusiKucu', function(ime)
 			Zemljista[i].Heading = nil
 			Zemljista[i].Kuca = nil
 			TriggerClientEvent("zemljista:ObrisiKucu", -1, Zemljista[i].Ime)
-			MySQL.Async.execute('DELETE FROM kuce WHERE ID = @id', {
-				['@id'] = Zemljista[i].KucaID
-			})
-			MySQL.Async.execute("UPDATE users SET house=@house WHERE identifier=@identifier", {['@identifier'] = xPlayer.identifier, ['@house'] = '{"owns":false,"furniture":[],"houseId":0}'}) 
-            MySQL.Async.execute("DELETE FROM bought_houses WHERE houseid=@houseid", {['@houseid'] = Zemljista[i].KucaID})
-			TriggerEvent('loaf_housing:ObrisiKucu', Zemljista[i].KucaID)
+			if Zemljista[i].KucaID ~= nil then
+				MySQL.Async.execute('DELETE FROM kuce WHERE ID = @id', {
+					['@id'] = Zemljista[i].KucaID
+				})
+				MySQL.Async.execute("UPDATE users SET house=@house WHERE identifier=@identifier", {['@identifier'] = xPlayer.identifier, ['@house'] = '{"owns":false,"furniture":[],"houseId":0}'}) 
+				MySQL.Async.execute("DELETE FROM bought_houses WHERE houseid=@houseid", {['@houseid'] = Zemljista[i].KucaID})
+				TriggerEvent('loaf_housing:ObrisiKucu', Zemljista[i].KucaID)
+			end
 			Zemljista[i].KucaID = nil
 			break
 		end

@@ -277,7 +277,7 @@ function OpenZemljisteMenu(ime)
 							local korde1 = nil
 							local korde2 = nil
 							local corde = GetOffsetFromEntityInWorldCoords(Kuca, 0.0, 0.1, 0.0)
-							local cordea = GetOffsetFromEntityInWorldCoords(Kuca, 0.0, 10.0, 0.0)
+							local cordea = GetOffsetFromEntityInWorldCoords(Kuca, 0.0, 5.0, 0.0)
 							local x,y,z = table.unpack(kord1)
 							local x2,y2,z2 = table.unpack(kord2)
 							if x < x2 then
@@ -298,7 +298,7 @@ function OpenZemljisteMenu(ime)
 							local korde1 = nil
 							local korde2 = nil
 							local corde = GetOffsetFromEntityInWorldCoords(Kuca, 0.0, -0.1, 0.0)
-							local cordea = GetOffsetFromEntityInWorldCoords(Kuca, 0.0, -10.0, 0.0)
+							local cordea = GetOffsetFromEntityInWorldCoords(Kuca, 0.0, -5.0, 0.0)
 							local x,y,z = table.unpack(kord1)
 							local x2,y2,z2 = table.unpack(kord2)
 							if x < x2 then
@@ -319,7 +319,7 @@ function OpenZemljisteMenu(ime)
 							local korde1 = nil
 							local korde2 = nil
 							local corde = GetOffsetFromEntityInWorldCoords(Kuca, 0.1, 0.0, 0.0)
-							local cordea = GetOffsetFromEntityInWorldCoords(Kuca, 10.0, 0.0, 0.0)
+							local cordea = GetOffsetFromEntityInWorldCoords(Kuca, 5.0, 0.0, 0.0)
 							local x,y,z = table.unpack(kord1)
 							local x2,y2,z2 = table.unpack(kord2)
 							if x < x2 then
@@ -340,7 +340,7 @@ function OpenZemljisteMenu(ime)
 							local korde1 = nil
 							local korde2 = nil
 							local corde = GetOffsetFromEntityInWorldCoords(Kuca, -0.1, 0.0, 0.0)
-							local cordea = GetOffsetFromEntityInWorldCoords(Kuca, -10.0, 0.0, 0.0)
+							local cordea = GetOffsetFromEntityInWorldCoords(Kuca, -5.0, 0.0, 0.0)
 							local x,y,z = table.unpack(kord1)
 							local x2,y2,z2 = table.unpack(kord2)
 							if x < x2 then
@@ -438,7 +438,7 @@ function OpenZemljisteMenu(ime)
 							local korde1 = nil
 							local korde2 = nil
 							local corde = GetOffsetFromEntityInWorldCoords(Kuca, 0.0, 0.1, 0.0)
-							local cordea = GetOffsetFromEntityInWorldCoords(Kuca, 0.0, 10.0, 0.0)
+							local cordea = GetOffsetFromEntityInWorldCoords(Kuca, 0.0, 5.0, 0.0)
 							local x,y,z = table.unpack(kord1)
 							local x2,y2,z2 = table.unpack(kord2)
 							if x < x2 then
@@ -459,7 +459,7 @@ function OpenZemljisteMenu(ime)
 							local korde1 = nil
 							local korde2 = nil
 							local corde = GetOffsetFromEntityInWorldCoords(Kuca, 0.0, -0.1, 0.0)
-							local cordea = GetOffsetFromEntityInWorldCoords(Kuca, 0.0, -10.0, 0.0)
+							local cordea = GetOffsetFromEntityInWorldCoords(Kuca, 0.0, -5.0, 0.0)
 							local x,y,z = table.unpack(kord1)
 							local x2,y2,z2 = table.unpack(kord2)
 							if x < x2 then
@@ -480,7 +480,7 @@ function OpenZemljisteMenu(ime)
 							local korde1 = nil
 							local korde2 = nil
 							local corde = GetOffsetFromEntityInWorldCoords(Kuca, 0.1, 0.0, 0.0)
-							local cordea = GetOffsetFromEntityInWorldCoords(Kuca, 10.0, 0.0, 0.0)
+							local cordea = GetOffsetFromEntityInWorldCoords(Kuca, 5.0, 0.0, 0.0)
 							local x,y,z = table.unpack(kord1)
 							local x2,y2,z2 = table.unpack(kord2)
 							if x < x2 then
@@ -501,7 +501,7 @@ function OpenZemljisteMenu(ime)
 							local korde1 = nil
 							local korde2 = nil
 							local corde = GetOffsetFromEntityInWorldCoords(Kuca, -0.1, 0.0, 0.0)
-							local cordea = GetOffsetFromEntityInWorldCoords(Kuca, -10.0, 0.0, 0.0)
+							local cordea = GetOffsetFromEntityInWorldCoords(Kuca, -5.0, 0.0, 0.0)
 							local x,y,z = table.unpack(kord1)
 							local x2,y2,z2 = table.unpack(kord2)
 							if x < x2 then
@@ -676,7 +676,7 @@ RegisterCommand("uredizemljiste", function(source, args, raw)
 				}, function (datari, menuri)
 					local mCijena = datari.value
 												
-					if mCijena == nil or mCijena < 0 then
+					if mCijena == nil or tonumber(mCijena) < 0 then
 						ESX.ShowNotification('Greska.')
 					else
 						menuri.close()
