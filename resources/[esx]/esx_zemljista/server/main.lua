@@ -27,7 +27,7 @@ function UcitajZemljista()
 			local ete2 = json.decode(result[i].MKoord)
 			--x,y,z = table.unpack(ete2)
 			local kordici = vector3(ete2.x,ete2.y,ete2.z)
-			table.insert(Zemljista, {Ime = result[i].Ime, Cijena = result[i].Cijena, Vlasnik = result[i].Vlasnik, KKoord = korda, Heading = h, Kuca = result[i].Kuca, MKoord = kordici, KucaID = result[i].KucaID})
+			table.insert(Zemljista, {Ime = result[i].Ime, Cijena = result[i].Cijena, Vlasnik = result[i].Vlasnik, KKoord = korda, Heading = h, Kuca = result[i].Kuca, MKoord = kordici, KucaID = result[i].KucaID, Blip = nil})
 			local data = json.decode(result[i].Koord1)
 			local data2 = json.decode(result[i].Koord2)
 			table.insert(Koord, {Zemljiste = result[i].Ime, Coord = data, Coord2 = data2})
@@ -37,45 +37,6 @@ function UcitajZemljista()
       end
     )
 end
-
-RegisterCommand("obrisizemljiste", function(source, args, raw)
-	if args[1] then
-		local Postoji = 0
-		for i=1, #Zemljista, 1 do
-			if Zemljista[i] ~= nil and Zemljista[i].Ime == args[1] then
-				Postoji = 1
-			end
-		end
-		if Postoji == 1 then
-			MySQL.Async.execute('DELETE FROM zemljista WHERE Ime = @ime',{
-				['@ime'] = args[1]
-			})
-			
-			for i=1, #Zemljista, 1 do
-				if Zemljista[i] ~= nil and Zemljista[i].Ime == args[1] then
-					Zemljista[i].Ime = nil
-					Zemljista[i] = nil
-				end
-			end
-			
-			for i=1, #Koord, 1 do
-				if Koord[i] ~= nil and Koord[i].Zemljiste == args[1] then
-					Koord[i].Zemljiste = nil
-					Koord[i] = nil
-				end
-			end
-			
-			TriggerClientEvent("zemljista:UpdateKoord", -1, Koord)
-			UcitajZemljista()
-			TriggerClientEvent("zemljista:UpdateZemljista", -1, Zemljista)
-			TriggerClientEvent('esx:showNotification', source, 'Zemljiste '..args[1]..' uspjesno obrisano!')
-		else
-			TriggerClientEvent('esx:showNotification', source, 'Zemljiste sa tim imenom ne postoji!')
-		end
-	else
-		TriggerClientEvent('esx:showNotification', source, '/obrisizemljiste [Ime zemljista]')
-	end
-end, true)
 
 RegisterNetEvent('zemljista:ObrisiZemljiste')
 AddEventHandler('zemljista:ObrisiZemljiste', function(ime)
@@ -112,6 +73,8 @@ AddEventHandler('zemljista:ObrisiZemljiste', function(ime)
 	end
 	TriggerClientEvent("zemljista:UpdateKoord", -1, Koord)
 	TriggerClientEvent('esx:showNotification', src, 'Uspjesno obrisano zemljiste '..ime..'!')
+	TriggerClientEvent("zemljista:ObrisiBlip", -1, ime)
+	Wait(1500)
 	TriggerClientEvent("zemljista:UpdateZemljista", -1, Zemljista)
 end)
 
@@ -126,8 +89,10 @@ AddEventHandler('zemljista:PremjestiMarker', function(ime, coord)
 		['@ime'] = ime,
 		['@kord'] = json.encode(coord)
 	})
+	TriggerClientEvent("zemljista:ObrisiBlip", -1, ime)
 	TriggerClientEvent("zemljista:UpdateZemljista", -1, Zemljista)
 	TriggerClientEvent('esx:showNotification', source, 'Uspjesno premjesten marker zemljistu '..ime..'!')
+	TriggerClientEvent("zemljista:RefreshBlip", -1, ime)
 end)
 
 RegisterNetEvent('zemljista:MakniVlasnika')
@@ -160,7 +125,9 @@ AddEventHandler('zemljista:MakniVlasnika', function(ime)
 		end
 	end
 	TriggerClientEvent('esx:showNotification', src, 'Uspjesno maknut vlasnik zemljistu '..ime..'!')
+	TriggerClientEvent("zemljista:ObrisiBlip", -1, ime)
 	TriggerClientEvent("zemljista:UpdateZemljista", -1, Zemljista)
+	TriggerClientEvent("zemljista:RefreshBlip", -1, ime)
 end)
 
 RegisterNetEvent('zemljista:ObrisiKucu')
@@ -202,9 +169,10 @@ AddEventHandler('zemljista:NapraviZemljiste', function(cij, coord)
 		['@cijena'] = cij,
 		['@mk'] = json.encode(coord)
 	})
-	table.insert(Zemljista, {Ime = str, Cijena = cij, Vlasnik = nil, KKoord = nil, Heading = nil, Kuca = nil, MKoord = coord, KucaID = nil})
+	table.insert(Zemljista, {Ime = str, Cijena = cij, Vlasnik = nil, KKoord = nil, Heading = nil, Kuca = nil, MKoord = coord, KucaID = nil, Blip = nil})
 	TriggerClientEvent("zemljista:UpdateZemljista", -1, Zemljista)
 	TriggerClientEvent('esx:showNotification', source, 'Zemljiste '..str..' uspjesno kreirano za $'..cij..'!')
+	TriggerClientEvent("zemljista:RefreshBlip", -1, str)
 end)
 
 ESX.RegisterServerCallback('zemljista:DohvatiZemljista', function(source, cb)
@@ -384,7 +352,11 @@ AddEventHandler('zemljista:ProdajZemljiste', function(ime)
 		end
 	end
 	TriggerClientEvent('esx:showNotification', src, 'Zemljiste uspjesno prodano!')
+	TriggerClientEvent("zemljista:ObrisiBlip", -1, ime)
+	Wait(1500)
 	TriggerClientEvent("zemljista:UpdateZemljista", -1, Zemljista)
+	Wait(1000)
+	TriggerClientEvent("zemljista:RefreshBlip", -1, ime)
 end)
 
 RegisterNetEvent('zemljista:SrusiKucu')
@@ -478,7 +450,9 @@ AddEventHandler('zemljista:Kupi', function(ime)
 					['@im'] = ime
 				})
 				xPlayer.showNotification("Uspjesno ste kupili zemljiste za $"..Zemljista[i].Cijena.."!")
+				TriggerClientEvent("zemljista:ObrisiBlip", -1, ime)
 				TriggerClientEvent("zemljista:UpdateZemljista", -1, Zemljista)
+				TriggerClientEvent("zemljista:RefreshBlip", -1, ime)
 			end
 		end
 	end

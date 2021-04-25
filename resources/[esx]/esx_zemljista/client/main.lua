@@ -47,11 +47,63 @@ function ProvjeriPosao()
 	end)
 	Wait(5000)
 	for i=1, #Zemljista, 1 do
-		if Zemljista[i] ~= nil and Zemljista[i].Kuca ~= nil then
-			SpawnKucu(Zemljista[i])
+		if Zemljista[i] ~= nil then
+			if Zemljista[i].Kuca ~= nil then
+				SpawnKucu(Zemljista[i])
+			end
+			if Zemljista[i].MKoord ~= "{}" then
+				SpawnBlip(Zemljista[i].Ime)
+			end
 		end
 	end
 end
+
+function SpawnBlip(ime)
+	for i=1, #Zemljista, 1 do
+		if Zemljista[i] ~= nil and Zemljista[i].Ime == ime then
+			if Zemljista[i].Blip ~= nil then
+				RemoveBlip(Zemljista[i].Blip)
+			end
+			if Zemljista[i].Vlasnik == nil then
+				local VBlip = AddBlipForCoord(Zemljista[i].MKoord.x, Zemljista[i].MKoord.y, Zemljista[i].MKoord.z)
+				SetBlipAlpha(VBlip, 255)
+				SetBlipSprite(VBlip, 285)
+				SetBlipColour (VBlip, 2)
+				SetBlipAsShortRange(VBlip, true)
+				SetBlipDisplay(VBlip, 2)
+				BeginTextCommandSetBlipName("STRING")
+				AddTextComponentString('Zemljiste na prodaju')
+				EndTextCommandSetBlipName(VBlip)
+				Zemljista[i].Blip = VBlip
+				break
+			else
+				local VBlip = AddBlipForCoord(Zemljista[i].MKoord.x, Zemljista[i].MKoord.y, Zemljista[i].MKoord.z)
+				SetBlipAlpha(VBlip, 255)
+				SetBlipSprite(VBlip, 285)
+				SetBlipColour (VBlip, 3)
+				SetBlipAsShortRange(VBlip, true)
+				SetBlipDisplay(VBlip, 2)
+				BeginTextCommandSetBlipName("STRING")
+				AddTextComponentString('Zemljiste')
+				EndTextCommandSetBlipName(VBlip)
+				Zemljista[i].Blip = VBlip
+				break
+			end
+		end
+	end
+end
+
+RegisterNetEvent('zemljista:ObrisiBlip')
+AddEventHandler('zemljista:ObrisiBlip', function(ime)
+	for i=1, #Zemljista, 1 do
+		if Zemljista[i] ~= nil and Zemljista[i].Ime == ime then
+			if Zemljista[i].Blip ~= nil then
+				RemoveBlip(Zemljista[i].Blip)
+			end
+			break
+		end
+	end
+end)
 
 function SpawnKucu(data)
 	local model = GetHashKey(data.Kuca)
@@ -226,6 +278,7 @@ function OpenZemljisteMenu(ime)
 			local kordac = GetEntityCoords(Kuca)
 			Citizen.CreateThread(function()
 				while Kuca ~= nil do
+					DrawBox(a,b,c,d,e,f+0.4, 0, 255, 0, 100)
 					DrawScaleformMovieFullscreen(ButtonsScaleform,255,255,255,255,0)
 						if IsControlJustPressed(0, 175) then
 							if (brojic+1) <= 15 then
@@ -375,10 +428,16 @@ function OpenZemljisteMenu(ime)
 									local heading = GetEntityHeading(Kuca)
 									table.insert(Kuce, {Zemljiste = ime, Objekt = Kuca})
 									TriggerServerEvent("zemljista:SpremiKucu", ime, korda, heading, Config.Kuce[brojic])
+									CurrentAction     = 'menu_zemljiste'
+									CurrentActionMsg  = "Pritisnite E da vidite opcije zemljista"
+									CurrentActionData = {ime = ime}
 								else
 									ESX.ShowNotification("Nemate dovoljno novca!")
 									DeleteObject(Kuca)
 									Kuca = nil
+									CurrentAction     = 'menu_zemljiste'
+									CurrentActionMsg  = "Pritisnite E da vidite opcije zemljista"
+									CurrentActionData = {ime = ime}
 								end
 							end, 1)
 							break
@@ -387,6 +446,9 @@ function OpenZemljisteMenu(ime)
 							FreezeEntityPosition(PlayerPedId(), false)
 							DeleteObject(Kuca)
 							Kuca = nil
+							CurrentAction     = 'menu_zemljiste'
+							CurrentActionMsg  = "Pritisnite E da vidite opcije zemljista"
+							CurrentActionData = {ime = ime}
 							break
 						end
 						Citizen.Wait(1)
@@ -411,12 +473,15 @@ function OpenZemljisteMenu(ime)
 					break
 				end
 			end
+			local a,b,c = table.unpack(kord1)
+			local d,e,f = table.unpack(kord2)
 			local controls = CreateControls(2)
 			ButtonsScaleform = Instructional.Create(controls)
 			local kordac = GetEntityCoords(Kuca)
 			local headic = GetEntityHeading(Kuca)
 			Citizen.CreateThread(function()
 				while Kuca ~= nil do
+					DrawBox(a,b,c,d,e,f+0.4, 0, 255, 0, 100)
 					DrawScaleformMovieFullscreen(ButtonsScaleform,255,255,255,255,0)
 						if IsControlPressed(0, 172) then
 							local korde1 = nil
@@ -533,6 +598,9 @@ function OpenZemljisteMenu(ime)
 							local korda = GetEntityCoords(Kuca)
 							local heading = GetEntityHeading(Kuca)
 							TriggerServerEvent("zemljista:UrediKucu", ime, korda, heading)
+							CurrentAction     = 'menu_zemljiste'
+							CurrentActionMsg  = "Pritisnite E da vidite opcije zemljista"
+							CurrentActionData = {ime = ime}
 							break
 						end
 						if IsControlJustPressed(0, 73) then
@@ -540,19 +608,76 @@ function OpenZemljisteMenu(ime)
 							SetEntityCoords(Kuca, kordac)
 							SetEntityHeading(Kuca, headic)
 							Kuca = nil
+							CurrentAction     = 'menu_zemljiste'
+							CurrentActionMsg  = "Pritisnite E da vidite opcije zemljista"
+							CurrentActionData = {ime = ime}
 							break
 						end
 						Citizen.Wait(1)
 				end
 			end)
 		elseif data.current.value == 'prodaj' then
-			menu.close()
-			TriggerServerEvent("zemljista:ProdajZemljiste", ime)
+			local elements2 = {
+				{label = "Da", value = 'da'},
+				{label = "Ne", value = 'ne'}
+			}
+			ESX.UI.Menu.Open( 'default', GetCurrentResourceName(), 'zemljiste2',
+			{
+				title    = "Zelite li prodati zemljiste za $"..(cijena/2).."?",
+				align    = 'top-left',
+				elements = elements2,
+			},
+			function(data2, menu2)
+				if data2.current.value == 'da' then
+					menu2.close()
+					menu.close()
+					TriggerServerEvent("zemljista:ProdajZemljiste", ime)
+					CurrentAction     = 'menu_zemljiste'
+					CurrentActionMsg  = "Pritisnite E da vidite opcije zemljista"
+					CurrentActionData = {ime = ime}
+				elseif data2.current.value == 'ne' then
+					menu2.close()
+				end
+			end,
+			function(data2, menu2)
+				menu2.close()
+				CurrentAction     = 'menu_zemljiste'
+				CurrentActionMsg  = "Pritisnite E da vidite opcije zemljista"
+				CurrentActionData = {ime = ime}
+			end
+			)
 		elseif data.current.value == 'kuca2' then
 			ESX.TriggerServerCallback('zemljista:ImalPara', function(imal)
 				if imal then
-					menu.close()
-					TriggerServerEvent("zemljista:SrusiKucu", ime)
+					local elements2 = {
+						{label = "Da", value = 'da'},
+						{label = "Ne", value = 'ne'}
+					}
+					ESX.UI.Menu.Open( 'default', GetCurrentResourceName(), 'zemljiste2',
+					{
+						title    = "Zelite li srusiti kucu za $30000?",
+						align    = 'top-left',
+						elements = elements2,
+					},
+					function(data2, menu2)
+						if data2.current.value == 'da' then
+							menu2.close()
+							menu.close()
+							TriggerServerEvent("zemljista:SrusiKucu", ime)
+							CurrentAction     = 'menu_zemljiste'
+							CurrentActionMsg  = "Pritisnite E da vidite opcije zemljista"
+							CurrentActionData = {ime = ime}
+						elseif data2.current.value == 'ne' then
+							menu2.close()
+						end
+					end,
+					function(data2, menu2)
+						menu2.close()
+						CurrentAction     = 'menu_zemljiste'
+						CurrentActionMsg  = "Pritisnite E da vidite opcije zemljista"
+						CurrentActionData = {ime = ime}
+					end
+					)
 				else
 					ESX.ShowNotification("Nemate dovoljno novca!")
 				end
@@ -569,10 +694,12 @@ function OpenZemljisteMenu(ime)
 						local korde = GetEntityCoords(PlayerPedId())
 						TriggerServerEvent("zemljista:PostaviUlaz", ime, korde)
 						trazi = false
+						break
 					end
 					if IsControlPressed(0, 186) then
 						trazi = false
 						ESX.ShowNotification("Odustali ste od postavljanja ulaza u kucu!")
+						break
 					end
 				end
 			end)
@@ -588,52 +715,88 @@ function OpenZemljisteMenu(ime)
 						local korde = GetEntityCoords(PlayerPedId())
 						TriggerServerEvent("zemljista:UrediUlaz", ime, korde)
 						trazi = false
+						CurrentAction     = 'menu_zemljiste'
+						CurrentActionMsg  = "Pritisnite E da vidite opcije zemljista"
+						CurrentActionData = {ime = ime}
+						break
 					end
 					if IsControlPressed(0, 186) then
 						trazi = false
 						ESX.ShowNotification("Odustali ste od postavljanja ulaza u kucu!")
+						CurrentAction     = 'menu_zemljiste'
+						CurrentActionMsg  = "Pritisnite E da vidite opcije zemljista"
+						CurrentActionData = {ime = ime}
+						break
 					end
 				end
 			end)
 		elseif data.current.value == 'kupi' then
 			ESX.TriggerServerCallback('loaf_housing:ImalKucu', function(imal)
 				if not imal then
-					local elements2 = {
-						{label = "Da", value = 'da'},
-						{label = "Ne", value = 'ne'}
-					}
-					ESX.UI.Menu.Open(
-					  'default', GetCurrentResourceName(), 'zemljiste2',
-					  {
-						title    = "Zelite li kupiti zemljiste za $"..cijena.."?",
-						align    = 'top-left',
-						elements = elements2,
-					  },
-					  function(data2, menu2)
-						if data2.current.value == 'da' then
-							TriggerServerEvent("zemljista:Kupi", ime)
-							menu2.close()
-							menu.close()
-							CurrentAction     = 'menu_zemljiste'
-							CurrentActionMsg  = "Pritisnite E da vidite opcije zemljista"
-							CurrentActionData = {ime = ime}
-						elseif data2.current.value == 'ne' then
-							menu2.close()
-							menu.close()
-							CurrentAction     = 'menu_zemljiste'
-							CurrentActionMsg  = "Pritisnite E da vidite opcije zemljista"
-							CurrentActionData = {ime = ime}
+					ESX.TriggerServerCallback('zemljista:ImalZemljiste', function(imal2)
+						if not imal2 then
+							local umenu = true
+							Citizen.CreateThread(function()
+								local kord1 = nil
+								local kord2 = nil
+								for i=1, #Koord, 1 do
+									if Koord[i] ~= nil and Koord[i].Zemljiste == ime then
+										kord1 = Koord[i].Coord
+										if Koord[i].Coord2 ~= nil then
+											kord2 = Koord[i].Coord2
+										end
+										break
+									end
+								end
+								local a,b,c = table.unpack(kord1)
+								local d,e,f = table.unpack(kord2)
+								while umenu do
+									DrawBox(a,b,c,d,e,f+0.4, 0, 255, 0, 100)
+									Citizen.Wait(1)
+								end
+							end)
+							local elements2 = {
+								{label = "Da", value = 'da'},
+								{label = "Ne", value = 'ne'}
+							}
+							ESX.UI.Menu.Open(
+							  'default', GetCurrentResourceName(), 'zemljiste2',
+							  {
+								title    = "Zelite li kupiti zemljiste za $"..cijena.."?",
+								align    = 'top-left',
+								elements = elements2,
+							  },
+							  function(data2, menu2)
+								if data2.current.value == 'da' then
+									umenu = false
+									TriggerServerEvent("zemljista:Kupi", ime)
+									menu2.close()
+									menu.close()
+									CurrentAction     = 'menu_zemljiste'
+									CurrentActionMsg  = "Pritisnite E da vidite opcije zemljista"
+									CurrentActionData = {ime = ime}
+								elseif data2.current.value == 'ne' then
+									umenu = false
+									menu2.close()
+									menu.close()
+									CurrentAction     = 'menu_zemljiste'
+									CurrentActionMsg  = "Pritisnite E da vidite opcije zemljista"
+									CurrentActionData = {ime = ime}
+								end
+							  end,
+							  function(data2, menu2)
+								umenu = false
+								menu2.close()
+
+								CurrentAction     = 'menu_zemljiste'
+								CurrentActionMsg  = "Pritisnite E da vidite opcije zemljista"
+								CurrentActionData = {ime = ime}
+							  end
+							)
+						else
+							ESX.ShowNotification("Vec imate kupljeno zemljiste!")
 						end
-					  end,
-					  function(data2, menu2)
-
-						menu2.close()
-
-						CurrentAction     = 'menu_zemljiste'
-						CurrentActionMsg  = "Pritisnite E da vidite opcije zemljista"
-						CurrentActionData = {ime = ime}
-					  end
-					)
+					end)
 				else
 					ESX.ShowNotification("Vec imate kupljenu kucu!")
 				end
@@ -820,6 +983,11 @@ end)
 AddEventHandler('zemljista:hasExitedMarker', function(station, part, partNum)
   ESX.UI.Menu.CloseAll()
   CurrentAction = nil
+end)
+
+RegisterNetEvent('zemljista:RefreshBlip')
+AddEventHandler('zemljista:RefreshBlip', function(ime)
+	SpawnBlip(ime)
 end)
 
 RegisterNetEvent('zemljista:UpdateKoord')
