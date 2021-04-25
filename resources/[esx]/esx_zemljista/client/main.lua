@@ -75,20 +75,37 @@ AddEventHandler('zemljista:ObrisiKucu', function(ime)
 	end
 end)
 
-function firstToUpper(str)
-    return (str:gsub("^%l", string.upper))
-end
+RegisterNetEvent('zemljista:NovaLokacija')
+AddEventHandler('zemljista:NovaLokacija', function(ime, kord, head)
+	for i=1, #Kuce, 1 do
+		if Kuce[i] ~= nil and Kuce[i].Zemljiste == ime then
+			SetEntityCoords(Kuce[i].Objekt, kord)
+			SetEntityHeading(Kuce[i].Objekt, head)
+			break
+		end
+	end
+end)
 
-CreateControls = function()
+CreateControls = function(br)
   local controls
-  controls = {
-      [1] = Config.Controls["direction"],
-      [2] = Config.Controls["heading"],
-      [3] = Config.Controls["height"],
-      [4] = Config.Controls["camera"],
-      [5] = Config.Controls["zoom"],
-  }
-
+  if br == 1 then
+	  controls = {
+		  [1] = Config.Controls["direction"],
+		  [2] = Config.Controls["heading"],
+		  [3] = Config.Controls["height"],
+		  [4] = Config.Controls["kuce"],
+		  [5] = Config.Controls["camera"],
+		  [6] = Config.Controls["zoom"],
+	  }
+  else
+	controls = {
+		  [1] = Config.Controls["direction"],
+		  [2] = Config.Controls["heading"],
+		  [3] = Config.Controls["height"],
+		  [4] = Config.Controls["camera"],
+		  [5] = Config.Controls["zoom"],
+	}
+  end
   return controls
 end
 
@@ -134,6 +151,7 @@ function OpenZemljisteMenu(ime)
 			if not kuca then
 				table.insert(elements, {label = "Izgradi kucu (100000$)", value = 'kuca'})
 			else
+				table.insert(elements, {label = "Premjesti kucu", value = 'kuca3'})
 				table.insert(elements, {label = "Srusi kucu(30000$)", value = 'kuca2'})
 			end
 			if kuca then
@@ -203,7 +221,7 @@ function OpenZemljisteMenu(ime)
 			PlaceObjectOnGroundProperly(Kuca)
 			FreezeEntityPosition(PlayerPedId(), true)
 			SetModelAsNoLongerNeeded(model)
-			local controls = CreateControls()
+			local controls = CreateControls(1)
 			ButtonsScaleform = Instructional.Create(controls)
 			local kordac = GetEntityCoords(Kuca)
 			Citizen.CreateThread(function()
@@ -374,6 +392,159 @@ function OpenZemljisteMenu(ime)
 						Citizen.Wait(1)
 				end
 			end)
+		elseif data.current.value == 'kuca3' then
+			menu.close()
+			FreezeEntityPosition(PlayerPedId(), true)
+			local kord1 = nil
+			local kord2 = nil
+			for i=1, #Koord, 1 do
+				if Koord[i] ~= nil and Koord[i].Zemljiste == ime then
+					kord1 = Koord[i].Coord
+					if Koord[i].Coord2 ~= nil then
+						kord2 = Koord[i].Coord2
+					end
+				end
+			end
+			for i=1, #Kuce, 1 do
+				if Kuce[i] ~= nil and Kuce[i].Zemljiste == ime then
+					Kuca = Kuce[i].Objekt
+					break
+				end
+			end
+			local controls = CreateControls(2)
+			ButtonsScaleform = Instructional.Create(controls)
+			local kordac = GetEntityCoords(Kuca)
+			local headic = GetEntityHeading(Kuca)
+			Citizen.CreateThread(function()
+				while Kuca ~= nil do
+					DrawScaleformMovieFullscreen(ButtonsScaleform,255,255,255,255,0)
+						if IsControlPressed(0, 172) then
+							local korde1 = nil
+							local corde = GetOffsetFromEntityInWorldCoords(Kuca, 0.0, 0.0, 0.01)
+							if corde.z < kordac.z+0.5 then
+								SetEntityCoords(Kuca, corde)
+								--PlaceObjectOnGroundProperly(Kuca)
+							end
+						end
+						if IsControlPressed(0, 173) then
+							local korde1 = nil
+							local corde = GetOffsetFromEntityInWorldCoords(Kuca, 0.0, 0.0, -0.01)
+							if corde.z > kordac.z-0.5 then
+								SetEntityCoords(Kuca, corde)
+								--PlaceObjectOnGroundProperly(Kuca)
+							end
+						end
+						if IsControlPressed(0, 32) then
+							local korde1 = nil
+							local korde2 = nil
+							local corde = GetOffsetFromEntityInWorldCoords(Kuca, 0.0, 0.1, 0.0)
+							local cordea = GetOffsetFromEntityInWorldCoords(Kuca, 0.0, 10.0, 0.0)
+							local x,y,z = table.unpack(kord1)
+							local x2,y2,z2 = table.unpack(kord2)
+							if x < x2 then
+								korde1 = kord1
+								korde2 = kord2
+							else
+								korde2 = kord1
+								korde1 = kord2
+							end
+							x,y,z = table.unpack(korde1)
+							x2,y2,z2 = table.unpack(korde2)
+							if cordea.x >= x and cordea.y >= y and cordea.x <= x2 and cordea.y <= y2 then
+								SetEntityCoords(Kuca, corde)
+								PlaceObjectOnGroundProperly(Kuca)
+							end
+						end
+						if IsControlPressed(0, 33) then
+							local korde1 = nil
+							local korde2 = nil
+							local corde = GetOffsetFromEntityInWorldCoords(Kuca, 0.0, -0.1, 0.0)
+							local cordea = GetOffsetFromEntityInWorldCoords(Kuca, 0.0, -10.0, 0.0)
+							local x,y,z = table.unpack(kord1)
+							local x2,y2,z2 = table.unpack(kord2)
+							if x < x2 then
+								korde1 = kord1
+								korde2 = kord2
+							else
+								korde2 = kord1
+								korde1 = kord2
+							end
+							x,y,z = table.unpack(korde1)
+							x2,y2,z2 = table.unpack(korde2)
+							if cordea.x >= x and cordea.y >= y and cordea.x <= x2 and cordea.y <= y2 then
+								SetEntityCoords(Kuca, corde)
+								PlaceObjectOnGroundProperly(Kuca)
+							end
+						end
+						if IsControlPressed(0, 34) then
+							local korde1 = nil
+							local korde2 = nil
+							local corde = GetOffsetFromEntityInWorldCoords(Kuca, 0.1, 0.0, 0.0)
+							local cordea = GetOffsetFromEntityInWorldCoords(Kuca, 10.0, 0.0, 0.0)
+							local x,y,z = table.unpack(kord1)
+							local x2,y2,z2 = table.unpack(kord2)
+							if x < x2 then
+								korde1 = kord1
+								korde2 = kord2
+							else
+								korde2 = kord1
+								korde1 = kord2
+							end
+							x,y,z = table.unpack(korde1)
+							x2,y2,z2 = table.unpack(korde2)
+							if cordea.x >= x and cordea.y >= y and cordea.x <= x2 and cordea.y <= y2 then
+								SetEntityCoords(Kuca, corde)
+								PlaceObjectOnGroundProperly(Kuca)
+							end
+						end
+						if IsControlPressed(0, 35) then
+							local korde1 = nil
+							local korde2 = nil
+							local corde = GetOffsetFromEntityInWorldCoords(Kuca, -0.1, 0.0, 0.0)
+							local cordea = GetOffsetFromEntityInWorldCoords(Kuca, -10.0, 0.0, 0.0)
+							local x,y,z = table.unpack(kord1)
+							local x2,y2,z2 = table.unpack(kord2)
+							if x < x2 then
+								korde1 = kord1
+								korde2 = kord2
+							else
+								korde2 = kord1
+								korde1 = kord2
+							end
+							x,y,z = table.unpack(korde1)
+							x2,y2,z2 = table.unpack(korde2)
+							if cordea.x >= x and cordea.y >= y and cordea.x <= x2 and cordea.y <= y2 then
+								SetEntityCoords(Kuca, corde)
+								PlaceObjectOnGroundProperly(Kuca)
+							end
+						end
+						if IsControlPressed(0, 52) then
+							local head = GetEntityHeading(Kuca)
+							SetEntityHeading(Kuca, head+1.0)
+							--PlaceObjectOnGroundProperly(Kuca)
+						end
+						if IsControlPressed(0, 51) then
+							local head = GetEntityHeading(Kuca)
+							SetEntityHeading(Kuca, head-1.0)
+							--PlaceObjectOnGroundProperly(Kuca)
+						end
+						if IsControlJustPressed(0, 191) then
+							FreezeEntityPosition(PlayerPedId(), false)
+							local korda = GetEntityCoords(Kuca)
+							local heading = GetEntityHeading(Kuca)
+							TriggerServerEvent("zemljista:UrediKucu", ime, korda, heading)
+							break
+						end
+						if IsControlJustPressed(0, 73) then
+							FreezeEntityPosition(PlayerPedId(), false)
+							SetEntityCoords(Kuca, kordac)
+							SetEntityHeading(Kuca, headic)
+							Kuca = nil
+							break
+						end
+						Citizen.Wait(1)
+				end
+			end)
 		elseif data.current.value == 'prodaj' then
 			menu.close()
 			TriggerServerEvent("zemljista:ProdajZemljiste", ime)
@@ -483,535 +654,69 @@ end
 RegisterCommand("uredizemljiste", function(source, args, raw)
 	local elements = {}
 	
-	for i=1, #njive, 1 do
-		if njive[i] ~= nil then
-			table.insert(elements, {label = njive[i].Label, value = njive[i].Ime})
+	for i=1, #Zemljista, 1 do
+		if Zemljista[i] ~= nil then
+			table.insert(elements, {label = Zemljista[i].Ime, value = Zemljista[i].Ime})
 		end
 	end
 	
-	table.insert(elements, {label = "Kreiraj mafiju", value = "nova"})
+	table.insert(elements, {label = "Kreiraj zemljiste", value = "nova"})
 
     ESX.UI.Menu.Open(
-		'default', GetCurrentResourceName(), 'umafiju',
+		'default', GetCurrentResourceName(), 'uzemlj',
 		{
-			title    = "Izaberite mafiju",
+			title    = "Izaberite zemljiste",
 			align    = 'top-left',
 			elements = elements,
 		},
 		function(data, menu)
 			if data.current.value == "nova" then
-				ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'rankime', {
-					title = "Upisite ime njive",
+				ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'cijena', {
+					title = "Upisite cijenu zemljista",
 				}, function (datari, menuri)
-					local mIme = datari.value
+					local mCijena = datari.value
 												
-					if mIme == nil then
+					if mCijena == nil or mCijena < 0 then
 						ESX.ShowNotification('Greska.')
 					else
 						menuri.close()
-						ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'ranklabel', {
-							title = "Upisite label njive",
-						}, function (datarl, menurl)
-							local mLabel = datarl.value
-														
-							if mLabel == nil then
-								ESX.ShowNotification('Greska.')
-							else
-								menurl.close()
-								menu.close()
-								TriggerServerEvent("zemljista:NapraviMafiju", mIme, mLabel)
-							end
-						end, function (datarl, menurl)
-							menurl.close()
-						end)
+						menu.close()
+						local korda = GetEntityCoords(PlayerPedId())
+						TriggerServerEvent("zemljista:NapraviZemljiste", mCijena, korda)
 					end
 				end, function (datari, menuri)
 					menuri.close()
 				end)
 			else
-				local Imenjive = data.current.value
+				local ime = data.current.value
 				elements = {}
-				table.insert(elements, {label = "Rankovi", value = "rankovi"})
-				table.insert(elements, {label = "Vozila", value = "vozila"})
-				table.insert(elements, {label = "Oruzja", value = "oruzja"})
-				table.insert(elements, {label = "Koordinate", value = "koord"})
-				table.insert(elements, {label = "Boje", value = "boje"})
-				--table.insert(elements, {label = "Promjeni ime", value = "ime"})
-				table.insert(elements, {label = "Obrisi mafiju", value = "obrisi"})
+				table.insert(elements, {label = "Premjesti marker", value = "mkoord"})
+				table.insert(elements, {label = "Postavi min koord", value = "koord1"})
+				table.insert(elements, {label = "Postavi max koord", value = "koord2"})
+				table.insert(elements, {label = "Makni vlasnika", value = "vlasnik"})
+				table.insert(elements, {label = "Obrisi kucu", value = "obrisik"})
+				table.insert(elements, {label = "Obrisi zemljiste", value = "obrisi"})
 				ESX.UI.Menu.Open(
-					'default', GetCurrentResourceName(), 'umafiju2',
+					'default', GetCurrentResourceName(), 'uzemlj2',
 					{
 						title    = "Izaberite opciju",
 						align    = 'top-left',
 						elements = elements,
 					},
 					function(data2, menu2)
-						if data2.current.value == "rankovi" then
-							elements = {}
-							
-							for i=1, #Rankovi, 1 do
-								if Rankovi[i] ~= nil and Rankovi[i].Mafija == Imenjive then
-									table.insert(elements, {label = Rankovi[i].Ime, value = Rankovi[i].ID})
-								end
-							end
-							
-							table.insert(elements, {label = "Napravi novi rank", value = "novi"})
-
-							ESX.UI.Menu.Open(
-							  'default', GetCurrentResourceName(), 'listarankova',
-							  {
-								title    = "Izaberite opciju",
-								align    = 'top-left',
-								elements = elements,
-							  },
-							  function(datalr, menulr)
-								if datalr.current.value == 'novi' then
-									menulr.close()
-									ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'rankid', {
-										title = "Upisite rank ID",
-									}, function (datar, menur)
-										local rID = tonumber(datar.value)
-										
-										if rID == nil then
-											ESX.ShowNotification('Greska.')
-										else
-											menur.close()
-											ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'rankime', {
-												title = "Upisite ime ranka",
-											}, function (datari, menuri)
-												local rIme = datari.value
-												
-												if rIme == nil then
-													ESX.ShowNotification('Greska.')
-												else
-													menuri.close()
-													ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'ranklabel', {
-														title = "Upisite label ranka",
-													}, function (datarl, menurl)
-														local rLabel = datarl.value
-														
-														if rLabel == nil then
-															ESX.ShowNotification('Greska.')
-														else
-															menurl.close()
-															TriggerServerEvent("zemljista:NapraviRank", Imenjive, rID, rIme, rLabel)
-														end
-													end, function (datarl, menurl)
-														menurl.close()
-													end)
-												end
-											end, function (datari, menuri)
-												menuri.close()
-											end)
-										end
-									end, function (datar, menur)
-										menur.close()
-									end)
-								else
-									local rankid = datalr.current.value
-									menulr.close()
-									elements = {}
-									table.insert(elements, {label = "Uredi rank", value = 'uredi'})
-									table.insert(elements, {label = 'Obrisi rank',  value = 'obrisi'})
-
-									ESX.UI.Menu.Open(
-									  'default', GetCurrentResourceName(), 'birasranka',
-									  {
-										title    = "Izaberite opciju",
-										align    = 'top-left',
-										elements = elements,
-									  },
-									  function(datauo, menuuo)
-										if datauo.current.value == 'uredi' then
-											menuuo.close()
-											ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'rankime', {
-												title = "Upisite ime ranka",
-											}, function (datari, menuri)
-												local rIme = datari.value
-												
-												if rIme == nil then
-													ESX.ShowNotification('Greska.')
-												else
-													menuri.close()
-													ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'ranklabel', {
-														title = "Upisite label ranka",
-													}, function (datarl, menurl)
-														local rLabel = datarl.value
-														
-														if rLabel == nil then
-															ESX.ShowNotification('Greska.')
-														else
-															menurl.close()
-															TriggerServerEvent("zemljista:NapraviRank", Imenjive, rankid, rIme, rLabel)
-														end
-													end, function (datarl, menurl)
-														menurl.close()
-													end)
-												end
-											end, function (datari, menuri)
-												menuri.close()
-											end)
-										end
-
-										if datauo.current.value == 'obrisi' then
-											menuuo.close()
-											TriggerServerEvent("zemljista:ObrisiRank", rankid, Imenjive)
-										end
-									  end,
-									  function(datauo, menuuo)
-										menuuo.close()
-									  end
-									)
-								end
-							  end,
-							  function(datalr, menulr)
-								menulr.close()
-							  end
-							)
-						elseif data2.current.value == "vozila" then
-							elements = {}
-							
-							for i=1, #Vozila, 1 do
-								if Vozila[i].Mafija == Imenjive then
-									table.insert(elements, {label = Vozila[i].Label, value = Vozila[i].Ime})
-								end
-							end
-							
-							table.insert(elements, {label = "Dodaj novo vozilo", value = "novi"})
-
-							ESX.UI.Menu.Open(
-							  'default', GetCurrentResourceName(), 'listarankova',
-							  {
-								title    = "Izaberite opciju",
-								align    = 'top-left',
-								elements = elements,
-							  },
-							  function(datalr, menulr)
-								if datalr.current.value == 'novi' then
-									menulr.close()
-									ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'rankid', {
-										title = "Upisite spawn ime vozila",
-									}, function (datar, menur)
-										local vIme = datar.value
-										
-										if vIme == nil then
-											ESX.ShowNotification('Greska.')
-										else
-											menur.close()
-											ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'rankime', {
-												title = "Upisite naziv vozila(label)",
-											}, function (datari, menuri)
-												local vLabel = datari.value
-												
-												if vLabel == nil then
-													ESX.ShowNotification('Greska.')
-												else
-													menuri.close()
-													TriggerServerEvent("zemljista:DodajVozilo", Imenjive, vIme, vLabel)
-												end
-											end, function (datari, menuri)
-												menuri.close()
-											end)
-										end
-									end, function (datar, menur)
-										menur.close()
-									end)
-								else
-									local voziloime = datalr.current.value
-									menulr.close()
-									elements = {}
-									table.insert(elements, {label = "Uredi vozilo", value = 'uredi'})
-									table.insert(elements, {label = 'Obrisi vozilo',  value = 'obrisi'})
-
-									ESX.UI.Menu.Open(
-									  'default', GetCurrentResourceName(), 'birasranka',
-									  {
-										title    = "Izaberite opciju",
-										align    = 'top-left',
-										elements = elements,
-									  },
-									  function(datauo, menuuo)
-										if datauo.current.value == 'uredi' then
-											menuuo.close()
-											ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'rankid', {
-												title = "Upisite spawn ime vozila",
-											}, function (datar, menur)
-												local vIme = datar.value
-												
-												if vIme == nil then
-													ESX.ShowNotification('Greska.')
-												else
-													menur.close()
-													ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'rankime', {
-														title = "Upisite naziv vozila(label)",
-													}, function (datari, menuri)
-														local vLabel = datari.value
-														
-														if vLabel == nil then
-															ESX.ShowNotification('Greska.')
-														else
-															menuri.close()
-															TriggerServerEvent("zemljista:DodajVozilo", Imenjive, vIme, vLabel, voziloime)
-														end
-													end, function (datari, menuri)
-														menuri.close()
-													end)
-												end
-											end, function (datar, menur)
-												menur.close()
-											end)
-										end
-
-										if datauo.current.value == 'obrisi' then
-											menuuo.close()
-											TriggerServerEvent("zemljista:ObrisiVozilo", voziloime, Imenjive)
-										end
-									  end,
-									  function(datauo, menuuo)
-										menuuo.close()
-									  end
-									)
-								end
-							  end,
-							  function(datalr, menulr)
-								menulr.close()
-							  end
-							)
-						elseif data2.current.value == "oruzja" then
-							elements = {}
-							
-							for i=1, #Oruzja, 1 do
-								if Oruzja[i].Mafija == Imenjive then
-									table.insert(elements, {label = ESX.GetWeaponLabel(Oruzja[i].Ime), value = Oruzja[i].Ime})
-								end
-							end
-							
-							table.insert(elements, {label = "Dodaj novo oruzje", value = "novi"})
-
-							ESX.UI.Menu.Open(
-							  'default', GetCurrentResourceName(), 'listarankova',
-							  {
-								title    = "Izaberite opciju",
-								align    = 'top-left',
-								elements = elements,
-							  },
-							  function(datalr, menulr)
-								if datalr.current.value == 'novi' then
-									menulr.close()
-									ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'rankid', {
-										title = "Upisite spawn ime oruzja(weapon_)",
-									}, function (datar, menur)
-										local orIme = datar.value
-										
-										if orIme == nil then
-											ESX.ShowNotification('Greska.')
-										else
-											menur.close()
-											ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'rankime', {
-												title = "Upisite cijenu oruzja",
-											}, function (datari, menuri)
-												local orCijena = tonumber(datari.value)
-												
-												if orCijena == nil then
-													ESX.ShowNotification('Greska.')
-												else
-													menuri.close()
-													TriggerServerEvent("zemljista:DodajOruzje", Imenjive, orIme, orCijena)
-												end
-											end, function (datari, menuri)
-												menuri.close()
-											end)
-										end
-									end, function (datar, menur)
-										menur.close()
-									end)
-								else
-									local oruzjeime = datalr.current.value
-									menulr.close()
-									elements = {}
-									table.insert(elements, {label = "Uredi oruzje", value = 'uredi'})
-									table.insert(elements, {label = 'Obrisi oruzje',  value = 'obrisi'})
-
-									ESX.UI.Menu.Open(
-									  'default', GetCurrentResourceName(), 'birasranka',
-									  {
-										title    = "Izaberite opciju",
-										align    = 'top-left',
-										elements = elements,
-									  },
-									  function(datauo, menuuo)
-										if datauo.current.value == 'uredi' then
-											menuuo.close()
-											ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'rankid', {
-												title = "Upisite spawn ime oruzja(weapon_)",
-											}, function (datar, menur)
-												local orIme = datar.value
-												
-												if orIme == nil then
-													ESX.ShowNotification('Greska.')
-												else
-													menur.close()
-													ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'rankime', {
-														title = "Upisite cijenu oruzja",
-													}, function (datari, menuri)
-														local orCijena = tonumber(datari.value)
-														
-														if orCijena == nil then
-															ESX.ShowNotification('Greska.')
-														else
-															menuri.close()
-															TriggerServerEvent("zemljista:DodajOruzje", Imenjive, orIme, orCijena, oruzjeime)
-														end
-													end, function (datari, menuri)
-														menuri.close()
-													end)
-												end
-											end, function (datar, menur)
-												menur.close()
-											end)
-										end
-
-										if datauo.current.value == 'obrisi' then
-											menuuo.close()
-											TriggerServerEvent("zemljista:ObrisiOruzje", oruzjeime, Imenjive)
-										end
-									  end,
-									  function(datauo, menuuo)
-										menuuo.close()
-									  end
-									)
-								end
-							  end,
-							  function(datalr, menulr)
-								menulr.close()
-							  end
-							)
-						elseif data2.current.value == "koord" then
-							elements = {}
-							
-							table.insert(elements, {label = "Postavi koordinate oruzarnice", value = "1"})
-							table.insert(elements, {label = "Postavi koordinate lider menua", value = "2"})
-							table.insert(elements, {label = "Postavi koordinate spawna vozila(marker)", value = "3"})
-							table.insert(elements, {label = "Postavi koordinate brisanja vozila(marker)", value = "4"})
-							table.insert(elements, {label = "Postavi koordinate spawna vozila", value = "5"})
-							table.insert(elements, {label = "Postavi koordinate crate dropa", value = "6"})
-
-							ESX.UI.Menu.Open(
-							  'default', GetCurrentResourceName(), 'listarankova',
-							  {
-								title    = "Izaberite opciju",
-								align    = 'top-left',
-								elements = elements,
-							  },
-							  function(datalr, menulr)
-								local mid = datalr.current.value
-								local coord = GetEntityCoords(PlayerPedId())
-								local head = GetEntityHeading(PlayerPedId())
-								TriggerServerEvent("zemljista:SpremiCoord", Imenjive, coord, tonumber(mid), head)
-							  end,
-							  function(datalr, menulr)
-								menulr.close()
-							  end
-							)
-						elseif data2.current.value == "boje" then
-							elements = {}
-							
-							table.insert(elements, {label = "Postavi boju vozila", value = "1"})
-							if Config.Blipovi == true then
-								table.insert(elements, {label = "Postavi boju blipa", value = "2"})
-							end
-
-							ESX.UI.Menu.Open(
-							  'default', GetCurrentResourceName(), 'listarankova',
-							  {
-								title    = "Izaberite opciju",
-								align    = 'top-left',
-								elements = elements,
-							  },
-							  function(datalr, menulr)
-								if datalr.current.value == "1" then
-									local br = datalr.current.value
-									menulr.close()
-									ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'rankid', {
-										title = "Upisite R boju (Rgb)",
-									}, function (datar, menur)
-										local bojR = tonumber(datar.value)
-										
-										if bojR == nil then
-											ESX.ShowNotification('Greska.')
-										else
-											menur.close()
-											ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'rankime', {
-												title = "Upisite G boju (rGb)",
-											}, function (datari, menuri)
-												local bojG = tonumber(datari.value)
-												
-												if bojG == nil then
-													ESX.ShowNotification('Greska.')
-												else
-													menuri.close()
-													
-													ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'rankznj', {
-														title = "Upisite B boju (rgB)",
-													}, function (datarz, menurz)
-														local bojB = tonumber(datarz.value)
-														
-														if bojB == nil then
-															ESX.ShowNotification('Greska.')
-														else
-															menurz.close()
-															TriggerServerEvent("zemljista:DodajBoju", Imenjive, br, 2, bojR, bojG, bojB)
-														end
-													end, function (datarz, menurz)
-														menurz.close()
-													end)
-												end
-											end, function (datari, menuri)
-												menuri.close()
-											end)
-										end
-									end, function (datar, menur)
-										menur.close()
-									end)
-								elseif datalr.current.value == "2" then
-									local br = datalr.current.value
-									menulr.close()
-									ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'nestatamo', {
-										title = "Upisite ID blip boje",
-									}, function (datazn, menuzn)
-										local bojID = tonumber(datazn.value)
-															
-										if bojID == nil then
-											ESX.ShowNotification('Greska.')
-										else
-											menuzn.close()
-											TriggerServerEvent("zemljista:DodajBoju", Imenjive, br, bojID)
-										end
-									end, function (datazn, menuzn)
-										menuzn.close()
-									end)
-								end
-							  end,
-							  function(datalr, menulr)
-								menulr.close()
-							  end
-							)
-						elseif data2.current.value == "ime" then
-							ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'rankid', {
-								title = "Upisite label ime njive",
-							}, function (datar, menur)
-								local mafIme = datar.value
-								if mafIme == nil then
-									ESX.ShowNotification('Greska.')
-								else
-									menur.close()
-									menu2.close()
-									menu.close()
-									TriggerServerEvent("zemljista:PromjeniIme", Imenjive, mafIme)
-								end
-							end, function (datar, menur)
-								menur.close()
-							end)
+						if data2.current.value == "mkoord" then
+							local koord = GetEntityCoords(PlayerPedId())
+							TriggerServerEvent("zemljista:PremjestiMarker", ime, koord)
+						elseif data2.current.value == "koord1" then
+							local coord = GetEntityCoords(PlayerPedId())
+							TriggerServerEvent("zemljista:SpremiCoord", ime, coord, 1)
+						elseif data2.current.value == "koord2" then
+							local coord = GetEntityCoords(PlayerPedId())
+							TriggerServerEvent("zemljista:SpremiCoord", ime, coord, 2)
+						elseif data2.current.value == "vlasnik" then
+							TriggerServerEvent("zemljista:MakniVlasnika", ime)
+						elseif data2.current.value == "obrisik" then
+							TriggerServerEvent("zemljista:ObrisiKucu", ime)
 						elseif data2.current.value == "obrisi" then
 							elements = {}
 							
@@ -1019,9 +724,9 @@ RegisterCommand("uredizemljiste", function(source, args, raw)
 							table.insert(elements, {label = "Ne", value = "ne"})
 
 							ESX.UI.Menu.Open(
-							  'default', GetCurrentResourceName(), 'listarankova',
+							  'default', GetCurrentResourceName(), 'zelisli',
 							  {
-								title    = "Zelite li obrisati mafiju?",
+								title    = "Zelite li obrisati zemljiste?",
 								align    = 'top-left',
 								elements = elements,
 							  },
@@ -1030,7 +735,7 @@ RegisterCommand("uredizemljiste", function(source, args, raw)
 									menulr.close()
 									menu2.close()
 									menu.close()
-									TriggerServerEvent("zemljista:ObrisiMafiju", Imenjive)
+									TriggerServerEvent("zemljista:ObrisiZemljiste", ime)
 								else
 									menulr.close()
 								end
@@ -1158,7 +863,7 @@ Citizen.CreateThread(function()
 		local currentPartNum = nil
 		
 		for i=1, #Zemljista, 1 do
-			if Zemljista[i] ~= nil then
+			if Zemljista[i] ~= nil and Zemljista[i].MKoord ~= "{}" then
 				if #(coords-Zemljista[i].MKoord) < 100.0 then
 					waitara = 1
 					naso = 1

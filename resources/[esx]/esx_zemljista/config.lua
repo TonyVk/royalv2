@@ -28,7 +28,7 @@ Config.Kuce = {
 
 Config.Controls = {
       ["direction"] = {
-        codes = {32,33,34,35},
+        codes = {35,34,33,32},
         text = "Smjer",
       },
       ["heading"] = {
@@ -38,6 +38,10 @@ Config.Controls = {
       ["height"] = {
         codes = {172,173},
         text = "Visina",
+      },
+	  ["kuce"] = {
+        codes = {190,189},
+        text = "Izbor kuce",
       },
 	  ["camera"] = {
         codes = {191},
