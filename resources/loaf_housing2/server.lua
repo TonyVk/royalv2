@@ -35,20 +35,15 @@ MySQL.ready(function ()
 			local data = json.decode(result[i].door)
 			table.insert(Config.Houses, {['ID'] = result[i].ID, ['prop'] = result[i].prop, ['door'] = vector3(data.x, data.y, data.z), ['price'] = result[i].price, ['prodaja'] = result[i].prodaja})
 		end
-		TriggerClientEvent("loaf_housing:SaljiKuce", -1, Config.Houses)
+		Wait(1000)
+		TriggerClientEvent("loaf_housing:SaljiKucice", -1, Config.Houses)
 	end)
 end)
-
-RegisterCommand("prebacikuce", function(source, args, rawCommandString)
-	for k, v in pairs(Config.Houses) do
-		MySQL.Sync.execute("INSERT INTO kuce(prop, door, price) VALUES(@pr, @dr, @pric)", {['@pr'] = v['prop'], ['@dr'] = json.encode(v['door']), ['@pric'] = v['price']})
-	end
-end, false)
 
 RegisterNetEvent('loaf_housing:DodajKucu')
 AddEventHandler('loaf_housing:DodajKucu', function(id, prop, door, price, prod, src)
 	table.insert(Config.Houses, {['ID'] = id, ['prop'] = prop, ['door'] = door, ['price'] = price, ['prodaja'] = prod})
-	TriggerClientEvent("loaf_housing:SaljiKuce", -1, Config.Houses)
+	TriggerClientEvent("loaf_housing:SaljiKucice", -1, Config.Houses)
 	
     local xPlayer = ESX.GetPlayerFromId(src)
     MySQL.Async.fetchScalar("SELECT house FROM users WHERE identifier = @identifier", {['@identifier'] = xPlayer.identifier}, function(result)
@@ -75,7 +70,7 @@ AddEventHandler('loaf_housing:UrediKucu', function(id, door, src)
 			break
 		end
 	end
-	TriggerClientEvent("loaf_housing:SaljiKuce", -1, Config.Houses)
+	TriggerClientEvent("loaf_housing:SaljiKucice", -1, Config.Houses)
     Wait(1500)
     TriggerClientEvent('loaf_housing:reloadHouses', -1)
 end)
@@ -89,7 +84,7 @@ AddEventHandler('loaf_housing:ObrisiKucu', function(id)
 			break
 		end
 	end
-	TriggerClientEvent("loaf_housing:SaljiKuce", -1, Config.Houses)
+	TriggerClientEvent("loaf_housing:SaljiKucice", -1, Config.Houses)
     Wait(1500)
     TriggerClientEvent('loaf_housing:reloadHouses', -1)
 end)

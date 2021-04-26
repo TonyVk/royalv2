@@ -135,9 +135,10 @@ function SpawnVehicle(vehicle, co, he)
 	TriggerServerEvent("kuce:SpawnVozilo", vehicle, co, he)
 end
 
-RegisterNetEvent('loaf_housing:SaljiKuce')
-AddEventHandler('loaf_housing:SaljiKuce', function(kuce)
+RegisterNetEvent('loaf_housing:SaljiKucice')
+AddEventHandler('loaf_housing:SaljiKucice', function(kuce)
 	Config.Houses = kuce
+	print(#Config.Houses)
 end)
 
 RegisterNetEvent('kuce:VratiVozilo')
