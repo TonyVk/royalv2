@@ -138,7 +138,6 @@ end
 RegisterNetEvent('loaf_housing:SaljiKucice')
 AddEventHandler('loaf_housing:SaljiKucice', function(kuce)
 	Config.Houses = kuce
-	print(#Config.Houses)
 end)
 
 RegisterNetEvent('kuce:VratiVozilo')
@@ -1138,7 +1137,8 @@ local connected = false
 
 AddEventHandler("playerSpawned", function()
 	if not connected then
-		ESX.TriggerServerCallback('loaf_housing:DohvatiZadnjuKucu', function(id)
+		ESX.TriggerServerCallback('loaf_housing:DohvatiZadnjuKucu', function(id, kuce)
+			Config.Houses = kuce
 			if id ~= 0 then
 				local xa,ya,za
 				for ka, v in pairs(Config.Houses) do

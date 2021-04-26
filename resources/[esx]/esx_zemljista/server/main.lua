@@ -27,7 +27,7 @@ function UcitajZemljista()
 			local ete2 = json.decode(result[i].MKoord)
 			--x,y,z = table.unpack(ete2)
 			local kordici = vector3(ete2.x,ete2.y,ete2.z)
-			table.insert(Zemljista, {Ime = result[i].Ime, Cijena = result[i].Cijena, Vlasnik = result[i].Vlasnik, KKoord = korda, Heading = h, Kuca = result[i].Kuca, MKoord = kordici, KucaID = result[i].KucaID, Blip = nil})
+			table.insert(Zemljista, {Ime = result[i].Ime, Cijena = result[i].Cijena, Vlasnik = result[i].Vlasnik, KKoord = korda, Heading = h, Kuca = result[i].Kuca, MKoord = kordici, KucaID = result[i].KucaID})
 			local data = json.decode(result[i].Koord1)
 			local data2 = json.decode(result[i].Koord2)
 			table.insert(Koord, {Zemljiste = result[i].Ime, Coord = data, Coord2 = data2})
@@ -74,7 +74,6 @@ AddEventHandler('zemljista:ObrisiZemljiste', function(ime)
 	TriggerClientEvent("zemljista:UpdateKoord", -1, Koord)
 	TriggerClientEvent('esx:showNotification', src, 'Uspjesno obrisano zemljiste '..ime..'!')
 	TriggerClientEvent("zemljista:ObrisiBlip", -1, ime)
-	Wait(1500)
 	TriggerClientEvent("zemljista:UpdateZemljista", -1, Zemljista)
 end)
 
@@ -169,9 +168,10 @@ AddEventHandler('zemljista:NapraviZemljiste', function(cij, coord)
 		['@cijena'] = cij,
 		['@mk'] = json.encode(coord)
 	})
-	table.insert(Zemljista, {Ime = str, Cijena = cij, Vlasnik = nil, KKoord = nil, Heading = nil, Kuca = nil, MKoord = coord, KucaID = nil, Blip = nil})
+	table.insert(Zemljista, {Ime = str, Cijena = cij, Vlasnik = nil, KKoord = nil, Heading = nil, Kuca = nil, MKoord = coord, KucaID = nil})
 	TriggerClientEvent("zemljista:UpdateZemljista", -1, Zemljista)
 	TriggerClientEvent('esx:showNotification', source, 'Zemljiste '..str..' uspjesno kreirano za $'..cij..'!')
+	Wait(4000)
 	TriggerClientEvent("zemljista:RefreshBlip", -1, str)
 end)
 
@@ -340,6 +340,7 @@ AddEventHandler('zemljista:ProdajZemljiste', function(ime)
 			Zemljista[i].Kuca = nil
 			Zemljista[i].Vlasnik = nil
 			TriggerClientEvent("zemljista:ObrisiKucu", -1, Zemljista[i].Ime)
+			TriggerClientEvent("zemljista:ObrisiBlip", -1, Zemljista[i].Ime)
 			MySQL.Async.execute('DELETE FROM kuce WHERE ID = @id', {
 				['@id'] = Zemljista[i].KucaID
 			})
@@ -352,10 +353,7 @@ AddEventHandler('zemljista:ProdajZemljiste', function(ime)
 		end
 	end
 	TriggerClientEvent('esx:showNotification', src, 'Zemljiste uspjesno prodano!')
-	TriggerClientEvent("zemljista:ObrisiBlip", -1, ime)
-	Wait(1500)
 	TriggerClientEvent("zemljista:UpdateZemljista", -1, Zemljista)
-	Wait(1000)
 	TriggerClientEvent("zemljista:RefreshBlip", -1, ime)
 end)
 

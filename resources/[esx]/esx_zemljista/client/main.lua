@@ -24,6 +24,7 @@ local Koord = {}
 local Zemljista = {}
 local Kuce = {}
 local Kuca = nil
+local Blipovi = {}
 local brojic = 1
 local ButtonsScaleform = nil
 Scaleforms    = mLibs:Scaleforms()
@@ -61,8 +62,10 @@ end
 function SpawnBlip(ime)
 	for i=1, #Zemljista, 1 do
 		if Zemljista[i] ~= nil and Zemljista[i].Ime == ime then
-			if Zemljista[i].Blip ~= nil then
-				RemoveBlip(Zemljista[i].Blip)
+			for j=1, #Blipovi, 1 do
+				if Blipovi[i] ~= nil and Blipovi[i].Zemljiste == ime then
+					RemoveBlip(Blipovi[i].Blip)
+				end
 			end
 			if Zemljista[i].Vlasnik == nil then
 				local VBlip = AddBlipForCoord(Zemljista[i].MKoord.x, Zemljista[i].MKoord.y, Zemljista[i].MKoord.z)
@@ -74,19 +77,7 @@ function SpawnBlip(ime)
 				BeginTextCommandSetBlipName("STRING")
 				AddTextComponentString('Zemljiste na prodaju')
 				EndTextCommandSetBlipName(VBlip)
-				Zemljista[i].Blip = VBlip
-				break
-			else
-				local VBlip = AddBlipForCoord(Zemljista[i].MKoord.x, Zemljista[i].MKoord.y, Zemljista[i].MKoord.z)
-				SetBlipAlpha(VBlip, 255)
-				SetBlipSprite(VBlip, 285)
-				SetBlipColour (VBlip, 3)
-				SetBlipAsShortRange(VBlip, true)
-				SetBlipDisplay(VBlip, 2)
-				BeginTextCommandSetBlipName("STRING")
-				AddTextComponentString('Zemljiste')
-				EndTextCommandSetBlipName(VBlip)
-				Zemljista[i].Blip = VBlip
+				table.insert(Blipovi, {Zemljiste = ime, Blip = VBlip})
 				break
 			end
 		end
@@ -95,12 +86,9 @@ end
 
 RegisterNetEvent('zemljista:ObrisiBlip')
 AddEventHandler('zemljista:ObrisiBlip', function(ime)
-	for i=1, #Zemljista, 1 do
-		if Zemljista[i] ~= nil and Zemljista[i].Ime == ime then
-			if Zemljista[i].Blip ~= nil then
-				RemoveBlip(Zemljista[i].Blip)
-			end
-			break
+	for j=1, #Blipovi, 1 do
+		if Blipovi[i] ~= nil and Blipovi[i].Zemljiste == ime then
+			RemoveBlip(Blipovi[i].Blip)
 		end
 	end
 end)

@@ -94,7 +94,7 @@ ESX.RegisterServerCallback('loaf_housing:DohvatiZadnjuKucu', function(source, cb
 	MySQL.Async.fetchScalar('SELECT last_house FROM users WHERE identifier = @identifier', {
 		['@identifier'] = xPlayer.identifier
 	}, function(result)
-		cb(result)
+		cb(result, Config.Houses)
     end)
 end)
 
