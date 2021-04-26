@@ -431,6 +431,7 @@ function OpenZemljisteMenu(ime)
 									CurrentAction     = 'menu_zemljiste'
 									CurrentActionMsg  = "Pritisnite E da vidite opcije zemljista"
 									CurrentActionData = {ime = ime}
+									Kuca = nil
 								else
 									ESX.ShowNotification("Nemate dovoljno novca!")
 									DeleteObject(Kuca)
