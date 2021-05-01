@@ -21,9 +21,9 @@ AddEventHandler('esx_illegal:ChemicalsConvertionMenu', function(itemName, amount
 		TriggerClientEvent('esx:showNotification', source, _U('Chemicals_notenough', xItem.label))
 		return
 	end
-	TriggerClientEvent("kemikalija:EoTiGaFreeze", true)
+	TriggerClientEvent("kemikalija:EoTiGaFreeze", source, true)
 	Citizen.Wait(5000)
-	TriggerClientEvent("kemikalija:EoTiGaFreeze", false)
+	TriggerClientEvent("kemikalija:EoTiGaFreeze", source, false)
 	xPlayer.addInventoryItem(xItem.name, amount)
 
 	xPlayer.removeInventoryItem('chemicals', amount)
