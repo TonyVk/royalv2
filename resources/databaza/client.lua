@@ -136,9 +136,19 @@ end)
 
 -- NUI Callback - Update
 RegisterNUICallback('update', function(data, cb)
-	ESX.TriggerServerCallback('databaza:update', function( d )
-    cb(d)
-  end, data)
+	if data.classified ~= nil then
+		if ESX.PlayerData.job.grade == 6 then
+			ESX.TriggerServerCallback('databaza:update', function( d )
+				cb(d)
+			end, data)
+		else
+			ESX.ShowNotification("Niste nacelnik policije!")
+		end
+	else
+		ESX.TriggerServerCallback('databaza:update', function( d )
+			cb(d)
+		end, data)
+	end
 end)
 
 -- NUI Callback - Remove
