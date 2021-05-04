@@ -87,6 +87,8 @@ function OpenChemicalsMenu()
 		menuOpen = false
 		TriggerServerEvent('esx_illegal:ChemicalsConvertionMenu', data.current.name, 1)
 	end, function(data, menu)
+		menu.close()
+		menuOpen = false
 	end)
 end
 

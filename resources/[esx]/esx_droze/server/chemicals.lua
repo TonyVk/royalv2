@@ -13,22 +13,23 @@ end)
 
 RegisterServerEvent('esx_illegal:ChemicalsConvertionMenu')
 AddEventHandler('esx_illegal:ChemicalsConvertionMenu', function(itemName, amount)
-	local xPlayer = ESX.GetPlayerFromId(source)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
 	local xItem = xPlayer.getInventoryItem(itemName)
 	local xChemicals = xPlayer.getInventoryItem('chemicals')
 
 	if xChemicals.count < amount then
-		TriggerClientEvent('esx:showNotification', source, _U('Chemicals_notenough', xItem.label))
+		TriggerClientEvent('esx:showNotification', src, _U('Chemicals_notenough', xItem.label))
 		return
 	end
-	TriggerClientEvent("kemikalija:EoTiGaFreeze", source, true)
+	TriggerClientEvent("kemikalija:EoTiGaFreeze", src, true)
 	Citizen.Wait(5000)
-	TriggerClientEvent("kemikalija:EoTiGaFreeze", source, false)
-	xPlayer.addInventoryItem(xItem.name, amount)
+	TriggerClientEvent("kemikalija:EoTiGaFreeze", src, false)
+	xPlayer.addInventoryItem(itemName, amount)
 
 	xPlayer.removeInventoryItem('chemicals', amount)
 
-	TriggerClientEvent('esx:showNotification', source, _U('Chemicals_made', xItem.label))
+	TriggerClientEvent('esx:showNotification', src, _U('Chemicals_made', xItem.label))
 end)
 
 ESX.RegisterServerCallback('esx_illegal:CheckLisense', function(source, cb)
