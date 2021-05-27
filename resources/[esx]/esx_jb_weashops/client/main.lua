@@ -287,7 +287,15 @@ function OpenShopMenu(zone)
 						elements = elements2
 					}, function(data5, menu5)
 						if data5.current.item == "kupior" then
-							TriggerServerEvent('wesh:KuPi', data.current.value, data.current.price, zone, CurrentID)
+							local torba = 0
+							TriggerEvent('skinchanger:getSkin', function(skin)
+								torba = skin['bags_1']
+							end)
+							if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+								TriggerServerEvent('wesh:KuPi', data.current.value, data.current.price, zone, CurrentID, true)
+							else
+								TriggerServerEvent('wesh:KuPi', data.current.value, data.current.price, zone, CurrentID, false)
+							end
 							menu5.close()
 						elseif data5.current.item == "kupimag" then
 							if data.current.value == "WEAPON_PISTOL" then

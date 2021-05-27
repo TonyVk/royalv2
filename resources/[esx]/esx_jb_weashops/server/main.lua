@@ -236,7 +236,7 @@ AddEventHandler('wesh:KuPi2', function(id, zone, ide)
 end)
 
 RegisterServerEvent('wesh:KuPi')
-AddEventHandler('wesh:KuPi', function(itemName, price, zone, id)
+AddEventHandler('wesh:KuPi', function(itemName, price, zone, id, torba)
 
   local _source = source
   local xPlayer  = ESX.GetPlayerFromId(source)
@@ -260,12 +260,26 @@ AddEventHandler('wesh:KuPi', function(itemName, price, zone, id)
 
   else if xPlayer.get('money') >= price then
 		if itemName == "clip" then
-			xPlayer.addInventoryItem(itemName, 1)
-			TriggerClientEvent('esx:showNotification', _source, _U('buy') .. "sarzer")
-			local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio item "..itemName.." x 1"
-			TriggerEvent("SpremiLog", por)
+			if torba then
+				if xPlayer.getInventoryItem('clip').count < 15*2 then
+					xPlayer.addInventoryItem(itemName, 1)
+					TriggerClientEvent('esx:showNotification', _source, _U('buy') .. "sarzer")
+					local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio item "..itemName.." x 1"
+					TriggerEvent("SpremiLog", por)
+				else
+					TriggerClientEvent('esx:showNotification', source, '~r~Ne stane vam vise sarzera!')
+				end
+			else
+				if xPlayer.getInventoryItem('clip').count < 15 then
+					xPlayer.addInventoryItem(itemName, 1)
+					TriggerClientEvent('esx:showNotification', _source, _U('buy') .. "sarzer")
+					local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio item "..itemName.." x 1"
+					TriggerEvent("SpremiLog", por)
+				else
+					TriggerClientEvent('esx:showNotification', source, '~r~Ne stane vam vise sarzera!')
+				end
+			end
 		else
-			
 			xPlayer.addWeapon(itemName, 42)
 			TriggerClientEvent('esx:showNotification', _source, _U('buy') .. ESX.GetWeaponLabel(itemName))
 		end
