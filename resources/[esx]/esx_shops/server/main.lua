@@ -85,6 +85,18 @@ ESX.RegisterServerCallback('esx_shops:DalJeVlasnik', function(source, cb, zona)
 	end
 end)
 
+ESX.RegisterServerCallback('esx_shops:DajBrojTrgovina', function(source, cb)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	local br = 0
+	for i=1, #Shopovi, 1 do
+		if Shopovi[i] ~= nil and Shopovi[i].owner == xPlayer.identifier then
+			br = br+1
+		end
+	end
+	cb(br)
+end)
+
 RegisterServerEvent('esx_shops:PromjeniCijenu')
 AddEventHandler('esx_shops:PromjeniCijenu', function(store, ime, item, cijena)
 	local _source = source

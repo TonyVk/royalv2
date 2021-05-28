@@ -736,3 +736,11 @@ AddEventHandler('dajpro:oruzje3', function(id, cijena, kol, pid)
 		TriggerClientEvent('esx:showNotification', id, "Imat cete vise kokaina od dozvoljenoga(max 10g)!")
 	end
 end)
+
+RegisterNetEvent("prodajoruzje:PlatiPorez")
+AddEventHandler('prodajoruzje:PlatiPorez', function(kol)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	xPlayer.removeAccountMoney('bank', kol*1000)
+	TriggerClientEvent('esx:showNotification', src, "Platili ste porez u iznosu od $"..(kol*1000))
+end)

@@ -99,6 +99,20 @@ ESX.RegisterServerCallback('pumpe:JelVlasnik', function(source, cb, ime)
 	end
 end)
 
+ESX.RegisterServerCallback('pumpe:DajBrojPumpi', function(source, cb)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	local br = 0
+	for i=1, #Pumpe, 1 do
+		if Pumpe[i] ~= nil and Pumpe[i].Vlasnik ~= nil then
+			if Pumpe[i].Vlasnik == xPlayer.identifier then
+				br = br+1
+			end
+		end
+	end
+	cb(br)
+end)
+
 RegisterNetEvent('pumpe:DajStanje')
 AddEventHandler('pumpe:DajStanje', function(ime)
 	local src = source

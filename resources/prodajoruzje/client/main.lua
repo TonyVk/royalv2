@@ -43,6 +43,35 @@ Citizen.CreateThread(function()
   ProvjeriPosao()
 end)
 
+Citizen.CreateThread(function()
+  while	true do
+	Citizen.Wait(3600000) --1h
+	local porez = 0
+	--kuca
+	ESX.TriggerServerCallback('loaf_housing:ImalKucu', function(br)
+		if br then
+			porez = porez+1
+		end
+	end)
+	--trgovine
+	ESX.TriggerServerCallback('esx_shops:DajBrojTrgovina', function(br)
+		porez = porez+br
+	end)
+	--Gunshopovi
+	ESX.TriggerServerCallback('esx_gun:DajBrojTrgovina', function(br)
+		porez = porez+br
+	end)
+	--Pumpe
+	ESX.TriggerServerCallback('pumpe:DajBrojPumpi', function(br)
+		porez = porez+br
+	end)
+	Citizen.Wait(2000)
+	if porez > 0 then
+		TriggerServerEvent("prodajoruzje:PlatiPorez", porez)
+	end
+  end
+end)
+
 function ProvjeriPosao()
 	ESX.PlayerData = ESX.GetPlayerData()
 	local model = GetHashKey("a_m_m_beach_01")
