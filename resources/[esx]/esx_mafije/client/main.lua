@@ -2594,9 +2594,7 @@ function OpenGetWeaponMenu()
 						OpenGetWeaponMenu()
 					end, data.current.value, 250, PlayerData.job.name)
 				else
-					ESX.TriggerServerCallback('mafije:dajWeaponItem', function()
-						OpenGetWeaponMenu()
-					end, data.current.value, data.current.ammo, PlayerData.job.name)
+					ESX.ShowNotification("Nemate 250 metaka da bi uzeli item oruzja!")
 				end
 			end
 		end
