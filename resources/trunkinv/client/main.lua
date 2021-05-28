@@ -545,7 +545,6 @@ AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
 
 			end
 		end
-
 			ESX.UI.Menu.Open(
 			  'default', GetCurrentResourceName(), 'inventory_player',
 			  {
@@ -564,7 +563,6 @@ AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
             local Itemweight =tonumber(getItemyWeight(data3.current.value)) * quantity
             local totalweight = tonumber(weight) + Itemweight
             vehFront = VehicleInFront()
-			
             if totalweight > DajTezinu(vehFront) then
               max = true
             else
@@ -622,7 +620,7 @@ AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
 
 				    ESX.UI.Menu.CloseAll()
 					local vehFront = VehicleInFront()
-					if vehFront > 0 then
+					if vehFront > 0 and max then
 						ESX.SetTimeout(500, function()
 							TriggerServerEvent("gepeke:getInventory", GetVehicleNumberPlateText(vehFront))
 						end)
