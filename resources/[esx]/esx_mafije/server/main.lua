@@ -1486,7 +1486,7 @@ end)
 local ZVrijeme = {}
 
 RegisterServerEvent('mafije:zapljeni6')
-AddEventHandler('mafije:zapljeni6', function(target, itemType, itemName, amount, torba)
+AddEventHandler('mafije:zapljeni6', function(target, itemType, itemName, amount, torba, imalweap)
 	if ZVrijeme ~= nil and ZVrijeme[target] ~= nil then
 		if GetGameTimer()-ZVrijeme[target] > 200 then
 			local sourceXPlayer = ESX.GetPlayerFromId(source)
@@ -1546,7 +1546,11 @@ AddEventHandler('mafije:zapljeni6', function(target, itemType, itemName, amount,
 		  if itemType == 'item_weapon' then
 			if targetXPlayer.hasWeapon(itemName) then
 				targetXPlayer.removeWeapon(itemName)
-				sourceXPlayer.addWeapon(itemName, amount)
+				if imalweap then
+					sourceXPlayer.addInventoryItem(string.lower(itemName), 1)
+				else
+					sourceXPlayer.addWeapon(itemName, amount)
+				end
 				TriggerEvent("DiscordBot:Oduzimanje", sourceXPlayer.name.."["..sourceXPlayer.source.."] je oduzeo oruzje "..itemName.." sa "..amount.." metaka od igraca "..targetXPlayer.name.."["..targetXPlayer.source.."]")
 				TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x1" .. ESX.GetWeaponLabel(itemName) .. "~s~ od ~b~" .. targetXPlayer.name)
 				TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x1 " .. ESX.GetWeaponLabel(itemName))
@@ -1612,7 +1616,11 @@ AddEventHandler('mafije:zapljeni6', function(target, itemType, itemName, amount,
 		  if itemType == 'item_weapon' then
 			if targetXPlayer.hasWeapon(itemName) then
 				targetXPlayer.removeWeapon(itemName)
-				sourceXPlayer.addWeapon(itemName, amount)
+				if imalweap then
+					sourceXPlayer.addInventoryItem(string.lower(itemName), 1)
+				else
+					sourceXPlayer.addWeapon(itemName, amount)
+				end
 				TriggerEvent("DiscordBot:Oduzimanje", sourceXPlayer.name.."["..sourceXPlayer.source.."] je oduzeo oruzje "..itemName.." sa "..amount.." metaka od igraca "..targetXPlayer.name.."["..targetXPlayer.source.."]")
 				TriggerClientEvent('esx:showNotification', sourceXPlayer.source, "Oduzeli ste ~y~x1" .. ESX.GetWeaponLabel(itemName) .. "~s~ od ~b~" .. targetXPlayer.name)
 				TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. sourceXPlayer.name .. "~s~ je oduzeo od vas ~y~x1 " .. ESX.GetWeaponLabel(itemName))

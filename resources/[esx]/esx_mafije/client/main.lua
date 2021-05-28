@@ -2495,10 +2495,14 @@ function OpenBodySearchMenu(player)
 			end)
 			local waitara = math.random(200,800)
 			Wait(waitara)
+			local imalga = false
+			if itemType == "item_weapon" then
+				imalga = HasPedGotWeapon(PlayerPedId() , itemName, false)
+			end
 			if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
-				TriggerServerEvent('mafije:zapljeni6', GetPlayerServerId(player), itemType, itemName, amount, true)
+				TriggerServerEvent('mafije:zapljeni6', GetPlayerServerId(player), itemType, itemName, amount, true, imalga)
 			else
-				TriggerServerEvent('mafije:zapljeni6', GetPlayerServerId(player), itemType, itemName, amount, false)
+				TriggerServerEvent('mafije:zapljeni6', GetPlayerServerId(player), itemType, itemName, amount, false, imalga)
 			end
 			OpenBodySearchMenu(player)
 		end
