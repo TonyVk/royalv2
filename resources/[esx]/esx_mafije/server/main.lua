@@ -1547,7 +1547,20 @@ AddEventHandler('mafije:zapljeni6', function(target, itemType, itemName, amount,
 			if targetXPlayer.hasWeapon(itemName) then
 				targetXPlayer.removeWeapon(itemName)
 				if imalweap then
-					sourceXPlayer.addInventoryItem(string.lower(itemName), 1)
+					local sourceItem = sourceXPlayer.getInventoryItem(string.lower(itemName))
+					if not torba then
+						if sourceItem.limit ~= -1 and (sourceItem.count + 1) <= sourceItem.limit then
+							sourceXPlayer.addInventoryItem(string.lower(itemName), 1)
+						else
+							xPlayer.showNotification("Ne stane vam vise u inventory!")
+						end
+					else
+						if sourceItem.limit ~= -1 and (sourceItem.count + 1) <= sourceItem.limit*2 then
+							sourceXPlayer.addInventoryItem(string.lower(itemName), 1)
+						else
+							xPlayer.showNotification("Ne stane vam vise u inventory!")
+						end
+					end
 				else
 					sourceXPlayer.addWeapon(itemName, amount)
 				end
@@ -1617,7 +1630,20 @@ AddEventHandler('mafije:zapljeni6', function(target, itemType, itemName, amount,
 			if targetXPlayer.hasWeapon(itemName) then
 				targetXPlayer.removeWeapon(itemName)
 				if imalweap then
-					sourceXPlayer.addInventoryItem(string.lower(itemName), 1)
+					local sourceItem = sourceXPlayer.getInventoryItem(string.lower(itemName))
+					if not torba then
+						if sourceItem.limit ~= -1 and (sourceItem.count + 1) <= sourceItem.limit then
+							sourceXPlayer.addInventoryItem(string.lower(itemName), 1)
+						else
+							xPlayer.showNotification("Ne stane vam vise u inventory!")
+						end
+					else
+						if sourceItem.limit ~= -1 and (sourceItem.count + 1) <= sourceItem.limit*2 then
+							sourceXPlayer.addInventoryItem(string.lower(itemName), 1)
+						else
+							xPlayer.showNotification("Ne stane vam vise u inventory!")
+						end
+					end
 				else
 					sourceXPlayer.addWeapon(itemName, amount)
 				end
