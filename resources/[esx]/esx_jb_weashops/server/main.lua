@@ -226,20 +226,15 @@ ESX.RegisterServerCallback('esx_weashop:requestDBItems', function(source, cb)
 end)
 
 RegisterServerEvent('wesh:KuPi2')
-AddEventHandler('wesh:KuPi2', function(id, zone, ide)
+AddEventHandler('wesh:KuPi2', function(oruzje, comp, label, zone, ide)
 	local _source = source
 	local xPlayer  = ESX.GetPlayerFromId(source)
 	if xPlayer.getMoney() >= 700 then
-		if id == 1 then
-			xPlayer.addWeaponComponent("WEAPON_PISTOL", "clip_extended")
-			TriggerClientEvent('esx:showNotification', _source, "Kupili ste extended spremnik za 700$!")
-		elseif id == 2 then
-			xPlayer.addWeaponComponent("WEAPON_CARBINERIFLE", "clip_extended")
-			TriggerClientEvent('esx:showNotification', _source, "Kupili ste extended spremnik za 700$!")
-		elseif id == 3 then
-			xPlayer.addWeaponComponent("WEAPON_PISTOL", "suppressor")
-			TriggerClientEvent('esx:showNotification', _source, "Kupili ste prigusivac za 700$!")
-		end
+		print(oruzje)
+		print(comp)
+		print(label)
+		xPlayer.addWeaponComponent(oruzje, comp)
+		TriggerClientEvent('esx:showNotification', _source, "Kupili ste "..label.." za 700$!")
 		xPlayer.removeMoney(700)
 		DajFirmi(zone..ide, 350)
 	else

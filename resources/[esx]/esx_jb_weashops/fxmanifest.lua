@@ -14,6 +14,7 @@ client_scripts {
   'locales/es.lua',
   'locales/hr.lua',
   'config.lua',
+  '@es_extended/config.weapons.lua',
   'client/main.lua'
 }
 

@@ -218,66 +218,34 @@ function OpenShopMenu(zone)
 					  label     = "Kupi oruzje".. ' - <span style="color:green;">$' .. data.current.price .. ' </span>',
 					  item 		= "kupior"
 					})
-					if data.current.value == "WEAPON_PISTOL" then
-						local hasComponent = HasPedGotWeaponComponent(PlayerPedId(), GetHashKey(data.current.value), GetHashKey('COMPONENT_PISTOL_CLIP_02'))
-						local hasComponent2 = HasPedGotWeaponComponent(PlayerPedId(), GetHashKey(data.current.value), GetHashKey('COMPONENT_AT_PI_SUPP_02'))
-						if hasComponent then
-							table.insert(elements2, {
-							  label     = "Kupi extended spremnik".. ' - <span style="color:green;">KUPLJENO </span>',
-							  item 		= "kupimagare"
-							})
-						else
-							local hasWeapon = HasPedGotWeapon(PlayerPedId(), GetHashKey(data.current.value), false)
-							if hasWeapon then
-								table.insert(elements2, {
-								  label     = "Kupi extended spremnik".. ' - <span style="color:green;">$700 </span>',
-								  item 		= "kupimag"
-								})
-							else
-								table.insert(elements2, {
-								  label     = "Kupi extended spremnik".. ' - <span style="color:red;">NEMATE ORUZJE </span>',
-								  item 		= "kupimagare"
-								})
-							end
-						end
-						if hasComponent2 then
-							table.insert(elements2, {
-							  label     = "Kupi prigusivac".. ' - <span style="color:green;">KUPLJENO </span>',
-							  item 		= "kupimagare"
-							})
-						else
-							local hasWeapon = HasPedGotWeapon(PlayerPedId(), GetHashKey(data.current.value), false)
-							if hasWeapon then
-								table.insert(elements2, {
-								  label     = "Kupi prigusivac".. ' - <span style="color:green;">$700 </span>',
-								  item 		= "kupimag2"
-								})
-							else
-								table.insert(elements2, {
-								  label     = "Kupi prigusivac".. ' - <span style="color:red;">NEMATE ORUZJE </span>',
-								  item 		= "kupimagare"
-								})
-							end
-						end
-					elseif data.current.value == "WEAPON_CARBINERIFLE" then
-						local hasComponent = HasPedGotWeaponComponent(PlayerPedId(), GetHashKey(data.current.value), GetHashKey('COMPONENT_CARBINERIFLE_CLIP_02'))
-						if hasComponent then
-							table.insert(elements2, {
-							  label     = "Kupi extended spremnik".. ' - <span style="color:green;">KUPLJENO </span>',
-							  item 		= "kupimagare"
-							})
-						else
-							local hasWeapon = HasPedGotWeapon(PlayerPedId(), GetHashKey(data.current.value), false)
-							if hasWeapon then
-								table.insert(elements2, {
-								  label     = "Kupi extended spremnik".. ' - <span style="color:green;">$700 </span>',
-								  item 		= "kupimag"
-								})
-							else
-								table.insert(elements2, {
-								  label     = "Kupi extended spremnik".. ' - <span style="color:red;">NEMATE ORUZJE </span>',
-								  item 		= "kupimagare"
-								})
+					for i=1, #Config.Weapons do
+						local oruzje = Config.Weapons[i]
+						if oruzje.name == data.current.value and #oruzje.components > 0 then
+							for j=1, #oruzje.components do
+								local comp = oruzje.components[j]
+								local hasComponent = HasPedGotWeaponComponent(PlayerPedId(), GetHashKey(oruzje.name), comp.hash)
+								if hasComponent then
+									table.insert(elements2, {
+										 label     = "Kupi "..comp.label..' - <span style="color:green;">KUPLJENO </span>',
+										 item 		= "kupimagare"
+									})
+								else
+									local hasWeapon = HasPedGotWeapon(PlayerPedId(), GetHashKey(data.current.value), false)
+									if hasWeapon then
+										table.insert(elements2, {
+											 label     = "Kupi "..comp.label..' - <span style="color:green;">$700 </span>',
+											 item 		= "kupimag",
+											 weapon		= oruzje.name,
+											 name		= comp.name,
+											 clabel 	= comp.label
+										})
+									else
+										table.insert(elements2, {
+											 label     = "Kupi "..comp.label..' - <span style="color:red;">NEMATE ORUZJE </span>',
+											 item 		= "kupimagare"
+										})
+									end
+								end
 							end
 						end
 					end
@@ -298,16 +266,7 @@ function OpenShopMenu(zone)
 							end
 							menu5.close()
 						elseif data5.current.item == "kupimag" then
-							if data.current.value == "WEAPON_PISTOL" then
-								TriggerServerEvent('wesh:KuPi2', 1, zone, CurrentID)
-							else
-								TriggerServerEvent('wesh:KuPi2', 2, zone, CurrentID)
-							end
-							menu5.close()
-						elseif data5.current.item == "kupimag2" then
-							if data.current.value == "WEAPON_PISTOL" then
-								TriggerServerEvent('wesh:KuPi2', 3, zone, CurrentID)
-							end
+							TriggerServerEvent('wesh:KuPi2', data5.current.weapon, data5.current.name, data5.current.clabel, zone, CurrentID)
 							menu5.close()
 						end
 					end, function(data5, menu5)

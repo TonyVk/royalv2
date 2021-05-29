@@ -9,5 +9,15 @@ Locales ['hr'] = {
   ['shop'] = 'Oruzarnica',
   ['shop_menu'] = 'Pritisnite ~INPUT_CONTEXT~ za pristup oruzarnici.',
   ['map_blip'] = 'Oruzarnica',
-
+  -- Weapon Components
+  ['component_clip_default'] = 'default Grip',
+  ['component_clip_extended'] = 'extended Grip',
+  ['component_clip_drum'] = 'drum Magazine',
+  ['component_clip_box'] = 'box Magazine',
+  ['component_flashlight'] = 'flashlight',
+  ['component_scope'] = 'scope',
+  ['component_scope_advanced'] = 'advanced Scope',
+  ['component_suppressor'] = 'suppressor',
+  ['component_grip'] = 'grip',
+  ['component_luxary_finish'] = 'luxary Weapon Finish',
 }

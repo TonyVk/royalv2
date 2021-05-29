@@ -47,6 +47,17 @@ Config.Weapons = {
 			{ name = 'luxary_finish', label = _U('component_luxary_finish'), hash = GetHashKey('COMPONENT_PISTOL_VARMOD_LUXE') }
 		}
 	},
+	
+	{
+		name = 'WEAPON_PISTOL_MK2',
+		label = _U('weapon_pistol_mk2'),
+		components = {
+			{ name = 'clip_default', label = _U('component_clip_default'), hash = GetHashKey('COMPONENT_PISTOL_MK2_CLIP_01') },
+			{ name = 'clip_extended', label = _U('component_clip_extended'), hash = GetHashKey('COMPONENT_PISTOL_MK2_CLIP_02') },
+			{ name = 'flashlight', label = _U('component_flashlight'), hash = GetHashKey('COMPONENT_AT_PI_FLSH_02') },
+			{ name = 'suppressor', label = _U('component_suppressor'), hash = GetHashKey('COMPONENT_AT_PI_SUPP_02') }
+		}
+	},
 
 	{
 		name = 'WEAPON_COMBATPISTOL',

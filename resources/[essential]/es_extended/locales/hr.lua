@@ -99,6 +99,7 @@ Locales['hr'] = {
   ['weapon_golfclub'] = 'golf club',
   ['weapon_crowbar'] = 'crow bar',
   ['weapon_pistol'] = 'pistol',
+  ['weapon_pistol_mk2'] = 'pistol mk2',
   ['weapon_combatpistol'] = 'combat pistol',
   ['weapon_appistol'] = 'AP pistol',
   ['weapon_pistol50'] = 'pistol .50',
