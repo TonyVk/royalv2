@@ -377,6 +377,7 @@ function OpenPumpaMenu(ime)
 			if not Kapacitet then
 				table.insert(elements, {label = "Povecaj kapacitet pumpe", value = 'kkap'})
 			end
+			table.insert(elements, {label = "Prodaj firmu igracu", value = 'prodaj2'})
 			table.insert(elements, {label = "Prodaj firmu", value = 'prodaj'})
 		else
 			table.insert(elements, {label = "Ova firma nije tvoja!", value = 'error'})
@@ -565,6 +566,36 @@ function OpenPumpaMenu(ime)
 		  )
 	  end
 	  
+	  if data.current.value == "prodaj2" then
+		local player, distance = ESX.Game.GetClosestPlayer()
+		if distance ~= -1 and distance <= 3.0 then
+			ESX.UI.Menu.Open(
+				'dialog', GetCurrentResourceName(), 'pumpa_prodaj_igr',
+				{
+					title = "Unesite cijenu za koju zelite prodati pumpu"
+				},
+				function(data3, menu3)
+
+				local count = tonumber(data3.value)
+
+				if count == nil then
+					ESX.ShowNotification("Kriva vrijednost!")
+				else
+					menu3.close()
+					menu.close()
+					TriggerServerEvent("pumpe:ProdajIgracu", ime, GetPlayerServerId(player), count)
+				end
+				end,
+				function(data3, menu3)
+					menu3.close()
+					menu.close()
+				end
+			)
+		else
+			ESX.ShowNotification('Nema igraca u blizini!')
+		end
+	  end
+	  
 	  if data.current.value == "prodaj" then
 			ESX.UI.Menu.Open(
 			  'default', GetCurrentResourceName(), 'pumpa',
@@ -720,6 +751,36 @@ end)
 RegisterNetEvent('pumpe:SaljiPumpe')
 AddEventHandler('pumpe:SaljiPumpe', function(pumpe) 
 	Pumpe = pumpe
+end)
+
+RegisterNetEvent('pumpe:PitajProdaju')
+AddEventHandler('pumpe:PitajProdaju', function(ime, cijena, pid)
+	ESX.UI.Menu.Open(
+		'default', GetCurrentResourceName(), 'pumpara',
+		{
+				title    = "Zelite li kupiti benzinsku pumpu "..ime.." za $"..cijena.."?",
+				align    = 'top-left',
+				elements = {
+					{label = "Da", value = 'da'},
+					{label = "Ne", value = 'ne'}
+				},
+		},
+		function(data69, menu69)
+			menu69.close()
+			if data69.current.value == 'da' then
+				TriggerServerEvent("pumpe:PrihvatioProdaju", ime, cijena, pid)
+			end
+
+			if data69.current.value == 'ne' then
+				ESX.ShowNotification("Odbili ste ponudu za kupnju pumpe!")
+				TriggerServerEvent("pumpe:OdbioProdaju", pid)
+				menu69.close()
+			end
+		end,
+		function(data69, menu69)
+			 menu69.close()
+		end
+	)
 end)
 
 RegisterNetEvent('EoSvimaGorivo')

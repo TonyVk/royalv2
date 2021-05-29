@@ -333,6 +333,45 @@ AddEventHandler('pumpe:KupiPumpu', function(ime)
 	end
 end)
 
+RegisterServerEvent('pumpe:ProdajIgracu')
+AddEventHandler('pumpe:ProdajIgracu', function(ime, id, cijena)
+	local src = source
+	TriggerClientEvent("pumpe:PitajProdaju", id, ime, cijena, src)
+end)
+
+RegisterServerEvent('pumpe:PrihvatioProdaju')
+AddEventHandler('pumpe:PrihvatioProdaju', function(ime, cijena, pid)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	local tPlayer = ESX.GetPlayerFromId(pid)
+	for i=1, #Pumpe, 1 do
+		if Pumpe[i] ~= nil and Pumpe[i].Ime == ime then
+			xPlayer.removeMoney(cijena)
+			tPlayer.addMoney(cijena)
+			Pumpe[i].Vlasnik = xPlayer.identifier
+			GetRPName(xPlayer.identifier, function(Firstname, Lastname)
+				local im = Firstname.." "..Lastname
+				Pumpe[i].VlasnikIme = im
+				TriggerClientEvent("pumpe:SaljiPumpe", -1, Pumpe)
+			end)
+			MySQL.Async.execute('UPDATE pumpe SET vlasnik = @vl WHERE ime = @ime',{
+				['@ime'] = ime,
+				['@vl'] = xPlayer.identifier
+			})
+			tPlayer.showNotification("Prodali ste benzinsku pumpu za $"..cijena.."!")
+			xPlayer.showNotification("Kupili ste benzinsku pumpu za $"..cijena.."!")
+			TriggerEvent("DiscordBot:Prodaja", tPlayer.name.."["..tPlayer.source.."] je prodao pumpu "..ime.." za $"..cijena.." igracu "..xPlayer.name.."["..xPlayer.source.."]")
+			break
+		end
+	end
+end)
+
+RegisterServerEvent('pumpe:OdbioProdaju')
+AddEventHandler('pumpe:OdbioProdaju', function(id)
+	local xPlayer = ESX.GetPlayerFromId(id)
+	xPlayer.showNotification("Igrac je odbio ponudu za prodaju pumpe!")
+end)
+
 RegisterServerEvent('pumpe:ProdajPumpu')
 AddEventHandler('pumpe:ProdajPumpu', function(ime)
 	local src = source

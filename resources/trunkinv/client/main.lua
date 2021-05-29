@@ -416,8 +416,9 @@ function DajTezinu(veh)
 	end
 end
 
-RegisterNetEvent('gepeke:getInventoryLoaded')
-AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
+function LuaJeRetardirana(inventory,weightara)
+	print(weightara)
+	local weight = weightara
 	local elements = {}
 	local vehFrontBack = VehicleInFront()
   TriggerServerEvent("gepeke:getOwnedVehicule")
@@ -562,6 +563,7 @@ AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
             local quantity = tonumber(data4.value)
             local Itemweight =tonumber(getItemyWeight(data3.current.value)) * quantity
             local totalweight = tonumber(weight) + Itemweight
+			print(weight)
             vehFront = VehicleInFront()
             if totalweight > DajTezinu(vehFront) then
               max = true
@@ -872,6 +874,12 @@ AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
 			menu.close()
 		end
 	)
+end
+
+RegisterNetEvent('gepeke:getInventoryLoaded')
+AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
+	print(weight)
+	LuaJeRetardirana(inventory,weight)
 end)
 
 
