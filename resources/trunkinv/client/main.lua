@@ -416,8 +416,90 @@ function DajTezinu(veh)
 	end
 end
 
+function BogaIsusa(data3, weight)
+	ESX.UI.Menu.Open(
+				  'dialog', GetCurrentResourceName(), 'inventory_item_count_give',
+				  {
+				    title = 'Kolicina'
+				  },
+				  function(data4, menu4)
+					local quantity = tonumber(data4.value)
+					local Itemweight =tonumber(getItemyWeight(data3.current.value)) * quantity
+					local totalweight = tonumber(weight) + Itemweight
+					vehFront = VehicleInFront()
+					if totalweight > DajTezinu(vehFront) then
+					  max = true
+					else
+					  max = false
+					end
+
+					ownedV = 0
+					while vehiclePlate == '' do
+					  Wait(1000)
+					end
+					for i=1, #vehiclePlate do
+					  if vehiclePlate[i].plate == GetVehicleNumberPlateText(vehFront) then
+						ownedV = 1
+						break
+					  else
+						ownedV = 0
+					  end
+					end
+
+					--fin test
+					if quantity > 0 and quantity <= tonumber(data3.current.count) and vehFront > 0  then
+					  local MaxVh =(tonumber(DajTezinu(vehFront))/1000)
+					  local Kgweight =  totalweight/1000
+					  if not max then
+						local x,y,z = table.unpack(GetEntityCoords(GetPlayerPed(-1),true))
+								local closecar = GetClosestVehicle(x, y, z, 4.0, 0, 71)
+								local tablica = GetVehicleNumberPlateText(closecar)
+
+					  --  VehicleMaxSpeed(closecar,totalweight,Config.VehicleLimit[GetVehicleClass(closecar)])
+						if tablica ~= nil then
+							TriggerServerEvent('gepeke:addInventoryItem', GetVehicleClass(closecar), GetDisplayNameFromVehicleModel(GetEntityModel(closecar)), tablica, data3.current.value, quantity, data3.current.name, data3.current.type, ownedV)
+							ESX.ShowNotification('Tezina gepeka : ~g~'.. Kgweight .. ' Kg / '..MaxVh..' Kg')
+							ESX.UI.Menu.CloseAll()
+							RequestAnimDict("mini@repair")
+							while not HasAnimDictLoaded( "mini@repair") do
+								Citizen.Wait(1)
+							end
+
+							TaskPlayAnim(GetPlayerPed(-1), "mini@repair" ,"fixing_a_ped" ,8.0, -8.0, -1, 0, 0, false, false, false )
+							Citizen.Wait(4000)
+							ClearPedTasksImmediately(GetPlayerPed(-1))
+							Citizen.Wait(500)
+							TriggerServerEvent("gepeke:getInventory", GetVehicleNumberPlateText(closecar))
+						else
+							ESX.ShowNotification('Dogodila se greska!')
+						end
+					  else
+						ESX.ShowNotification('Dosegli ste ogranicenje od ~r~ '..MaxVh..' Kg')
+					  end
+					else
+						ESX.ShowNotification('~r~ Krivi iznos')
+					end
+
+				    ESX.UI.Menu.CloseAll()
+					local vehFront = VehicleInFront()
+					if vehFront > 0 and max then
+						ESX.SetTimeout(500, function()
+							TriggerServerEvent("gepeke:getInventory", GetVehicleNumberPlateText(vehFront))
+						end)
+					else
+					  --SetVehicleDoorShut(vehFrontBack, 5, false)
+					end
+				  end,
+				  function(data4, menu4)
+		            --SetVehicleDoorShut(vehFrontBack, 5, false)
+				    ESX.UI.Menu.CloseAll()
+					local lastvehicleplatetext = GetVehicleNumberPlateText(vehFrontBack)
+					TriggerServerEvent('gepeke:RemoveVehicleList', lastvehicleplatetext)
+				  end
+				)
+end
+
 function LuaJeRetardirana(inventory,weightara)
-	print(weightara)
 	local weight = weightara
 	local elements = {}
 	local vehFrontBack = VehicleInFront()
@@ -554,92 +636,8 @@ function LuaJeRetardirana(inventory,weightara)
 			    elements = elem,
 			  },function(data3, menu3)
 			  if data3.current.type ~= "item_weapon" then
-				ESX.UI.Menu.Open(
-				  'dialog', GetCurrentResourceName(), 'inventory_item_count_give',
-				  {
-				    title = 'Kolicina'
-				  },
-				  function(data4, menu4)
-            local quantity = tonumber(data4.value)
-            local Itemweight =tonumber(getItemyWeight(data3.current.value)) * quantity
-            local totalweight = tonumber(weight) + Itemweight
-			print(weight)
-            vehFront = VehicleInFront()
-            if totalweight > DajTezinu(vehFront) then
-              max = true
-            else
-              max = false
-            end
-
-            ownedV = 0
-            while vehiclePlate == '' do
-              Wait(1000)
-            end
-            for i=1, #vehiclePlate do
-              if vehiclePlate[i].plate == GetVehicleNumberPlateText(vehFront) then
-                ownedV = 1
-                break
-              else
-                ownedV = 0
-              end
-            end
-
-            --fin test
-            if quantity > 0 and quantity <= tonumber(data3.current.count) and vehFront > 0  then
-              local MaxVh =(tonumber(DajTezinu(vehFront))/1000)
-              local Kgweight =  totalweight/1000
-              if not max then
-              	local x,y,z = table.unpack(GetEntityCoords(GetPlayerPed(-1),true))
-  				    	local closecar = GetClosestVehicle(x, y, z, 4.0, 0, 71)
-						local tablica = GetVehicleNumberPlateText(closecar)
-
-              --  VehicleMaxSpeed(closecar,totalweight,Config.VehicleLimit[GetVehicleClass(closecar)])
-				if tablica ~= nil then
-					TriggerServerEvent('gepeke:addInventoryItem', GetVehicleClass(closecar), GetDisplayNameFromVehicleModel(GetEntityModel(closecar)), tablica, data3.current.value, quantity, data3.current.name, data3.current.type, ownedV)
-					ESX.ShowNotification('Tezina gepeka : ~g~'.. Kgweight .. ' Kg / '..MaxVh..' Kg')
-					menu.close()
-					menu3.close()
-					menu4.close()
-					RequestAnimDict("mini@repair")
-					while not HasAnimDictLoaded( "mini@repair") do
-						Citizen.Wait(1)
-					end
-
-					TaskPlayAnim(GetPlayerPed(-1), "mini@repair" ,"fixing_a_ped" ,8.0, -8.0, -1, 0, 0, false, false, false )
-					Citizen.Wait(4000)
-					ClearPedTasksImmediately(GetPlayerPed(-1))
-					Citizen.Wait(500)
-					TriggerServerEvent("gepeke:getInventory", GetVehicleNumberPlateText(closecar))
-				else
-					ESX.ShowNotification('Dogodila se greska!')
-				end
-              else
-                ESX.ShowNotification('Dosegli ste ogranicenje od ~r~ '..MaxVh..' Kg')
-              end
-			else
-				ESX.ShowNotification('~r~ Krivi iznos')
-			end
-
-				    ESX.UI.Menu.CloseAll()
-					local vehFront = VehicleInFront()
-					if vehFront > 0 and max then
-						ESX.SetTimeout(500, function()
-							TriggerServerEvent("gepeke:getInventory", GetVehicleNumberPlateText(vehFront))
-						end)
-					else
-					  --SetVehicleDoorShut(vehFrontBack, 5, false)
-					end
-
-
-				  end,
-				  function(data4, menu4)
-		            --SetVehicleDoorShut(vehFrontBack, 5, false)
-				    ESX.UI.Menu.CloseAll()
-					local lastvehicleplatetext = GetVehicleNumberPlateText(vehFrontBack)
-					TriggerServerEvent('gepeke:RemoveVehicleList', lastvehicleplatetext)
-				  end
-				)
-				else
+					BogaIsusa(data3, weightara)
+			  else
 					local Itemweight =tonumber(getItemyWeight(data3.current.value)) * data3.current.count
 					local totalweight = tonumber(weight) + Itemweight
 					vehFront = VehicleInFront()
@@ -878,7 +876,6 @@ end
 
 RegisterNetEvent('gepeke:getInventoryLoaded')
 AddEventHandler('gepeke:getInventoryLoaded', function(inventory,weight)
-	print(weight)
 	LuaJeRetardirana(inventory,weight)
 end)
 
