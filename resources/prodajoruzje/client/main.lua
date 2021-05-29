@@ -108,6 +108,36 @@ AddEventHandler('es_admin:setPerm', function()
 	end)
 end)
 
+RegisterNetEvent('loto:IzaberiBroj')
+AddEventHandler('loto:IzaberiBroj', function()
+	TriggerEvent("esx_invh:closeinv")
+	ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'vrloto', {
+		title = "Upisite broj za loto (1-120)",
+	}, function (datari69, menuri69)
+		local br = datari69.value
+		if br == nil or tonumber(br) <= 0 then
+			ESX.ShowNotification('Krivi iznos!')
+		else
+			ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'vrloto2', {
+				title = "Upisite koliku uplatu hocete (1-15000$)",
+			}, function (datari70, menuri70)
+				local br2 = datari70.value
+				if br2 == nil or tonumber(br2) <= 0 or tonumber(br2) > 15000 then
+					ESX.ShowNotification('Krivi iznos!')
+				else
+					TriggerServerEvent("loto:UplatiBroj", br, br2)
+					menuri70.close()
+				end
+			end, function (datari70, menuri70)
+				menuri70.close()
+			end)
+			menuri69.close()
+		end
+	end, function (datari69, menuri69)
+		menuri69.close()
+	end)
+end)
+
 --[[AddEventHandler("gameEventTriggered", function(name, data)
 	print(name)
 	--(targetId, playerId, nezz, jelUmro, hashOruzja, nezz(mijenja se kada se sudaris autom), nezz(mijenja se kada se sudaris autom), nezz, nezz(mijenja se kada headas peda), nezz, mijenja se ovisno o tome koji dio vozila pucas)

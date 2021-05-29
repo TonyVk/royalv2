@@ -1,6 +1,7 @@
 ESX = nil
 local Grebalice = {}
 local COruzje = {}
+local LotoBrojevi = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -744,3 +745,58 @@ AddEventHandler('prodajoruzje:PlatiPorez', function(kol)
 	xPlayer.removeAccountMoney('bank', kol*1000)
 	TriggerClientEvent('esx:showNotification', src, "Platili ste porez u iznosu od $"..(kol*1000))
 end)
+
+ESX.RegisterUsableItem("loto", function(source)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	TriggerClientEvent('loto:IzaberiBroj', _source)
+end)
+
+RegisterNetEvent("loto:UplatiBroj")
+AddEventHandler('loto:UplatiBroj', function(br, cijena)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	if xPlayer.getMoney() >= tonumber(cijena) then
+		local naso = false
+		for i=1, #LotoBrojevi, 1 do
+			if LotoBrojevi[i].Broj == tonumber(br) or LotoBrojevi[i].Ident == xPlayer.identifier then
+				naso = true
+				break
+			end
+		end
+		if not naso then
+			xPlayer.removeInventoryItem("loto", 1)
+			xPlayer.removeMoney(cijena)
+			ESX.SavePlayer(xPlayer, function()
+			end)
+			TriggerClientEvent('esx:showNotification', src, "Uplatili ste $"..tonumber(cijena).." na loto broj "..tonumber(br).."!")
+			table.insert(LotoBrojevi, {Ident = xPlayer.identifier, Broj = tonumber(br), Cijena = tonumber(cijena)})
+		else
+			TriggerClientEvent('esx:showNotification', src, "Broj je zauzet ili ste vec uplatili listic!")
+		end
+	else
+		TriggerClientEvent('esx:showNotification', src, "Nemate dovoljno novca!")
+	end
+end)
+
+function Loto()
+	TriggerClientEvent('esx:showNotification', -1, "Loto pocinje za 15 minuta, uplatite listice dok mozete!")
+	SetTimeout(900000, function()
+		local br = math.random(1,120)
+		TriggerClientEvent('esx:showNotification', -1, "[Loto] Izvucen je broj "..br.."!")
+		for i=1, #LotoBrojevi, 1 do
+			if LotoBrojevi[i].Broj == br then
+				local xPlayer = ESX.GetPlayerFromIdentifier(LotoBrojevi[i].Ident)
+				if xPlayer ~= nil then
+					xPlayer.addMoney(LotoBrojevi[i].Cijena*3)
+					TriggerClientEvent('esx:showNotification', xPlayer.source, "[Loto] Osvojili ste $"..(LotoBrojevi[i].Cijena*3).."! Cestitke!!")
+				end
+				break
+			end
+		end
+		LotoBrojevi = {}
+		SetTimeout(13500000, Loto)
+	end)
+end
+
+SetTimeout(13500000, Loto)
