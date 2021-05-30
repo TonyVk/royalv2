@@ -115,6 +115,36 @@ function OpenShop2Menu(zone)
 	)
 end
 
+RegisterNetEvent('oruzarnica:PitajProdaju')
+AddEventHandler('oruzarnica:PitajProdaju', function(ime, cijena, pid)
+	ESX.UI.Menu.Open(
+		'default', GetCurrentResourceName(), 'oruzara',
+		{
+				title    = "Zelite li kupiti oruzarnicu "..ime.." za $"..cijena.."?",
+				align    = 'top-left',
+				elements = {
+					{label = "Da", value = 'da'},
+					{label = "Ne", value = 'ne'}
+				},
+		},
+		function(data69, menu69)
+			menu69.close()
+			if data69.current.value == 'da' then
+				TriggerServerEvent("oruzarnica:PrihvatioProdaju", ime, cijena, pid)
+			end
+
+			if data69.current.value == 'ne' then
+				ESX.ShowNotification("Odbili ste ponudu za kupnju oruzarnice!")
+				TriggerServerEvent("oruzarnica:OdbioProdaju", pid)
+				menu69.close()
+			end
+		end,
+		function(data69, menu69)
+			 menu69.close()
+		end
+	)
+end)
+
 function OpenShopMenu(zone)
 
   local elements = {}
@@ -152,6 +182,12 @@ function OpenShopMenu(zone)
 								label      = "Podignite novac".. ' - <span style="color:green;">$' .. lova .. ' </span>',
 								label_real = "podigni",
 								item       = "podignin",
+								price      = 0,
+							})
+							table.insert(elements, {
+								label      = "Prodaj igracu",
+								label_real = "prodaj2",
+								item       = "prodajt2",
 								price      = 0,
 							})
 							table.insert(elements, {
@@ -210,8 +246,36 @@ function OpenShopMenu(zone)
 						  end
 						)
 				elseif data.current.item == 'prodajt' then
-						menu.close()
-						TriggerServerEvent("esx_gun:ProdajFirmu", st)
+					menu.close()
+					TriggerServerEvent("esx_gun:ProdajFirmu", st)
+				elseif data.current.item == 'prodajt2' then
+					local player, distance = ESX.Game.GetClosestPlayer()
+					if distance ~= -1 and distance <= 3.0 then
+						ESX.UI.Menu.Open(
+							'dialog', GetCurrentResourceName(), 'wea_prodaj_igr',
+							{
+								title = "Unesite cijenu za koju zelite prodati oruzarnicu"
+							},
+							function(data3, menu3)
+
+							local count = tonumber(data3.value)
+
+							if count == nil then
+								ESX.ShowNotification("Kriva vrijednost!")
+							else
+								menu3.close()
+								menu.close()
+								TriggerServerEvent("oruzarnica:ProdajIgracu", st, GetPlayerServerId(player), count)
+							end
+							end,
+							function(data3, menu3)
+								menu3.close()
+								menu.close()
+							end
+						)
+					else
+						ESX.ShowNotification('Nema igraca u blizini!')
+					end
 				else
 					local elements2 = {}
 					table.insert(elements2, {
