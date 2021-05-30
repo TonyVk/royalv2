@@ -44,6 +44,49 @@ ESX.RegisterServerCallback('esx_shops:requestDBItems', function(source, cb)
 	cb(ShopItems, NoveCijene)
 end)
 
+RegisterServerEvent('trgovine:ProdajIgracu')
+AddEventHandler('trgovine:ProdajIgracu', function(ime, id, cijena)
+	local src = source
+	TriggerClientEvent("trgovine:PitajProdaju", id, ime, cijena, src)
+end)
+
+RegisterServerEvent('trgovine:PrihvatioProdaju')
+AddEventHandler('trgovine:PrihvatioProdaju', function(ime, cijena, pid)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	local tPlayer = ESX.GetPlayerFromId(pid)
+	if xPlayer.getMoney() >= cijena then
+		local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(pid).."("..tPlayer.identifier..") je dobio $"..cijena.."(linija 62)"
+		TriggerEvent("SpremiLog", por)
+		for i=1, #Shopovi, 1 do
+			if Shopovi[i] ~= nil and Shopovi[i].store == ime then
+				xPlayer.removeMoney(cijena)
+				tPlayer.addMoney(cijena)
+				Shopovi[i].owner = xPlayer.identifier
+				MySQL.Async.execute('UPDATE shops2 SET `owner` = @ow WHERE store = @st', {
+					['@ow'] = xPlayer.identifier
+					['@st'] = ime
+				})
+				TriggerClientEvent("esx_shops:ReloadBlip", src)
+				TriggerClientEvent("esx_shops:ReloadBlip", pid)
+				tPlayer.showNotification("Prodali ste trgovinu za $"..cijena.."!")
+				xPlayer.showNotification("Kupili ste trgovinu za $"..cijena.."!")
+				TriggerEvent("DiscordBot:Prodaja", tPlayer.name.."["..tPlayer.source.."] je prodao trgovinu "..ime.." za $"..cijena.." igracu "..xPlayer.name.."["..xPlayer.source.."]")
+				break
+			end
+		end
+	else
+		tPlayer.showNotification("Igrac nema dovoljno novca kod sebe!")
+		xPlayer.showNotification("Nemate dovoljno novca kod sebe!")
+	end
+end)
+
+RegisterServerEvent('trgovine:OdbioProdaju')
+AddEventHandler('trgovine:OdbioProdaju', function(id)
+	local xPlayer = ESX.GetPlayerFromId(id)
+	xPlayer.showNotification("Igrac je odbio ponudu za prodaju pumpe!")
+end)
+
 ESX.RegisterServerCallback('esx_shops:DajDostupnost', function(source, cb, store)
 	local naso = false
 	for i=1, #Shopovi, 1 do

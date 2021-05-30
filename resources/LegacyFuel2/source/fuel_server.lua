@@ -344,25 +344,30 @@ AddEventHandler('pumpe:PrihvatioProdaju', function(ime, cijena, pid)
 	local src = source
 	local xPlayer = ESX.GetPlayerFromId(src)
 	local tPlayer = ESX.GetPlayerFromId(pid)
-	for i=1, #Pumpe, 1 do
-		if Pumpe[i] ~= nil and Pumpe[i].Ime == ime then
-			xPlayer.removeMoney(cijena)
-			tPlayer.addMoney(cijena)
-			Pumpe[i].Vlasnik = xPlayer.identifier
-			GetRPName(xPlayer.identifier, function(Firstname, Lastname)
-				local im = Firstname.." "..Lastname
-				Pumpe[i].VlasnikIme = im
-				TriggerClientEvent("pumpe:SaljiPumpe", -1, Pumpe)
-			end)
-			MySQL.Async.execute('UPDATE pumpe SET vlasnik = @vl WHERE ime = @ime',{
-				['@ime'] = ime,
-				['@vl'] = xPlayer.identifier
-			})
-			tPlayer.showNotification("Prodali ste benzinsku pumpu za $"..cijena.."!")
-			xPlayer.showNotification("Kupili ste benzinsku pumpu za $"..cijena.."!")
-			TriggerEvent("DiscordBot:Prodaja", tPlayer.name.."["..tPlayer.source.."] je prodao pumpu "..ime.." za $"..cijena.." igracu "..xPlayer.name.."["..xPlayer.source.."]")
-			break
+	if xPlayer.getMoney() >= cijena then
+		for i=1, #Pumpe, 1 do
+			if Pumpe[i] ~= nil and Pumpe[i].Ime == ime then
+				xPlayer.removeMoney(cijena)
+				tPlayer.addMoney(cijena)
+				Pumpe[i].Vlasnik = xPlayer.identifier
+				GetRPName(xPlayer.identifier, function(Firstname, Lastname)
+					local im = Firstname.." "..Lastname
+					Pumpe[i].VlasnikIme = im
+					TriggerClientEvent("pumpe:SaljiPumpe", -1, Pumpe)
+				end)
+				MySQL.Async.execute('UPDATE pumpe SET vlasnik = @vl WHERE ime = @ime',{
+					['@ime'] = ime,
+					['@vl'] = xPlayer.identifier
+				})
+				tPlayer.showNotification("Prodali ste benzinsku pumpu za $"..cijena.."!")
+				xPlayer.showNotification("Kupili ste benzinsku pumpu za $"..cijena.."!")
+				TriggerEvent("DiscordBot:Prodaja", tPlayer.name.."["..tPlayer.source.."] je prodao pumpu "..ime.." za $"..cijena.." igracu "..xPlayer.name.."["..xPlayer.source.."]")
+				break
+			end
 		end
+	else
+		tPlayer.showNotification("Igrac nema dovoljno novca kod sebe!")
+		xPlayer.showNotification("Nemate dovoljno novca kod sebe!")
 	end
 end)
 

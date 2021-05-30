@@ -109,6 +109,36 @@ function OpenCijeneMenu(zone, st)
 			end)
 end
 
+RegisterNetEvent('trgovine:PitajProdaju')
+AddEventHandler('trgovine:PitajProdaju', function(ime, cijena, pid)
+	ESX.UI.Menu.Open(
+		'default', GetCurrentResourceName(), 'trgovara',
+		{
+				title    = "Zelite li kupiti trgovinu "..ime.." za $"..cijena.."?",
+				align    = 'top-left',
+				elements = {
+					{label = "Da", value = 'da'},
+					{label = "Ne", value = 'ne'}
+				},
+		},
+		function(data69, menu69)
+			menu69.close()
+			if data69.current.value == 'da' then
+				TriggerServerEvent("trgovine:PrihvatioProdaju", ime, cijena, pid)
+			end
+
+			if data69.current.value == 'ne' then
+				ESX.ShowNotification("Odbili ste ponudu za kupnju trgovine!")
+				TriggerServerEvent("trgovine:OdbioProdaju", pid)
+				menu69.close()
+			end
+		end,
+		function(data69, menu69)
+			 menu69.close()
+		end
+	)
+end)
+
 function OpenShopMenu(zone)
 	local elements = {}
 	local st = zone..CurrentID
@@ -196,6 +226,12 @@ function OpenShopMenu(zone)
 								price      = 0,
 							})
 							table.insert(elements, {
+								label      = "Prodaj igracu",
+								label_real = "prodaj2",
+								item       = "prodajt2",
+								price      = 0,
+							})
+							table.insert(elements, {
 								label      = "Prodaj ($1000000)",
 								label_real = "prodaj",
 								item       = "prodajt",
@@ -250,6 +286,34 @@ function OpenShopMenu(zone)
 		elseif data.current.item == 'prodajt' then
 			menu.close()
 			TriggerServerEvent("esx_shops:ProdajFirmu", st)
+		elseif data.current.item == 'prodajt2' then
+			local player, distance = ESX.Game.GetClosestPlayer()
+			if distance ~= -1 and distance <= 3.0 then
+				ESX.UI.Menu.Open(
+					'dialog', GetCurrentResourceName(), 'trg_prodaj_igr',
+					{
+						title = "Unesite cijenu za koju zelite prodati trgovinu"
+					},
+					function(data3, menu3)
+
+					local count = tonumber(data3.value)
+
+					if count == nil then
+						ESX.ShowNotification("Kriva vrijednost!")
+					else
+						menu3.close()
+						menu.close()
+						TriggerServerEvent("trgovine:ProdajIgracu", st, GetPlayerServerId(player), count)
+					end
+					end,
+					function(data3, menu3)
+						menu3.close()
+						menu.close()
+					end
+				)
+			else
+				ESX.ShowNotification('Nema igraca u blizini!')
+			end
 		elseif data.current.item == 'prc' then
 			menu.close()
 			OpenCijeneMenu(zone, st)
