@@ -64,7 +64,7 @@ AddEventHandler('trgovine:PrihvatioProdaju', function(ime, cijena, pid)
 				tPlayer.addMoney(cijena)
 				Shopovi[i].owner = xPlayer.identifier
 				MySQL.Async.execute('UPDATE shops2 SET `owner` = @ow WHERE store = @st', {
-					['@ow'] = xPlayer.identifier
+					['@ow'] = xPlayer.identifier,
 					['@st'] = ime
 				})
 				TriggerClientEvent("esx_shops:ReloadBlip", src)
@@ -84,7 +84,7 @@ end)
 RegisterServerEvent('trgovine:OdbioProdaju')
 AddEventHandler('trgovine:OdbioProdaju', function(id)
 	local xPlayer = ESX.GetPlayerFromId(id)
-	xPlayer.showNotification("Igrac je odbio ponudu za prodaju pumpe!")
+	xPlayer.showNotification("Igrac je odbio ponudu za prodaju trgovine!")
 end)
 
 ESX.RegisterServerCallback('esx_shops:DajDostupnost', function(source, cb, store)
