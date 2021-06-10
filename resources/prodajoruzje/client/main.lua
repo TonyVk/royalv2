@@ -355,8 +355,6 @@ end)
 local skupljanje = vector3(59.282123565674, -774.98114013672, 17.823108673096)
 local cprerada = vector3(2433.5622558594, 4968.9677734375, 42.347618103027)
 local cijev = vector3(94.248916625977, 3755.9348144531, 40.77135848999)
-local okino = false
-local struja = vector3(29.269901275635, -1348.3966064453, 29.497020721436)
 
 Citizen.CreateThread(function()
 	local waitara = 500
@@ -441,20 +439,6 @@ Citizen.CreateThread(function()
 			currentStation = 1
 			currentPart    = 'Cijev'
 			currentPartNum = 1
-		end
-		
-		if #(coords-struja) < 15 then
-			waitara = 0
-			naso = 1
-			if not okino then
-				SetArtificialLightsState(true)
-				okino = true
-			end
-		else
-			if okino then
-				SetArtificialLightsState(false)
-				okino = false
-			end
 		end
 
 		if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastStation ~= currentStation or LastPart ~= currentPart or LastPartNum ~= currentPartNum) ) then

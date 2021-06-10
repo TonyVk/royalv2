@@ -1,4 +1,5 @@
 ESX = nil
+local Kvarovi = {}
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 RegisterServerEvent('elektricar:platituljanu')
@@ -12,4 +13,75 @@ AddEventHandler('elektricar:platituljanu', function()
         TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac elektricara, a nije zaposlen kao elektricar!")
 	    TriggerEvent("AntiCheat:Citer", _source)
     end
+end)
+
+MySQL.ready(function()
+	UcitajKvarove()
+end)
+
+function UcitajKvarove()
+	Kvarovi = {}
+	MySQL.Async.fetchAll(
+      'SELECT * FROM elektricar',
+      {},
+      function(result)
+		if result ~= nil then
+			for i=1, #result, 1 do
+				local data2 = json.decode(result[i].lokacija)
+				local vecta = vector3(data2.x, data2.y, data2.z)
+				table.insert(Kvarovi, {Ime = result[i].ime, Koord = vecta})
+			end
+		end
+      end
+    )
+end
+
+ESX.RegisterServerCallback('kvarovi:DohvatiKvarove', function(source, cb)
+	cb(Kvarovi)
+end)
+
+RegisterServerEvent('kvarovi:DodajKvar')
+AddEventHandler('kvarovi:DodajKvar', function(coords)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local str = "Kvar "..#Kvarovi+1
+	table.insert(Kvarovi, {Ime = str, Koord = coords})
+	MySQL.Async.execute('INSERT INTO elektricar (ime, lokacija) VALUES (@ime, @lok)',{
+		['@ime'] = str,
+		['@lok'] = json.encode(coords)
+	})
+	TriggerClientEvent("kvarovi:SaljiKvarove", -1, Kvarovi)
+	xPlayer.showNotification("Uspjesno dodan kvar "..str.."!")
+end)
+
+RegisterServerEvent('kvarovi:Premjesti')
+AddEventHandler('kvarovi:Premjesti', function(ime, koord)
+	local naso = false
+	for i=1, #Kvarovi, 1 do
+		if Kvarovi[i] ~= nil and Kvarovi[i].Ime == ime then
+			Kvarovi[i].Koord = koord
+			naso = true
+			break
+		end
+	end
+	TriggerClientEvent("kvarovi:SaljiKvarove", -1, Kvarovi)
+	if naso then
+		MySQL.Async.execute('UPDATE elektricar SET lokacija = @koord WHERE ime = @ime',{
+			['@ime'] = ime,
+			['@koord'] = json.encode(koord)
+		})
+	end
+end)
+
+RegisterServerEvent('kvarovi:Obrisi')
+AddEventHandler('kvarovi:Obrisi', function(ime)
+	for i=1, #Kvarovi, 1 do
+		if Kvarovi[i].Ime == ime then
+			table.remove(Kvarovi, i)
+			break
+		end
+	end
+	TriggerClientEvent("kvarovi:SaljiKvarove", -1, Kvarovi)
+	MySQL.Async.execute('DELETE FROM elektricar WHERE ime = @ime',{
+		['@ime'] = ime
+	})
 end)

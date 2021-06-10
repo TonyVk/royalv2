@@ -13,6 +13,7 @@ local Vozilo = nil
 local Blipic = nil
 local LokBroj = nil
 local BrTura = 0
+local Kvarovi = {}
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -40,6 +41,10 @@ local Blipara				  = {}
 --------------------------------------------------------------------------------
 function ProvjeriPosao()
 	PlayerData = ESX.GetPlayerData()
+	Wait(5000)
+	ESX.TriggerServerCallback('kvarovi:DohvatiKvarove', function(kvarovi)
+		Kvarovi = kvarovi
+	end)
 end
 -- MENUS
 function MenuCloakRoom()
@@ -80,6 +85,101 @@ function MenuCloakRoom()
 		end
 	)
 end
+
+RegisterCommand("uredikvarove", function(source, args, raw)
+	ESX.TriggerServerCallback('DajMiPermLevelCall', function(perm)
+		if perm == 69 then
+			ESX.UI.Menu.CloseAll()
+			local elements = {
+				{label = "Lista kvarova", value = "lkvar"},
+				{label = "Dodaj kvar", value = "nkvar"}
+			}
+
+			ESX.UI.Menu.Open(
+				'default', GetCurrentResourceName(), 'ukvarovi',
+				{
+					title    = "Izaberite opciju",
+					align    = 'top-left',
+					elements = elements,
+				},
+				function(data, menu)
+					if data.current.value == "nkvar" then
+						local coords = GetEntityCoords(PlayerPedId())
+						TriggerServerEvent("kvarovi:DodajKvar", coords)
+					elseif data.current.value == "lkvar" then
+						local elements = {}
+						for i=1, #Kvarovi, 1 do
+							if Kvarovi[i] ~= nil then
+								table.insert(elements, {label = Kvarovi[i].Ime, value = Kvarovi[i].Ime})
+							end
+						end
+						ESX.UI.Menu.Open(
+							'default', GetCurrentResourceName(), 'lkvarovi',
+							{
+								title    = "Izaberite kvar",
+								align    = 'top-left',
+								elements = elements,
+							},
+							function(data2, menu2)
+								local elements = {
+									{label = "Portaj se do kvara", value = "port"},
+									{label = "Premjesti kvar", value = "premj"},
+									{label = "Obrisi kvar", value = "brisi"}
+								}
+								ESX.UI.Menu.Open(
+									'default', GetCurrentResourceName(), 'lkvarovi2',
+									{
+										title    = "Izaberite opciju",
+										align    = 'top-left',
+										elements = elements,
+									},
+									function(data3, menu3)
+										if data3.current.value == "premj" then
+											local korda = GetEntityCoords(PlayerPedId())
+											TriggerServerEvent("kvarovi:Premjesti", data2.current.value, korda)
+											menu3.close()
+											ESX.ShowNotification("Premjestili ste kvar "..data2.current.value)
+										elseif data3.current.value == "brisi" then
+											TriggerServerEvent("kvarovi:Obrisi", data2.current.value)
+											menu3.close()
+											menu2.close()
+											ESX.ShowNotification("Obrisali ste kvar "..data2.current.value)
+										elseif data3.current.value == "port" then
+											menu3.close()
+											menu2.close()
+											for i=1, #Kvarovi, 1 do
+												if Kvarovi[i] ~= nil and Kvarovi[i].Koord ~= nil then
+													if Kvarovi[i].Ime == data2.current.value then
+														SetEntityCoords(PlayerPedId(), Kvarovi[i].Koord)
+													end
+												end
+											end
+											ESX.ShowNotification("Portali ste se do kvara "..data2.current.value)
+										end
+									end,
+									function(data3, menu3)
+										menu3.close()
+									end
+								)
+							end,
+							function(data2, menu2)
+								menu2.close()
+							end
+						)
+					end
+				end,
+				function(data, menu)
+					menu.close()
+				end
+			)
+		end
+	end)
+end, false)
+
+RegisterNetEvent('kvarovi:SaljiKvarove')
+AddEventHandler('kvarovi:SaljiKvarove', function(kvarovi) 
+	Kvarovi = kvarovi
+end)
 
 RegisterNUICallback(
     "kraj",
@@ -341,11 +441,29 @@ end)
 -- DISPLAY MISSION MARKERS AND MARKERS
 Citizen.CreateThread(function()
 	local waitara = 500
+	local odradio = false
 	while true do
 		Wait(waitara)
 		local naso = 0
+		local coords      = GetEntityCoords(GetPlayerPed(-1))
+		for i=1, #Kvarovi, 1 do
+			if Kvarovi[i] ~= nil and Kvarovi[i].Koord ~= nil then
+				local kordara = Kvarovi[i].Koord
+				if (kordara.x ~= 0 and kordara.x ~= nil) and (kordara.y ~= 0 and kordara.y ~= nil) and (kordara.z ~= 0 and kordara.z ~= nil) then
+					if #(coords-kordara) < 40.0 then
+						if not odradio then
+							odradio = true
+							SetArtificialLightsState(true)
+							SetArtificialLightsStateAffectsVehicles(false)
+						end
+					elseif odradio then
+						SetArtificialLightsState(false)
+						odradio = false
+					end
+				end
+			end
+		end
 		if IsJobElektricar() then
-			local coords      = GetEntityCoords(GetPlayerPed(-1))
 			local isInMarker  = false
 			local currentZone = nil
 
