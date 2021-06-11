@@ -29,7 +29,7 @@ function UcitajKvarove()
 			for i=1, #result, 1 do
 				local data2 = json.decode(result[i].lokacija)
 				local vecta = vector3(data2.x, data2.y, data2.z)
-				table.insert(Kvarovi, {Ime = result[i].ime, Koord = vecta})
+				table.insert(Kvarovi, {Ime = result[i].ime, Koord = vecta, Radius = result[i].radius})
 			end
 		end
       end
@@ -41,13 +41,14 @@ ESX.RegisterServerCallback('kvarovi:DohvatiKvarove', function(source, cb)
 end)
 
 RegisterServerEvent('kvarovi:DodajKvar')
-AddEventHandler('kvarovi:DodajKvar', function(coords)
+AddEventHandler('kvarovi:DodajKvar', function(coords, radius)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local str = "Kvar "..#Kvarovi+1
-	table.insert(Kvarovi, {Ime = str, Koord = coords})
-	MySQL.Async.execute('INSERT INTO elektricar (ime, lokacija) VALUES (@ime, @lok)',{
+	table.insert(Kvarovi, {Ime = str, Koord = coords, Radius = radius})
+	MySQL.Async.execute('INSERT INTO elektricar (ime, lokacija, radius) VALUES (@ime, @lok, @rad)',{
 		['@ime'] = str,
-		['@lok'] = json.encode(coords)
+		['@lok'] = json.encode(coords),
+		['@rad'] = radius
 	})
 	TriggerClientEvent("kvarovi:SaljiKvarove", -1, Kvarovi)
 	xPlayer.showNotification("Uspjesno dodan kvar "..str.."!")
@@ -68,6 +69,25 @@ AddEventHandler('kvarovi:Premjesti', function(ime, koord)
 		MySQL.Async.execute('UPDATE elektricar SET lokacija = @koord WHERE ime = @ime',{
 			['@ime'] = ime,
 			['@koord'] = json.encode(koord)
+		})
+	end
+end)
+
+RegisterServerEvent('kvarovi:UrediRadius')
+AddEventHandler('kvarovi:UrediRadius', function(ime, radius)
+	local naso = false
+	for i=1, #Kvarovi, 1 do
+		if Kvarovi[i] ~= nil and Kvarovi[i].Ime == ime then
+			Kvarovi[i].Radius = radius
+			naso = true
+			break
+		end
+	end
+	TriggerClientEvent("kvarovi:SaljiKvarove", -1, Kvarovi)
+	if naso then
+		MySQL.Async.execute('UPDATE elektricar SET radius = @rad WHERE ime = @ime',{
+			['@ime'] = ime,
+			['@rad'] = radius
 		})
 	end
 end)

@@ -20,6 +20,7 @@ local CurrentID 			  = nil
 local blip = {}
 local NoveCijene = {}
 local PrviSpawn = false
+local NemaStruje = false
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -413,6 +414,11 @@ function ReloadBlip()
 	end
 end
 
+RegisterNetEvent('elektricar:NemaStruje')
+AddEventHandler('elektricar:NemaStruje', function(br)
+	NemaStruje = br
+end)
+
 RegisterNetEvent('esx_shops:ReloadBlip')
 AddEventHandler('esx_shops:ReloadBlip', function()
 	ReloadBlip()
@@ -487,7 +493,11 @@ Citizen.CreateThread(function()
 
 			if IsControlJustReleased(0, Keys['E']) then
 				if CurrentAction == 'shop_menu' then
-					OpenShopMenu(CurrentActionData.zone)
+					if not NemaStruje then
+						OpenShopMenu(CurrentActionData.zone)
+					else
+						ESX.ShowNotification("Ne mozemo vam naplatiti trenutno posto nema struje.")
+					end
 				end
 
 				CurrentAction = nil

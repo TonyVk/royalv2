@@ -5,12 +5,18 @@ local CurrentAction				= nil
 local CurrentActionMsg			= ''
 local CurrentActionData			= {}
 local isDead					= false
+local NemaStruje 				= false
 
 Citizen.CreateThread(function()
 	while ESX == nil do
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(0)
 	end
+end)
+
+RegisterNetEvent('elektricar:NemaStruje')
+AddEventHandler('elektricar:NemaStruje', function(br)
+	NemaStruje = br
 end)
 
 function OpenAccessoryMenu()
@@ -235,8 +241,13 @@ Citizen.CreateThread(function()
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
 			if IsControlJustReleased(0, 38) and CurrentActionData.accessory then
-				OpenShopMenu(CurrentActionData.accessory)
-				CurrentAction = nil
+				if not NemaStruje then
+					OpenShopMenu(CurrentActionData.accessory)
+					CurrentAction = nil
+				else
+					CurrentAction = nil
+					ESX.ShowNotification("Trenutno nismo u mogucnosti prodati robu zato sto nemamo struje!")
+				end
 			end
 		elseif CurrentAction == nil and not Config.EnableControls then
 			Citizen.Wait(500)

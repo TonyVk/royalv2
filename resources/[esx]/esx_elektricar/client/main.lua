@@ -104,8 +104,20 @@ RegisterCommand("uredikvarove", function(source, args, raw)
 				},
 				function(data, menu)
 					if data.current.value == "nkvar" then
-						local coords = GetEntityCoords(PlayerPedId())
-						TriggerServerEvent("kvarovi:DodajKvar", coords)
+						ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'radius', {
+							title = "Upisite radius kvara (default 40)",
+						}, function (datari, menuri)
+							local radius = datari.value
+							if radius == nil or radius < 1 then
+								ESX.ShowNotification('Greska.')
+							else
+								local coords = GetEntityCoords(PlayerPedId())
+								TriggerServerEvent("kvarovi:DodajKvar", coords, radius)
+								menuri.close()
+							end
+						end, function (datari, menuri)
+							menuri.close()
+						end)
 					elseif data.current.value == "lkvar" then
 						local elements = {}
 						for i=1, #Kvarovi, 1 do
@@ -124,6 +136,7 @@ RegisterCommand("uredikvarove", function(source, args, raw)
 								local elements = {
 									{label = "Portaj se do kvara", value = "port"},
 									{label = "Premjesti kvar", value = "premj"},
+									{label = "Promjeni radius kvara", value = "rad"},
 									{label = "Obrisi kvar", value = "brisi"}
 								}
 								ESX.UI.Menu.Open(
@@ -144,6 +157,21 @@ RegisterCommand("uredikvarove", function(source, args, raw)
 											menu3.close()
 											menu2.close()
 											ESX.ShowNotification("Obrisali ste kvar "..data2.current.value)
+										elseif data3.current.value == "rad" then
+											ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'radius', {
+												title = "Upisite radius kvara (default 40)",
+											}, function (datari, menuri)
+												local radius = datari.value
+												if radius == nil or radius < 1 then
+													ESX.ShowNotification('Greska.')
+												else
+													local coords = GetEntityCoords(PlayerPedId())
+													TriggerServerEvent("kvarovi:UrediRadius", data2.current.value, radius)
+													menuri.close()
+												end
+											end, function (datari, menuri)
+												menuri.close()
+											end)
 										elseif data3.current.value == "port" then
 											menu3.close()
 											menu2.close()
@@ -450,14 +478,16 @@ Citizen.CreateThread(function()
 			if Kvarovi[i] ~= nil and Kvarovi[i].Koord ~= nil then
 				local kordara = Kvarovi[i].Koord
 				if (kordara.x ~= 0 and kordara.x ~= nil) and (kordara.y ~= 0 and kordara.y ~= nil) and (kordara.z ~= 0 and kordara.z ~= nil) then
-					if #(coords-kordara) < 40.0 then
+					if #(coords-kordara) < Kvarovi[i].Radius then
 						if not odradio then
 							odradio = true
 							SetArtificialLightsState(true)
 							SetArtificialLightsStateAffectsVehicles(false)
+							TriggerEvent("elektricar:NemaStruje", true)
 						end
 					elseif odradio then
 						SetArtificialLightsState(false)
+						TriggerEvent("elektricar:NemaStruje", false)
 						odradio = false
 					end
 				end

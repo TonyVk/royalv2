@@ -9,6 +9,7 @@ local Licenses                = {}
 local CurrentID 			  = nil
 local blip = {}
 local PrviSpawn = false
+local NemaStruje 		      = false
 
 Citizen.CreateThread(function()
   while ESX == nil do
@@ -21,6 +22,11 @@ Citizen.CreateThread(function()
       Config.Zones[k].Items = v
     end
   end)
+end)
+
+RegisterNetEvent('elektricar:NemaStruje')
+AddEventHandler('elektricar:NemaStruje', function(br)
+	NemaStruje = br
 end)
 
 RegisterNetEvent('esx_weashop:loadLicenses')
@@ -459,15 +465,19 @@ Citizen.CreateThread(function()
 		  if IsControlJustReleased(0, Keys['E']) then
 
 			if CurrentAction == 'shop_menu' then
-			  if Config.EnableLicense == true then
-				if Licenses['weapon'] ~= nil or Config.Zones[CurrentActionData.zone].legal == 1 then
-				  OpenShopMenu(CurrentActionData.zone)
+				if not NemaStruje then
+					if Config.EnableLicense == true then
+						if Licenses['weapon'] ~= nil or Config.Zones[CurrentActionData.zone].legal == 1 then
+							OpenShopMenu(CurrentActionData.zone)
+						else
+							OpenBuyLicenseMenu(CurrentActionData.zone)
+						end
+					else
+						OpenShopMenu(CurrentActionData.zone)
+					end
 				else
-				  OpenBuyLicenseMenu(CurrentActionData.zone)
+					ESX.ShowNotification("Trenutno vam ne mozemo prodavati oruzje posto nemamo struje!")
 				end
-			  else
-				OpenShopMenu(CurrentActionData.zone)
-			  end
 			end
 
 			CurrentAction = nil

@@ -16,13 +16,19 @@ local LastZone                = nil
 local CurrentAction           = nil
 local CurrentActionMsg        = ''
 local CurrentActionData       = {}
-local HasPaid                = false
+local HasPaid                 = false
+local NemaStruje 			  = false
 
 Citizen.CreateThread(function()
 	while ESX == nil do
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(0)
 	end
+end)
+
+RegisterNetEvent('elektricar:NemaStruje')
+AddEventHandler('elektricar:NemaStruje', function(br)
+	NemaStruje = br
 end)
 
 function OpenShopMenu()
@@ -214,7 +220,11 @@ Citizen.CreateThread(function()
 
 			if IsControlJustReleased(0, Keys['E']) then
 				if CurrentAction == 'shop_menu' then
-					OpenShopMenu()
+					if not NemaStruje then
+						OpenShopMenu()
+					else
+						ESX.ShowNotification("Nismo u mogucnosti vam prodati robu posto nemamo struje.")
+					end
 				end
 
 				CurrentAction = nil

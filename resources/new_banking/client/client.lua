@@ -7,6 +7,7 @@ local atbank = false
 local bankMenu = true
 local JelZatvoreno = false
 local PrviSpawn = false
+local NemaStruje = false
 
 function playAnim(animDict, animName, duration)
 	RequestAnimDict(animDict)
@@ -29,6 +30,10 @@ Citizen.CreateThread(function()
 	end
 end)
 
+RegisterNetEvent('elektricar:NemaStruje')
+AddEventHandler('elektricar:NemaStruje', function(br)
+	NemaStruje = br
+end)
 
 AddEventHandler("playerSpawned", function()
 	if not PrviSpawn then
@@ -54,19 +59,24 @@ if bankMenu then
 					DisplayHelpText(_U('atm_open'))
 					if IsControlJustPressed(1, 38) then
 						if JelZatvoreno == false then
-							playAnim('mp_common', 'givetake1_a', 2500)
-							Citizen.Wait(2500)
-							inMenu = true
-							SetNuiFocus(true, true)
-							SendNUIMessage({type = 'openGeneral'})
-							ESX.TriggerServerCallback('banka:DohvatiKredit', function(br)
-								SendNUIMessage({
-									type = "narediKredit",
-									kredit = br.kredit,
-									rata = br.rata
-								})
-							end)
-							TriggerServerEvent('bank:balance')
+							if not NemaStruje then
+								playAnim('mp_common', 'givetake1_a', 2500)
+								Citizen.Wait(2500)
+								inMenu = true
+								SetNuiFocus(true, true)
+								SendNUIMessage({type = 'openGeneral'})
+								ESX.TriggerServerCallback('banka:DohvatiKredit', function(br)
+									SendNUIMessage({
+										type = "narediKredit",
+										kredit = br.kredit,
+										rata = br.rata
+									})
+								end)
+								TriggerServerEvent('bank:balance')
+							else
+								waitara = 500
+								ESX.ShowAdvancedNotification('BANKA', 'Obavijest', 'Ne mozemo odradivati transakcije posto trenutno nemamo struje!', "CHAR_BANK_FLEECA", 2)
+							end
 						else
 							waitara = 500
 							ESX.ShowAdvancedNotification('BANKA', 'Obavijest', 'Zbog pljacke jedne od nasih poslovnica nismo u stanju trenutno odradjivati transakcije novca!', "CHAR_BANK_FLEECA", 2)

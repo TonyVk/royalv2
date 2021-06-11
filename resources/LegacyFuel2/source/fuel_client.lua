@@ -32,6 +32,7 @@ local GUI                       = {}
 GUI.Time                        = 0
 local BlizuPumpe 				= nil
 local ZadnjeGorivo 				= 0.0
+local NemaStruje 				= false
 
 function ManageFuelUsage(vehicle)
 	if not DecorExistOn(vehicle, Config.FuelDecor) then
@@ -53,6 +54,11 @@ function ManageFuelUsage(vehicle)
 		SetFuel(vehicle, GetVehicleFuelLevel(vehicle) - Config.FuelUsage[Round(GetVehicleCurrentRpm(vehicle), 1)] * (limitic or 1.0) / 10)
 	end
 end
+
+RegisterNetEvent('elektricar:NemaStruje')
+AddEventHandler('elektricar:NemaStruje', function(br)
+	NemaStruje = br
+end)
 
 RegisterCommand("uredipumpe", function(source, args, raw)
 	ESX.TriggerServerCallback('DajMiPermLevelCall', function(perm)
@@ -1020,14 +1026,18 @@ Citizen.CreateThread(function()
 							DrawText3Ds(stringCoords.x, stringCoords.y, stringCoords.z + 1.2, "Pritisnite ~g~E ~w~da kupite kanister goriva za ~g~$" .. cijena)
 
 							if IsControlJustReleased(0, 38) then
-								if gorivo >= 50 then
-									GiveWeaponToPed(ped, 883325847, 4500, false, true)
-									
-									TriggerServerEvent('gorivo:foka', cijena, BlizuPumpe, 50, ImalVlasnika)
+								if not NemaStruje then
+									if gorivo >= 50 then
+										GiveWeaponToPed(ped, 883325847, 4500, false, true)
+										
+										TriggerServerEvent('gorivo:foka', cijena, BlizuPumpe, 50, ImalVlasnika)
 
-									currentCash = ESX.GetPlayerData().money
+										currentCash = ESX.GetPlayerData().money
+									else
+										ESX.ShowNotification("Nema dovoljno goriva!")
+									end
 								else
-									ESX.ShowNotification("Nema dovoljno goriva!")
+									ESX.ShowNotification("Nismo u mogucnosti vam prodati gorivo posto nemamo struje!")
 								end
 							end
 						else
@@ -1039,9 +1049,13 @@ Citizen.CreateThread(function()
 										DrawText3Ds(stringCoords.x, stringCoords.y, stringCoords.z + 1.2, Config.Strings.RefillJerryCan .. refillCost)
 
 										if IsControlJustReleased(0, 38) then
-											TriggerServerEvent('gorivo:foka', refillCost, BlizuPumpe, Racunica, ImalVlasnika)
+											if not NemaStruje then
+												TriggerServerEvent('gorivo:foka', refillCost, BlizuPumpe, Racunica, ImalVlasnika)
 
-											SetPedAmmo(ped, 883325847, 4500)
+												SetPedAmmo(ped, 883325847, 4500)
+											else
+												ESX.ShowNotification("Nismo u mogucnosti vam prodati gorivo posto nemamo struje!")
+											end
 										end
 									else
 										DrawText3Ds(stringCoords.x, stringCoords.y, stringCoords.z + 1.2, Config.Strings.NotEnoughCashJerryCan)
