@@ -990,9 +990,13 @@ Citizen.CreateThread(function()
 									DrawText3Ds(stringCoords.x, stringCoords.y, stringCoords.z + 1.2, Config.Strings.EToRefuel)
 
 									if IsControlJustReleased(0, 38) then
-										isFueling = true
-										TriggerEvent('fuel:refuelFromPump', isNearPump, ped, vehicle)
-										LoadAnimDict("timetable@gardener@filling_can")
+										if not NemaStruje then
+											isFueling = true
+											TriggerEvent('fuel:refuelFromPump', isNearPump, ped, vehicle)
+											LoadAnimDict("timetable@gardener@filling_can")
+										else
+											ESX.ShowNotification("Ne mozemo vam naplatiti posto nemamo struje.")
+										end
 									end
 								else
 									DrawText3Ds(stringCoords.x, stringCoords.y, stringCoords.z + 1.2, Config.Strings.NotEnoughCash)

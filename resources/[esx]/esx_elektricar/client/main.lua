@@ -108,7 +108,7 @@ RegisterCommand("uredikvarove", function(source, args, raw)
 							title = "Upisite radius kvara (default 40)",
 						}, function (datari, menuri)
 							local radius = datari.value
-							if radius == nil or radius < 1 then
+							if radius == nil or tonumber(radius) < 1 then
 								ESX.ShowNotification('Greska.')
 							else
 								local coords = GetEntityCoords(PlayerPedId())
@@ -162,7 +162,7 @@ RegisterCommand("uredikvarove", function(source, args, raw)
 												title = "Upisite radius kvara (default 40)",
 											}, function (datari, menuri)
 												local radius = datari.value
-												if radius == nil or radius < 1 then
+												if radius == nil or tonumber(radius) < 1 then
 													ESX.ShowNotification('Greska.')
 												else
 													local coords = GetEntityCoords(PlayerPedId())
@@ -474,18 +474,20 @@ Citizen.CreateThread(function()
 		Wait(waitara)
 		local naso = 0
 		local coords      = GetEntityCoords(GetPlayerPed(-1))
+		local dalekosi = false
 		for i=1, #Kvarovi, 1 do
 			if Kvarovi[i] ~= nil and Kvarovi[i].Koord ~= nil then
 				local kordara = Kvarovi[i].Koord
 				if (kordara.x ~= 0 and kordara.x ~= nil) and (kordara.y ~= 0 and kordara.y ~= nil) and (kordara.z ~= 0 and kordara.z ~= nil) then
-					if #(coords-kordara) < Kvarovi[i].Radius then
+					if #(coords-kordara) < tonumber(Kvarovi[i].Radius) then
+						dalekosi = true
 						if not odradio then
 							odradio = true
 							SetArtificialLightsState(true)
 							SetArtificialLightsStateAffectsVehicles(false)
 							TriggerEvent("elektricar:NemaStruje", true)
 						end
-					elseif odradio then
+					elseif odradio and not dalekosi then
 						SetArtificialLightsState(false)
 						TriggerEvent("elektricar:NemaStruje", false)
 						odradio = false
