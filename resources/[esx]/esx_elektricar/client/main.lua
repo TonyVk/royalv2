@@ -226,7 +226,11 @@ RegisterNUICallback(
 			})
 			SetNuiFocus(false)
 			ClearPedTasksImmediately(PlayerPedId())
-			TriggerServerEvent("elektricar:platituljanu")
+			if TaLokacija ~= nil then
+				TriggerServerEvent("elektricar:platituljanu2")
+			else
+				TriggerServerEvent("elektricar:platituljanu")
+			end
 			TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.job.name)
 			if TaLokacija ~= nil then
 				TriggerServerEvent("kvarovi:MakniKvar", TaLokacija)
@@ -543,13 +547,14 @@ Citizen.CreateThread(function()
 							SetArtificialLightsStateAffectsVehicles(false)
 							TriggerEvent("elektricar:NemaStruje", true)
 						end
-					elseif odradio and not dalekosi then
-						SetArtificialLightsState(false)
-						TriggerEvent("elektricar:NemaStruje", false)
-						odradio = false
 					end
 				end
 			end
+		end
+		if odradio and not dalekosi then
+			SetArtificialLightsState(false)
+			TriggerEvent("elektricar:NemaStruje", false)
+			odradio = false
 		end
 		if IsJobElektricar() then
 			local isInMarker  = false

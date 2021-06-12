@@ -8,8 +8,21 @@ AddEventHandler('elektricar:platituljanu', function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	if xPlayer.job.name == 'elektricar' then
-		xPlayer.addMoney(450)
-		TriggerEvent("biznis:StaviUSef", "elektricar", math.ceil(450*0.30))
+		xPlayer.addMoney(750)
+		TriggerEvent("biznis:StaviUSef", "elektricar", math.ceil(750*0.30))
+	else
+        TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac elektricara, a nije zaposlen kao elektricar!")
+	    TriggerEvent("AntiCheat:Citer", _source)
+    end
+end)
+
+RegisterServerEvent('elektricar:platituljanu2')
+AddEventHandler('elektricar:platituljanu2', function()
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	if xPlayer.job.name == 'elektricar' then
+		xPlayer.addMoney(850)
+		TriggerEvent("biznis:StaviUSef", "elektricar", math.ceil(850*0.30))
 	else
         TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac elektricara, a nije zaposlen kao elektricar!")
 	    TriggerEvent("AntiCheat:Citer", _source)
@@ -128,12 +141,11 @@ function StvoriKvar()
 			end
 		end
 		if not naso then
-			print(rnd)
 			table.insert(Pokvareni, {Ime = Kvarovi[rnd].Ime, Koord = Kvarovi[rnd].Koord, Radius = Kvarovi[rnd].Radius})
 			TriggerClientEvent("kvarovi:SaljiPokvarene", -1, Pokvareni)
 		end
 	end
-	SetTimeout(15000, StvoriKvar)
+	SetTimeout(3600000, StvoriKvar)
 end
 
-SetTimeout(15000, StvoriKvar)
+SetTimeout(3600000, StvoriKvar)
