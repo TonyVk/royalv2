@@ -14,6 +14,9 @@ local Blipic = nil
 local LokBroj = nil
 local BrTura = 0
 local Kvarovi = {}
+local Pokvareni = {}
+local PopraviMe = nil
+local TaLokacija = nil
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -209,6 +212,11 @@ AddEventHandler('kvarovi:SaljiKvarove', function(kvarovi)
 	Kvarovi = kvarovi
 end)
 
+RegisterNetEvent('kvarovi:SaljiPokvarene')
+AddEventHandler('kvarovi:SaljiPokvarene', function(pokvareni) 
+	Pokvareni = pokvareni
+end)
+
 RegisterNUICallback(
     "kraj",
     function(data, cb)
@@ -220,9 +228,17 @@ RegisterNUICallback(
 			ClearPedTasksImmediately(PlayerPedId())
 			TriggerServerEvent("elektricar:platituljanu")
 			TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.job.name)
+			if TaLokacija ~= nil then
+				TriggerServerEvent("kvarovi:MakniKvar", TaLokacija)
+			end
 			BrTura = BrTura+1
 			if BrTura ~= 10 then
-				SpucajPosao()
+				if TaLokacija == nil then
+					SpucajPosao()
+				else
+					TaLokacija = nil
+					SpucajPosao2()
+				end
 			else
 				ESX.ShowNotification("Vratite vozilo u firmu!")
 				for k,v in pairs(Config.Zones) do
@@ -240,9 +256,9 @@ function MenuVehicleSpawner()
 	local elements = {}
 
 	for i=1, #Config.Trucks, 1 do
-		table.insert(elements, {label = GetLabelText(GetDisplayNameFromVehicleModel(Config.Trucks[i])), value = Config.Trucks[i]})
+		table.insert(elements, {label = "Popravak ormarica po gradu", value = Config.Trucks[i]})
 	end
-
+	table.insert(elements, {label = "Popravak struje po trgovinama ("..#Pokvareni..")", value = "struja"})
 
 	ESX.UI.Menu.CloseAll()
 
@@ -267,6 +283,24 @@ function MenuVehicleSpawner()
 			TaskWarpPedIntoVehicle(GetPlayerPed(-1), Vozilo, -1)
 			Radis = true
 			SpucajPosao()
+		elseif data.current.value == "struja" then
+			if Vozilo ~= nil then
+				ESX.Game.DeleteVehicle(Vozilo)
+				Vozilo = nil
+			end
+			if #Pokvareni > 0 then
+				ESX.Streaming.RequestModel("burrito")
+				Vozilo = CreateVehicle("burrito", Config.Zones.VehicleSpawnPoint.Pos.x, Config.Zones.VehicleSpawnPoint.Pos.y, Config.Zones.VehicleSpawnPoint.Pos.z, 82.12, true, false)
+				platenum = math.random(10000, 99999)
+				SetModelAsNoLongerNeeded("burrito")
+				SetVehicleNumberPlateText(Vozilo, "HUG"..platenum)
+				plaquevehicule = "HUG"..platenum
+				TaskWarpPedIntoVehicle(GetPlayerPed(-1), Vozilo, -1)
+				Radis = true
+				SpucajPosao2()
+			else
+				ESX.ShowNotification("Nema prijavljenih kvarova!")
+			end
 		end
 
 			menu.close()
@@ -363,7 +397,27 @@ function SpucajPosao()
 	Blipic = AddBlipForCoord(Config.Lokacije[LokBroj].x, Config.Lokacije[LokBroj].y, Config.Lokacije[LokBroj].z)
 	SetBlipRoute(Blipic, true)
 	Spawno = true
-	ESX.ShowNotification("Idite do ormarica i popravite!")
+	ESX.ShowNotification("Idite do ormarica i popravite struju!")
+end
+
+function SpucajPosao2()
+	if #Pokvareni > 0 then
+		LokBroj = math.random(1, #Pokvareni)
+		Blipic = AddBlipForCoord(Pokvareni[LokBroj].Koord.x, Pokvareni[LokBroj].Koord.y, Pokvareni[LokBroj].Koord.z)
+		TaLokacija = Pokvareni[LokBroj].Ime
+		SetBlipRoute(Blipic, true)
+		Spawno = true
+		PopraviMe = Pokvareni[LokBroj].Koord
+		ESX.ShowNotification("Idite do trgovine i popravite struju!")
+	else
+		ESX.ShowNotification("Nema prijavljenih kvarova, vratite vozilo u firmu!")
+		for k,v in pairs(Config.Zones) do
+			if k == "VehicleDeletePoint" then
+				Blipic = AddBlipForCoord(v.Pos.x, v.Pos.y, v.Pos.z)
+				SetBlipRoute(Blipic, true)
+			end
+		end
+	end
 end
 
 function IsATruck()
@@ -396,6 +450,7 @@ AddEventHandler('esx_elektricar:hasEnteredMarker', function(zone)
 	if zone == 'Radis' then
 		LokBroj = nil
 		RemoveBlip(Blipic)
+		PopraviMe = nil
 		TaskStartScenarioInPlace(PlayerPedId(), "WORLD_HUMAN_WELDING", 0, true)
 		SendNUIMessage({
 			prikazi = true
@@ -432,6 +487,7 @@ function ZavrsiPosao()
 	Blipic = nil
 	Spawno = false
 	Radis = false
+	PopraviMe = nil
 	LokBroj = nil
 end
 
@@ -475,11 +531,11 @@ Citizen.CreateThread(function()
 		local naso = 0
 		local coords      = GetEntityCoords(GetPlayerPed(-1))
 		local dalekosi = false
-		for i=1, #Kvarovi, 1 do
-			if Kvarovi[i] ~= nil and Kvarovi[i].Koord ~= nil then
-				local kordara = Kvarovi[i].Koord
+		for i=1, #Pokvareni, 1 do
+			if Pokvareni[i] ~= nil and Pokvareni[i].Koord ~= nil then
+				local kordara = Pokvareni[i].Koord
 				if (kordara.x ~= 0 and kordara.x ~= nil) and (kordara.y ~= 0 and kordara.y ~= nil) and (kordara.z ~= 0 and kordara.z ~= nil) then
-					if #(coords-kordara) < tonumber(Kvarovi[i].Radius) then
+					if #(coords-kordara) < tonumber(Pokvareni[i].Radius) then
 						dalekosi = true
 						if not odradio then
 							odradio = true
@@ -510,18 +566,35 @@ Citizen.CreateThread(function()
 			end
 			
 			if LokBroj ~= nil then
-				if #(coords-Config.Lokacije[LokBroj]) < 15.0 then
-				--if(GetDistanceBetweenCoords(coords, Config.Lokacije[LokBroj].x, Config.Lokacije[LokBroj].y, Config.Lokacije[LokBroj].z-1.0, true) < 15.0) then
-					waitara = 0
-					naso = 1
-					local x,y,z = table.unpack(Config.Lokacije[LokBroj])
-					DrawMarker(1, x, y, z-1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 1.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
-				end
-				if #(coords-Config.Lokacije[LokBroj]) < 1.0 then
-				--if(GetDistanceBetweenCoords(coords, Config.Lokacije[LokBroj].x, Config.Lokacije[LokBroj].y, Config.Lokacije[LokBroj].z, true) < 1.0) then
-					if not IsPedInAnyVehicle(PlayerPedId(), false) then
-						isInMarker  = true
-						currentZone = "Radis"
+				if PopraviMe == nil then
+					if #(coords-Config.Lokacije[LokBroj]) < 15.0 then
+					--if(GetDistanceBetweenCoords(coords, Config.Lokacije[LokBroj].x, Config.Lokacije[LokBroj].y, Config.Lokacije[LokBroj].z-1.0, true) < 15.0) then
+						waitara = 0
+						naso = 1
+						local x,y,z = table.unpack(Config.Lokacije[LokBroj])
+						DrawMarker(1, x, y, z-1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 1.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
+					end
+					if #(coords-Config.Lokacije[LokBroj]) < 1.0 then
+					--if(GetDistanceBetweenCoords(coords, Config.Lokacije[LokBroj].x, Config.Lokacije[LokBroj].y, Config.Lokacije[LokBroj].z, true) < 1.0) then
+						if not IsPedInAnyVehicle(PlayerPedId(), false) then
+							isInMarker  = true
+							currentZone = "Radis"
+						end
+					end
+				else
+					if #(coords-PopraviMe) < 15.0 then
+					--if(GetDistanceBetweenCoords(coords, Config.Lokacije[LokBroj].x, Config.Lokacije[LokBroj].y, Config.Lokacije[LokBroj].z-1.0, true) < 15.0) then
+						waitara = 0
+						naso = 1
+						local x,y,z = table.unpack(PopraviMe)
+						DrawMarker(1, x, y, z-1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 1.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
+					end
+					if #(coords-PopraviMe) < 1.0 then
+					--if(GetDistanceBetweenCoords(coords, Config.Lokacije[LokBroj].x, Config.Lokacije[LokBroj].y, Config.Lokacije[LokBroj].z, true) < 1.0) then
+						if not IsPedInAnyVehicle(PlayerPedId(), false) then
+							isInMarker  = true
+							currentZone = "Radis"
+						end
 					end
 				end
 			end

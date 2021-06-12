@@ -1,5 +1,6 @@
 ESX = nil
 local Kvarovi = {}
+local Pokvareni = {}
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 RegisterServerEvent('elektricar:platituljanu')
@@ -105,3 +106,34 @@ AddEventHandler('kvarovi:Obrisi', function(ime)
 		['@ime'] = ime
 	})
 end)
+
+RegisterServerEvent('kvarovi:MakniKvar')
+AddEventHandler('kvarovi:MakniKvar', function(ime)
+	for i=1, #Pokvareni, 1 do
+		if Pokvareni[i].Ime == ime then
+			table.remove(Pokvareni, i)
+			break
+		end
+	end
+	TriggerClientEvent("kvarovi:SaljiPokvarene", -1, Pokvareni)
+end)
+
+function StvoriKvar()
+	if #Kvarovi > 0 then
+		local rnd = math.random(1, #Kvarovi)
+		local naso = false
+		for i=1, #Pokvareni, 1 do
+			if Pokvareni[i].Ime == Kvarovi[rnd].Ime then
+				naso = true
+			end
+		end
+		if not naso then
+			print(rnd)
+			table.insert(Pokvareni, {Ime = Kvarovi[rnd].Ime, Koord = Kvarovi[rnd].Koord, Radius = Kvarovi[rnd].Radius})
+			TriggerClientEvent("kvarovi:SaljiPokvarene", -1, Pokvareni)
+		end
+	end
+	SetTimeout(15000, StvoriKvar)
+end
+
+SetTimeout(15000, StvoriKvar)
