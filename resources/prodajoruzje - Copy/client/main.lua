@@ -72,6 +72,15 @@ Citizen.CreateThread(function()
   end
 end)
 
+--Voda
+function IsFacingWater()
+  local ped = PlayerPedId()
+  local headPos = GetPedBoneCoords(ped, 31086, 0.0, 0.0, 0.0)
+  local offsetPos = GetOffsetFromEntityInWorldCoords(ped, 0.0, 50.0, -25.0)
+  local hit, hitPos = TestProbeAgainstWater(headPos.x, headPos.y, headPos.z, offsetPos.x, offsetPos.y, offsetPos.z)
+  return hit, hitPos
+end
+
 function ProvjeriPosao()
 	ESX.PlayerData = ESX.GetPlayerData()
 	local model = GetHashKey("a_m_m_beach_01")
@@ -273,9 +282,6 @@ AddEventHandler('prodajoruzje:grebalica', function()
 		while Upaljeno do
 			Citizen.Wait(0)
 			DisableAllControlActions(0)
-			Citizen.Wait(1500)
-			EnableAllControlActions(0)
-			prikazi = false
 		end
 	end)
 end)
@@ -355,248 +361,248 @@ AddEventHandler('prodajoruzje:petarde', function()
 			DeleteEntity(prop)
 end)
 
--- local skupljanje = vector3(59.282123565674, -774.98114013672, 17.823108673096)
--- local cprerada = vector3(2433.5622558594, 4968.9677734375, 42.347618103027)
--- local cijev = vector3(94.248916625977, 3755.9348144531, 40.77135848999)
+local skupljanje = vector3(59.282123565674, -774.98114013672, 17.823108673096)
+local cprerada = vector3(2433.5622558594, 4968.9677734375, 42.347618103027)
+local cijev = vector3(94.248916625977, 3755.9348144531, 40.77135848999)
 
--- Citizen.CreateThread(function()
--- 	local waitara = 500
--- 	while true do
--- 		Citizen.Wait(waitara)
--- 		local naso = 0
--- 		local playerPed = GetPlayerPed(-1)
--- 		local isInMarker     = false
--- 		local currentStation = nil
--- 		local currentPart    = nil
--- 		local currentPartNum = nil
--- 		local hasExited = false
--- 		if CurrentAction ~= nil then
--- 			waitara = 0
--- 			naso = 1
+Citizen.CreateThread(function()
+	local waitara = 500
+	while true do
+		Citizen.Wait(waitara)
+		local naso = 0
+		local playerPed = GetPlayerPed(-1)
+		local isInMarker     = false
+		local currentStation = nil
+		local currentPart    = nil
+		local currentPartNum = nil
+		local hasExited = false
+		if CurrentAction ~= nil then
+			waitara = 0
+			naso = 1
 	  
--- 			SetTextComponentFormat('STRING')
--- 			AddTextComponentString(CurrentActionMsg)
--- 			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
+			SetTextComponentFormat('STRING')
+			AddTextComponentString(CurrentActionMsg)
+			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 
--- 			if IsControlPressed(0, Keys['E']) and (GetGameTimer() - GUI.Time) > 150 then
--- 				if CurrentAction == 'menu_prerada' then
--- 					OpenPreradaMenu()
--- 				elseif CurrentAction == 'menu_skupljanje' then
--- 					TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_WELDING", 0, true)
---                     local vrime = GetGameTimer()
--- 					while GetGameTimer()-vrime < 15000 do
--- 						Wait(1)
--- 						DisableAllControlActions()
--- 					end
--- 					ClearPedTasksImmediately(playerPed)
--- 					local kordic = GetEntityCoords(playerPed)
--- 					if not IsEntityDead(playerPed) and #(kordic-skupljanje) <= 5.0 then
--- 						TriggerServerEvent("kraft:SkupiGa")
--- 						ESX.ShowNotification("Dobili ste 1x zeljeza!")
--- 						currentStation = 1
--- 						currentPart    = 'Skupljanje'
--- 						currentPartNum = 1
--- 					end
--- 					isInMarker = false
--- 					HasAlreadyEnteredMarker = false
--- 				elseif CurrentAction == 'menu_cijev' then
--- 					OpenCijevMenu()
--- 				end
--- 				GUI.Time = GetGameTimer()
--- 				CurrentAction = nil
--- 			end
--- 		end
--- 		local coords    = GetEntityCoords(playerPed)
+			if IsControlPressed(0, Keys['E']) and (GetGameTimer() - GUI.Time) > 150 then
+				if CurrentAction == 'menu_prerada' then
+					OpenPreradaMenu()
+				elseif CurrentAction == 'menu_skupljanje' then
+					TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_WELDING", 0, true)
+                    local vrime = GetGameTimer()
+					while GetGameTimer()-vrime < 15000 do
+						Wait(1)
+						DisableAllControlActions()
+					end
+					ClearPedTasksImmediately(playerPed)
+					local kordic = GetEntityCoords(playerPed)
+					if not IsEntityDead(playerPed) and #(kordic-skupljanje) <= 5.0 then
+						TriggerServerEvent("kraft:SkupiGa")
+						ESX.ShowNotification("Dobili ste 1x zeljeza!")
+						currentStation = 1
+						currentPart    = 'Skupljanje'
+						currentPartNum = 1
+					end
+					isInMarker = false
+					HasAlreadyEnteredMarker = false
+				elseif CurrentAction == 'menu_cijev' then
+					OpenCijevMenu()
+				end
+				GUI.Time = GetGameTimer()
+				CurrentAction = nil
+			end
+		end
+		local coords    = GetEntityCoords(playerPed)
 		
--- 		if #(coords-cprerada) < 100.0 then
--- 			waitara = 0
--- 			naso = 1
--- 			DrawMarker(0, cprerada, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 2.0, 1.0, 0, 0, 0, 100, false, true, 2, false, false, false, false)
--- 		end
--- 		if #(coords-cprerada) < 2.5 then
--- 			isInMarker     = true
--- 			currentStation = 1
--- 			currentPart    = 'Prerada'
--- 			currentPartNum = 1
--- 		end
+		if #(coords-cprerada) < 100.0 then
+			waitara = 0
+			naso = 1
+			DrawMarker(0, cprerada, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 2.0, 1.0, 0, 0, 0, 100, false, true, 2, false, false, false, false)
+		end
+		if #(coords-cprerada) < 2.5 then
+			isInMarker     = true
+			currentStation = 1
+			currentPart    = 'Prerada'
+			currentPartNum = 1
+		end
 		
--- 		if #(coords-skupljanje) < 100.0 then
--- 			waitara = 0
--- 			naso = 1
--- 			DrawMarker(0, skupljanje, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 2.0, 1.0, 0, 0, 0, 100, false, true, 2, false, false, false, false)
--- 		end
--- 		if #(coords-skupljanje) < 2.5 then
--- 			isInMarker     = true
--- 			currentStation = 1
--- 			currentPart    = 'Skupljanje'
--- 			currentPartNum = 1
--- 		end
+		if #(coords-skupljanje) < 100.0 then
+			waitara = 0
+			naso = 1
+			DrawMarker(0, skupljanje, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 2.0, 1.0, 0, 0, 0, 100, false, true, 2, false, false, false, false)
+		end
+		if #(coords-skupljanje) < 2.5 then
+			isInMarker     = true
+			currentStation = 1
+			currentPart    = 'Skupljanje'
+			currentPartNum = 1
+		end
 		
--- 		if #(coords-cijev) < 100.0 then
--- 			waitara = 0
--- 			naso = 1
--- 			DrawMarker(0, cijev, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 2.0, 1.0, 0, 0, 0, 100, false, true, 2, false, false, false, false)
--- 		end
--- 		if #(coords-cijev) < 1.5 then
--- 			isInMarker     = true
--- 			currentStation = 1
--- 			currentPart    = 'Cijev'
--- 			currentPartNum = 1
--- 		end
+		if #(coords-cijev) < 100.0 then
+			waitara = 0
+			naso = 1
+			DrawMarker(0, cijev, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 2.0, 1.0, 0, 0, 0, 100, false, true, 2, false, false, false, false)
+		end
+		if #(coords-cijev) < 1.5 then
+			isInMarker     = true
+			currentStation = 1
+			currentPart    = 'Cijev'
+			currentPartNum = 1
+		end
 
--- 		if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastStation ~= currentStation or LastPart ~= currentPart or LastPartNum ~= currentPartNum) ) then
--- 			waitara = 0
--- 			naso = 1
--- 			if
--- 				(LastStation ~= nil and LastPart ~= nil and LastPartNum ~= nil) and
--- 				(LastStation ~= currentStation or LastPart ~= currentPart or LastPartNum ~= currentPartNum)
--- 			then
--- 				TriggerEvent('prodajoruzje:hasExitedMarker', LastStation, LastPart, LastPartNum)
--- 				hasExited = true
--- 			end
+		if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastStation ~= currentStation or LastPart ~= currentPart or LastPartNum ~= currentPartNum) ) then
+			waitara = 0
+			naso = 1
+			if
+				(LastStation ~= nil and LastPart ~= nil and LastPartNum ~= nil) and
+				(LastStation ~= currentStation or LastPart ~= currentPart or LastPartNum ~= currentPartNum)
+			then
+				TriggerEvent('prodajoruzje:hasExitedMarker', LastStation, LastPart, LastPartNum)
+				hasExited = true
+			end
 
--- 			HasAlreadyEnteredMarker = true
--- 			LastStation             = currentStation
--- 			LastPart                = currentPart
--- 			LastPartNum             = currentPartNum
+			HasAlreadyEnteredMarker = true
+			LastStation             = currentStation
+			LastPart                = currentPart
+			LastPartNum             = currentPartNum
 
--- 			TriggerEvent('prodajoruzje:hasEnteredMarker', currentStation, currentPart, currentPartNum)
--- 		end
+			TriggerEvent('prodajoruzje:hasEnteredMarker', currentStation, currentPart, currentPartNum)
+		end
 
--- 		if not hasExited and not isInMarker and HasAlreadyEnteredMarker then
--- 			waitara = 0
--- 			naso = 1
--- 			HasAlreadyEnteredMarker = false
+		if not hasExited and not isInMarker and HasAlreadyEnteredMarker then
+			waitara = 0
+			naso = 1
+			HasAlreadyEnteredMarker = false
 
--- 			TriggerEvent('prodajoruzje:hasExitedMarker', LastStation, LastPart, LastPartNum)
--- 		end
+			TriggerEvent('prodajoruzje:hasExitedMarker', LastStation, LastPart, LastPartNum)
+		end
 	
--- 		if naso == 0 then
--- 			waitara = 500
--- 		end
--- 	end
--- end)
+		if naso == 0 then
+			waitara = 500
+		end
+	end
+end)
 
--- AddEventHandler('prodajoruzje:hasEnteredMarker', function(station, part, partNum)
--- 	if part == 'Prerada' then
--- 		CurrentAction     = 'menu_prerada'
--- 		CurrentActionMsg  = "Pritisnite E da otvorite menu prerade!"
--- 		CurrentActionData = {}
--- 	elseif part == 'Skupljanje' then
--- 		CurrentAction     = 'menu_skupljanje'
--- 		CurrentActionMsg  = "Pritisnite E da pocnete skupljati zeljezo!"
--- 		CurrentActionData = {}
--- 	elseif part == 'Cijev' then
--- 		CurrentAction     = 'menu_cijev'
--- 		CurrentActionMsg  = "Pritisnite E da otvorite menu!"
--- 		CurrentActionData = {}
--- 	end
--- end)
+AddEventHandler('prodajoruzje:hasEnteredMarker', function(station, part, partNum)
+	if part == 'Prerada' then
+		CurrentAction     = 'menu_prerada'
+		CurrentActionMsg  = "Pritisnite E da otvorite menu prerade!"
+		CurrentActionData = {}
+	elseif part == 'Skupljanje' then
+		CurrentAction     = 'menu_skupljanje'
+		CurrentActionMsg  = "Pritisnite E da pocnete skupljati zeljezo!"
+		CurrentActionData = {}
+	elseif part == 'Cijev' then
+		CurrentAction     = 'menu_cijev'
+		CurrentActionMsg  = "Pritisnite E da otvorite menu!"
+		CurrentActionData = {}
+	end
+end)
 
--- AddEventHandler('prodajoruzje:hasExitedMarker', function(station, part, partNum)
--- 	ESX.UI.Menu.CloseAll()
--- 	CurrentAction = nil
--- end)
+AddEventHandler('prodajoruzje:hasExitedMarker', function(station, part, partNum)
+	ESX.UI.Menu.CloseAll()
+	CurrentAction = nil
+end)
 
--- function OpenPreradaMenu()
---     local elements = {}
---     table.insert(elements, {label = 'Kundak za assault rifle (5 zeljeza)', value = "kkundak"})
--- 	table.insert(elements, {label = 'Kundak za carbine rifle (10 zeljeza)', value = "ckundak"})
--- 	table.insert(elements, {label = 'Kundak za special carbine (15 zeljeza)', value = "skundak"})
--- 	table.insert(elements, {label = 'Kundak za SMG (4 zeljeza)', value = "smkundak"})
+function OpenPreradaMenu()
+    local elements = {}
+    table.insert(elements, {label = 'Kundak za assault rifle (5 zeljeza)', value = "kkundak"})
+	table.insert(elements, {label = 'Kundak za carbine rifle (10 zeljeza)', value = "ckundak"})
+	table.insert(elements, {label = 'Kundak za special carbine (15 zeljeza)', value = "skundak"})
+	table.insert(elements, {label = 'Kundak za SMG (4 zeljeza)', value = "smkundak"})
 
---     ESX.UI.Menu.Open(
---       'default', GetCurrentResourceName(), 'kraft_prerada',
---       {
---         title    = "Izaberite koji kundak zelite",
---         align    = 'top-left',
---         elements = elements,
---       },
---       function(data, menu)
--- 		ESX.TriggerServerCallback('kraft:ProvjeriKolicinu', function(imal)
--- 			  if imal then
--- 					local itemic = data.current.value
--- 					menu.close()
--- 					ESX.ShowNotification("Zapoceli ste preradu zeljeza u kundak!")
--- 					RequestAnimDict("anim@amb@clubhouse@tutorial@bkr_tut_ig3@")
--- 					while not HasAnimDictLoaded("anim@amb@clubhouse@tutorial@bkr_tut_ig3@") do
--- 						Wait(100)
--- 					end
--- 					TaskPlayAnim(PlayerPedId(), "anim@amb@clubhouse@tutorial@bkr_tut_ig3@", "machinic_loop_mechandplayer", 1.0, 1.0, -1, 17, 1.0, 0, 0, 0)
--- 					local vrime = GetGameTimer()
--- 					while GetGameTimer()-vrime < 15000 do
--- 						Wait(1)
--- 						DisableAllControlActions()
--- 					end
--- 					ClearPedTasksImmediately(PlayerPedId())
--- 					local kordic = GetEntityCoords(PlayerPedId())
--- 					if not IsEntityDead(PlayerPedId()) and #(kordic-cprerada) <= 5.0 then
--- 						TriggerServerEvent("kraft:DajKundak", itemic)
--- 						ESX.ShowNotification("Zavrsili ste preradu zeljeza u kundak!")
--- 					end
--- 					HasAlreadyEnteredMarker = false
--- 			  else
--- 					ESX.ShowNotification("Nemate dovoljno zeljeza ili nemate mjesta u inventoryju za kundak!")
--- 			  end
--- 		end, data.current.value)
---       end,
---       function(data, menu)
---         menu.close()
--- 		CurrentAction     = 'menu_prerada'
--- 		CurrentActionMsg  = "Pritisnite E da otvorite menu prerade!"
--- 		CurrentActionData = {}
---       end
---     )
--- end
+    ESX.UI.Menu.Open(
+      'default', GetCurrentResourceName(), 'kraft_prerada',
+      {
+        title    = "Izaberite koji kundak zelite",
+        align    = 'top-left',
+        elements = elements,
+      },
+      function(data, menu)
+		ESX.TriggerServerCallback('kraft:ProvjeriKolicinu', function(imal)
+			  if imal then
+					local itemic = data.current.value
+					menu.close()
+					ESX.ShowNotification("Zapoceli ste preradu zeljeza u kundak!")
+					RequestAnimDict("anim@amb@clubhouse@tutorial@bkr_tut_ig3@")
+					while not HasAnimDictLoaded("anim@amb@clubhouse@tutorial@bkr_tut_ig3@") do
+						Wait(100)
+					end
+					TaskPlayAnim(PlayerPedId(), "anim@amb@clubhouse@tutorial@bkr_tut_ig3@", "machinic_loop_mechandplayer", 1.0, 1.0, -1, 17, 1.0, 0, 0, 0)
+					local vrime = GetGameTimer()
+					while GetGameTimer()-vrime < 15000 do
+						Wait(1)
+						DisableAllControlActions()
+					end
+					ClearPedTasksImmediately(PlayerPedId())
+					local kordic = GetEntityCoords(PlayerPedId())
+					if not IsEntityDead(PlayerPedId()) and #(kordic-cprerada) <= 5.0 then
+						TriggerServerEvent("kraft:DajKundak", itemic)
+						ESX.ShowNotification("Zavrsili ste preradu zeljeza u kundak!")
+					end
+					HasAlreadyEnteredMarker = false
+			  else
+					ESX.ShowNotification("Nemate dovoljno zeljeza ili nemate mjesta u inventoryju za kundak!")
+			  end
+		end, data.current.value)
+      end,
+      function(data, menu)
+        menu.close()
+		CurrentAction     = 'menu_prerada'
+		CurrentActionMsg  = "Pritisnite E da otvorite menu prerade!"
+		CurrentActionData = {}
+      end
+    )
+end
 
--- function OpenCijevMenu()
---     local elements = {}
---     table.insert(elements, {label = 'Cijev za assault rifle ($5000)', value = "kcijev"})
--- 	table.insert(elements, {label = 'Cijev za carbine rifle ($6000)', value = "ccijev"})
--- 	table.insert(elements, {label = 'Cijev za special carbine ($7000)', value = "scijev"})
--- 	table.insert(elements, {label = 'Cijev za smg ($4000)', value = "smcijev"})
+function OpenCijevMenu()
+    local elements = {}
+    table.insert(elements, {label = 'Cijev za assault rifle ($5000)', value = "kcijev"})
+	table.insert(elements, {label = 'Cijev za carbine rifle ($6000)', value = "ccijev"})
+	table.insert(elements, {label = 'Cijev za special carbine ($7000)', value = "scijev"})
+	table.insert(elements, {label = 'Cijev za smg ($4000)', value = "smcijev"})
 
---     ESX.UI.Menu.Open(
---       'default', GetCurrentResourceName(), 'kraft_cijev',
---       {
---         title    = "Izaberite koju cijev zelite",
---         align    = 'top-left',
---         elements = elements,
---       },
---       function(data, menu)
--- 		ESX.TriggerServerCallback('kraft:ProvjeriKolicinu2', function(imal)
--- 			  if imal then
--- 					menu.close()
--- 					CurrentAction     = 'menu_cijev'
--- 					CurrentActionMsg  = "Pritisnite E da otvorite menu!"
--- 					CurrentActionData = {}
--- 					ESX.ShowNotification("Kupili ste cijev!")
--- 			  else
--- 					ESX.ShowNotification("Nemate dovoljno novca ili nemate mjesta u inventoryju za cijev!")
--- 			  end
--- 		end, data.current.value)
---       end,
---       function(data, menu)
---         menu.close()
--- 		CurrentAction     = 'menu_cijev'
--- 		CurrentActionMsg  = "Pritisnite E da otvorite menu!"
--- 		CurrentActionData = {}
---       end
---     )
--- end
+    ESX.UI.Menu.Open(
+      'default', GetCurrentResourceName(), 'kraft_cijev',
+      {
+        title    = "Izaberite koju cijev zelite",
+        align    = 'top-left',
+        elements = elements,
+      },
+      function(data, menu)
+		ESX.TriggerServerCallback('kraft:ProvjeriKolicinu2', function(imal)
+			  if imal then
+					menu.close()
+					CurrentAction     = 'menu_cijev'
+					CurrentActionMsg  = "Pritisnite E da otvorite menu!"
+					CurrentActionData = {}
+					ESX.ShowNotification("Kupili ste cijev!")
+			  else
+					ESX.ShowNotification("Nemate dovoljno novca ili nemate mjesta u inventoryju za cijev!")
+			  end
+		end, data.current.value)
+      end,
+      function(data, menu)
+        menu.close()
+		CurrentAction     = 'menu_cijev'
+		CurrentActionMsg  = "Pritisnite E da otvorite menu!"
+		CurrentActionData = {}
+      end
+    )
+end
 
--- RegisterNetEvent('prodajoruzje:SloziOruzje')
--- AddEventHandler('prodajoruzje:SloziOruzje', function(br)
--- 	SendNUIMessage({
--- 		prikazi2 = true,
--- 		broj = br,
--- 		ktijelo = true,
--- 		kkundak = true,
--- 		clip = true,
--- 		kcijev = true
--- 	})
--- 	SetNuiFocus(true, true)
--- end)
+RegisterNetEvent('prodajoruzje:SloziOruzje')
+AddEventHandler('prodajoruzje:SloziOruzje', function(br)
+	SendNUIMessage({
+		prikazi2 = true,
+		broj = br,
+		ktijelo = true,
+		kkundak = true,
+		clip = true,
+		kcijev = true
+	})
+	SetNuiFocus(true, true)
+end)
 
 RegisterNetEvent('prodajoruzje:SetajChameSkin')
 AddEventHandler('prodajoruzje:SetajChameSkin', function(sk, br)
@@ -659,7 +665,18 @@ RegisterCommand("lc", function(source, args, rawCommandString)
 	end
 end, false)
 
+RegisterCommand("aduty", function(source, args, rawCommandString)
+	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if perm == 1 then
+			SetEntityCoords(PlayerPedId(), -889.0873413086, -432.51022338868, 88.263557434082)
+		else
+			ESX.ShowNotification("Nemate pristup ovoj komandi!")
+		end
+	--end)
+end, false)
+
 local beba = false
+
 RegisterCommand("beba", function(source, args, rawCommandString)
 	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		if perm == 1 then
@@ -939,6 +956,64 @@ RegisterCommand("testumor", function(source, args, rawCommandString)
 		end
 	--end)
 end, false)
+
+local FishRod = nil
+RegisterCommand("teststap", function(source, args, rawCommandString)
+	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if perm == 1 then
+			if FishRod == nil then
+				local model = GetHashKey("prop_fishing_rod_01")
+				RequestModel(model)
+				
+				while not HasModelLoaded(model) do
+					Wait(1)
+				end
+				BoneID = GetPedBoneIndex(PlayerPedId(), 60309)
+				FishRod = CreateObject(model,  1729.73,  6403.90,  34.56,  true,  true,  true)
+				vX,vY,vZ = table.unpack(GetEntityCoords(PlayerPedId()))
+				xRot, yRot, zRot = table.unpack(GetEntityRotation(PlayerPedId(),2))
+				AttachEntityToEntity(FishRod,  PlayerPedId(),  BoneID, 0,0,0, 0,0,0,  false, false, false, false, 2, true)
+				SetModelAsNoLongerNeeded(model)
+				--FishRod = AttachEntityToPed('prop_fishing_rod_01',60309, 0,0,0, 0,0,0)
+			else
+				DeleteEntity(FishRod)
+				FishRod = nil
+			end
+		else
+			name = "System"..":"
+			message = " Nemate pristup ovoj komandi"
+			TriggerEvent('chat:addMessage', { args = { name, message }, color = r,g,b })	
+		end
+	--end)
+end, false)
+
+local trajeanim = false
+Citizen.CreateThread(function()
+	while true do
+		Citizen.Wait(100)
+		if FishRod ~= nil then
+			if IsControlPressed(1, 24) then
+				if not trajeanim then
+					RequestAnimDict("amb@world_human_stand_fishing@idle_a")
+					while not HasAnimDictLoaded("amb@world_human_stand_fishing@idle_a") do
+						Citizen.Wait(1000)
+					end
+					TaskPlayAnim(PlayerPedId(),"amb@world_human_stand_fishing@idle_a","idle_b", 8.0, -8, -1, 2, 0, 0, 0, 0)
+					trajeanim = true
+				end
+			else
+				if trajeanim then
+					RequestAnimDict("amb@world_human_stand_fishing@base")
+					while not HasAnimDictLoaded("amb@world_human_stand_fishing@base") do
+						Citizen.Wait(1000)
+					end
+					TaskPlayAnim(PlayerPedId(),"amb@world_human_stand_fishing@base","base", 8.0, -8, -1, 2, 0, 0, 0, 0)
+					trajeanim = false
+				end
+			end
+		end
+	end
+end)
 
 RegisterCommand("testanim", function(source, args, rawCommandString)
 	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
