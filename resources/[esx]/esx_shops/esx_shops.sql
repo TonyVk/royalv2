@@ -1,4 +1,4 @@
-USE `essentialmode`;
+USE `sx_baza`;
 
 CREATE TABLE `shops` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,

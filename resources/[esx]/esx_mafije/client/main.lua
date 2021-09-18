@@ -54,6 +54,18 @@ local tObj3 					= nil
 local UnutarLabosa 				= false
 local JebenaKanta				= nil
 
+--Legala
+local posaov = nil
+local prikolca = nil
+local Blipara = nil
+local LokCPa
+local LokCPa2
+local LokDosa
+local IstovarioTo = 0
+local OstavioTo = 1
+local Vozis = 0
+local blipcic = nil
+
 local dostave = 
 {
     vector3(-1107.837524414, 4891.6513671875, 214.53938293458),
@@ -164,6 +176,122 @@ AddEventHandler('baseevents:enteredVehicle', function(currentVehicle, currentSea
 		end
 	end
 end)
+
+function DajRutu()
+	i = math.random(1, #Config.Markeri)
+	Blipara = AddBlipForCoord(Config.Markeri[i].x,  Config.Markeri[i].y,  Config.Markeri[i].z)
+	SetBlipSprite (Blipara, 1)
+	SetBlipDisplay(Blipara, 8)
+	SetBlipColour (Blipara, 2)
+	SetBlipScale  (Blipara, 1.4)
+	SetBlipRoute  (Blipara, true)
+	LokCPa = vector3(Config.Markeri[i].x,  Config.Markeri[i].y,  Config.Markeri[i].z)
+	Citizen.CreateThread(function()
+		while IstovarioTo == 0 do
+			Wait(0)
+			--DrawMarker(20, trunkpos, 0,0,0, 0,0,0, arrowSize, 150, 255, 128, 0, true, true, true)	
+			--plyCoords = GetEntityCoords(GetPlayerPed(-1), false)
+			DrawMarker(1, Config.Markeri[i].x,  Config.Markeri[i].y,  Config.Markeri[i].z, 0, 0, 0, 0, 0, 0, 1.25, 1.25, 1.0001, 0, 128, 0, 200, 0, 0, 0, 0)
+		end
+	end)
+end
+
+function OpenPosaoMenu()
+    local elements = {}
+	table.insert(elements, {label = "Prijevoz pića", value = 'pice'})
+	table.insert(elements, {label = "Prijevoz vozila", value = 'vozila'})
+    ESX.UI.Menu.CloseAll()
+
+    ESX.UI.Menu.Open(
+      'default', GetCurrentResourceName(), 'posao',
+      {
+        title    = "Izbor poslova",
+        align    = 'top-left',
+        elements = elements,
+      },
+      function(data, menu)
+
+        if data.current.value == 'pice' then
+			if Vozis == 0 then
+				local xa, ya, za, ha
+				for i=1, #Koord, 1 do
+					if Koord[i].Mafija == PlayerData.job.name and Koord[i].Ime == "PosaoSpawn" then
+						xa, ya, za, ha = table.unpack(Koord[i].Coord)
+					end
+				end
+				if xa ~= 0 and xa ~= nil then
+					ESX.Game.SpawnVehicle("benson",{
+						x=xa,
+						y=ya,
+						z=za											
+						},ha, function(callback_vehicle)
+						SetVehRadioStation(callback_vehicle, "OFF")
+						--TaskWarpPedIntoVehicle(GetPlayerPed(-1), callback_vehicle, -1)
+						posaov = callback_vehicle
+					end)
+					DajRutu()
+					ESX.ShowNotification("Sjednite u kamion i idite do lokacije oznacene na mapi!")
+					menu.close()
+					Vozis = 1
+				else
+					ESX.ShowNotification("Nije vam postavljena koordinata spawna vozila, zovite admina!")
+				end
+			else
+				ESX.ShowNotification("Vec dostavljate to")
+			end
+        end
+
+        if data.current.value == 'vozila' then
+			if Vozis == 0 then
+				local xa, ya, za, ha
+				for i=1, #Koord, 1 do
+					if Koord[i].Mafija == PlayerData.job.name and Koord[i].Ime == "PosaoSpawn" then
+						xa, ya, za, ha = table.unpack(Koord[i].Coord)
+					end
+				end
+				if xa ~= 0 and xa ~= nil then
+					ESX.Game.SpawnVehicle("packer", {x = xa, y = ya, z = za}, ha, function(vehicle)	
+						--TaskWarpPedIntoVehicle(GetPlayerPed(-1), vehicle, -1)
+						posaov = vehicle
+						ESX.Game.SpawnVehicle("TR4", {x = xa, y = ya, z = za}, ha, function(trailer)
+							AttachVehicleToTrailer(vehicle, trailer, 1.1)
+							prikolca = trailer
+						end)
+					end)
+					Blipara = AddBlipForCoord(-18.065839767456, -1085.4000244141, 26.079084396362)
+					SetBlipSprite (Blipara, 1)
+					SetBlipDisplay(Blipara, 8)
+					SetBlipColour (Blipara, 2)
+					SetBlipScale  (Blipara, 1.4)
+					SetBlipRoute  (Blipara, true)
+					Vozis = 1
+					LokCPa2 = vector3(-18.065839767456, -1085.4000244141, 26.079084396362)
+					Citizen.CreateThread(function()
+						while IstovarioTo == 0 do
+							Wait(0)
+							--DrawMarker(20, trunkpos, 0,0,0, 0,0,0, arrowSize, 150, 255, 128, 0, true, true, true)	
+							--plyCoords = GetEntityCoords(GetPlayerPed(-1), false)
+							DrawMarker(1, -18.065839767456, -1085.4000244141, 26.079084396362, 0, 0, 0, 0, 0, 0, 1.25, 1.25, 1.0001, 0, 128, 0, 200, 0, 0, 0, 0)
+						end
+					end)
+				else
+					ESX.ShowNotification("Nije vam postavljena koordinata spawna vozila, zovite admina!")
+				end
+			else
+				ESX.ShowNotification("Vec dostavljate to")
+			end
+        end
+      end,
+      function(data, menu)
+
+        menu.close()
+
+        CurrentAction     = 'menu_posao'
+        CurrentActionMsg  = "Pritisnite E da otvorite izbornik"
+        CurrentActionData = {}
+      end
+    )
+end
 
 RegisterNetEvent('baseevents:leftVehicle')
 AddEventHandler('baseevents:leftVehicle', function(currentVehicle, currentSeat, modelName, netId)
@@ -287,6 +415,26 @@ function SpawnBlipove()
 				end
 			end
 		end
+		if Koord[i] ~= nil and Koord[i].Ime == "Posao" then
+			if Koord[i].Mafija == PlayerData.job.name then
+				local x,y,z = table.unpack(Koord[i].Coord)
+				if x ~= 0 and x ~= nil then
+					blipcic = AddBlipForCoord(x,y,z)
+
+					SetBlipSprite (blipcic, 473)
+					SetBlipAsShortRange(blipcic, true)
+					for a=1, #Boje, 1 do
+						if Boje[a] ~= nil and Boje[a].Mafija == Koord[i].Mafija and Boje[a].Ime == "Blip" then
+							SetBlipColour(Blipovi[Koord[i].Mafija], tonumber(Boje[a].Boja))
+							break
+						end
+					end
+					BeginTextCommandSetBlipName("STRING")
+					AddTextComponentString("Dostava pića/vozila")
+					EndTextCommandSetBlipName(blipcic)
+				end
+			end
+		end
 	end
 end
 
@@ -375,6 +523,29 @@ function SpawnBlip()
 						AddTextComponentString("Kokain lab na prodaju!")
 						EndTextCommandSetBlipName(SBlipovi[Koord[i].Mafija])
 					end
+				end
+			end
+		end
+		if Koord[i] ~= nil and Koord[i].Ime == "Posao" then
+			if Koord[i].Mafija == PlayerData.job.name then
+				if DoesBlipExist(blipcic) then
+					RemoveBlip(blipcic)
+				end
+				local x,y,z = table.unpack(Koord[i].Coord)
+				if x ~= 0 and x ~= nil then
+					blipcic = AddBlipForCoord(x,y,z)
+
+					SetBlipSprite (blipcic, 473)
+					SetBlipAsShortRange(blipcic, true)
+					for a=1, #Boje, 1 do
+						if Boje[a] ~= nil and Boje[a].Mafija == Koord[i].Mafija and Boje[a].Ime == "Blip" then
+							SetBlipColour(Blipovi[Koord[i].Mafija], tonumber(Boje[a].Boja))
+							break
+						end
+					end
+					BeginTextCommandSetBlipName("STRING")
+					AddTextComponentString("Dostava pića/vozila")
+					EndTextCommandSetBlipName(blipcic)
 				end
 			end
 		end
@@ -513,6 +684,7 @@ RegisterCommand("uredimafiju", function(source, args, raw)
 						table.insert(elements, {label = "Koordinate", value = "koord"})
 						table.insert(elements, {label = "Boje", value = "boje"})
 						table.insert(elements, {label = "Promjeni ime", value = "ime"})
+						table.insert(elements, {label = "Postavke", value = "postavke"})
 						table.insert(elements, {label = "Obrisi mafiju", value = "obrisi"})
 						ESX.UI.Menu.Open(
 							'default', GetCurrentResourceName(), 'umafiju2',
@@ -877,6 +1049,15 @@ RegisterCommand("uredimafiju", function(source, args, raw)
 									table.insert(elements, {label = "Postavi koordinate brisanja plovila", value = "10"})
 									table.insert(elements, {label = "Postavi koordinate labosa za kokain", value = "11"})
 									table.insert(elements, {label = "Postavi koordinate spawna kamiona za prodaju", value = "12"})
+									for i=1, #Mafije, 1 do
+										if Mafije[i] ~= nil and Mafije[i].Ime == ImeMafije then
+											if Mafije[i].Posao == 1 then
+												table.insert(elements, {label = "Postavi koordinate za uzimanje legalnog posla", value = "13"})
+												table.insert(elements, {label = "Postavi koordinate spawna kamiona za legalni posao", value = "14"})
+											end
+											break
+										end
+									end
 
 									ESX.UI.Menu.Open(
 									  'default', GetCurrentResourceName(), 'listarankova',
@@ -1007,6 +1188,26 @@ RegisterCommand("uredimafiju", function(source, args, raw)
 									end, function (datar, menur)
 										menur.close()
 									end)
+								elseif data2.current.value == "postavke" then
+									elements = {}
+									
+									table.insert(elements, {label = "Omoguci/onemoguci legalan posao", value = "1"})
+
+									ESX.UI.Menu.Open(
+									  'default', GetCurrentResourceName(), 'legala',
+									  {
+										title    = "Izaberite opciju",
+										align    = 'top-left',
+										elements = elements,
+									  },
+									  function(datalr, menulr)
+										local mid = datalr.current.value
+										TriggerServerEvent("mafije:SpremiPostavke", ImeMafije, tonumber(mid))
+									  end,
+									  function(datalr, menulr)
+										menulr.close()
+									  end
+									)
 								elseif data2.current.value == "obrisi" then
 									elements = {}
 									
@@ -3039,6 +3240,113 @@ AddEventHandler('mafije:hasEnteredMarker', function(station, part, partNum)
     CurrentActionMsg  = "Pritisnite E da zapljenite vozilo"
     CurrentActionData = {station = station}
   end
+
+  if part == 'Istovar' then
+	local vehara = GetVehiclePedIsUsing(PlayerPedId())
+	local retval = GetDisplayNameFromVehicleModel(GetEntityModel(vehara))
+	if retval == "BENSON" then
+		FreezeEntityPosition(GetVehiclePedIsIn(PlayerPedId(), false), true)
+		ESX.ShowNotification("Istovarate piće...")
+		Wait(10000)
+		ESX.ShowNotification("Istovarili ste piće, idite do lokacije oznacene na mapi")
+		FreezeEntityPosition(GetVehiclePedIsIn(PlayerPedId(), false), false)
+		RemoveBlip(Blipara)
+		TriggerServerEvent("mafije:PlatiDostavu", 1, PlayerData.job.name)
+		ESX.ShowNotification("Vasa mafija je dobila 6000$, a vi ste dobili 3000$")
+		IstovarioTo = 1
+		local xa, ya, za, ha
+		for i=1, #Koord, 1 do
+			if Koord[i].Mafija == PlayerData.job.name and Koord[i].Ime == "PosaoSpawn" then
+				xa, ya, za, ha = table.unpack(Koord[i].Coord)
+				Blipara = AddBlipForCoord(xa, ya, za)
+				LokDosa = vector3(xa, ya, za)
+			end
+		end
+		SetBlipSprite(Blipara, 1)
+		SetBlipColour (Blipara, 2)
+		OstavioTo = 0
+		SetBlipRoute(Blipara,  true) -- waypoint to blip
+		Citizen.CreateThread(function()
+			while OstavioTo == 0 do
+				Wait(0)
+				--DrawMarker(20, trunkpos, 0,0,0, 0,0,0, arrowSize, 150, 255, 128, 0, true, true, true)	
+				--plyCoords = GetEntityCoords(GetPlayerPed(-1), false)
+				DrawMarker(1, xa, ya, za, 0, 0, 0, 0, 0, 0, 1.25, 1.25, 1.0001, 0, 128, 0, 200, 0, 0, 0, 0)
+			end
+		end)
+	else
+		ESX.ShowNotification("Niste u vozilu za dostavu")
+	end
+  end
+  
+  if part == 'Istovar2' then
+	local vehara = GetVehiclePedIsUsing(PlayerPedId())
+	local retval = GetDisplayNameFromVehicleModel(GetEntityModel(vehara))
+	if retval == "PACKER" then
+		local retvala, trailer = GetVehicleTrailerVehicle(vehara)
+		if retvala and trailer == prikolca then
+			IstovarioTo = 1
+			FreezeEntityPosition(GetVehiclePedIsIn(PlayerPedId(), false), true)
+			ESX.ShowNotification("Istovarate vozila...")
+			Wait(1000)
+			DoScreenFadeOut(100)
+			ESX.Game.DeleteVehicle(prikolca)
+			Wait(10000)
+			ESX.Game.SpawnVehicle("TR2", {x = -36.092674255371, y = -1079.3096923828, z = 26.740900039673}, 239.43359375, function(trailer)
+				AttachVehicleToTrailer(posaov, trailer, 1.1)
+				prikolca = trailer
+			end)
+			FreezeEntityPosition(GetVehiclePedIsIn(PlayerPedId(), false), false)
+			DoScreenFadeIn(100)
+			TriggerServerEvent("mafije:PlatiDostavu", 2, PlayerData.job.name)
+			ESX.ShowNotification("Istovarili ste vozila, idite do lokacije oznacene na mapi")
+			ESX.ShowNotification("Vasa mafija je dobila 7500$, a vi ste dobili 3750$")
+			RemoveBlip(Blipara)
+			local xa, ya, za, ha
+			for i=1, #Koord, 1 do
+				if Koord[i].Mafija == PlayerData.job.name and Koord[i].Ime == "PosaoSpawn" then
+					xa, ya, za, ha = table.unpack(Koord[i].Coord)
+					Blipara = AddBlipForCoord(xa, ya, za)
+					LokDosa = vector3(xa, ya, za)
+				end
+			end
+			SetBlipSprite(Blipara, 1)
+			SetBlipColour (Blipara, 2)
+			OstavioTo = 0
+			SetBlipRoute(Blipara,  true) -- waypoint to blip
+			Citizen.CreateThread(function()
+				while OstavioTo == 0 do
+					Wait(0)
+					--DrawMarker(20, trunkpos, 0,0,0, 0,0,0, arrowSize, 150, 255, 128, 0, true, true, true)	
+					--plyCoords = GetEntityCoords(GetPlayerPed(-1), false)
+					DrawMarker(1, xa, ya, za, 0, 0, 0, 0, 0, 0, 1.25, 1.25, 1.0001, 0, 128, 0, 200, 0, 0, 0, 0)
+				end
+			end)
+		else
+			ESX.ShowNotification("Nemate zakacenu prikolicu ili nije vaša")
+		end
+	else
+		ESX.ShowNotification("Niste u vozilu za dostavu")
+	end
+  end
+  
+  if part == 'VratiKamion' then
+	RemoveBlip(Blipara)
+	ESX.Game.DeleteVehicle(posaov)
+	if prikolca ~= nil then
+		ESX.Game.DeleteVehicle(prikolca)
+	end
+	OstavioTo = 1
+	IstovarioTo = 0
+	ESX.ShowNotification("Uspjesno ste odradili dostavu")
+	Vozis = 0
+  end
+  
+  if part == 'Posao' then
+    CurrentAction     = 'menu_posao'
+    CurrentActionMsg  = "Pritisnite E da otvorite izbornik"
+    CurrentActionData = {}
+  end
   
   if part == 'Dostava' then
 		if KVozilo == GetVehiclePedIsIn(PlayerPedId(), false) then
@@ -3407,6 +3715,7 @@ AddEventHandler('mafije:UpdateBoje', function(br, maf, boj)
 					if Boje[i] ~= nil and Boje[i].Mafija == maf and Boje[i].Ime == "Blip" then
 						SetBlipColour (Blipovi[maf], tonumber(Boje[i].Boja))
 						SetBlipColour (SBlipovi[maf], tonumber(Boje[i].Boja))
+						SetBlipColour (blipcic, tonumber(Boje[i].Boja))
 						break
 					end
 				end
@@ -3416,6 +3725,8 @@ AddEventHandler('mafije:UpdateBoje', function(br, maf, boj)
 				Blipovi[maf] = nil
 				RemoveBlip(SBlipovi[maf])
 				SBlipovi[maf] = nil
+				RemoveBlip(blipcic)
+				blipcic = nil
 			end
 		end
 	end
@@ -3480,7 +3791,7 @@ AddEventHandler('mafije:KreirajBlip', function(co, maf, br)
 					end
 					EndTextCommandSetBlipName(Blipovi[maf])
 				end
-			else
+			elseif br == 2 then
 				local x,y,z = table.unpack(co)
 				if SBlipovi[maf] ~= nil then
 					RemoveBlip(SBlipovi[maf])
@@ -3531,6 +3842,27 @@ AddEventHandler('mafije:KreirajBlip', function(co, maf, br)
 						AddTextComponentString("Kokain lab na prodaju!")
 						EndTextCommandSetBlipName(SBlipovi[maf])
 					end
+				end
+			else
+				local x,y,z = table.unpack(co)
+				if blipcic~= nil then
+					RemoveBlip(blipcic)
+					blipcic = nil
+				end
+				if x ~= 0 and x ~= nil then
+					blipcic = AddBlipForCoord(x,y,z)
+
+					SetBlipSprite (blipcic, 473)
+					SetBlipAsShortRange(blipcic, true)
+					for a=1, #Boje, 1 do
+						if Boje[a] ~= nil and Boje[a].Mafija == Koord[i].Mafija and Boje[a].Ime == "Blip" then
+							SetBlipColour(Blipovi[Koord[i].Mafija], tonumber(Boje[a].Boja))
+							break
+						end
+					end
+					BeginTextCommandSetBlipName("STRING")
+					AddTextComponentString("Dostava pića/vozila")
+					EndTextCommandSetBlipName(blipcic)
 				end
 			end
 		end
@@ -3640,6 +3972,10 @@ Citizen.CreateThread(function()
 		if CurrentAction == 'menu_ulazkupi' then
 			OpenSPitajMenu()
         end
+
+		if CurrentAction == 'menu_posao' then
+			OpenPosaoMenu()
+		end
 		
 		if CurrentAction == 'menu_impound' then
 			local veh = GetVehiclePedIsIn(PlayerPedId(), false)
@@ -3852,6 +4188,26 @@ Citizen.CreateThread(function()
 			currentPartNum = 1
 		end
 	end
+	if GetDistanceBetweenCoords(coords,  LokCPa,  true) < Config.MarkerSize.x and IstovarioTo == 0 and Vozis == 1 then
+		isInMarker     = true
+		currentStation = k
+		currentPart    = 'Istovar'
+		currentPartNum = i
+	end
+	
+	if GetDistanceBetweenCoords(coords,  LokCPa2,  true) < Config.MarkerSize.x and IstovarioTo == 0 and Vozis == 1 then
+		isInMarker     = true
+		currentStation = k
+		currentPart    = 'Istovar2'
+		currentPartNum = i
+	end
+  
+	if GetDistanceBetweenCoords(coords,  LokDosa,  true) < Config.MarkerSize.x and OstavioTo == 0 and Vozis == 1 then
+		isInMarker     = true
+		currentStation = k
+		currentPart    = 'VratiKamion'
+		currentPartNum = i
+	end
 	for i=1, #Koord, 1 do
 		if Koord[i] ~= nil and Koord[i].Mafija == PlayerData.job.name then
 			if Koord[i].Ime == "Oruzarnica" then
@@ -3978,6 +4334,22 @@ Citizen.CreateThread(function()
 						isInMarker     = true
 						currentStation = 4
 						currentPart    = 'UlazUKokain'
+						currentPartNum = i
+					end
+				end
+			end
+			if Koord[i].Ime == "Posao" then
+				local x,y,z = table.unpack(Koord[i].Coord)
+				if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+					if GetDistanceBetweenCoords(coords, x, y, z, true) < 100.0 then
+						waitara = 0
+						naso = 1
+						DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 0, 128, 255, 100, false, true, 2, false, false, false, false)
+					end
+					if GetDistanceBetweenCoords(coords, x, y, z, true) < 1.5 then
+						isInMarker     = true
+						currentStation = 4
+						currentPart    = 'Posao'
 						currentPartNum = i
 					end
 				end

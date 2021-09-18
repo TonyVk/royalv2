@@ -1,9 +1,9 @@
-USE `essentialmode`;
+USE `sx_baza`;
 
 CREATE TABLE `shops2` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`store` varchar(100) NOT NULL,
-	`owner` varchar(60) NULL,
+	`owner` int(11) NULL,
 	`sef` int(11) NOT NULL,
 
 	PRIMARY KEY (`id`)

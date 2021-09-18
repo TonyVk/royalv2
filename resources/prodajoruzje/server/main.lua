@@ -73,69 +73,69 @@ ESX.RegisterUsableItem("petarde", function(source)
 	TriggerClientEvent('prodajoruzje:petarde', _source)
 end)
 
--- ESX.RegisterUsableItem("ktijelo", function(source)
--- 	local _source = source
--- 	local xPlayer = ESX.GetPlayerFromId(_source)
--- 	local kc = xPlayer.getInventoryItem("kcijev").count
--- 	local kk = xPlayer.getInventoryItem("kkundak").count
--- 	local kt = xPlayer.getInventoryItem("ktijelo").count
--- 	local cl = xPlayer.getInventoryItem("clip").count
--- 	if kc > 0 and kk > 0 and kt > 0 and cl > 0 then
--- 		COruzje[_source] = true
--- 		TriggerClientEvent("esx_invh:closeinv", _source)
--- 		TriggerClientEvent('prodajoruzje:SloziOruzje', _source, 0)
--- 	else
--- 		xPlayer.showNotification("Fali vam jedan od dijelova!")
--- 	end
--- end)
+ESX.RegisterUsableItem("ktijelo", function(source)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	local kc = xPlayer.getInventoryItem("kcijev").count
+	local kk = xPlayer.getInventoryItem("kkundak").count
+	local kt = xPlayer.getInventoryItem("ktijelo").count
+	local cl = xPlayer.getInventoryItem("clip").count
+	if kc > 0 and kk > 0 and kt > 0 and cl > 0 then
+		COruzje[_source] = true
+		TriggerClientEvent("esx_invh:closeinv", _source)
+		TriggerClientEvent('prodajoruzje:SloziOruzje', _source, 0)
+	else
+		xPlayer.showNotification("Fali vam jedan od dijelova!")
+	end
+end)
 
--- ESX.RegisterUsableItem("ctijelo", function(source)
--- 	local _source = source
--- 	local xPlayer = ESX.GetPlayerFromId(_source)
--- 	local kc = xPlayer.getInventoryItem("ccijev").count
--- 	local kk = xPlayer.getInventoryItem("ckundak").count
--- 	local kt = xPlayer.getInventoryItem("ctijelo").count
--- 	local cl = xPlayer.getInventoryItem("clip").count
--- 	if kc > 0 and kk > 0 and kt > 0 and cl > 0 then
--- 		COruzje[_source] = true
--- 		TriggerClientEvent("esx_invh:closeinv", _source)
--- 		TriggerClientEvent('prodajoruzje:SloziOruzje', _source, 1)
--- 	else
--- 		xPlayer.showNotification("Fali vam jedan od dijelova!")
--- 	end
--- end)
+ESX.RegisterUsableItem("ctijelo", function(source)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	local kc = xPlayer.getInventoryItem("ccijev").count
+	local kk = xPlayer.getInventoryItem("ckundak").count
+	local kt = xPlayer.getInventoryItem("ctijelo").count
+	local cl = xPlayer.getInventoryItem("clip").count
+	if kc > 0 and kk > 0 and kt > 0 and cl > 0 then
+		COruzje[_source] = true
+		TriggerClientEvent("esx_invh:closeinv", _source)
+		TriggerClientEvent('prodajoruzje:SloziOruzje', _source, 1)
+	else
+		xPlayer.showNotification("Fali vam jedan od dijelova!")
+	end
+end)
 
--- ESX.RegisterUsableItem("stijelo", function(source)
--- 	local _source = source
--- 	local xPlayer = ESX.GetPlayerFromId(_source)
--- 	local kc = xPlayer.getInventoryItem("scijev").count
--- 	local kk = xPlayer.getInventoryItem("skundak").count
--- 	local kt = xPlayer.getInventoryItem("stijelo").count
--- 	local cl = xPlayer.getInventoryItem("clip").count
--- 	if kc > 0 and kk > 0 and kt > 0 and cl > 0 then
--- 		COruzje[_source] = true
--- 		TriggerClientEvent("esx_invh:closeinv", _source)
--- 		TriggerClientEvent('prodajoruzje:SloziOruzje', _source, 2)
--- 	else
--- 		xPlayer.showNotification("Fali vam jedan od dijelova!")
--- 	end
--- end)
+ESX.RegisterUsableItem("stijelo", function(source)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	local kc = xPlayer.getInventoryItem("scijev").count
+	local kk = xPlayer.getInventoryItem("skundak").count
+	local kt = xPlayer.getInventoryItem("stijelo").count
+	local cl = xPlayer.getInventoryItem("clip").count
+	if kc > 0 and kk > 0 and kt > 0 and cl > 0 then
+		COruzje[_source] = true
+		TriggerClientEvent("esx_invh:closeinv", _source)
+		TriggerClientEvent('prodajoruzje:SloziOruzje', _source, 2)
+	else
+		xPlayer.showNotification("Fali vam jedan od dijelova!")
+	end
+end)
 
--- ESX.RegisterUsableItem("smtijelo", function(source)
--- 	local _source = source
--- 	local xPlayer = ESX.GetPlayerFromId(_source)
--- 	local kc = xPlayer.getInventoryItem("smcijev").count
--- 	local kk = xPlayer.getInventoryItem("smkundak").count
--- 	local kt = xPlayer.getInventoryItem("smtijelo").count
--- 	local cl = xPlayer.getInventoryItem("clip").count
--- 	if kc > 0 and kk > 0 and kt > 0 and cl > 0 then
--- 		COruzje[_source] = true
--- 		TriggerClientEvent("esx_invh:closeinv", _source)
--- 		TriggerClientEvent('prodajoruzje:SloziOruzje', _source, 3)
--- 	else
--- 		xPlayer.showNotification("Fali vam jedan od dijelova!")
--- 	end
--- end)
+ESX.RegisterUsableItem("smtijelo", function(source)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	local kc = xPlayer.getInventoryItem("smcijev").count
+	local kk = xPlayer.getInventoryItem("smkundak").count
+	local kt = xPlayer.getInventoryItem("smtijelo").count
+	local cl = xPlayer.getInventoryItem("clip").count
+	if kc > 0 and kk > 0 and kt > 0 and cl > 0 then
+		COruzje[_source] = true
+		TriggerClientEvent("esx_invh:closeinv", _source)
+		TriggerClientEvent('prodajoruzje:SloziOruzje', _source, 3)
+	else
+		xPlayer.showNotification("Fali vam jedan od dijelova!")
+	end
+end)
 
 ESX.RegisterUsableItem("grebalica", function(source)
 	local _source = source
@@ -215,104 +215,104 @@ AddEventHandler('prodajoruzje:KoiKuracJeOvo2', function(br)
 	end
 end)
 
--- ESX.RegisterServerCallback('kraft:ProvjeriKolicinu', function(source, cb, item)
--- 	local src = source
--- 	local xPlayer = ESX.GetPlayerFromId(src)
--- 	local morel = false
--- 	if xPlayer.getInventoryItem(item).count+1 <= xPlayer.getInventoryItem(item).limit then
--- 		if item == "kkundak"then
--- 			if xPlayer.getInventoryItem("iron").count >= 5 then
--- 				xPlayer.removeInventoryItem("iron", 5)
--- 				morel = true
--- 				COruzje[src] = true
--- 			end
--- 		elseif item == "ckundak"then
--- 			if xPlayer.getInventoryItem("iron").count >= 10 then
--- 				xPlayer.removeInventoryItem("iron", 10)
--- 				morel = true
--- 				COruzje[src] = true
--- 			end
--- 		elseif item == "skundak"then
--- 			if xPlayer.getInventoryItem("iron").count >= 15 then
--- 				xPlayer.removeInventoryItem("iron", 15)
--- 				morel = true
--- 				COruzje[src] = true
--- 			end
--- 		elseif item == "smkundak"then
--- 			if xPlayer.getInventoryItem("iron").count >= 4 then
--- 				xPlayer.removeInventoryItem("iron", 4)
--- 				morel = true
--- 				COruzje[src] = true
--- 			end
--- 		end
--- 	end
--- 	cb(morel)
--- end)
+ESX.RegisterServerCallback('kraft:ProvjeriKolicinu', function(source, cb, item)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	local morel = false
+	if xPlayer.getInventoryItem(item).count+1 <= xPlayer.getInventoryItem(item).limit then
+		if item == "kkundak"then
+			if xPlayer.getInventoryItem("iron").count >= 5 then
+				xPlayer.removeInventoryItem("iron", 5)
+				morel = true
+				COruzje[src] = true
+			end
+		elseif item == "ckundak"then
+			if xPlayer.getInventoryItem("iron").count >= 10 then
+				xPlayer.removeInventoryItem("iron", 10)
+				morel = true
+				COruzje[src] = true
+			end
+		elseif item == "skundak"then
+			if xPlayer.getInventoryItem("iron").count >= 15 then
+				xPlayer.removeInventoryItem("iron", 15)
+				morel = true
+				COruzje[src] = true
+			end
+		elseif item == "smkundak"then
+			if xPlayer.getInventoryItem("iron").count >= 4 then
+				xPlayer.removeInventoryItem("iron", 4)
+				morel = true
+				COruzje[src] = true
+			end
+		end
+	end
+	cb(morel)
+end)
 
--- ESX.RegisterServerCallback('kraft:ProvjeriKolicinu2', function(source, cb, item)
--- 	local src = source
--- 	local xPlayer = ESX.GetPlayerFromId(src)
--- 	local morel = false
--- 	if xPlayer.getInventoryItem(item).count+1 <= xPlayer.getInventoryItem(item).limit then
--- 		if item == "kcijev"then
--- 			if xPlayer.getMoney() >= 5000 then
--- 				xPlayer.removeMoney(5000)
--- 				xPlayer.addInventoryItem("kcijev", 1)
--- 				morel = true
--- 			end
--- 		elseif item == "ccijev"then
--- 			if xPlayer.getMoney() >= 6000 then
--- 				xPlayer.removeMoney(6000)
--- 				xPlayer.addInventoryItem("ccijev", 1)
--- 				morel = true
--- 			end
--- 		elseif item == "scijev"then
--- 			if xPlayer.getMoney() >= 7000 then
--- 				xPlayer.removeMoney(7000)
--- 				xPlayer.addInventoryItem("scijev", 1)
--- 				morel = true
--- 			end
--- 		elseif item == "smcijev"then
--- 			if xPlayer.getMoney() >= 4000 then
--- 				xPlayer.removeMoney(4000)
--- 				xPlayer.addInventoryItem("smcijev", 1)
--- 				morel = true
--- 			end
--- 		end
--- 	end
--- 	cb(morel)
--- end)
+ESX.RegisterServerCallback('kraft:ProvjeriKolicinu2', function(source, cb, item)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	local morel = false
+	if xPlayer.getInventoryItem(item).count+1 <= xPlayer.getInventoryItem(item).limit then
+		if item == "kcijev"then
+			if xPlayer.getMoney() >= 5000 then
+				xPlayer.removeMoney(5000)
+				xPlayer.addInventoryItem("kcijev", 1)
+				morel = true
+			end
+		elseif item == "ccijev"then
+			if xPlayer.getMoney() >= 6000 then
+				xPlayer.removeMoney(6000)
+				xPlayer.addInventoryItem("ccijev", 1)
+				morel = true
+			end
+		elseif item == "scijev"then
+			if xPlayer.getMoney() >= 7000 then
+				xPlayer.removeMoney(7000)
+				xPlayer.addInventoryItem("scijev", 1)
+				morel = true
+			end
+		elseif item == "smcijev"then
+			if xPlayer.getMoney() >= 4000 then
+				xPlayer.removeMoney(4000)
+				xPlayer.addInventoryItem("smcijev", 1)
+				morel = true
+			end
+		end
+	end
+	cb(morel)
+end)
 
--- local skupljanje = vector3(59.282123565674, -774.98114013672, 17.823108673096)
--- RegisterNetEvent("kraft:SkupiGa")
--- AddEventHandler('kraft:SkupiGa', function()
--- 	local src = source
--- 	local koord = GetEntityCoords(GetPlayerPed(src))
--- 	if #(koord-skupljanje) <= 15.0 then
--- 		local xPlayer = ESX.GetPlayerFromId(src)
---         if xPlayer.getInventoryItem("iron").count+1 <= xPlayer.getInventoryItem("iron").limit then
--- 		     xPlayer.addInventoryItem("iron", 1)
---         else
--- 			xPlayer.showNotification("Ne stane vam vise u inventory")
--- 		end
--- 	else
--- 		TriggerEvent("DiscordBot:Anticheat", GetPlayerName(src).."["..src.."] je pokusao pozvati event za dobijanje zeljeza, a nije blizu lokacije skupljanja!")
--- 	    TriggerEvent("AntiCheat:Citer", src)
--- 	end
--- end)
+local skupljanje = vector3(59.282123565674, -774.98114013672, 17.823108673096)
+RegisterNetEvent("kraft:SkupiGa")
+AddEventHandler('kraft:SkupiGa', function()
+	local src = source
+	local koord = GetEntityCoords(GetPlayerPed(src))
+	if #(koord-skupljanje) <= 15.0 then
+		local xPlayer = ESX.GetPlayerFromId(src)
+        if xPlayer.getInventoryItem("iron").count+1 <= xPlayer.getInventoryItem("iron").limit then
+		     xPlayer.addInventoryItem("iron", 1)
+        else
+			xPlayer.showNotification("Ne stane vam vise u inventory")
+		end
+	else
+		TriggerEvent("DiscordBot:Anticheat", GetPlayerName(src).."["..src.."] je pokusao pozvati event za dobijanje zeljeza, a nije blizu lokacije skupljanja!")
+	    TriggerEvent("AntiCheat:Citer", src)
+	end
+end)
 
--- RegisterNetEvent("kraft:DajKundak")
--- AddEventHandler('kraft:DajKundak', function(item)
--- 	local src = source
--- 	if COruzje[src] then
--- 		local xPlayer = ESX.GetPlayerFromId(src)
--- 		xPlayer.addInventoryItem(item, 1)
--- 		COruzje[src] = false
--- 	else
--- 		TriggerEvent("DiscordBot:Anticheat", GetPlayerName(src).."["..src.."] je pokusao pozvati event za preradu zeljeza u kundak, a nije zapoceo sa preradom!")
--- 	    --TriggerEvent("AntiCheat:Citer", src)
--- 	end
--- end)
+RegisterNetEvent("kraft:DajKundak")
+AddEventHandler('kraft:DajKundak', function(item)
+	local src = source
+	if COruzje[src] then
+		local xPlayer = ESX.GetPlayerFromId(src)
+		xPlayer.addInventoryItem(item, 1)
+		COruzje[src] = false
+	else
+		TriggerEvent("DiscordBot:Anticheat", GetPlayerName(src).."["..src.."] je pokusao pozvati event za preradu zeljeza u kundak, a nije zapoceo sa preradom!")
+	    --TriggerEvent("AntiCheat:Citer", src)
+	end
+end)
 
 ESX.RegisterUsableItem("petarda", function(source)
 	local _source = source

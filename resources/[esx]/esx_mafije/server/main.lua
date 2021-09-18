@@ -47,7 +47,7 @@ function UcitajMafije()
 			TriggerEvent("RefreshAddone")
 			TriggerEvent("RefreshSociety")
 			TriggerEvent('esx_society:registerSociety', result[i].Ime, result[i].Label, soc, soc, soc, {type = 'public'})
-			table.insert(Mafije, {Ime = result[i].Ime, Label = result[i].Label, Gradonacelnik = result[i].Gradonacelnik, Skladiste = result[i].Skladiste})
+			table.insert(Mafije, {Ime = result[i].Ime, Label = result[i].Label, Gradonacelnik = result[i].Gradonacelnik, Skladiste = result[i].Skladiste, Posao = result[i].Posao})
 			local data = json.decode(result[i].Rankovi)
 			if data ~= nil then
 				for a=1, #data do
@@ -78,6 +78,10 @@ function UcitajMafije()
 			table.insert(Koord, {Mafija = result[i].Ime, Ime = "Izlaz", Coord = data2})
 			data2 = json.decode(result[i].LokVozila2)
 			table.insert(Koord, {Mafija = result[i].Ime, Ime = "LokVozila2", Coord = data2})
+			data2 = json.decode(result[i].KPosao)
+			table.insert(Koord, {Mafija = result[i].Ime, Ime = "Posao", Coord = data2})
+			data2 = json.decode(result[i].PosaoSpawn)
+			table.insert(Koord, {Mafija = result[i].Ime, Ime = "PosaoSpawn", Coord = data2})
 			local data3 = json.decode(result[i].Vozila)
 			if data3 ~= nil then
 				for b=1, #data3 do
@@ -506,7 +510,7 @@ AddEventHandler('mafije:NapraviMafiju', function(maf, lab)
 				['@lab'] = label
 			})
 			
-			table.insert(Mafije, {Ime = maf, Label = lab})
+			table.insert(Mafije, {Ime = maf, Label = lab, Posao = 0})
 			TriggerClientEvent("mafije:UpdateMafije", -1, Mafije)
 			
 			MySQL.Async.execute('INSERT INTO jobs (name, label, whitelisted) VALUES (@ime, @lab, @white)',{
@@ -1480,6 +1484,100 @@ AddEventHandler('mafije:SpremiCoord', function(ime, coord, br, head)
 		end
 		TriggerClientEvent('esx:showNotification', source, 'Koordinate spawna kamiona za kokain su uspjesno spremljene za mafiju '..ime..'!')
 		TriggerClientEvent("mafije:UpdateKoord", -1, Koord)
+	elseif br == 13 then
+		MySQL.Async.execute('UPDATE mafije SET KPosao = @cor WHERE Ime = @im', {
+			['@cor'] = json.encode(cordara),
+			['@im'] = ime
+		})
+		local Postoji = 0
+		for i=1, #Koord, 1 do
+			if Koord[i] ~= nil and Koord[i].Mafija == ime and Koord[i].Ime == "Posao" then
+				Koord[i].Coord = cordara
+				Postoji = 1
+			end
+		end
+		if Postoji == 0 then
+			table.insert(Koord, {Mafija = ime, Ime = "Posao", Coord = cordara})
+		end
+		TriggerClientEvent('esx:showNotification', source, 'Koordinate uzimanja legalnog posla za mafiju '..ime..' su spremljene!')
+		TriggerClientEvent("mafije:UpdateKoord", -1, Koord)
+		TriggerClientEvent("mafije:KreirajBlip", -1, cordara, ime, 3)
+	elseif br == 14 then
+		local cordare = {}
+		table.insert(cordare, x)
+		table.insert(cordare, y)
+		table.insert(cordare, z)
+		table.insert(cordare, head)
+		MySQL.Async.execute('UPDATE mafije SET PosaoSpawn = @cor WHERE Ime = @im', {
+			['@cor'] = json.encode(cordare),
+			['@im'] = ime
+		})
+		local Postoji = 0
+		for i=1, #Koord, 1 do
+			if Koord[i] ~= nil and Koord[i].Mafija == ime and Koord[i].Ime == "PosaoSpawn" then
+				Koord[i].Coord = cordare
+				Postoji = 1
+			end
+		end
+		if Postoji == 0 then
+			table.insert(Koord, {Mafija = ime, Ime = "PosaoSpawn", Coord = cordare})
+		end
+		TriggerClientEvent('esx:showNotification', source, 'Koordinate spawna kamiona za legalni posao su uspjesno spremljene za mafiju '..ime..'!')
+		TriggerClientEvent("mafije:UpdateKoord", -1, Koord)
+	end
+end)
+
+RegisterServerEvent('mafije:PlatiDostavu')
+AddEventHandler('mafije:PlatiDostavu', function(id, maf)
+	local sourceXPlayer = ESX.GetPlayerFromId(source)
+	local soc = "society_"..maf
+	TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
+		if id == 1 then
+			account.addMoney(6000)
+			account.save()
+			sourceXPlayer.addMoney(3000)
+			ESX.SavePlayer(sourceXPlayer, function() 
+			end)
+		elseif id == 2 then
+			account.addMoney(7500)
+			account.save()
+			sourceXPlayer.addMoney(3750)
+			ESX.SavePlayer(sourceXPlayer, function() 
+			end)
+		end
+	end)
+end)
+
+RegisterNetEvent('mafije:SpremiPostavke')
+AddEventHandler('mafije:SpremiPostavke', function(ime, br)
+	if br == 1 then
+		for i=1, #Mafije, 1 do
+			if Mafije[i] ~= nil and Mafije[i].Ime == ime then
+				if Mafije[i].Posao == 0 then
+					Mafije[i].Posao = 1
+					TriggerClientEvent('esx:showNotification', source, 'Omogucili ste legalan posao za mafiju '..ime..'!')
+				else
+					Mafije[i].Posao = 0
+					TriggerClientEvent('esx:showNotification', source, 'Onemogucili ste legalan posao za mafiju '..ime..'!')
+				end
+				MySQL.Async.execute('UPDATE mafije SET Posao = @br, KPosao = "{}", PosaoSpawn = "{}" WHERE Ime = @im', {
+					['@br'] = Mafije[i].Posao,
+					['@im'] = ime
+				})
+				for i=1, #Koord, 1 do
+					if Koord[i] ~= nil and Koord[i].Mafija == ime and Koord[i].Ime == "Posao" then
+						table.remove(Koord, i)
+					end
+					if Koord[i] ~= nil and Koord[i].Mafija == ime and Koord[i].Ime == "PosaoSpawn" then
+						table.remove(Koord, i)
+					end
+				end
+				TriggerClientEvent("mafije:UpdateMafije", -1, Mafije)
+				TriggerClientEvent("mafije:UpdateKoord", -1, Koord)
+				TriggerClientEvent("mafije:KreirajBlip", -1, {x = 0, y = 0, z = 0}, ime, 3)
+				break
+			end
+		end
 	end
 end)
 
