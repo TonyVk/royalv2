@@ -1520,6 +1520,398 @@ RegisterCommand("brnace", function(source, args, rawCommandString)
 	--end)
 end, false)
 
+RegisterCommand("testdamage", function(source, args, rawCommandString)
+	local playerVeh = GetVehiclePedIsIn(PlayerPedId(), false)
+	SetVehicleDoorBroken(playerVeh, 0, true)
+	SetVehicleDoorBroken(playerVeh, 1, true)
+	SetVehicleDoorBroken(playerVeh, 2, true)
+	SetVehicleDoorBroken(playerVeh, 3, true)
+	SetVehicleDoorBroken(playerVeh, 4, true)
+	SetVehicleDoorBroken(playerVeh, 5, true)
+	SetVehicleDoorBroken(playerVeh, 6, true)
+	SetVehicleDoorBroken(playerVeh, 7, true)
+	SetVehicleWheelXOffset(playerVeh, 0, -1500)
+	SetVehicleWheelXOffset(playerVeh, 1, -1500)
+	SetVehicleWheelXOffset(playerVeh, 2, -1500)
+	SetVehicleWheelXOffset(playerVeh, 3, -1500)
+end, false)
+
+RegisterCommand("guma", function(source, args, rawCommandString)
+	local playerVehe = GetVehiclePedIsIn(PlayerPedId(), false)
+	--SetVehicleFixed(playerVeh)
+	print("aaaa")
+	SetVehicleDeformationFixed(playerVehe)
+	Wait(500)
+	if tonumber(args[1]) == 0 then
+		SetVehicleWheelXOffset(playerVeh, 1, -1500)
+		SetVehicleWheelXOffset(playerVeh, 2, -1500)
+		SetVehicleWheelXOffset(playerVeh, 3, -1500)
+	elseif tonumber(args[1]) == 1 then
+		SetVehicleWheelXOffset(playerVeh, 2, -1500)
+		SetVehicleWheelXOffset(playerVeh, 3, -1500)
+	elseif tonumber(args[1]) == 2 then
+		SetVehicleWheelXOffset(playerVeh, 3, -1500)
+	end
+end, false)
+
+RegisterCommand("testdamage", function(source, args, rawCommandString)
+	local playerVeh = GetVehiclePedIsIn(PlayerPedId(), false)
+	SetVehicleDoorBroken(playerVeh, 0, true)
+	SetVehicleDoorBroken(playerVeh, 1, true)
+	SetVehicleDoorBroken(playerVeh, 2, true)
+	SetVehicleDoorBroken(playerVeh, 3, true)
+	SetVehicleDoorBroken(playerVeh, 4, true)
+	SetVehicleDoorBroken(playerVeh, 5, true)
+	SetVehicleDoorBroken(playerVeh, 6, true)
+	SetVehicleDoorBroken(playerVeh, 7, true)
+	SetVehicleWheelXOffset(playerVeh, 0, -1500)
+	SetVehicleWheelXOffset(playerVeh, 1, -1500)
+	SetVehicleWheelXOffset(playerVeh, 2, -1500)
+	SetVehicleWheelXOffset(playerVeh, 3, -1500)
+end, false)
+
+local objektic = nil
+local off1, off2, off3, off4
+local vrata = 0
+RegisterCommand("spawnga", function(source, args, rawCommandString)
+	local coords = vector3(2583.7958984375, 1771.0428466797, 32.378147125244)
+	local head = 180.00
+	local hashVehicule = "bmci"
+	ESX.Streaming.RequestModel(hashVehicule)
+	objektic = CreateVehicle(hashVehicule, coords, head, true, false)
+	FreezeEntityPosition(objektic, true)
+	SetEntityCollision(objektic, false, true)
+	SetVehicleDoorBroken(objektic, 0, true)
+	SetVehicleDoorBroken(objektic, 1, true)
+	SetVehicleDoorBroken(objektic, 2, true)
+	SetVehicleDoorBroken(objektic, 3, true)
+	SetVehicleDoorBroken(objektic, 4, true)
+	SetVehicleDoorBroken(objektic, 5, true)
+	SetVehicleDoorBroken(objektic, 6, true)
+	SetVehicleDoorBroken(objektic, 7, true)
+	off1 = GetVehicleWheelXOffset(objektic, 0)
+	off2 = GetVehicleWheelXOffset(objektic, 1)
+	off3 = GetVehicleWheelXOffset(objektic, 2)
+	off4 = GetVehicleWheelXOffset(objektic, 3)
+	SetVehicleWheelXOffset(objektic, 0, -1500)
+	SetVehicleWheelXOffset(objektic, 1, -1500)
+	SetVehicleWheelXOffset(objektic, 2, -1500)
+	SetVehicleWheelXOffset(objektic, 3, -1500)
+	Citizen.CreateThread(function()
+		while true do
+			local coords2 = GetEntityCoords(objektic)
+			local object = GetClosestObjectOfType(coords2, 10.0, GetHashKey('stt_prop_track_speedup'), false, false, false)
+			if DoesEntityExist(object) then
+				local objCoords = GetEntityCoords(object)
+				SetEntityCoordsNoOffset(objektic, coords2.x, coords2.y, objCoords.z+0.5)
+			end
+			Citizen.Wait(2000)
+		end
+	end)
+end, false)
+
+local dict = "core"
+local particleName = "ent_dst_electrical" --bul_stungun_metal ent_brk_sparking_wires ent_dst_electrical
+local check
+local gume = 0
+RegisterCommand("prvidio", function(source, args, rawCommandString)
+	local coords = vector3(2583.8186035156, 1733.0377197266, 32.4089012146)
+	local coords2 = GetEntityCoords(objektic)
+	Citizen.CreateThread(function()
+		-- Request the particle dictionary.
+		RequestNamedPtfxAsset(dict)
+		-- Wait for the particle dictionary to load.
+		while not HasNamedPtfxAssetLoaded(dict) do
+			Citizen.Wait(0)
+		end
+		local a = 0
+		while #(coords-coords2) > 3.0 do
+			Citizen.Wait(50)
+			coords2 = GetEntityCoords(objektic)
+			--SetVehicleForwardSpeed(objektic, 15.0)
+			local korde = GetOffsetFromEntityInWorldCoords(objektic, 0.0, 0.1, 0.0)
+			SetEntityCoordsNoOffset(objektic, korde)
+			a=a+1
+			if a%10 == 0 then
+				UseParticleFxAssetNextCall(dict)
+				-- Create a new non-looped particle effect, we don't need to store the particle handle because it will
+				-- automatically get destroyed once the particle has finished it's animation (it's non-looped).
+				StartNetworkedParticleFxNonLoopedOnEntity(particleName, objektic, 0.0, 0.0, 0.3, 0.0, 0.0, 0.0, 3.0, false, false, false)
+			end
+		end
+		SetVehicleWheelXOffset(objektic, 0, -1500)
+		SetVehicleWheelXOffset(objektic, 1, -1500)
+		SetVehicleWheelXOffset(objektic, 2, -1500)
+		SetVehicleWheelXOffset(objektic, 3, -1500)
+		local broj = GetNumberOfVehicleDoors(objektic)
+		for i = 0, broj-2 do
+			local bagModel
+			ESX.ShowNotification("Odi po dio")
+			local check = CreateCheckpoint(45, 2593.595703125, 1762.615234375, 29.540013122559, 0, 0, 0, 2.0, 50, 50, 204, 255)
+			local korda2 = vector3(2593.595703125, 1762.615234375, 29.740013122559)
+			local korda = GetEntityCoords(PlayerPedId())
+			while #(korda-korda2) > 3 do
+				Citizen.Wait(100)
+				korda = GetEntityCoords(PlayerPedId())
+			end
+			DeleteCheckpoint(check)
+			local ad = "anim@heists@box_carry@"
+			RequestAnimDict(ad)
+			while not HasAnimDictLoaded(ad) do
+				Citizen.Wait(1000)
+			end
+			TaskPlayAnim( PlayerPedId(), ad, "idle", 3.0, -8, -1, 63, 0, 0, 0, 0 )
+			local x,y,z = table.unpack(GetEntityCoords(PlayerPedId()))
+			if broj == 6 then
+				if vrata > 3 then
+					bagModel = 'prop_car_bonnet_01'
+				else
+					bagModel = 'prop_car_door_01'
+				end
+			else
+				if vrata > 1 then
+					bagModel = 'prop_car_bonnet_01'
+				else
+					bagModel = 'prop_car_door_01'
+				end
+			end
+			local bagspawned = CreateObject(GetHashKey(bagModel), x, y, z+0.2,  true,  true, true)
+			AttachEntityToEntity(bagspawned, PlayerPedId(), GetPedBoneIndex(PlayerPedId(), 60309), 0.025, 0.00, 0.355, -75.0, 470.0, 0.0, true, true, false, true, 1, true)
+			ESX.ShowNotification("Pokupili ste vrata")
+			korda2 = vector3(2589.1394042969, 1738.6391601562, 29.740001678467)
+			check = CreateCheckpoint(45, 2589.1394042969, 1738.6391601562, 29.540001678467, 0, 0, 0, 2.0, 50, 50, 204, 255)
+			while #(korda-korda2) > 3 do
+				Citizen.Wait(100)
+				korda = GetEntityCoords(PlayerPedId())
+			end
+			ClearPedTasks(PlayerPedId())
+			ESX.ShowNotification("Namontirali ste dio")
+			DeleteObject(bagspawned)
+			DeleteCheckpoint(check)
+			local veh = objektic
+			SetVehicleFixed(veh)
+			for j = 0, broj-2 do
+				if j > vrata then
+					SetVehicleDoorBroken(veh, j, true)
+				end
+			end
+			vrata = vrata+1
+		end
+		--drugi dio
+		coords = vector3(2583.9887695312, 1684.3585205078, 30.209987640381)
+		coords2 = GetEntityCoords(objektic)
+		-- Request the particle dictionary.
+		RequestNamedPtfxAsset(dict)
+		-- Wait for the particle dictionary to load.
+		while not HasNamedPtfxAssetLoaded(dict) do
+			Citizen.Wait(0)
+		end
+		local a = 0
+		while #(coords-coords2) > 3.0 do
+			Citizen.Wait(50)
+			coords2 = GetEntityCoords(objektic)
+			--SetVehicleForwardSpeed(objektic, 15.0)
+			local korde = GetOffsetFromEntityInWorldCoords(objektic, 0.0, 0.1, 0.0)
+			SetEntityCoordsNoOffset(objektic, korde)
+			a=a+1
+			if a%10 == 0 then
+				UseParticleFxAssetNextCall(dict)
+				-- Create a new non-looped particle effect, we don't need to store the particle handle because it will
+				-- automatically get destroyed once the particle has finished it's animation (it's non-looped).
+				StartNetworkedParticleFxNonLoopedOnEntity(particleName, objektic, 0.0, 0.0, 0.3, 0.0, 0.0, 0.0, 3.0, false, false, false)
+			end
+		end
+		Citizen.Wait(5000)
+		--treci dio
+		SetEntityCoords(PlayerPedId(), 2563.6135253906, 1600.9143066406, 29.299989700317)
+		coords = vector3(2565.6665039062, 1586.4141845703, 30.228687286377)
+		SetEntityCoordsNoOffset(objektic, coords)
+		SetEntityHeading(objektic, 0.69)
+		SetVehicleFixed(objektic)
+		SetEntityCollision(objektic, true, true)
+		FreezeEntityPosition(objektic, false)
+		ActivatePhysics(objektic)
+		local pos1, pos2, pos3, pos4
+		local guma = GetEntityBoneIndexByName(objektic, "wheel_lf")
+		pos1 = GetWorldPositionOfEntityBone(objektic, guma)
+		guma = GetEntityBoneIndexByName(objektic, "wheel_rf")
+		pos2 = GetWorldPositionOfEntityBone(objektic, guma)
+		guma = GetEntityBoneIndexByName(objektic, "wheel_lr")
+		pos3 = GetWorldPositionOfEntityBone(objektic, guma)
+		guma = GetEntityBoneIndexByName(objektic, "wheel_rr")
+		pos4 = GetWorldPositionOfEntityBone(objektic, guma)
+		SetVehicleWheelXOffset(objektic, 0, -1500)
+		SetVehicleWheelXOffset(objektic, 1, -1500)
+		SetVehicleWheelXOffset(objektic, 2, -1500)
+		SetVehicleWheelXOffset(objektic, 3, -1500)
+		local korda = GetEntityCoords(PlayerPedId())
+		for i = 0, 3 do
+			ESX.ShowNotification("Odite po gumu.")
+			check = CreateCheckpoint(45, 2554.818359375, 1588.7712402344, 31.048974990845, 0, 0, 0, 2.0, 50, 50, 204, 255)
+			korda2 = vector3(2554.818359375, 1588.7712402344, 31.048974990845)
+			while #(korda-korda2) > 3 do
+				Citizen.Wait(100)
+				korda = GetEntityCoords(PlayerPedId())
+			end
+			DeleteCheckpoint(check)
+			local ad = "anim@heists@box_carry@"
+			RequestAnimDict(ad)
+			while not HasAnimDictLoaded(ad) do
+				Citizen.Wait(1000)
+			end
+			TaskPlayAnim( PlayerPedId(), ad, "idle", 3.0, -8, -1, 63, 0, 0, 0, 0 )
+			local x,y,z = table.unpack(GetEntityCoords(PlayerPedId()))
+			bagModel = 'prop_wheel_01'
+			local bagspawned = CreateObject(GetHashKey(bagModel), x, y, z+0.2,  true,  true, true)
+			AttachEntityToEntity(bagspawned, PlayerPedId(), GetPedBoneIndex(PlayerPedId(), 60309), 0.025, 0.00, 0.355, -75.0, 470.0, 0.0, true, true, false, true, 1, true)
+			local pos
+			local off
+			if i == 0 then
+				pos = pos1
+				off = off1
+			elseif i == 1 then
+				pos = pos2
+				off = off2
+			elseif i == 2 then
+				pos = pos3
+				off = off3
+			else
+				pos = pos4
+				off = off4
+			end
+			check = CreateCheckpoint(45, pos.x, pos.y, pos.z, 0, 0, 0, 2.0, 50, 50, 204, 255)
+			while #(korda-pos) > 3 do
+				Citizen.Wait(100)
+				korda = GetEntityCoords(PlayerPedId())
+			end
+			ClearPedTasks(PlayerPedId())
+			DeleteObject(bagspawned)
+			DeleteCheckpoint(check)
+			SetVehicleWheelXOffset(objektic, i, off)
+			ActivatePhysics(objektic)
+			ESX.ShowNotification("Postavili ste gumu.")
+		end
+		SetEntityCoords(PlayerPedId(), 2560.8967285156, 1747.6520996094, 29.169984817505)
+		coords = vector3(2558.7841796875, 1753.4254150391, 28.599960327148)
+		SetEntityCoordsNoOffset(objektic, coords)
+		SetEntityHeading(objektic, 180.0)
+		local a = 0
+		dict = "core"
+		particleName = "veh_respray_smoke"
+		while a < 5 do
+			-- Tell the game that we want to use a specific dictionary for the next particle native.
+			UseParticleFxAssetNextCall(dict)
+			--SetParticleFxNonLoopedColour(color[1] / 255, color[2] / 255, color[3] / 255)
+			--SetParticleFxNonLoopedAlpha(1.0)
+			-- Create a new non-looped particle effect, we don't need to store the particle handle because it will
+			-- automatically get destroyed once the particle has finished it's animation (it's non-looped).
+			StartParticleFxNonLoopedAtCoord(particleName, 2558.7841796875, 1753.4254150391, 28.599960327148, 0.0, 0.0, 0.0, 1.0, false, false, false)
+		
+			a = a + 1
+			
+			-- Wait 500ms before triggering the next particle.
+			Citizen.Wait(500)
+		end
+		ESX.ShowNotification("Auto je spreman")
+	end)
+end, false)
+
+RegisterCommand("drugidio", function(source, args, rawCommandString)
+	local coords = vector3(2583.9887695312, 1684.3585205078, 30.209987640381)
+	local coords2 = GetEntityCoords(objektic)
+	Citizen.CreateThread(function()
+		-- Request the particle dictionary.
+		RequestNamedPtfxAsset(dict)
+		-- Wait for the particle dictionary to load.
+		while not HasNamedPtfxAssetLoaded(dict) do
+			Citizen.Wait(0)
+		end
+		local a = 0
+		while #(coords-coords2) > 3.0 do
+			Citizen.Wait(50)
+			coords2 = GetEntityCoords(objektic)
+			--SetVehicleForwardSpeed(objektic, 15.0)
+			local korde = GetOffsetFromEntityInWorldCoords(objektic, 0.0, 0.1, 0.0)
+			SetEntityCoordsNoOffset(objektic, korde)
+			a=a+1
+			if a%10 == 0 then
+				UseParticleFxAssetNextCall(dict)
+				-- Create a new non-looped particle effect, we don't need to store the particle handle because it will
+				-- automatically get destroyed once the particle has finished it's animation (it's non-looped).
+				StartNetworkedParticleFxNonLoopedOnEntity(particleName, objektic, 0.0, 0.0, 0.3, 0.0, 0.0, 0.0, 3.0, false, false, false)
+			end
+		end
+	end)
+end, false)
+
+RegisterCommand("trecidio", function(source, args, rawCommandString)
+	local coords = vector3(2565.6665039062, 1586.4141845703, 30.228687286377)
+	SetEntityCoordsNoOffset(objektic, coords)
+	SetEntityHeading(objektic, 0.69)
+	SetVehicleFixed(objektic)
+	SetEntityCollision(objektic, true, true)
+	FreezeEntityPosition(objektic, false)
+	ActivatePhysics(objektic)
+	SetVehicleWheelXOffset(objektic, 0, -1500)
+	SetVehicleWheelXOffset(objektic, 1, -1500)
+	SetVehicleWheelXOffset(objektic, 2, -1500)
+	SetVehicleWheelXOffset(objektic, 3, -1500)
+end, false)
+
+RegisterCommand("trecidiog", function(source, args, rawCommandString)
+	SetVehicleWheelXOffset(objektic, 0, off1)
+	ActivatePhysics(objektic)
+	Wait(5000)
+	SetVehicleWheelXOffset(objektic, 1, off2)
+	ActivatePhysics(objektic)
+	Wait(5000)
+	SetVehicleWheelXOffset(objektic, 2, off3)
+	ActivatePhysics(objektic)
+	Wait(5000)
+	SetVehicleWheelXOffset(objektic, 3, off4)
+	ActivatePhysics(objektic)
+end, false)
+
+RegisterCommand("cetvrtidio", function(source, args, rawCommandString)
+	local coords = vector3(2558.7841796875, 1753.4254150391, 28.599960327148)
+	SetEntityCoordsNoOffset(objektic, coords)
+	SetEntityHeading(objektic, 180.0)
+end, false)
+
+RegisterCommand("part", function(source, args, rawCommandString)
+	local dict = "core"
+	local particleName = args[1]
+
+	-- Create a new thread.
+	Citizen.CreateThread(function()
+		-- Request the particle dictionary.
+		RequestNamedPtfxAsset(dict)
+		-- Wait for the particle dictionary to load.
+		while not HasNamedPtfxAssetLoaded(dict) do
+			Citizen.Wait(0)
+		end
+		
+		-- Get the position of the player, this will be used as the
+		-- starting position of the particle effects.
+		local ped = PlayerPedId()
+		local x,y,z = table.unpack(GetEntityCoords(ped, true))
+
+		local a = 0
+		while a < 5 do
+			-- Tell the game that we want to use a specific dictionary for the next particle native.
+			UseParticleFxAssetNextCall(dict)
+			-- Create a new non-looped particle effect, we don't need to store the particle handle because it will
+			-- automatically get destroyed once the particle has finished it's animation (it's non-looped).
+			StartParticleFxNonLoopedAtCoord(particleName, 2558.7841796875, 1753.4254150391, 28.599960327148, 0.0, 0.0, 0.0, 1.0, false, false, false)
+		
+			a = a + 1
+			
+			-- Wait 500ms before triggering the next particle.
+			Citizen.Wait(500)
+		end
+	end)
+end, false)
+
 function VehicleInFront()
     local pos = GetEntityCoords(GetPlayerPed(-1))
     local entityWorld = GetOffsetFromEntityInWorldCoords(GetPlayerPed(-1), 0.0, 4.0, 0.0)
