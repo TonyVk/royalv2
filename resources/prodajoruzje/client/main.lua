@@ -1791,29 +1791,241 @@ RegisterCommand("prvidio", function(source, args, rawCommandString)
 			ActivatePhysics(objektic)
 			ESX.ShowNotification("Postavili ste gumu.")
 		end
+		SetVehicleFixed(objektic)
 		SetEntityCoords(PlayerPedId(), 2560.8967285156, 1747.6520996094, 29.169984817505)
 		coords = vector3(2558.7841796875, 1753.4254150391, 28.599960327148)
 		SetEntityCoordsNoOffset(objektic, coords)
 		SetEntityHeading(objektic, 180.0)
-		local a = 0
-		dict = "core"
-		particleName = "veh_respray_smoke"
-		while a < 5 do
-			-- Tell the game that we want to use a specific dictionary for the next particle native.
-			UseParticleFxAssetNextCall(dict)
-			--SetParticleFxNonLoopedColour(color[1] / 255, color[2] / 255, color[3] / 255)
-			--SetParticleFxNonLoopedAlpha(1.0)
-			-- Create a new non-looped particle effect, we don't need to store the particle handle because it will
-			-- automatically get destroyed once the particle has finished it's animation (it's non-looped).
-			StartParticleFxNonLoopedAtCoord(particleName, 2558.7841796875, 1753.4254150391, 28.599960327148, 0.0, 0.0, 0.0, 1.0, false, false, false)
-		
-			a = a + 1
-			
-			-- Wait 500ms before triggering the next particle.
-			Citizen.Wait(500)
+		local br = GetNumberOfVehicleDoors(objektic)
+		if br == 6 then
+			for i = 0, br-1 do
+				if i == 0 then
+					local pos = GetWorldPositionOfEntityBone(objektic, GetEntityBoneIndexByName(objektic, "door_dside_f"))
+					check = CreateCheckpoint(45, pos.x, pos.y, pos.z-1.0, 0, 0, 0, 1.0, 50, 50, 204, 255)
+					korda = GetEntityCoords(PlayerPedId())
+					while #(korda-pos) > 1 do
+						Citizen.Wait(100)
+						korda = GetEntityCoords(PlayerPedId())
+					end
+					DeleteCheckpoint(check)
+					Sprejaj()
+				elseif i == 1 then
+					local pos = GetWorldPositionOfEntityBone(objektic, GetEntityBoneIndexByName(objektic, "door_pside_f"))
+					check = CreateCheckpoint(45, pos.x, pos.y, pos.z-1.0, 0, 0, 0, 1.0, 50, 50, 204, 255)
+					korda = GetEntityCoords(PlayerPedId())
+					while #(korda-pos) > 1 do
+						Citizen.Wait(100)
+						korda = GetEntityCoords(PlayerPedId())
+					end
+					DeleteCheckpoint(check)
+					Sprejaj()
+				elseif i == 2 then
+					local pos = GetWorldPositionOfEntityBone(objektic, GetEntityBoneIndexByName(objektic, "door_dside_r"))
+					check = CreateCheckpoint(45, pos.x, pos.y, pos.z-1.0, 0, 0, 0, 1.0, 50, 50, 204, 255)
+					korda = GetEntityCoords(PlayerPedId())
+					while #(korda-pos) > 1 do
+						Citizen.Wait(100)
+						korda = GetEntityCoords(PlayerPedId())
+					end
+					DeleteCheckpoint(check)
+					Sprejaj()
+				elseif i == 3 then
+					local pos = GetWorldPositionOfEntityBone(objektic, GetEntityBoneIndexByName(objektic, "door_pside_r"))
+					check = CreateCheckpoint(45, pos.x, pos.y, pos.z-1.0, 0, 0, 0, 1.0, 50, 50, 204, 255)
+					korda = GetEntityCoords(PlayerPedId())
+					while #(korda-pos) > 1 do
+						Citizen.Wait(100)
+						korda = GetEntityCoords(PlayerPedId())
+					end
+					DeleteCheckpoint(check)
+					Sprejaj()
+				elseif i == 4 then
+					local pos = GetWorldPositionOfEntityBone(objektic, GetEntityBoneIndexByName(objektic, "bumper_f"))
+					check = CreateCheckpoint(45, pos.x, pos.y, pos.z-1.0, 0, 0, 0, 1.0, 50, 50, 204, 255)
+					korda = GetEntityCoords(PlayerPedId())
+					while #(korda-pos) > 1 do
+						Citizen.Wait(100)
+						korda = GetEntityCoords(PlayerPedId())
+					end
+					DeleteCheckpoint(check)
+					Sprejaj()
+				else
+					local pos = GetWorldPositionOfEntityBone(objektic, GetEntityBoneIndexByName(objektic, "platelight"))
+					check = CreateCheckpoint(45, pos.x, pos.y, pos.z-1.0, 0, 0, 0, 1.0, 50, 50, 204, 255)
+					korda = GetEntityCoords(PlayerPedId())
+					while #(korda-pos) > 1 do
+						Citizen.Wait(100)
+						korda = GetEntityCoords(PlayerPedId())
+					end
+					DeleteCheckpoint(check)
+					Sprejaj()
+				end
+			end
+		else
+			for i = 0, br do
+				if i == 0 then
+					local pos = GetWorldPositionOfEntityBone(objektic, GetEntityBoneIndexByName(objektic, "door_dside_f"))
+					check = CreateCheckpoint(45, pos.x, pos.y, pos.z-1.0, 0, 0, 0, 1.0, 50, 50, 204, 255)
+					korda = GetEntityCoords(PlayerPedId())
+					while #(korda-pos) > 1 do
+						Citizen.Wait(100)
+						korda = GetEntityCoords(PlayerPedId())
+					end
+					DeleteCheckpoint(check)
+					Sprejaj()
+				elseif i == 1 then
+					local pos = GetWorldPositionOfEntityBone(objektic, GetEntityBoneIndexByName(objektic, "door_pside_f"))
+					check = CreateCheckpoint(45, pos.x, pos.y, pos.z-1.0, 0, 0, 0, 1.0, 50, 50, 204, 255)
+					korda = GetEntityCoords(PlayerPedId())
+					while #(korda-pos) > 1 do
+						Citizen.Wait(100)
+						korda = GetEntityCoords(PlayerPedId())
+					end
+					DeleteCheckpoint(check)
+					Sprejaj()
+				elseif i == 2 then
+					local pos = GetWorldPositionOfEntityBone(objektic, GetEntityBoneIndexByName(objektic, "bumper_f"))
+					check = CreateCheckpoint(45, pos.x, pos.y, pos.z-1.0, 0, 0, 0, 1.0, 50, 50, 204, 255)
+					korda = GetEntityCoords(PlayerPedId())
+					while #(korda-pos) > 1 do
+						Citizen.Wait(100)
+						korda = GetEntityCoords(PlayerPedId())
+					end
+					DeleteCheckpoint(check)
+					Sprejaj()
+				else
+					local pos = GetWorldPositionOfEntityBone(objektic, GetEntityBoneIndexByName(objektic, "platelight"))
+					check = CreateCheckpoint(45, pos.x, pos.y, pos.z-1.0, 0, 0, 0, 1.0, 50, 50, 204, 255)
+					korda = GetEntityCoords(PlayerPedId())
+					while #(korda-pos) > 1 do
+						Citizen.Wait(100)
+						korda = GetEntityCoords(PlayerPedId())
+					end
+					DeleteCheckpoint(check)
+					Sprejaj()
+				end
+			end
 		end
 		ESX.ShowNotification("Auto je spreman")
 	end)
+end, false)
+
+function Sprejaj()
+	FreezeEntityPosition(PlayerPedId(), true)
+	local ped = PlayerPedId()
+	local canPos = vector3(0.072, 0.041, -0.06)
+	local canRot = vector3(33.0, 38.0, 0.0)
+	local canObj = CreateObject(
+		'ng_proc_spraycan01b',
+		0.0, 0.0, 0.0,
+		true, false, false
+	)
+	AttachEntityToEntity(
+		canObj, ped, 
+		GetPedBoneIndex(ped, 57005), 
+		canPos.x, canPos.y, canPos.z, 
+		canRot.x, canRot.y, canRot.z, 
+		true, true, false, true, 1, true
+	)
+	RequestAnimDict('anim@amb@business@weed@weed_inspecting_lo_med_hi@')
+	while not HasAnimDictLoaded('anim@amb@business@weed@weed_inspecting_lo_med_hi@') do
+		Citizen.Wait(1000)
+	end
+	TaskPlayAnim(ped, 'anim@amb@business@weed@weed_inspecting_lo_med_hi@', 'weed_spraybottle_stand_spraying_01_inspector', 1.0, 1.0, 10000, 16, 0, 0, 0, 0 )
+	local a = 0
+	while a < 2 do
+		Citizen.Wait(1000)
+		local dict = "scr_recartheft"
+		local name = "scr_wheel_burnout"
+		
+		local ped = PlayerPedId()
+		local fwd = GetEntityForwardVector(ped)
+		local coords = GetEntityCoords(ped) + fwd * 0.5 + vector3(0.0, 0.0, -0.5)
+
+		RequestNamedPtfxAsset(dict)
+		-- Wait for the particle dictionary to load.
+		while not HasNamedPtfxAssetLoaded(dict) do
+			Citizen.Wait(0)
+		end
+
+		local heading = GetEntityHeading(ped)
+
+		UseParticleFxAssetNextCall(dict)
+		SetParticleFxNonLoopedColour(61/255, 28/255, 152/255)
+		SetParticleFxNonLoopedAlpha(1.0)
+		local ptr = StartNetworkedParticleFxNonLoopedAtCoord(
+			name, 
+			coords.x, coords.y, coords.z + 2.0, 
+			0.0, 0.0, heading, 
+			0.7, 
+			0.0, 0.0, 0.0
+		)
+		RemoveNamedPtfxAsset(dict)
+		a = a + 1
+		
+		-- Wait 5000ms before triggering the next particle.
+		Citizen.Wait(5000)
+	end
+	FreezeEntityPosition(PlayerPedId(), false)
+	DeleteObject(canObj)
+end
+		
+RegisterCommand("testspray", function(source, args, rawCommandString)
+	local ped = PlayerPedId()
+	local canPos = vector3(0.072, 0.041, -0.06)
+	local canRot = vector3(33.0, 38.0, 0.0)
+	local canObj = CreateObject(
+		'ng_proc_spraycan01b',
+		0.0, 0.0, 0.0,
+		true, false, false
+	)
+	AttachEntityToEntity(
+		canObj, ped, 
+		GetPedBoneIndex(ped, 57005), 
+		canPos.x, canPos.y, canPos.z, 
+		canRot.x, canRot.y, canRot.z, 
+		true, true, false, true, 1, true
+	)
+	RequestAnimDict('anim@amb@business@weed@weed_inspecting_lo_med_hi@')
+	while not HasAnimDictLoaded('anim@amb@business@weed@weed_inspecting_lo_med_hi@') do
+		Citizen.Wait(1000)
+	end
+    TaskPlayAnim(ped, 'anim@amb@business@weed@weed_inspecting_lo_med_hi@', 'weed_spraybottle_stand_spraying_01_inspector', 1.0, 1.0, 10000, 16, 0, 0, 0, 0 )
+	local a = 0
+	while a < 2 do
+		Citizen.Wait(1000)
+		local dict = "scr_recartheft"
+		local name = "scr_wheel_burnout"
+		
+		local ped = PlayerPedId()
+		local fwd = GetEntityForwardVector(ped)
+		local coords = GetEntityCoords(ped) + fwd * 0.5 + vector3(0.0, 0.0, -0.5)
+
+		RequestNamedPtfxAsset(dict)
+		-- Wait for the particle dictionary to load.
+		while not HasNamedPtfxAssetLoaded(dict) do
+			Citizen.Wait(0)
+		end
+
+		local heading = GetEntityHeading(ped)
+
+		UseParticleFxAssetNextCall(dict)
+		SetParticleFxNonLoopedColour(61/255, 28/255, 152/255)
+		SetParticleFxNonLoopedAlpha(1.0)
+		local ptr = StartNetworkedParticleFxNonLoopedAtCoord(
+			name, 
+			coords.x, coords.y, coords.z + 2.0, 
+			0.0, 0.0, heading, 
+			0.7, 
+			0.0, 0.0, 0.0
+		)
+		RemoveNamedPtfxAsset(dict)
+		a = a + 1
+		
+		-- Wait 5000ms before triggering the next particle.
+		Citizen.Wait(5000)
+	end
+	DeleteObject(canObj)
 end, false)
 
 RegisterCommand("drugidio", function(source, args, rawCommandString)
